@@ -6,6 +6,11 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.nupkg
+*.nuget
+/package/lib/net45/
+/package/tools/
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

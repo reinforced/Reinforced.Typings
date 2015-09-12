@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReinforcedTypingsTask.cs" />
+    <Compile Include="ReinforcedTypings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.csproj">
@@ -53,12 +53,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="NuGet\Reinforced.Typings.1.0.0.nuspec" />
+    <None Include="NuGet\input\build\net45\Reinforced.Typings.props" />
+    <None Include="NuGet\input\build\net45\Reinforced.Typings.targets" />
+    <None Include="NuGet\Reinforced.Typings.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NuGet\input\build\" />
+    <Folder Include="NuGet\input\lib\net45\" />
+    <Folder Include="NuGet\input\tools\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\.nuget\NuGet.exe">
+      <Link>NuGet\NuGet.exe</Link>
+    </Content>
     <Content Include="NuGet\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

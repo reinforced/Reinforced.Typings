@@ -7,8 +7,11 @@ using Microsoft.Build.Utilities;
 
 namespace Reinforced.Typings.Integrate
 {
-    public class ReinforcedTypingsTask : Task
+    public class ReinforcedTypings : Task
     {
+        [Required]
+        public string TargetFilePath { get; set; }
+
         public override bool Execute()
         {
             return true;

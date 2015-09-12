@@ -7,7 +7,7 @@
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
         <projectUrl>https://github.com/reinforced/Reinforced.Typings</projectUrl>
-        <iconUrl>https://avatars1.githubusercontent.com/u/14252257?v=3&amp;s=200</iconUrl>
+        <iconUrl>https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/Reinforced.Typings.Integrate/NuGet/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Reinforced.Typings allows to automatically create TypeScript .d.ts and .ts files containing glue code for your ASP.NET MVC server entities (ViewModels, Controllers etc)</description>
         <summary>Automatic TypeScript typings generator for ASP.NET MVC</summary>
@@ -16,5 +16,4 @@
         <tags>mvc, web, typescript</tags>
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
     </metadata>
-    <files />
 </package>
