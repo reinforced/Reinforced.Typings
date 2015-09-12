@@ -8,8 +8,8 @@
 *.sln.docstates
 *.nupkg
 *.nuget
-/package/lib/net45/
-/package/tools/
+package/lib/net45/
+package/tools/
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
@@ -22,7 +22,6 @@
 [Rr]eleases/
 x64/
 x86/
-build/
 bld/
 [Bb]in/
 [Oo]bj/
