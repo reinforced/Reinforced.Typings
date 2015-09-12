@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2A5CCD5C-E660-4088-8937-9632ABBBCDBB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Reinforced.Typings</RootNamespace>
+    <AssemblyName>Reinforced.Typings</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Reinforced.Typings.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
+    <Compile Include="Attributes\TsAttributeBase.cs" />
+    <Compile Include="Attributes\TsClassAttribute.cs" />
+    <Compile Include="Attributes\TsDeclarationAttributeBase.cs" />
+    <Compile Include="Attributes\TsEnumAttribute.cs" />
+    <Compile Include="Attributes\TsFunctionAttribute.cs" />
+    <Compile Include="Attributes\TsGenericAttribute.cs" />
+    <Compile Include="Attributes\TsIgnoreAttribute.cs" />
+    <Compile Include="Attributes\TsInterfaceAttribute.cs" />
+    <Compile Include="Attributes\TsParameterAttribute.cs" />
+    <Compile Include="Attributes\TsPropertyAttribute.cs" />
+    <Compile Include="Attributes\TsReferenceAttribute.cs" />
+    <Compile Include="Attributes\TsValueAttribute.cs" />
+    <Compile Include="Generators\ClassCodeGenerator.cs" />
+    <Compile Include="Generators\EnumGenerator.cs" />
+    <Compile Include="Generators\FieldCodeGenerator.cs" />
+    <Compile Include="Generators\InterfaceCodeGenerator.cs" />
+    <Compile Include="Generators\ITsCodeGenerator.cs" />
+    <Compile Include="Generators\MethodCodeGenerator.cs" />
+    <Compile Include="Generators\ParameterCodeGenerator.cs" />
+    <Compile Include="Generators\PropertyCodeGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TsExporter.cs" />
+    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="TypeResolver.cs" />
+    <Compile Include="WriterWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
