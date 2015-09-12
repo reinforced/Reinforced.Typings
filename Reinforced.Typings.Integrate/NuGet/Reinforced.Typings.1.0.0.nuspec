@@ -9,11 +9,12 @@
         <projectUrl>https://github.com/reinforced/Reinforced.Typings</projectUrl>
         <iconUrl>https://avatars1.githubusercontent.com/u/14252257?v=3&amp;s=200</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Automatic TypeScript typings generator for ASP.NET MVC</description>
-        <summary>Reinforced.Typings allows to automatically create TypeScript .d.ts and .ts files containing glue code for your ASP.NET MVC server entities (ViewModels, Controllers etc)</summary>
+        <description>Reinforced.Typings allows to automatically create TypeScript .d.ts and .ts files containing glue code for your ASP.NET MVC server entities (ViewModels, Controllers etc)</description>
+        <summary>Automatic TypeScript typings generator for ASP.NET MVC</summary>
         <copyright>© 2015 Pavel B. Novikov</copyright>
         <language>en-US</language>
         <tags>mvc, web, typescript</tags>
+        <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
     </metadata>
     <files />
 </package>
