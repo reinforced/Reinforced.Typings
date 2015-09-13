@@ -7,11 +7,19 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public class EnumGenerator : ITsCodeGenerator<Type>
     {
+        /// <summary>
+        /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
+        /// </summary>
+        /// <param name="element">Element code to be generated to output</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
         public void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
             var values = Enum.GetValues(element);
             var name = element.GetName();
-            sw.WriteLine("export enum {0} {{ ", name);
+            var fmt = Settings.GetDeclarationFormat(element);
+
+            sw.WriteLine(String.Format(fmt,"enum {0} {{ "), name);
             sw.Tab();
             for (int index = 0; index < values.Length; index++)
             {
@@ -25,5 +33,10 @@ namespace Reinforced.Typings.Generators
             sw.UnTab();
             sw.WriteLine("}");
         }
+
+        /// <summary>
+        /// Export settings
+        /// </summary>
+        public ExportSettings Settings { get; set; }
     }
 }

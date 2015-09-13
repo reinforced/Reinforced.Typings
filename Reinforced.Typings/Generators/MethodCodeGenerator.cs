@@ -65,7 +65,7 @@ namespace Reinforced.Typings.Generators
             {
                 var param = p[index];
                 if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param);
+                var generator = resolver.GeneratorFor(param,Settings);
                 generator.Generate(param, resolver, sw);
                 if (index != p.Length - 1 && !p[index + 1].IsIgnored())
                 {
@@ -125,7 +125,12 @@ namespace Reinforced.Typings.Generators
         {
             sw.Write(") : {0}", type);
         }
-
+        /// <summary>
+        /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
+        /// </summary>
+        /// <param name="element">Element code to be generated to output</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
         public virtual void Generate(MethodInfo element, TypeResolver resolver, WriterWrapper sw)
         {
             if (element.IsIgnored()) return;
@@ -145,7 +150,9 @@ namespace Reinforced.Typings.Generators
             sw.UnTab();
         }
 
-
-
+        /// <summary>
+        /// Export settings
+        /// </summary>
+        public ExportSettings Settings { get; set; }
     }
 }

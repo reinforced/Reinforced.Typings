@@ -10,61 +10,106 @@ namespace Reinforced.Typings.Cli
     /// </summary>
     public static class Bootstrapper
     {
-        private static string _assemblyLocalDir;
+        private static ExporterConsoleParameters _parameters;
+        private static Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
+        private static string _lastAssemblyLocalDir;
+        private static int _totalLoadedAssemblies;
+
+
         /// <summary>
         /// Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
         /// </summary>
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            if (args.Length < 2)
+            Console.WriteLine("Reinforced.Typings CLI generator © 2015 Pavel B. Novikov");
+
+            if (args.Length == 0)
             {
                 PrintHelp();
                 return;
             }
-            Console.WriteLine("Reinforced.Typings CLI generator is starting now");
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+
+            _parameters = ExtractParametersFromArgs(args);
+            var settings = InstantiateExportSettings();
             
-            var assemblies = GetAssembliesFromArgs(args);
-            TsExporter exporter = new TsExporter(assemblies);
-            Console.WriteLine("{0} assemblies loaded",assemblies.Length);
-            var targetFileName = args[args.Length - 1];
-            string tmpFileName = string.Format("{0}.tmp", targetFileName);
-            using (var fs = new FileStream(tmpFileName, FileMode.Create, FileAccess.Write))
-            {
-                using (var tr = new StreamWriter(fs))
-                {
-                    tr.WriteLine("// THIS FILE IS AUTO-GENERATED");
-                    tr.WriteLine("// DO NOT MODIFY IT MANUALLY");
-                    exporter.Export(tr);
-                    tr.Flush();
-                    fs.Flush(true);
-                }
-            }
-            Console.WriteLine("TypeScript sources generated");
-            File.Delete(targetFileName);
-            File.Move(tmpFileName, targetFileName);
-            File.Delete(tmpFileName);
+            TsExporter exporter = new TsExporter(settings);
+            exporter.Export();
+
+            
+            Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded",_totalLoadedAssemblies);
+            Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
+            
         }
 
-        private static Assembly[] GetAssembliesFromArgs(string[] args)
+        private static ExportSettings InstantiateExportSettings()
         {
+            ExportSettings settings = new ExportSettings();
+            settings.ExportPureTypings = _parameters.ExportPureTypings;
+            settings.Hierarchical = _parameters.Hierarchy;
+            settings.TargetDirectory = _parameters.TargetDirectory;
+            settings.TargetFile = _parameters.TargetFile;
+            settings.WriteWarningComment = _parameters.WriteWarningComment;
+            settings.SourceAssemblies = GetAssembliesFromArgs();
+            return settings;
+        }
+
+        private static void BuildReferencesCache()
+        {
+            _referencesCache.Clear();
+            foreach (var reference in _parameters.References)
+            {
+                _referencesCache.Add(Path.GetFileName(reference), reference);
+            }
+        }
+
+        private static string LookupAssemblyPath(string assemblyNameOrFullPath,bool storeIfFullName = true)
+        {
+            if (!assemblyNameOrFullPath.EndsWith(".dll")) assemblyNameOrFullPath = assemblyNameOrFullPath + ".dll";
+            Console.WriteLine("Looking up for assembly {0}",assemblyNameOrFullPath);
+
+            if (Path.IsPathRooted(assemblyNameOrFullPath))
+            {
+                if (storeIfFullName)
+                {
+                    _lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
+                }
+                Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
+                return assemblyNameOrFullPath;
+            }
+
+            if (_referencesCache.ContainsKey(assemblyNameOrFullPath))
+            {
+                var rf = _referencesCache[assemblyNameOrFullPath];
+                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, rf);
+                return rf;
+            }
+            var p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
+            if (File.Exists(p))
+            {
+                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
+                return p;
+            }
+
+            Console.WriteLine("Warning! Probably assembly {0} not found", assemblyNameOrFullPath, p);
+            return assemblyNameOrFullPath;
+        }
+
+        private static Assembly[] GetAssembliesFromArgs()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+            BuildReferencesCache();
+
             List<Assembly> assemblies = new List<Assembly>();
 
-            for (int i = 0; i < args.Length-1; i++)
+            for (int i = 0; i < _parameters.SourceAssemblies.Length; i++)
             {
-                var assemblyPath = args[i];
-                if (Path.IsPathRooted(assemblyPath))
-                {
-                    _assemblyLocalDir = Path.GetDirectoryName(assemblyPath) + "\\";
-                    var a = Assembly.LoadFrom(assemblyPath);
-                    assemblies.Add(a);
-                }
-                else
-                {
-                    var a = Assembly.LoadFrom(Path.Combine(_assemblyLocalDir,assemblyPath));
-                    assemblies.Add(a);
-                }
+                var assemblyPath = _parameters.SourceAssemblies[i];
+                var path = LookupAssemblyPath(assemblyPath);
+                var a = Assembly.LoadFrom(path);
+                _totalLoadedAssemblies++;
+                
+                assemblies.Add(a);
             }
 
             return assemblies.ToArray();
@@ -73,15 +118,101 @@ namespace Reinforced.Typings.Cli
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             AssemblyName nm = new AssemblyName(args.Name);
-            string path = Path.Combine(_assemblyLocalDir, nm.Name + ".dll");
+            string path = LookupAssemblyPath(nm.Name + ".dll",false);
             Assembly a = Assembly.LoadFrom(path);
-            Console.WriteLine("{0} additionally resolved",nm);
+            _totalLoadedAssemblies++;
+            Console.WriteLine("{0} additionally resolved", nm);
             return a;
         }
 
         private static void PrintHelp()
         {
-            Console.WriteLine(@"Usage: {0} Assembly.dll [Assembly2.dll Assembly3.dll ... etc] target_file.ts", Path.GetFileName(Assembly.GetEntryAssembly().CodeBase));
+            Console.WriteLine("Available parameters:");
+            Console.WriteLine();
+
+            var t = typeof(ExporterConsoleParameters);
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var propertyInfo in props)
+            {
+                var attr = propertyInfo.GetCustomAttribute<ConsoleHelpAttribute>();
+                if (attr != null)
+                {
+                    var req = attr.RequiredType;
+                    string requiredText = null;
+                    switch (req)
+                    {
+                        case Required.NotReuired:
+                            requiredText = "(not requred)";
+                            break;
+                        case Required.Reuired:
+                            requiredText = "(requred)";
+                            break;
+                        case Required.Partially:
+                            requiredText = "(sometimes requred)";
+                            break;
+                    }
+                    Console.WriteLine(propertyInfo.Name + " " + requiredText);
+
+                    var s = "\t" + attr.HelpText.Replace("\n", "\n\t").Replace("\n", Environment.NewLine);
+                    Console.WriteLine(s);
+
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        private static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
+        {
+            var t = typeof(ExporterConsoleParameters);
+            var instance = new ExporterConsoleParameters();
+            foreach (var s in args)
+            {
+                var trimmed = s.TrimStart('-');
+                var kv = trimmed.Split('=');
+                var key = kv[0].Trim();
+                var value = kv[1].Trim().Trim('"');
+
+                var prop = t.GetProperty(key);
+                if (prop == null)
+                {
+                    Console.WriteLine("Unrecognized parameter: {0}", key);
+                    continue;
+                }
+
+                if (prop.PropertyType == typeof(bool))
+                {
+                    bool parsedValue = Boolean.Parse(value);
+                    prop.SetValue(instance, parsedValue);
+                    continue;
+                }
+
+                if (prop.PropertyType == typeof(string))
+                {
+                    prop.SetValue(instance, value);
+                    continue;
+                }
+
+                if (prop.PropertyType == typeof(string[]))
+                {
+                    var parsedValue = value.Split(';');
+                    prop.SetValue(instance, parsedValue);
+                    continue;
+                }
+
+                Console.WriteLine("Cannot parse parameter for source property {0}", key);
+            }
+
+            try
+            {
+                instance.Validate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Parameters validation error: {0}", ex.Message);
+                PrintHelp();
+                return null;
+            }
+            return instance;
         }
     }
 }

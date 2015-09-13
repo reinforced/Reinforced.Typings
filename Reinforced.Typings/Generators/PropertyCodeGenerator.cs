@@ -8,7 +8,13 @@ namespace Reinforced.Typings.Generators
     /// Default code generator for properties
     /// </summary>
     public class PropertyCodeGenerator : ITsCodeGenerator<MemberInfo>
-    {
+    {    
+        /// <summary>
+        /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
+        /// </summary>
+        /// <param name="element">Element code to be generated to output</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
         public virtual void Generate(MemberInfo element, TypeResolver resolver, WriterWrapper sw)
         {
             if (element.IsIgnored()) return;
@@ -43,6 +49,11 @@ namespace Reinforced.Typings.Generators
             sw.WriteLine();
             sw.UnTab();
         }
+
+        /// <summary>
+        /// Export settings
+        /// </summary>
+        public ExportSettings Settings { get; set; }
 
         /// <summary>
         /// Returns type of specified property. It is useful for overloads sometimes

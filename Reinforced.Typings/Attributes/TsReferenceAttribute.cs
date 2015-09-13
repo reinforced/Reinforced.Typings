@@ -13,6 +13,10 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public string Path { get; private set; }
 
+        /// <summary>
+        /// Constructs new instance of TsReferenceAttribute
+        /// </summary>
+        /// <param name="path">Path that should be written as file to reference tag</param>
         public TsReferenceAttribute(string path)
         {
             Path = path;

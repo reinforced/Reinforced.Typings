@@ -13,5 +13,10 @@
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         void Generate(TElement element, TypeResolver resolver, WriterWrapper sw);
+
+        /// <summary>
+        /// Export settings
+        /// </summary>
+        ExportSettings Settings { get; set; }
     }
 }

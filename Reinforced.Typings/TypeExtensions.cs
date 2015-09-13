@@ -77,11 +77,21 @@ namespace Reinforced.Typings
             return false;
         }
 
+        /// <summary>
+        /// Determines if supplied type is non-generic enumerable
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>True if supplied type is nongeneric enumerable. False otherwise</returns>
         public static bool IsNongenericEnumerable(this Type t)
         {
             return (typeof(IEnumerable).IsAssignableFrom(t));
         }
 
+        /// <summary>
+        /// Determines should type be exported as interface or not
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>True, if supplied type should be exported as interface. False otherwise</returns>
         public static bool IsExportingAsInterface(this Type t)
         {
             return t.GetCustomAttribute<TsInterfaceAttribute>() != null;
@@ -135,6 +145,11 @@ namespace Reinforced.Typings
             return element.Name;
         }
 
+        /// <summary>
+        /// Determines if supplied type is delegate type
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>True, if supplied type is delegate, false otherwise</returns>
         public static bool IsDelegate(this Type t)
         {
             if (t.BaseType == null) return false;

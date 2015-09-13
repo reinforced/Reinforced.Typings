@@ -11,12 +11,23 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public class ClassCodeGenerator : ITsCodeGenerator<Type>
     {
+        /// <summary>
+        /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
+        /// </summary>
+        /// <param name="element">Element code to be generated to output</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
         public virtual void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
             var tc = element.GetCustomAttribute<TsClassAttribute>();
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
             Export("class", element, resolver, sw, tc);
         }
+
+        /// <summary>
+        /// Export settings
+        /// </summary>
+        public ExportSettings Settings { get; set; }
 
         /// <summary>
         /// Exports entire class to specified writer
@@ -29,10 +40,11 @@ namespace Reinforced.Typings.Generators
         protected virtual void Export(string declType, Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
         {
             string name = element.GetName();
-            
+
             sw.Indent();
-            sw.Write("export {0} ", declType);
+            sw.Write(Settings.GetDeclarationFormat(element), declType);
             sw.Write(name);
+
             var ifaces = element.GetInterfaces();
             var bs = element.BaseType;
             if (bs != null && bs != typeof(object))
@@ -42,11 +54,11 @@ namespace Reinforced.Typings.Generators
                     sw.Write(" extends {0} ", resolver.ResolveTypeName(bs));
                 }
             }
-            var ifacesStrings =  ifaces.Where(c => c.GetCustomAttribute<TsInterfaceAttribute>() != null).Select(resolver.ResolveTypeName).ToArray();
-            if (ifacesStrings.Length>0)
+            var ifacesStrings = ifaces.Where(c => c.GetCustomAttribute<TsInterfaceAttribute>() != null).Select(resolver.ResolveTypeName).ToArray();
+            if (ifacesStrings.Length > 0)
             {
-                string implemets = String.Join(", ",ifacesStrings);
-                sw.Write("implements {0}",implemets);
+                string implemets = String.Join(", ", ifacesStrings);
+                sw.Write("implements {0}", implemets);
             }
 
             sw.Write(" {{");
@@ -56,6 +68,15 @@ namespace Reinforced.Typings.Generators
             sw.WriteLine("}");
         }
 
+        
+
+        /// <summary>
+        /// Exports all type members sequentially
+        /// </summary>
+        /// <param name="element">Type itself</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
+        /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
         protected virtual void ExportMembers(Type element, TypeResolver resolver, WriterWrapper sw,
             IAutoexportSwitchAttribute swtch)
         {
@@ -75,8 +96,8 @@ namespace Reinforced.Typings.Generators
                 properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>() != null);
             }
             GenerateMembers(element, resolver, sw, properties);
-            
-            var methods = element.GetMethods(flags).Where(c=>predicate(c)&&!c.IsSpecialName);
+
+            var methods = element.GetMethods(flags).Where(c => predicate(c) && !c.IsSpecialName);
             if (!swtch.AutoExportMethods)
             {
                 methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>() != null);
@@ -97,7 +118,7 @@ namespace Reinforced.Typings.Generators
 
             foreach (var fieldInfo in members)
             {
-                var generator = resolver.GeneratorFor(fieldInfo);
+                var generator = resolver.GeneratorFor(fieldInfo, Settings);
                 generator.Generate(fieldInfo, resolver, sw);
             }
         }

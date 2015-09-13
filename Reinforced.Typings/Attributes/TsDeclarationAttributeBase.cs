@@ -20,6 +20,9 @@
         /// </summary>
         public string Namespace { get; set; }
 
+        /// <summary>
+        /// Constructs new instance of TsDeclarationAttributeBase
+        /// </summary>
         protected TsDeclarationAttributeBase()
         {
             IncludeNamespace = true;

@@ -3,7 +3,7 @@
 namespace Reinforced.Typings.Attributes
 {
     /// <summary>
-    /// Interface containing base properties for some attributes
+    /// Interface <c>containing</c> base properties for some attributes
     /// </summary>
     public interface IAutoexportSwitchAttribute
     {

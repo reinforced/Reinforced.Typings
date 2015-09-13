@@ -33,6 +33,9 @@ namespace Reinforced.Typings.Attributes
             get { return null; }
         }
 
+        /// <summary>
+        /// Constructs new instance of TsInterfaceAttribute
+        /// </summary>
         public TsInterfaceAttribute()
         {
             AutoI = true;

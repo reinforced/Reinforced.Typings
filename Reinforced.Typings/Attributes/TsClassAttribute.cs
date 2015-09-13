@@ -28,6 +28,9 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public Type DefaultMethodCodeGenerator { get; set; }
 
+        /// <summary>
+        /// Constructs new instance of TsClassAttribute
+        /// </summary>
         public TsClassAttribute()
         {
             AutoExportProperties = true;

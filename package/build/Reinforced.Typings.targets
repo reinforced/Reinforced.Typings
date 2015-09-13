@@ -1,16 +1,19 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup>
-		<BuildDependsOn>
-			$(BuildDependsOn);ReinforcedTypingsGenerate;
-		</BuildDependsOn>  			
+	<PropertyGroup>		
+		<TargetsTriggeredByCompilation>
+			$(TargetsTriggeredByCompilation);ReinforcedTypingsGenerate;
+		</TargetsTriggeredByCompilation>		
 		<RtToolPath>$(MSBuildThisFileDirectory)\rtcli.exe</RtToolPath>		
 	</PropertyGroup>
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="Reinforced.Typings.Integrate.dll" />
-	<Target Name="ReinforcedTypingsGenerate" DependsOnTargets="CopyFilesToOutputDirectory" Condition="'$(BuildingProject)' != 'false'">
+	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false'">	
 		<RtCli 
-			TargetFilePath="$(ReinforcedTypingsTargetFile)" 
-			AdditionalDlls="@(AdditionalDlls)" 
-			ProjectTargetPath="$(TargetPath)"		
+			TargetFile="$(ReinforcedTypingsTargetFile)" 
+			AdditionalSourceAssemblies="@(AdditionalDlls)" 
+			References="@(ReferencePath)"
+			SourceAssembly="@(IntermediateAssembly)"
+			ProjectRoot="$(ProjectDir)"
+			WriteWarningComment="true"
 			RtCliPath="$(RtToolPath)"
 		/>
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != ''" />
