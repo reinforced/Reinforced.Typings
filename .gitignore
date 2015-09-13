@@ -10,7 +10,10 @@
 *.nuget
 package/lib/net45/
 package/tools/
-
+package/build/*.dll
+package/build/*.xml
+package/build/*.exe
+package/build/*.config
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

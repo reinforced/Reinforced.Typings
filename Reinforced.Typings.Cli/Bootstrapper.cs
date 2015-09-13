@@ -22,12 +22,12 @@ namespace Reinforced.Typings.Cli
                 PrintHelp();
                 return;
             }
+            Console.WriteLine("Reinforced.Typings CLI generator is starting now");
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-            //_assemblyLocalDir = Path.GetDirectoryName(args[0]) + "\\";
-
+            
             var assemblies = GetAssembliesFromArgs(args);
             TsExporter exporter = new TsExporter(assemblies);
-            Console.WriteLine("Assemblies loaded");
+            Console.WriteLine("{0} assemblies loaded",assemblies.Length);
             var targetFileName = args[args.Length - 1];
             string tmpFileName = string.Format("{0}.tmp", targetFileName);
             using (var fs = new FileStream(tmpFileName, FileMode.Create, FileAccess.Write))
@@ -51,7 +51,7 @@ namespace Reinforced.Typings.Cli
         {
             List<Assembly> assemblies = new List<Assembly>();
 
-            for (int i = 0; i < args.Length-2; i++)
+            for (int i = 0; i < args.Length-1; i++)
             {
                 var assemblyPath = args[i];
                 if (Path.IsPathRooted(assemblyPath))

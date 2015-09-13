@@ -22,13 +22,17 @@
 			<RtBuild Include="Reinforced.Typings.Integrate\bin\Release\Reinforced.Typings.Integrate.dll" />			
 		</ItemGroup>
 		<Copy SourceFiles="@(RtLibrary)" DestinationFiles="@(RtLibrary->'package\lib\net45\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="@(RtBuild)" DestinationFiles="@(RtBuild->'package\lib\net45\%(RecursiveDir)%(Filename)%(Extension)')" />
+	
 		<ItemGroup>
 			<RtCli Include="Reinforced.Typings.Cli\bin\Release\Reinforced.Typings.dll" />
 			<RtCli Include="Reinforced.Typings.Cli\bin\Release\rtcli.exe" />
 			<RtCli Include="Reinforced.Typings.Cli\bin\Release\rtcli.exe.config" />
 		</ItemGroup>
 		<Copy SourceFiles="@(RtCli)" DestinationFiles="@(RtCli->'package\tools\%(RecursiveDir)%(Filename)%(Extension)')" />
+		
+		<Copy SourceFiles="@(RtCli)" DestinationFiles="@(RtCli->'package\build\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(RtBuild)" DestinationFiles="@(RtBuild->'package\build\%(RecursiveDir)%(Filename)%(Extension)')" />		
+		<Copy SourceFiles="@(RtLibrary)" DestinationFiles="@(RtLibrary->'package\build\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 	<Target Name="Pack">
 		<Exec Command=".nuget\NuGet.exe pack package\Reinforced.Typings.nuspec -BasePath package" />

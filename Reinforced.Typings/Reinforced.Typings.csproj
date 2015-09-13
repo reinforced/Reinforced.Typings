@@ -68,6 +68,8 @@
     <Compile Include="Generators\MethodCodeGenerator.cs" />
     <Compile Include="Generators\ParameterCodeGenerator.cs" />
     <Compile Include="Generators\PropertyCodeGenerator.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\SimpleLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TsExporter.cs" />
     <Compile Include="TypeExtensions.cs" />

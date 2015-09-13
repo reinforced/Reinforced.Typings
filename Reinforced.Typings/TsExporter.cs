@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Logging;
 
 namespace Reinforced.Typings
 {
@@ -27,14 +28,14 @@ namespace Reinforced.Typings
         {
             _assemblies = assemblyPaths.Select(Assembly.LoadFrom).ToArray();
         }
-        
+
         /// <summary>
         /// Creates TsExporter instance using specified assembly
         /// </summary>
         /// <param name="assembly">Assembly to look up for types to export</param>
         public TsExporter(Assembly assembly)
         {
-            _assemblies = new Assembly[]{assembly};
+            _assemblies = new Assembly[] { assembly };
         }
 
         /// <summary>
@@ -59,13 +60,16 @@ namespace Reinforced.Typings
         private void ExtractReferences()
         {
             var allTypes = _assemblies.SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>() != null));
+
+            "Types to export detected: {0}".LogArray(allTypes,2);
+
             _namespace = allTypes.GroupBy(c => c.GetNamespace()).ToDictionary(k => k.Key, v => v.ToList());
-            
+
             _assemblies.Where(c => c.GetCustomAttribute<TsReferenceAttribute>() != null)
                     .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
-                    .Select(c => string.Format("/// <reference path=\"{0}\"/>",c.Path))
+                    .Select(c => string.Format("/// <reference path=\"{0}\"/>", c.Path))
                     .ToList()
-                    .ForEach(a=>_referenceBuilder.AppendLine(a));
+                    .ForEach(a => _referenceBuilder.AppendLine(a));
 
             _isAnalyzed = true;
         }
@@ -77,20 +81,20 @@ namespace Reinforced.Typings
         public void Export(TextWriter sw)
         {
             if (!_isAnalyzed) ExtractReferences();
-            
+
             sw.WriteLine(_referenceBuilder.ToString());
             TypeResolver tr = new TypeResolver();
             WriterWrapper ww = new WriterWrapper(sw);
 
             foreach (var n in _namespace)
             {
-                ww.WriteLine("module {0} {{",n.Key);
+                ww.WriteLine("module {0} {{", n.Key);
                 ww.Tab();
                 foreach (var type in n.Value)
                 {
                     var converter = tr.GeneratorFor(type);
-                    converter.Generate(type,tr,ww);
-                    Console.WriteLine("Exported {0}",type);
+                    converter.Generate(type, tr, ww);
+                    Console.WriteLine("Exported {0}", type);
                 }
                 ww.UnTab();
                 ww.WriteLine();

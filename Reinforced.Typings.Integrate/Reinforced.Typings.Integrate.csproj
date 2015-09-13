@@ -44,31 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReinforcedTypings.cs" />
+    <Compile Include="RtCli.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.csproj">
-      <Project>{2a5ccd5c-e660-4088-8937-9632abbbcdbb}</Project>
-      <Name>Reinforced.Typings</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NuGet\input\build\net45\Reinforced.Typings.props" />
-    <None Include="NuGet\input\build\net45\Reinforced.Typings.targets" />
-    <None Include="NuGet\Reinforced.Typings.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NuGet\input\lib\net45\" />
-    <Folder Include="NuGet\input\tools\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\.nuget\NuGet.exe">
-      <Link>NuGet\NuGet.exe</Link>
-    </Content>
-    <Content Include="NuGet\icon.png" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
