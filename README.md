@@ -59,5 +59,5 @@ It will add Reinforced.Typings references to you project, some msbuild files and
 Documentation and samples
 -------------
 
-Detailed documentation and usage samples is coming. For now Reinforced.Typings has pretty XMLDOC comments so feel fre to use it. 
+Detailed documentation and usage samples is coming. For now Reinforced.Typings has pretty XMLDOC comments so feel free to use it. 
 Also you can star this project to make documentation appear faster :)
