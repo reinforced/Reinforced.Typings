@@ -11,21 +11,21 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Overrides property/field type
         /// </summary>
-        public string Type { get; set; }
+        public virtual string Type { get; set; }
 
         /// <summary>
         /// Overrides property/field type with managed type
         /// </summary>
-        public Type StrongType { get; set; }
+        public virtual Type StrongType { get; set; }
 
         /// <summary>
         /// Overrides name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Specifies default value
         /// </summary>
-        public object DefaultValue { get; set; }
+        public virtual object DefaultValue { get; set; }
     }
 }

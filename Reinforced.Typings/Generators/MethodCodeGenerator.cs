@@ -82,17 +82,25 @@ namespace Reinforced.Typings.Generators
         /// <param name="sw">Output writer</param>
         protected virtual void GenerateBody(MethodInfo element, TypeResolver resolver, WriterWrapper sw)
         {
-            if (element.ReturnType != typeof(void))
+            if (Settings.ExportPureTypings) //Ambient class declarations cannot have a body
             {
+                sw.Write(";");
                 sw.WriteLine();
-                sw.WriteIndented(@"{ 
-    return null; 
-}");
             }
             else
             {
-                sw.Write("{{ }}");
-                sw.WriteLine();
+                if (element.ReturnType != typeof (void))
+                {
+                    sw.WriteLine();
+                    sw.WriteIndented(@"{ 
+    return null; 
+}");
+                }
+                else
+                {
+                    sw.Write("{{ }}");
+                    sw.WriteLine();
+                }
             }
         }
 

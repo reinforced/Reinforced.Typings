@@ -44,13 +44,16 @@ namespace Reinforced.Typings.Cli
 
         private static ExportSettings InstantiateExportSettings()
         {
-            ExportSettings settings = new ExportSettings();
-            settings.ExportPureTypings = _parameters.ExportPureTypings;
-            settings.Hierarchical = _parameters.Hierarchy;
-            settings.TargetDirectory = _parameters.TargetDirectory;
-            settings.TargetFile = _parameters.TargetFile;
-            settings.WriteWarningComment = _parameters.WriteWarningComment;
-            settings.SourceAssemblies = GetAssembliesFromArgs();
+            ExportSettings settings = new ExportSettings
+            {
+                ExportPureTypings = _parameters.ExportPureTypings,
+                Hierarchical = _parameters.Hierarchy,
+                TargetDirectory = _parameters.TargetDirectory,
+                TargetFile = _parameters.TargetFile,
+                WriteWarningComment = _parameters.WriteWarningComment,
+                SourceAssemblies = GetAssembliesFromArgs(),
+                RootNamespace = _parameters.RootNamespace
+            };
             return settings;
         }
 

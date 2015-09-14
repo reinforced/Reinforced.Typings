@@ -11,6 +11,6 @@ namespace Reinforced.Typings.Attributes
         /// Dummy function body generator 
         /// If empty then it's being generated empty/return null body.
         /// </summary>
-        public Type CodeGeneratorType { get; set; }
+        public virtual Type CodeGeneratorType { get; set; }
     }
 }

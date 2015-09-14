@@ -63,6 +63,14 @@ namespace Reinforced.Typings.Integrate
         /// </summary>
         public ITaskItem[] AdditionalSourceAssemblies { get; set; }
 
+        /// <summary>
+        /// Root namespace for hierarchical export
+        /// </summary>
+        public string RootNamespace { get; set; }
+
+        /// <summary>
+        /// ProjectDir variable
+        /// </summary>
         public string ProjectRoot { get; set; }
         
         protected override string GenerateFullPathToTool()
@@ -85,10 +93,9 @@ namespace Reinforced.Typings.Integrate
                 TargetDirectory = FixTargetPath(TargetDirectory),
                 TargetFile = FixTargetPath(TargetFile),
                 References = ExtractReferences(),
-                SourceAssemblies = ExtractSourceAssemblies()
+                SourceAssemblies = ExtractSourceAssemblies(),
+                RootNamespace = RootNamespace
             };
-
-           
 
             return consoleParams.ExportConsoleParameters();
         }

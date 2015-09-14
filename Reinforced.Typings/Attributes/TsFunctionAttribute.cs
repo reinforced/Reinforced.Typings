@@ -10,16 +10,16 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Overrides function return type
         /// </summary>
-        public string Type { get; set; }
+        public virtual string Type { get; set; }
 
         /// <summary>
         /// Overrides function return type with managed type
         /// </summary>
-        public Type StrongType { get; set; }
+        public virtual Type StrongType { get; set; }
 
         /// <summary>
         /// Overrides name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Reinforced.Typings
         private bool _hierarchical;
         private Assembly[] _sourceAssemblies;
         private bool _exportPureTyings;
+        private string _rootNamespace;
 
         /// <summary>
         /// The assemblies to extract typings from. 
@@ -98,6 +99,20 @@ namespace Reinforced.Typings
             {
                 if (_isLocked) return;
                 _exportPureTyings = value;
+            }
+        }
+
+        /// <summary>
+        /// Specifies root namespace for hierarchical export.
+        /// Helps to avoid creating redundant directories when hierarchical export.
+        /// </summary>
+        public string RootNamespace
+        {
+            get { return _rootNamespace; }
+            set
+            {
+                if (_isLocked) return;
+                _rootNamespace = value;
             }
         }
 

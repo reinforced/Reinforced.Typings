@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Path to referenced TS file
         /// </summary>
-        public string Path { get; private set; }
+        public virtual string Path { get; private set; }
 
         /// <summary>
         /// Constructs new instance of TsReferenceAttribute

@@ -217,6 +217,8 @@ namespace Reinforced.Typings
             var tc = t.GetCustomAttribute<TsClassAttribute>();
             var ti = t.GetCustomAttribute<TsInterfaceAttribute>();
             string nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
+            bool includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
+            if (!includeNamespace) return String.Empty;
             if (!string.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
             return t.Namespace;
         }

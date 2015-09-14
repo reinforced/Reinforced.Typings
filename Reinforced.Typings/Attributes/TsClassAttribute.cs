@@ -11,22 +11,22 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Export all methods automatically or not. 
         /// </summary>
-        public bool AutoExportMethods { get; set; }
+        public virtual bool AutoExportMethods { get; set; }
 
         /// <summary>
         /// Export all properties automatically or not. 
         /// </summary>
-        public bool AutoExportProperties { get; set; }
+        public virtual bool AutoExportProperties { get; set; }
 
         /// <summary>
         /// Export all fields automatically or not. 
         /// </summary>
-        public bool AutoExportFields { get; set; }
+        public virtual bool AutoExportFields { get; set; }
 
         /// <summary>
         /// Reference to code geenrator which will be applied to every method
         /// </summary>
-        public Type DefaultMethodCodeGenerator { get; set; }
+        public virtual Type DefaultMethodCodeGenerator { get; set; }
 
         /// <summary>
         /// Constructs new instance of TsClassAttribute

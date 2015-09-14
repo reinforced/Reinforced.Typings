@@ -11,17 +11,17 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Automatically appends I prefix if non-interfaces
         /// </summary>
-        public bool AutoI { get; set; }
+        public virtual bool AutoI { get; set; }
         
         /// <summary>
         /// Export all methods automatically or not. 
         /// </summary>
-        public bool AutoExportMethods { get; set; }
+        public virtual bool AutoExportMethods { get; set; }
 
         /// <summary>
         /// Export all properties automatically or not. 
         /// </summary>
-        public bool AutoExportProperties { get; set; }
+        public virtual bool AutoExportProperties { get; set; }
 
         bool IAutoexportSwitchAttribute.AutoExportFields
         {

@@ -71,11 +71,20 @@ Example:   rtcli.exe WriteWarningComment=""false"" ")]
         /// If true, export will be performed in .d.ts manner (only typings, declare module etc).
         /// Otherwise, export will be performed to regulat .ts file
         /// </summary>
-        [ConsoleHelp(@"Boolean parameter that controls generation mode swith between .ts/.d.ts
+        [ConsoleHelp(@"Boolean parameter that controls generation mode switch between .ts/.d.ts
 If true, export will be performed in .d.ts manner (only typings, declare module etc).
 Otherwise, export will be performed to regulat .ts file 
 Example:   rtcli.exe ExportPureTyings=""true"" ")]
         public bool ExportPureTypings { get; set; }
+
+        /// <summary>
+        /// Specifies root namespace for hierarchical export.
+        /// Helps to avoid creating redundant directories when hierarchical export.
+        /// </summary>
+        [ConsoleHelp(@"Specifies root namespace for hierarchical export.
+Helps to avoid creating redundant directories when hierarchical export.
+Example:   rtcli.exe ExportPureTyings=""true"" ")]
+        public string RootNamespace { get; set; }
 
         /// <summary>
         /// Validates input parameters

@@ -165,6 +165,10 @@ namespace Reinforced.Typings
             else tn = tn + ".ts";
 
             if (string.IsNullOrEmpty(ns)) return Path.Combine(_settings.TargetDirectory, tn);
+            if (!string.IsNullOrEmpty(_settings.RootNamespace))
+            {
+                ns = ns.Replace(_settings.RootNamespace, String.Empty);
+            }
             ns = ns.Replace('.', '\\');
             return Path.Combine(_settings.TargetDirectory, ns, tn);
         }

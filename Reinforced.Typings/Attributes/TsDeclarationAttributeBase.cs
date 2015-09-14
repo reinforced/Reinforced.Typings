@@ -8,17 +8,17 @@
         /// <summary>
         /// Place to corresponding namespace
         /// </summary>
-        public bool IncludeNamespace { get; set; }
+        public virtual bool IncludeNamespace { get; set; }
 
         /// <summary>
         /// Overrides name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Overrides namespace
         /// </summary>
-        public string Namespace { get; set; }
+        public virtual string Namespace { get; set; }
 
         /// <summary>
         /// Constructs new instance of TsDeclarationAttributeBase

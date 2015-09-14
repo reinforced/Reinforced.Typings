@@ -79,11 +79,21 @@ namespace Reinforced.Typings.Generators
                 sw.Write("...");
             }
             sw.Write(name);
-            if (isNullable && defaultValue == null) sw.Write("?"); //wait what? Ts do not have nullable parameters
-            sw.Write(":{0}", type);
-            if (defaultValue != null)
+
+            if (!Settings.ExportPureTypings)
             {
-                sw.Write(" = {0}", defaultValue);
+                if (isNullable && defaultValue == null) sw.Write("?");
+                sw.Write(":{0}", type);
+                if (defaultValue != null)
+                {
+                    sw.Write(" = {0}", defaultValue);
+                }
+            }
+            else
+            {
+                //there are slightly different rules for .d.ts
+                if (isNullable||defaultValue!=null) sw.Write("?");
+                sw.Write(":{0}", type);
             }
         }
 

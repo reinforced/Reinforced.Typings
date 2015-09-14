@@ -11,12 +11,12 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Overrides type name
         /// </summary>
-        public string Type { get; set; }
+        public virtual string Type { get; set; }
 
         /// <summary>
         /// Overrides type
         /// </summary>
-        public Type StrongType { get; set; }
+        public virtual Type StrongType { get; set; }
 
         /// <summary>
         /// Constructs new instance of TsGenericAttribute
