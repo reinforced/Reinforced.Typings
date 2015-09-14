@@ -1,4 +1,11 @@
-﻿What is that?
+﻿Reinforce.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/)
+-------------
+
+```sh
+PM> Install-Package Reinforced.Typings
+```
+
+What is that?
 -------------
 
 It is automated TypeScript sources generator from your MVC project's assembly. It is a way to describe your server types (typically, View models being passed to client via JSON) in TypeScript typings. Also it allows to generate glue code e.g. for controller methods.
