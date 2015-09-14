@@ -18,7 +18,8 @@ namespace Reinforced.Typings
         private readonly StringBuilder _referenceBuilder = new StringBuilder();
         private Dictionary<string, List<Type>> _namespace = new Dictionary<string, List<Type>>();
         private List<Type> _allTypes;
-        private List<string> _tmpFiles = new List<string>();
+        private HashSet<Type> _allTypesHash;
+        private readonly FilesOperations _fileOps;
 
         #region Constructors
 
@@ -29,6 +30,7 @@ namespace Reinforced.Typings
         public TsExporter(ExportSettings settings)
         {
             _settings = settings;
+            _fileOps = new FilesOperations(settings);
         }
 
         #endregion
@@ -37,6 +39,8 @@ namespace Reinforced.Typings
         {
             if (_isAnalyzed) return;
             _allTypes = _settings.SourceAssemblies.SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>() != null)).ToList();
+
+            _allTypesHash = new HashSet<Type>(_allTypes);
 
             _namespace = _allTypes.GroupBy(c => c.GetNamespace()).ToDictionary(k => k.Key, v => v.ToList());
 
@@ -79,14 +83,17 @@ namespace Reinforced.Typings
         private void ExportType(Type type, TextWriter tw, TypeResolver resolver)
         {
             tw.WriteLine(_referenceBuilder.ToString());
+            var n = type.GetNamespace();
+            tw.WriteLine(_fileOps.GenerateInspectedReferences(type, _allTypesHash,n));
+
             WriterWrapper sw = new WriterWrapper(tw);
             var gen = resolver.GeneratorForNamespace(_settings);
-            var n = type.GetNamespace();
+            
             gen.WriteNamespaceBegin(n, sw);
             var converter = resolver.GeneratorFor(type, _settings);
             converter.Generate(type, resolver, sw);
             Console.WriteLine("Exported {0}", type);
-            gen.WriteNamespaceEnd(sw);
+            gen.WriteNamespaceEnd(n, sw);
             tw.Flush();
         }
         /// <summary>
@@ -94,11 +101,11 @@ namespace Reinforced.Typings
         /// </summary>
         public void Export()
         {
-            _tmpFiles.Clear();
+            _fileOps.ClearTempRegistry();
             ExtractReferences();
             if (!_settings.Hierarchical)
             {
-                var file = GetTmpFile(_settings.TargetFile);
+                var file = _fileOps.GetTmpFile(_settings.TargetFile);
                 using (var fs = File.OpenWrite(file))
                 {
                     using (var tw = new StreamWriter(fs))
@@ -113,8 +120,8 @@ namespace Reinforced.Typings
                 TypeResolver tr = new TypeResolver(_settings);
                 foreach (var t in _allTypes)
                 {
-                    var path = GetPathForType(t);
-                    var tmpFile = GetTmpFile(path);
+                    var path = _fileOps.GetPathForType(t);
+                    var tmpFile = _fileOps.GetTmpFile(path);
                     using (var fs = File.OpenWrite(tmpFile))
                     {
                         using (var tw = new StreamWriter(fs))
@@ -125,53 +132,9 @@ namespace Reinforced.Typings
                     }
                 }
             }
-            DeployTempFiles();
+            _fileOps.DeployTempFiles();
         }
 
-        private void DeployTempFiles()
-        {
-            foreach (var tmpFile in _tmpFiles)
-            {
-                var origFile = Path.GetFileNameWithoutExtension(tmpFile);
-                var origDir = Path.GetDirectoryName(tmpFile);
-
-                origFile = Path.Combine(origDir, origFile);
-
-                if (File.Exists(origFile)) File.Delete(origFile);
-                File.Move(tmpFile, origFile);
-                Console.WriteLine("File replaced: {0} -> {1}", tmpFile, origFile);
-            }
-        }
-
-        private string GetTmpFile(string fileName)
-        {
-            fileName = fileName + ".tmp";
-            if (File.Exists(fileName))
-            {
-                File.Delete(fileName);
-            }
-            _tmpFiles.Add(fileName);
-            return fileName;
-        }
-
-        private string GetPathForType(Type t)
-        {
-            var ns = t.GetNamespace();
-            var tn = t.GetName();
-
-            var idx = tn.IndexOf('<');
-            if (idx != -1) tn = tn.Substring(0, idx);
-            if (_settings.ExportPureTypings) tn = tn + ".d.ts";
-            else tn = tn + ".ts";
-
-            if (string.IsNullOrEmpty(ns)) return Path.Combine(_settings.TargetDirectory, tn);
-            if (!string.IsNullOrEmpty(_settings.RootNamespace))
-            {
-                ns = ns.Replace(_settings.RootNamespace, String.Empty);
-            }
-            ns = ns.Replace('.', '\\');
-            return Path.Combine(_settings.TargetDirectory, ns, tn);
-        }
 
         private void WriteWarning(TextWriter tw)
         {

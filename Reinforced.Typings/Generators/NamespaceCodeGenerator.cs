@@ -26,7 +26,7 @@ namespace Reinforced.Typings.Generators
                 Console.WriteLine("Exported {0}", type);
             }
            
-            WriteNamespaceEnd(sw);
+            WriteNamespaceEnd(namespaceName,sw);
         }
 
         /// <summary>
@@ -36,6 +36,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="sw">Output writer</param>
         public virtual void WriteNamespaceBegin(string namespaceName,WriterWrapper sw)
         {
+            if (string.IsNullOrEmpty(namespaceName)) return;
             if (Settings.ExportPureTypings)
             {
                 sw.WriteLine("declare module {0} {{", namespaceName);
@@ -51,9 +52,11 @@ namespace Reinforced.Typings.Generators
         /// <summary>
         /// Writes to ouput file namespace closing
         /// </summary>
+        /// <param name="namespaceName">Namespace name</param>
         /// <param name="sw">Output writer</param>
-        public virtual void WriteNamespaceEnd(WriterWrapper sw)
+        public virtual void WriteNamespaceEnd(string namespaceName, WriterWrapper sw)
         {
+            if (string.IsNullOrEmpty(namespaceName)) return;
             sw.UnTab();
             sw.WriteLine();
             sw.WriteLine("}");

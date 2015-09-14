@@ -19,6 +19,8 @@ namespace Reinforced.Typings.Generators
             bool needsExports = !string.IsNullOrEmpty(ns);
             if (settings.ExportPureTypings)
             {
+                if (element.IsExportingAsInterface()) return "{0} "; // no declare or export for interfaces
+
                 if (!needsExports) return "declare {0} "; //no export directive allowed in .d.ts
                 return "export {0} ";
             }

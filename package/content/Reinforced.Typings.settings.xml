@@ -53,7 +53,7 @@
 			Note that in case of using RtDivideTypesAmongFiles, RtTargetFile parameter will 
 			NOT be used anymore.
 		-->
-		<RtTargetDirectory>$(SolutionDir)Scripts\MyApplication</RtTargetDirectory>
+		<RtTargetDirectory>$(ProjectDir)Scripts\MyApplication</RtTargetDirectory>
 		
 		<!--
 			Also you have to specify your app's namespace in case of using RtDivideTypesAmongFiles.
