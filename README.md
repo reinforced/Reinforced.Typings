@@ -13,7 +13,7 @@ It is automated TypeScript sources generator from your MVC project's assembly. I
 Could you explain it?
 -------------
 
-Okay, well. Let's consider typical ASP.NET MVC web application. If it is AJAX-powered then you have to make requests to server and send/receive JSON data. Typically you receive/send from/to server kind of JSON-ed ViewModel classes that expose data from database/client input. Since TypeScript has been invented, there is "strongly-typed" way to write your javascript that perforь such kind of operations. So basically you better to have typings (or interfaces) for server View-models on client-side. Of course you can write them manually. 
+Okay, well. Let's consider typical ASP.NET MVC web application. If it is AJAX-powered then you have to make requests to server and send/receive JSON data. Typically you receive/send from/to server kind of JSON-ed ViewModel classes that expose data from database/client input. Since TypeScript has been invented, there is "strongly-typed" way to write your javascript that perform such kind of operations. So basically you better to have typings (or interfaces) for server View-models on client-side. Of course you can write them manually. 
 
 And with Reinforced.Typings you only have to mark classes you want to have in TypeScript code with corresponding attribute - and them will be exported to specified TypeScript file after next build. Each build. Automatically.
 
