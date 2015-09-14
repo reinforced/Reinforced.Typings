@@ -1,4 +1,4 @@
-﻿Reinforce.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/)
+﻿Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/)
 -------------
 
 ```sh
