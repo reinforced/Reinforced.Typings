@@ -5,7 +5,7 @@ namespace Reinforced.Typings.Attributes
     /// <summary>
     /// Exports specified class or interface as typescript interface
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Interface)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct)]
     public class TsInterfaceAttribute : TsDeclarationAttributeBase, IAutoexportSwitchAttribute
     {
         /// <summary>

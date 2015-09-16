@@ -87,6 +87,22 @@ Example:   rtcli.exe ExportPureTyings=""true"" ")]
         public string RootNamespace { get; set; }
 
         /// <summary>
+        /// Use camelCase for methods naming
+        /// </summary>
+        [ConsoleHelp(@"Specifies usage of camelCase for methods.
+True to use camelCase while generating methods names. False to remain methods names unchanged.
+Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
+        public bool CamelCaseForMethods { get; set; }
+
+        /// <summary>
+        /// Use camelCase for properties naming
+        /// </summary>
+        [ConsoleHelp(@"Specifies usage of camelCase for properties.
+True to use camelCase while generating properties names. False to remain properties names unchanged.
+Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
+        public bool CamelCaseForProperties { get; set; }
+
+        /// <summary>
         /// Validates input parameters
         /// </summary>
         public void Validate()

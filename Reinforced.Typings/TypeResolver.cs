@@ -30,6 +30,7 @@ namespace Reinforced.Typings
             _defaultGenerators[MemberTypes.Property] = new PropertyCodeGenerator{Settings = settings};
             _defaultGenerators[MemberTypes.Field] = new FieldCodeGenerator { Settings = settings };
             _defaultGenerators[MemberTypes.Method] = new MethodCodeGenerator { Settings = settings };
+            _defaultGenerators[MemberTypes.Constructor] = new ConstructorCodeGenerator { Settings = settings };
             _defaultParameterGenerator = new ParameterCodeGenerator { Settings = settings };
             _defaultClassGenerator = new ClassCodeGenerator { Settings = settings };
             _defaultInterfaceGenerator = new InterfaceCodeGenerator { Settings = settings };

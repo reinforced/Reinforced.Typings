@@ -15,6 +15,8 @@ namespace Reinforced.Typings
         private Assembly[] _sourceAssemblies;
         private bool _exportPureTyings;
         private string _rootNamespace;
+        private bool _camelCaseForMethods;
+        private bool _camelCaseForProperties;
 
         /// <summary>
         /// The assemblies to extract typings from. 
@@ -113,6 +115,32 @@ namespace Reinforced.Typings
             {
                 if (_isLocked) return;
                 _rootNamespace = value;
+            }
+        }
+
+        /// <summary>
+        /// Use camelCase for methods naming
+        /// </summary>
+        public bool CamelCaseForMethods
+        {
+            get { return _camelCaseForMethods; }
+            set
+            {
+                if (_isLocked) return;
+                _camelCaseForMethods = value;
+            }
+        }
+
+        /// <summary>
+        /// Use camelCase for properties naming
+        /// </summary>
+        public bool CamelCaseForProperties
+        {
+            get { return _camelCaseForProperties; }
+            set
+            {
+                if (_isLocked) return;
+                _camelCaseForProperties = value;
             }
         }
 

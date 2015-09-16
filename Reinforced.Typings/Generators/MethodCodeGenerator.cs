@@ -58,7 +58,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Method info</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
-        protected virtual void WriteMethodParameters(MethodInfo element, TypeResolver resolver, WriterWrapper sw)
+        protected virtual void WriteMethodParameters(MethodBase element, TypeResolver resolver, WriterWrapper sw)
         {
             ParameterInfo[] p = element.GetParameters();
             for (int index = 0; index < p.Length; index++)
@@ -77,10 +77,11 @@ namespace Reinforced.Typings.Generators
         /// <summary>
         /// Writes method body to output writer
         /// </summary>
-        /// <param name="element">Method info</param>
+        /// <param name="returnType">Method return type</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
-        protected virtual void GenerateBody(MethodInfo element, TypeResolver resolver, WriterWrapper sw)
+        /// <param name="content">Content for non-void body</param>
+        protected virtual void GenerateBody(string returnType, TypeResolver resolver, WriterWrapper sw,string content="return null;")
         {
             if (Settings.ExportPureTypings) //Ambient class declarations cannot have a body
             {
@@ -89,12 +90,12 @@ namespace Reinforced.Typings.Generators
             }
             else
             {
-                if (element.ReturnType != typeof (void))
+                if (returnType!="void")
                 {
                     sw.WriteLine();
-                    sw.WriteIndented(@"{ 
-    return null; 
-}");
+                    sw.WriteIndented(@"{{ 
+    {0}
+}}",content);
                 }
                 else
                 {
@@ -131,7 +132,14 @@ namespace Reinforced.Typings.Generators
         /// <param name="sw">Output writer</param>
         protected void WriteRestOfDeclaration(string type, WriterWrapper sw)
         {
-            sw.Write(") : {0}", type);
+            if (string.IsNullOrEmpty(type))
+            {
+                sw.Write(")");
+            }
+            else
+            {
+                sw.Write(") : {0}", type);
+            }
         }
         /// <summary>
         /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
@@ -154,7 +162,7 @@ namespace Reinforced.Typings.Generators
             WriteRestOfDeclaration(type, sw);
 
             if (isInterfaceMethod) { sw.Write(";"); sw.WriteLine(); }
-            else GenerateBody(element, resolver, sw);
+            else GenerateBody(type, resolver, sw);
             sw.UnTab();
         }
 

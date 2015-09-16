@@ -5,7 +5,7 @@ namespace Reinforced.Typings.Attributes
     /// <summary>
     /// This attribute will export member as typescript class definition
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public class TsClassAttribute : TsDeclarationAttributeBase, IAutoexportSwitchAttribute
     {
         /// <summary>

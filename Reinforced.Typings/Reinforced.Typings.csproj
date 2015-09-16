@@ -51,6 +51,7 @@
     <Compile Include="Attributes\TsAddTypeReference.cs" />
     <Compile Include="Attributes\TsAttributeBase.cs" />
     <Compile Include="Attributes\TsClassAttribute.cs" />
+    <Compile Include="Attributes\TsBaseParamAttribute.cs" />
     <Compile Include="Attributes\TsDeclarationAttributeBase.cs" />
     <Compile Include="Attributes\TsEnumAttribute.cs" />
     <Compile Include="Attributes\TsFunctionAttribute.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="ExportSettings.cs" />
     <Compile Include="FilesOperations.cs" />
     <Compile Include="Generators\ClassCodeGenerator.cs" />
+    <Compile Include="Generators\ConstructorCodeGenerator.cs" />
     <Compile Include="Generators\EnumGenerator.cs" />
     <Compile Include="Generators\FieldCodeGenerator.cs" />
     <Compile Include="Generators\InterfaceCodeGenerator.cs" />

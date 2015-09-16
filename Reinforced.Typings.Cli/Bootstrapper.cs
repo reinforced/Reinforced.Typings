@@ -57,7 +57,9 @@ namespace Reinforced.Typings.Cli
                 TargetFile = _parameters.TargetFile,
                 WriteWarningComment = _parameters.WriteWarningComment,
                 SourceAssemblies = GetAssembliesFromArgs(),
-                RootNamespace = _parameters.RootNamespace
+                RootNamespace = _parameters.RootNamespace,
+                CamelCaseForMethods = _parameters.CamelCaseForMethods,
+                CamelCaseForProperties = _parameters.CamelCaseForProperties
             };
             return settings;
         }
@@ -161,7 +163,7 @@ namespace Reinforced.Typings.Cli
                     }
                     Console.WriteLine(propertyInfo.Name + " " + requiredText);
 
-                    var s = "\t" + attr.HelpText.Replace("\n", "\n\t").Replace("\n", Environment.NewLine);
+                    var s = "\t" + attr.HelpText.Replace("\r",String.Empty).Replace("\n", "\n\t").Replace("\n", Environment.NewLine);
                     Console.WriteLine(s);
 
                     Console.WriteLine();

@@ -11,6 +11,6 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Overrides enum value name
         /// </summary>
-        public virtual string NameOverride { get; set; }
+        public virtual string Name { get; set; }
     }
 }

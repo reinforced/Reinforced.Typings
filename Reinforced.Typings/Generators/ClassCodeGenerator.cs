@@ -80,7 +80,7 @@ namespace Reinforced.Typings.Generators
         protected virtual void ExportMembers(Type element, TypeResolver resolver, WriterWrapper sw,
             IAutoexportSwitchAttribute swtch)
         {
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
+            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
             Func<MemberInfo, bool> predicate = c => c.GetCustomAttribute<TsIgnoreAttribute>() == null;
 
             var fields = element.GetFields(flags).Where(predicate).OfType<FieldInfo>();
@@ -103,6 +103,12 @@ namespace Reinforced.Typings.Generators
                 methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>() != null);
             }
             GenerateMembers(element, resolver, sw, methods);
+
+            if (!element.IsExportingAsInterface()) // constructors are not allowed on interfaces
+            {
+                var constructors = element.GetConstructors(flags).Where(c => predicate(c) && !c.IsSpecialName);
+                GenerateMembers(element, resolver, sw, constructors);
+            }
         }
 
         /// <summary>
