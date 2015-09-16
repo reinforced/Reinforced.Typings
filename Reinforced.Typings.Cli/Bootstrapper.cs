@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Reinforced.Typings.Cli
@@ -29,8 +30,12 @@ namespace Reinforced.Typings.Cli
                 PrintHelp();
                 return;
             }
-
             _parameters = ExtractParametersFromArgs(args);
+            if (_parameters == null)
+            {
+                Console.WriteLine("No valid parameters found. Exiting.");
+                Environment.Exit(0);
+            }
             var settings = InstantiateExportSettings();
             
             TsExporter exporter = new TsExporter(settings);
@@ -172,6 +177,12 @@ namespace Reinforced.Typings.Cli
             {
                 var trimmed = s.TrimStart('-');
                 var kv = trimmed.Split('=');
+                if (kv.Length != 2)
+                {
+                    Console.WriteLine("Unrecognized parameter: {0}", s);
+                    continue;
+                }
+
                 var key = kv[0].Trim();
                 var value = kv[1].Trim().Trim('"');
 

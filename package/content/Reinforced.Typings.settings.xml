@@ -62,6 +62,19 @@
 		-->
 		<RtRootNamespace>My.Application.Root.Namespace</RtRootNamespace>
 		
+		<!--
+			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
+			typings generation.
+		-->
+		<RtDisable>false</RtDisable>
+		
+		<!--
+			Disables typescript compilation in solution. 
+			Use it when your TypeScripts are broken and you need to rebuild project and then regenerate typings 
+			to fix it, but TypeScript compilation fails and failing project build. This option will temporary 
+			disable typescripts build.
+		-->
+		<RtBypassTypeScriptCompilation>false</RtBypassTypeScriptCompilation>
 	</PropertyGroup>
 	
 	<!--

@@ -3,11 +3,52 @@
 		<TargetsTriggeredByCompilation>
 			$(TargetsTriggeredByCompilation);ReinforcedTypingsGenerate;
 		</TargetsTriggeredByCompilation>		
-		<RtToolPath>$(MSBuildThisFileDirectory)rtcli.exe</RtToolPath>		
+		<RtToolPath>$(MSBuildThisFileDirectory)rtcli.exe</RtToolPath>
+		<BuildDependsOn>
+			ConditionallyDisableTypeScriptCompilation;
+			$(BuildDependsOn);
+		</BuildDependsOn>
 	</PropertyGroup>
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="Reinforced.Typings.Integrate.dll" />
+	
+	<UsingTask TaskName="RemoveTypeScriptStep" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+	  <ParameterGroup>
+		<Original ParameterType="System.String" Required="true" />
+		<Fixed ParameterType="System.String[]" Output="true" />		
+	  </ParameterGroup>
+	  <Task>
+		<Using Namespace="System.Collections.Generic"/>
+		<Code Type="Fragment" Language="cs">
+		<![CDATA[
+			string[] targets = Original.Trim().Split(new char[]{';'}, StringSplitOptions.RemoveEmptyEntries);
+			List<string> result = new List<string>();
+			foreach(string s in targets){
+				if (s!="CompileTypeScript") result.Add(s.Trim());
+			}
+			Fixed = result.ToArray();
+		]]>
+		</Code>
+	  </Task>
+	</UsingTask>  
+	
 	<Import Project="$(ProjectDir)\Reinforced.Typings.settings.xml" Condition="Exists('$(ProjectDir)\Reinforced.Typings.settings.xml')" />
-	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false'">	
+	
+	<Target Name="ConditionallyDisableTypeScriptCompilation" Condition="'$(RtBypassTypeScriptcompilation)' == 'true'">
+		<Warning File="Reinforced.Typings.settings.xml" Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"/>
+		<RemoveTypeScriptStep Original="$(CompileDependsOn)">
+			<Output PropertyName="CompileDependsOn" TaskParameter="Fixed"/>
+		</RemoveTypeScriptStep>
+		<RemoveTypeScriptStep Original="$(PublishPipelineCollectFilesCore)">
+			<Output PropertyName="PublishPipelineCollectFilesCore" TaskParameter="Fixed"/>
+		</RemoveTypeScriptStep>
+		<RemoveTypeScriptStep Original="$(BuiltProjectOutputGroupDependsOn)">
+			<Output PropertyName="BuiltProjectOutputGroupDependsOn" TaskParameter="Fixed"/>
+		</RemoveTypeScriptStep>		
+	</Target>
+	<Target Name="ConditionallyShowDisabledWarning" Condition="'$(RtDisable)' != 'false'">
+		<Warning File="Reinforced.Typings.settings.xml" Text="Reinforced.Typings will not run because it is disabled in its configuration"/>
+	</Target>
+	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">			
 		<RtCli 
 			RtCliPath="$(RtToolPath)"
 			SourceAssembly="@(IntermediateAssembly)"
