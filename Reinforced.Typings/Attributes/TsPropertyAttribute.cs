@@ -6,22 +6,8 @@ namespace Reinforced.Typings.Attributes
     /// Overrides property/field export settings
     /// </summary>
     [AttributeUsage(AttributeTargets.Property|AttributeTargets.Field)]
-    public class TsPropertyAttribute : TsAttributeBase
+    public class TsPropertyAttribute : TsTypedMemberAttributeBase
     {
-        /// <summary>
-        /// Overrides property/field type
-        /// </summary>
-        public virtual string Type { get; set; }
-
-        /// <summary>
-        /// Overrides property/field type with managed type
-        /// </summary>
-        public virtual Type StrongType { get; set; }
-
-        /// <summary>
-        /// Overrides name
-        /// </summary>
-        public virtual string Name { get; set; }
 
         /// <summary>
         /// Forces property to be a nullable

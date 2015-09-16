@@ -61,6 +61,8 @@
     <Compile Include="Attributes\TsParameterAttribute.cs" />
     <Compile Include="Attributes\TsPropertyAttribute.cs" />
     <Compile Include="Attributes\TsReferenceAttribute.cs" />
+    <Compile Include="Attributes\TsTypedAttributeBase.cs" />
+    <Compile Include="Attributes\TsTypedMemberAttributeBase.cs" />
     <Compile Include="Attributes\TsValueAttribute.cs" />
     <Compile Include="ExportSettings.cs" />
     <Compile Include="FilesOperations.cs" />

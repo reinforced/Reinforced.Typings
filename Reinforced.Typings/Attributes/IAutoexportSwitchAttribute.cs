@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Attributes
         /// Export all fields automatically or not. 
         /// </summary>
         bool AutoExportFields { get; }
-
+       
         /// <summary>
         /// Reference to code geenrator which will be applied to every method
         /// </summary>

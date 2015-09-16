@@ -6,21 +6,8 @@ namespace Reinforced.Typings.Attributes
     /// Overrides function export
     /// </summary>
     [AttributeUsage(AttributeTargets.Property|AttributeTargets.Method)]
-    public class TsFunctionAttribute : TsAttributeBase
+    public class TsFunctionAttribute : TsTypedMemberAttributeBase
     {
-        /// <summary>
-        /// Overrides function return type
-        /// </summary>
-        public virtual string Type { get; set; }
-
-        /// <summary>
-        /// Overrides function return type with managed type
-        /// </summary>
-        public virtual Type StrongType { get; set; }
-
-        /// <summary>
-        /// Overrides name
-        /// </summary>
-        public virtual string Name { get; set; }
+        
     }
 }

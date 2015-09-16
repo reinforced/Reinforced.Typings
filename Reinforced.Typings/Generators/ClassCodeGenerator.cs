@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
@@ -81,7 +82,7 @@ namespace Reinforced.Typings.Generators
             IAutoexportSwitchAttribute swtch)
         {
             var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
-            Func<MemberInfo, bool> predicate = c => c.GetCustomAttribute<TsIgnoreAttribute>() == null;
+            Func<MemberInfo, bool> predicate = c => c.GetCustomAttribute<TsIgnoreAttribute>() == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
 
             var fields = element.GetFields(flags).Where(predicate).OfType<FieldInfo>();
             if (!swtch.AutoExportFields)

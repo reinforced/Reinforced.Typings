@@ -222,5 +222,75 @@ namespace Reinforced.Typings
             if (!string.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
             return t.Namespace;
         }
+
+        /// <summary>
+        /// Returns access modifier for specified field
+        /// </summary>
+        /// <param name="fieldInfo">Field</param>
+        /// <returns>Access modifier string</returns>
+        public static string GetModifier(this FieldInfo fieldInfo)
+        {
+            if (fieldInfo.IsPrivate) return "private";
+            if (fieldInfo.IsFamily) return "protected";
+            if (fieldInfo.IsPublic) return "public";
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Returns access modifier for specified method
+        /// </summary>
+        /// <param name="methodInfo">Method</param>
+        /// <returns>Access modifier string</returns>
+        public static string GetModifier(this MethodInfo methodInfo)
+        {
+            if (methodInfo.IsPrivate) return "private";
+            if (methodInfo.IsFamily) return "protected";
+            if (methodInfo.IsPublic) return "public";
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Returns access modifier for specified constructor
+        /// </summary>
+        /// <param name="constructorInfo">Constructor</param>
+        /// <returns>Access modifier string</returns>
+        public static string GetModifier(this ConstructorInfo constructorInfo)
+        {
+            if (constructorInfo.IsPrivate) return "private";
+            if (constructorInfo.IsFamily) return "protected";
+            if (constructorInfo.IsPublic) return "public";
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Returns access modifier for specified constructor
+        /// </summary>
+        /// <param name="propertyInfo">Property</param>
+        /// <returns>Access modifier string</returns>
+        public static string GetModifier(this PropertyInfo propertyInfo)
+        {
+            var getAccessor = GetModifier(propertyInfo.GetMethod);
+            var setAccessor = GetModifier(propertyInfo.SetMethod);
+            if (getAccessor == setAccessor) return getAccessor;
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Determines if propercy is "bounced". 
+        /// It means property with different accesor's access level
+        /// </summary>
+        /// <param name="propertyInfo">Property</param>
+        /// <returns>True if property has different access levels for accessor</returns>
+        public static bool IsBounceProperty(this PropertyInfo propertyInfo)
+        {
+            var g = propertyInfo.GetMethod;
+            var s = propertyInfo.SetMethod;
+            if ((g == null) || (s == null)) return true;
+            return
+                g.IsPublic != s.IsPublic
+                || g.IsFamily != s.IsFamily
+                || g.IsPrivate != s.IsPrivate;
+
+        }
     }
 }

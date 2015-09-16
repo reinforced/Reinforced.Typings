@@ -6,18 +6,8 @@ namespace Reinforced.Typings.Attributes
     /// Denotes type for generic attribute
     /// </summary>
     [AttributeUsage(AttributeTargets.GenericParameter)]
-    public class TsGenericAttribute : TsAttributeBase
+    public class TsGenericAttribute : TsTypedAttributeBase
     {
-        /// <summary>
-        /// Overrides type name
-        /// </summary>
-        public virtual string Type { get; set; }
-
-        /// <summary>
-        /// Overrides type
-        /// </summary>
-        public virtual Type StrongType { get; set; }
-
         /// <summary>
         /// Constructs new instance of TsGenericAttribute
         /// </summary>

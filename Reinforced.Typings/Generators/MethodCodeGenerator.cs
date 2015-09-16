@@ -156,7 +156,7 @@ namespace Reinforced.Typings.Generators
 
             GetFunctionNameAndReturnType(element, resolver, out name, out type);
             WriteFunctionName(element.IsStatic, name, sw, isInterfaceMethod);
-
+            
             WriteMethodParameters(element, resolver, sw);
 
             WriteRestOfDeclaration(type, sw);
