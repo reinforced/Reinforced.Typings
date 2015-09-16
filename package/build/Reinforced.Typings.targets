@@ -6,6 +6,7 @@
 		<RtToolPath>$(MSBuildThisFileDirectory)rtcli.exe</RtToolPath>
 		<BuildDependsOn>
 			ConditionallyDisableTypeScriptCompilation;
+			ConditionallyShowDisabledWarning;
 			$(BuildDependsOn);
 		</BuildDependsOn>
 	</PropertyGroup>
