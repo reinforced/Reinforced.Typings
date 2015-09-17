@@ -72,6 +72,26 @@ namespace Reinforced.Typings.Integrate
         /// ProjectDir variable
         /// </summary>
         public string ProjectRoot { get; set; }
+
+        /// <summary>
+        /// Use camelCase for methods naming
+        /// </summary>
+        public bool CamelCaseForMethods { get; set; }
+
+        /// <summary>
+        /// Use camelCase for properties naming
+        /// </summary>
+        public bool CamelCaseForProperties { get; set; }
+
+        /// <summary>
+        /// Path to documentation XML
+        /// </summary>
+        public string DocumentationFilePath { get; set; }
+
+        /// <summary>
+        /// Documentation generator switch
+        /// </summary>
+        public bool GenerateDocumentation { get; set; }
         
         protected override string GenerateFullPathToTool()
         {
@@ -94,7 +114,11 @@ namespace Reinforced.Typings.Integrate
                 TargetFile = FixTargetPath(TargetFile),
                 References = ExtractReferences(),
                 SourceAssemblies = ExtractSourceAssemblies(),
-                RootNamespace = RootNamespace
+                RootNamespace = RootNamespace,
+                CamelCaseForProperties = CamelCaseForProperties,
+                CamelCaseForMethods = CamelCaseForMethods,
+                DocumentationFilePath = DocumentationFilePath,
+                GenerateDocumentation = GenerateDocumentation
             };
 
             return consoleParams.ExportConsoleParameters();

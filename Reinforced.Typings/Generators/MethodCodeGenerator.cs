@@ -36,6 +36,7 @@ namespace Reinforced.Typings.Generators
         {
             name = element.Name;
             var fa = element.GetCustomAttribute<TsFunctionAttribute>();
+
             if (fa != null)
             {
                 if (!string.IsNullOrEmpty(fa.Name)) name = fa.Name;
@@ -48,6 +49,7 @@ namespace Reinforced.Typings.Generators
             {
                 type = resolver.ResolveTypeName(element.ReturnType);
             }
+            name = Settings.ConditionallyConvertMethodNameToCamelCase(name);
 
         }
 
@@ -65,7 +67,7 @@ namespace Reinforced.Typings.Generators
             {
                 var param = p[index];
                 if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param,Settings);
+                var generator = resolver.GeneratorFor(param, Settings);
                 generator.Generate(param, resolver, sw);
                 if (index != p.Length - 1 && !p[index + 1].IsIgnored())
                 {
@@ -81,7 +83,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="content">Content for non-void body</param>
-        protected virtual void GenerateBody(string returnType, TypeResolver resolver, WriterWrapper sw,string content="return null;")
+        protected virtual void GenerateBody(string returnType, TypeResolver resolver, WriterWrapper sw, string content = "return null;")
         {
             if (Settings.ExportPureTypings) //Ambient class declarations cannot have a body
             {
@@ -90,12 +92,12 @@ namespace Reinforced.Typings.Generators
             }
             else
             {
-                if (returnType!="void")
+                if (returnType != "void")
                 {
                     sw.WriteLine();
                     sw.WriteIndented(@"{{ 
     {0}
-}}",content);
+}}", content);
                 }
                 else
                 {
@@ -109,16 +111,17 @@ namespace Reinforced.Typings.Generators
         /// Writes method name, accessor and opening brace to output writer
         /// </summary>
         /// <param name="isStatic">Is method static or not</param>
+        /// <param name="accessModifier">Access modifier for method</param>
         /// <param name="name">Method name</param>
         /// <param name="sw">Output writer</param>
         /// <param name="isInterfaceDecl">Is this method interface declaration or not (access modifiers prohibited on interface declaration methods)</param>
-        protected void WriteFunctionName(bool isStatic, string name, WriterWrapper sw, bool isInterfaceDecl = false)
+        protected void WriteFunctionName(bool isStatic, AccessModifier accessModifier, string name, WriterWrapper sw, bool isInterfaceDecl = false)
         {
-            sw.Tab();
+         
             sw.Indent();
             if (!isInterfaceDecl)
             {
-                sw.Write("public ");
+                sw.Write("{0} ", accessModifier.ToModifierText());
                 if (isStatic) sw.Write("static ");
             }
 
@@ -155,10 +158,13 @@ namespace Reinforced.Typings.Generators
             string name, type;
 
             GetFunctionNameAndReturnType(element, resolver, out name, out type);
-            WriteFunctionName(element.IsStatic, name, sw, isInterfaceMethod);
-            
-            WriteMethodParameters(element, resolver, sw);
 
+            Settings.Documentation.WriteDocumentation(element,sw);
+
+            sw.Tab();
+
+            WriteFunctionName(element.IsStatic, element.GetModifier(), name, sw, isInterfaceMethod);
+            WriteMethodParameters(element, resolver, sw);
             WriteRestOfDeclaration(type, sw);
 
             if (isInterfaceMethod) { sw.Write(";"); sw.WriteLine(); }

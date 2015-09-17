@@ -19,7 +19,9 @@ namespace Reinforced.Typings.Generators
             var name = element.GetName();
             var fmt = Settings.GetDeclarationFormat(element);
 
-            sw.WriteLine(String.Format(fmt,"enum {0} {{ "), name);
+            Settings.Documentation.WriteDocumentation(element, sw);
+
+            sw.WriteLine(String.Format(fmt, "enum {0} {{ "), name);
             sw.Tab();
             for (int index = 0; index < values.Length; index++)
             {

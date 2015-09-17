@@ -103,6 +103,24 @@ Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
         public bool CamelCaseForProperties { get; set; }
 
         /// <summary>
+        /// Full path to assembly's XMLDOC file.
+        /// If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
+        /// </summary>
+        [ConsoleHelp(@"Full path to assembly's XMLDOC file.
+If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
+Example:   rtcli.exe DocumentationFilePath=""C:\MyAssembly\Assembly.XML"" ")]
+        public string DocumentationFilePath { get; set; }
+
+        /// <summary>
+        /// Disables or enables documentation generation regardless valid DocumentationFilePath file. True by default.
+        /// </summary>
+        [ConsoleHelp(@"Disables or enables documentation generation regardless valid DocumentationFilePath file
+False to disable documentation generation. True to enable.
+True by default.
+Example:   rtcli.exe GenerateDocumentation=""false"" ")]
+        public bool GenerateDocumentation { get; set; }
+
+        /// <summary>
         /// Validates input parameters
         /// </summary>
         public void Validate()

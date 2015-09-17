@@ -228,12 +228,11 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="fieldInfo">Field</param>
         /// <returns>Access modifier string</returns>
-        public static string GetModifier(this FieldInfo fieldInfo)
+        public static AccessModifier GetModifier(this FieldInfo fieldInfo)
         {
-            if (fieldInfo.IsPrivate) return "private";
-            if (fieldInfo.IsFamily) return "protected";
-            if (fieldInfo.IsPublic) return "public";
-            return String.Empty;
+            if (fieldInfo.IsPrivate) return AccessModifier.Private;
+            if (fieldInfo.IsFamily) return AccessModifier.Protected;
+            return AccessModifier.Public;
         }
 
         /// <summary>
@@ -241,12 +240,11 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="methodInfo">Method</param>
         /// <returns>Access modifier string</returns>
-        public static string GetModifier(this MethodInfo methodInfo)
+        public static AccessModifier GetModifier(this MethodInfo methodInfo)
         {
-            if (methodInfo.IsPrivate) return "private";
-            if (methodInfo.IsFamily) return "protected";
-            if (methodInfo.IsPublic) return "public";
-            return String.Empty;
+            if (methodInfo.IsPrivate) return AccessModifier.Private;
+            if (methodInfo.IsFamily) return AccessModifier.Protected;
+            return AccessModifier.Public;
         }
 
         /// <summary>
@@ -254,12 +252,11 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="constructorInfo">Constructor</param>
         /// <returns>Access modifier string</returns>
-        public static string GetModifier(this ConstructorInfo constructorInfo)
+        public static AccessModifier GetModifier(this ConstructorInfo constructorInfo)
         {
-            if (constructorInfo.IsPrivate) return "private";
-            if (constructorInfo.IsFamily) return "protected";
-            if (constructorInfo.IsPublic) return "public";
-            return String.Empty;
+            if (constructorInfo.IsPrivate) return AccessModifier.Private;
+            if (constructorInfo.IsFamily) return AccessModifier.Protected;
+            return AccessModifier.Public;
         }
 
         /// <summary>
@@ -267,12 +264,12 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="propertyInfo">Property</param>
         /// <returns>Access modifier string</returns>
-        public static string GetModifier(this PropertyInfo propertyInfo)
+        public static AccessModifier GetModifier(this PropertyInfo propertyInfo)
         {
             var getAccessor = GetModifier(propertyInfo.GetMethod);
             var setAccessor = GetModifier(propertyInfo.SetMethod);
-            if (getAccessor == setAccessor) return getAccessor;
-            return String.Empty;
+
+            return getAccessor > setAccessor ? getAccessor : setAccessor;
         }
 
         /// <summary>
@@ -291,6 +288,49 @@ namespace Reinforced.Typings
                 || g.IsFamily != s.IsFamily
                 || g.IsPrivate != s.IsPrivate;
 
+        }
+
+        internal static MethodBase GetMethodWithSameParameters(MethodBase[] methodsSet, Type[] parameters)
+        {
+            MethodBase result = null;
+            foreach (var method in methodsSet)
+            {
+                var methodParams = method.GetParameters();
+                if (methodParams.Length != parameters.Length) continue;
+
+                bool parametersMatch = true;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i] != methodParams[i].ParameterType)
+                    {
+                        parametersMatch = false;
+                        break;
+                    }
+                }
+                if (parametersMatch)
+                {
+                    result = method;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Converts AccessModifier to corresponding TypeScript source text
+        /// </summary>
+        /// <param name="modifier">Access modifier</param>
+        /// <returns>Access modifier text</returns>
+        public static string ToModifierText(this AccessModifier modifier)
+        {
+            switch (modifier)
+            {
+                case AccessModifier.Private:
+                    return "private";
+                case AccessModifier.Protected:
+                    return "protected";
+            }
+            return "public";
         }
     }
 }

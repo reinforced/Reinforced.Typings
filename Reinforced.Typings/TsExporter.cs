@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
 {
@@ -51,6 +52,7 @@ namespace Reinforced.Typings
                     .ForEach(a => _referenceBuilder.AppendLine(a));
 
             _settings.References = _referenceBuilder.ToString();
+            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null);
 
             _isAnalyzed = true;
         }
@@ -84,11 +86,11 @@ namespace Reinforced.Typings
         {
             tw.WriteLine(_referenceBuilder.ToString());
             var n = type.GetNamespace();
-            tw.WriteLine(_fileOps.GenerateInspectedReferences(type, _allTypesHash,n));
+            tw.WriteLine(_fileOps.GenerateInspectedReferences(type, _allTypesHash, n));
 
             WriterWrapper sw = new WriterWrapper(tw);
             var gen = resolver.GeneratorForNamespace(_settings);
-            
+
             gen.WriteNamespaceBegin(n, sw);
             var converter = resolver.GeneratorFor(type, _settings);
             converter.Generate(type, resolver, sw);

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
 {
@@ -17,6 +18,8 @@ namespace Reinforced.Typings
         private string _rootNamespace;
         private bool _camelCaseForMethods;
         private bool _camelCaseForProperties;
+        private string _documentationFilePath;
+        private bool _generateDocumentation;
 
         /// <summary>
         /// The assemblies to extract typings from. 
@@ -144,6 +147,32 @@ namespace Reinforced.Typings
             }
         }
 
+        /// <summary>
+        /// Path to assembly's XMLDOC file
+        /// </summary>
+        public string DocumentationFilePath
+        {
+            get { return _documentationFilePath; }
+            set
+            {
+                if (_isLocked) return;
+                _documentationFilePath = value;
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables documentation generator
+        /// </summary>
+        public bool GenerateDocumentation
+        {
+            get { return _generateDocumentation; }
+            set
+            {
+                if (_isLocked) return;
+                _generateDocumentation = value;
+            }
+        }
+
         internal string References { get; set; }
 
 
@@ -157,5 +186,7 @@ namespace Reinforced.Typings
         {
             _isLocked = false;
         }
+
+        internal DocumentationManager Documentation { get; set; }
     }
 }

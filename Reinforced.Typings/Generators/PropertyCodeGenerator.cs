@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Generators
     /// Default code generator for properties
     /// </summary>
     public class PropertyCodeGenerator : ITsCodeGenerator<MemberInfo>
-    {    
+    {
         /// <summary>
         /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
@@ -43,9 +43,15 @@ namespace Reinforced.Typings.Generators
                 propName = propName + "?";
             }
 
+            if (element is PropertyInfo)
+            {
+                propName = Settings.ConditionallyConvertPropertyNameToCamelCase(propName);
+            }
+
             sw.Tab();
             sw.Indent();
-            sw.Write("{0}: {1};",propName,typeName);
+            Settings.Documentation.WriteDocumentation(element, sw);
+            sw.Write("{0}: {1};", propName, typeName);
             sw.WriteLine();
             sw.UnTab();
         }
@@ -62,7 +68,7 @@ namespace Reinforced.Typings.Generators
         /// <returns>Property info type</returns>
         protected virtual Type GetType(MemberInfo mi)
         {
-            PropertyInfo pi = (PropertyInfo) mi;
+            PropertyInfo pi = (PropertyInfo)mi;
             return pi.PropertyType;
         }
     }

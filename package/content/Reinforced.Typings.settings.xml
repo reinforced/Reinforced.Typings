@@ -75,6 +75,23 @@
 			disable typescripts build.
 		-->
 		<RtBypassTypeScriptCompilation>false</RtBypassTypeScriptCompilation>
+		
+		<!--
+			When true, forces Reinforced.Typings to generate METHODS names in "camelCase" instead of 
+			.NET-common "PascalCase"
+		-->
+		<RtCamelCaseForMethods>false</RtCamelCaseForMethods>
+		
+		<!--
+			When true, forces Reinforced.Typings to generate PROPERTIES names in "camelCase" instead of 
+			.NET-common "PascalCase"
+		-->
+		<RtCamelCaseForProperties>false</RtCamelCaseForProperties>
+		
+		<!--
+			This settings conditionally disables jsdoc generation from .NET XMLDOC
+		-->
+		<RtGenerateDocumentation>true</RtGenerateDocumentation>
 	</PropertyGroup>
 	
 	<!--

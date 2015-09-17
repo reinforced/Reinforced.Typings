@@ -23,7 +23,7 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return;
             var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface();
-            WriteFunctionName(false, "constructor", sw, isInterfaceMethod);
+            WriteFunctionName(false, element.GetModifier(), "constructor", sw, isInterfaceMethod);
             WriteMethodParameters(element, resolver, sw);
             WriteRestOfDeclaration(String.Empty, sw);
             WriteConstructorBody(element, resolver, sw);
@@ -63,27 +63,9 @@ namespace Reinforced.Typings.Generators
 
             // 4. Trying to lookup constructor with same parameters
             bool found = false;
-            var parameters = element.GetParameters();
-            foreach (var baseConstructor in baseConstructors)
-            {
-                var baseCtorParams = baseConstructor.GetParameters();
-                if (baseCtorParams.Length!=parameters.Length) continue;
-
-                bool parametersMatch = true;
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    if (parameters[i].ParameterType != baseCtorParams[i].ParameterType)
-                    {
-                        parametersMatch = false;
-                        break;
-                    }
-                }
-                if (parametersMatch)
-                {
-                    found = true;
-                    break;
-                }
-            }
+            var parameters = element.GetParameters().Select(c=>c.ParameterType).ToArray();
+            var corresponding = TypeExtensions.GetMethodWithSameParameters(baseConstructors.Cast<MethodBase>().ToArray(), parameters);
+            found = corresponding != null;
 
             if (found)
             {

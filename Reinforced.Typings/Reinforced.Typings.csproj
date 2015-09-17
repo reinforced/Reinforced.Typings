@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessModifier.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeReference.cs" />
     <Compile Include="Attributes\TsAttributeBase.cs" />
@@ -64,6 +65,11 @@
     <Compile Include="Attributes\TsTypedAttributeBase.cs" />
     <Compile Include="Attributes\TsTypedMemberAttributeBase.cs" />
     <Compile Include="Attributes\TsValueAttribute.cs" />
+    <Compile Include="Xmldoc\DocumentationManager.cs" />
+    <Compile Include="Xmldoc\Model\DocumentationMemberType.cs" />
+    <Compile Include="Xmldoc\Model\DocumentationMemberExtensions.cs" />
+    <Compile Include="Xmldoc\Model\Model.cs" />
+    <Compile Include="Xmldoc\Model\XmlIgnoreInner.cs" />
     <Compile Include="ExportSettings.cs" />
     <Compile Include="FilesOperations.cs" />
     <Compile Include="Generators\ClassCodeGenerator.cs" />

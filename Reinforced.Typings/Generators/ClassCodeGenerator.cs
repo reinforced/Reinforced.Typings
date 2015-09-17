@@ -34,20 +34,22 @@ namespace Reinforced.Typings.Generators
         /// Exports entire class to specified writer
         /// </summary>
         /// <param name="declType">Declaration type. Used in "export $gt;class&lt; ... " line. This parameter allows switch it to "interface"</param>
-        /// <param name="element">Exporting class type</param>
+        /// <param name="type">Exporting class type</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
-        protected virtual void Export(string declType, Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        protected virtual void Export(string declType, Type type, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
         {
-            string name = element.GetName();
+            string name = type.GetName();
 
-            sw.Indent();
-            sw.Write(Settings.GetDeclarationFormat(element), declType);
+            Settings.Documentation.WriteDocumentation(type, sw);
+
+            sw.Tab();
+            sw.Write(Settings.GetDeclarationFormat(type), declType);
             sw.Write(name);
 
-            var ifaces = element.GetInterfaces();
-            var bs = element.BaseType;
+            var ifaces = type.GetInterfaces();
+            var bs = type.BaseType;
             if (bs != null && bs != typeof(object))
             {
                 if (bs.GetCustomAttribute<TsAttributeBase>() != null)
@@ -64,12 +66,9 @@ namespace Reinforced.Typings.Generators
 
             sw.Write(" {{");
             sw.WriteLine();
-            ExportMembers(element, resolver, sw, swtch);
-            //sw.UnTab();
+            ExportMembers(type, resolver, sw, swtch);
             sw.WriteLine("}");
         }
-
-        
 
         /// <summary>
         /// Exports all type members sequentially
