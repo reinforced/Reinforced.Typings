@@ -45,43 +45,45 @@ namespace Reinforced.Typings.Generators
                 GenerateBody("void", resolver, sw);
                 return;
             }
-
-            // 2. Check base constructors
-            var baseConstructors = bt.GetConstructors(BindingFlags.DeclaredOnly);
-            if (baseConstructors.Length == 0)
-            {
-                // 2. If not present then generate empty super() call
-                GenerateBody("somethingnonvoid", resolver, sw, "super();");
-                return;
-            }
-
-            // 3. Check presence of [TsBaseParam]
+            var parameters = element.GetParameters();
+            // 2. Check presence of [TsBaseParam]
             var attr = element.GetCustomAttribute<TsBaseParamAttribute>(false);
             if (attr != null)
             {
-                // 3. If present then generate super() call with supplied parameters
-                var ctorParams = string.Concat(", ", attr.Values);
+                // 2. If present then generate super() call with supplied parameters
+                var ctorParams = string.Join(", ", attr.Values.Take(parameters.Length));
                 GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", ctorParams));
+                return;
+            }
+
+            // 3. Check base constructors
+            var baseConstructors = bt.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
+            BindingFlags.DeclaredOnly);
+            if (baseConstructors.Length == 0)
+            {
+                // 3. If not present then generate empty super() call
+                GenerateBody("somethingnonvoid", resolver, sw, "super();");
                 return;
             }
 
             // 4. Trying to lookup constructor with same parameters
             bool found = false;
-            var parameters = element.GetParameters().Select(c => c.ParameterType).ToArray();
-            var corresponding = TypeExtensions.GetMethodWithSameParameters(baseConstructors.Cast<MethodBase>().ToArray(), parameters);
+            
+            var paramTypes = parameters.Select(c => c.ParameterType).ToArray();
+            var corresponding = TypeExtensions.GetMethodWithSameParameters(baseConstructors.Cast<MethodBase>().ToArray(), paramTypes);
             found = corresponding != null;
 
             if (found)
             {
                 // 4.If constructor with same parameters found - just use it
-                var ctorParams = string.Concat(", ", parameters.Select(c => c.GetName()));
+                var ctorParams = string.Join(", ", parameters.Select(c => c.GetName()));
                 GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", ctorParams));
                 return;
             }
 
             // 5. If nothing found - well... we simply leave here super with all nulls supplied
 
-            var mockedCtorParams = string.Concat(", ", Enumerable.Repeat("null", parameters.Length));
+            var mockedCtorParams = string.Join(", ", Enumerable.Repeat("null", parameters.Length));
             GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", mockedCtorParams));
         }
     }
