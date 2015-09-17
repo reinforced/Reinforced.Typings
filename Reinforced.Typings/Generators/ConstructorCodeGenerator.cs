@@ -23,11 +23,13 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return;
             var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface();
+            sw.Tab();
+            Settings.Documentation.WriteDocumentation(element, sw);
+            sw.Indent();
             WriteFunctionName(false, element.GetModifier(), "constructor", sw, isInterfaceMethod);
             WriteMethodParameters(element, resolver, sw);
             WriteRestOfDeclaration(String.Empty, sw);
             WriteConstructorBody(element, resolver, sw);
-            GenerateBody("void", resolver, sw);
             sw.UnTab();
         }
 
@@ -35,6 +37,8 @@ namespace Reinforced.Typings.Generators
         {
             // 1. Check presence of base type 
             var bt = element.DeclaringType != null ? element.DeclaringType.BaseType : null;
+            if (bt == typeof(object) || bt.IsExportingAsInterface()) bt = null;
+
             if (bt == null)
             {
                 // 1. If not present then generate empty constructor body
@@ -52,7 +56,7 @@ namespace Reinforced.Typings.Generators
             }
 
             // 3. Check presence of [TsBaseParam]
-            var attr = element.GetCustomAttribute<TsBaseParamAttribute>();
+            var attr = element.GetCustomAttribute<TsBaseParamAttribute>(false);
             if (attr != null)
             {
                 // 3. If present then generate super() call with supplied parameters
@@ -63,21 +67,21 @@ namespace Reinforced.Typings.Generators
 
             // 4. Trying to lookup constructor with same parameters
             bool found = false;
-            var parameters = element.GetParameters().Select(c=>c.ParameterType).ToArray();
+            var parameters = element.GetParameters().Select(c => c.ParameterType).ToArray();
             var corresponding = TypeExtensions.GetMethodWithSameParameters(baseConstructors.Cast<MethodBase>().ToArray(), parameters);
             found = corresponding != null;
 
             if (found)
             {
                 // 4.If constructor with same parameters found - just use it
-                var ctorParams = string.Concat(", ", parameters.Select(c=>c.GetName()));
+                var ctorParams = string.Concat(", ", parameters.Select(c => c.GetName()));
                 GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", ctorParams));
                 return;
             }
 
             // 5. If nothing found - well... we simply leave here super with all nulls supplied
 
-            var mockedCtorParams = string.Concat(", ", Enumerable.Repeat("null",parameters.Length));
+            var mockedCtorParams = string.Concat(", ", Enumerable.Repeat("null", parameters.Length));
             GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", mockedCtorParams));
         }
     }

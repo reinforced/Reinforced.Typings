@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Reinforced.Typings.Generators
 {
@@ -60,6 +61,17 @@ namespace Reinforced.Typings.Generators
                 return char.ToLower(s[0]) + s.Substring(1);
             }
             return s;
+        }
+
+        /// <summary>
+        /// Retrieves type from source assemblies by name
+        /// </summary>
+        /// <param name="settings">Settings</param>
+        /// <param name="typeName">Type name</param>
+        /// <returns>Type (or null)</returns>
+        public static Type GetSourceAssemblyType(this ExportSettings settings, string typeName)
+        {
+            return settings.SourceAssemblies.Select(sourceAssembly => sourceAssembly.GetType(typeName, false)).FirstOrDefault(t => t != null);
         }
     }
 }

@@ -35,24 +35,24 @@ namespace Reinforced.Typings
         internal static HashSet<Type> InspectReferences(Type element, HashSet<Type> alltypes)
         {
             HashSet<Type> references = new HashSet<Type>();
-            IAutoexportSwitchAttribute swtch = element.GetCustomAttribute<TsClassAttribute>() ??
-                                               (IAutoexportSwitchAttribute)element.GetCustomAttribute<TsInterfaceAttribute>();
+            IAutoexportSwitchAttribute swtch = element.GetCustomAttribute<TsClassAttribute>(false) ??
+                                               (IAutoexportSwitchAttribute)element.GetCustomAttribute<TsInterfaceAttribute>(false);
 
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
-            Func<MemberInfo, bool> predicate = c => c.GetCustomAttribute<TsIgnoreAttribute>() == null;
+            Func<MemberInfo, bool> predicate = c => c.GetCustomAttribute<TsIgnoreAttribute>(false) == null;
 
             var fields = element.GetFields(flags).Where(predicate).OfType<FieldInfo>();
-            if (!swtch.AutoExportFields) fields = fields.Where(c => c.GetCustomAttribute<TsPropertyAttribute>() != null);
+            if (!swtch.AutoExportFields) fields = fields.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
 
             foreach (var fi in fields) InspectArgumentReferences(fi.FieldType, alltypes, references);
 
             var properties = element.GetProperties(flags).Where(predicate).OfType<PropertyInfo>();
-            if (!swtch.AutoExportProperties) properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>() != null);
+            if (!swtch.AutoExportProperties) properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
 
             foreach (var pi in properties) InspectArgumentReferences(pi.PropertyType, alltypes, references);
 
             var methods = element.GetMethods(flags).Where(c => predicate(c) && !c.IsSpecialName);
-            if (!swtch.AutoExportMethods) methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>() != null);
+            if (!swtch.AutoExportMethods) methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>(false) != null);
 
             foreach (var mi in methods)
             {

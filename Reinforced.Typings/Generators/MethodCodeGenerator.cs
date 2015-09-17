@@ -17,7 +17,7 @@ namespace Reinforced.Typings.Generators
         protected virtual Type GetReturnFunctionType(MethodInfo element)
         {
             Type t = element.ReturnType;
-            var fa = element.GetCustomAttribute<TsFunctionAttribute>();
+            var fa = element.GetCustomAttribute<TsFunctionAttribute>(false);
             if (fa != null)
             {
                 if (fa.StrongType != null) t = fa.StrongType;
@@ -35,7 +35,7 @@ namespace Reinforced.Typings.Generators
         protected virtual void GetFunctionNameAndReturnType(MethodInfo element, TypeResolver resolver, out string name, out string type)
         {
             name = element.Name;
-            var fa = element.GetCustomAttribute<TsFunctionAttribute>();
+            var fa = element.GetCustomAttribute<TsFunctionAttribute>(false);
 
             if (fa != null)
             {
@@ -88,7 +88,7 @@ namespace Reinforced.Typings.Generators
             if (Settings.ExportPureTypings) //Ambient class declarations cannot have a body
             {
                 sw.Write(";");
-                sw.WriteLine();
+                sw.Br();
             }
             else
             {
@@ -101,8 +101,8 @@ namespace Reinforced.Typings.Generators
                 }
                 else
                 {
-                    sw.Write("{{ }}");
-                    sw.WriteLine();
+                    sw.Write(" {{ }}");
+                    sw.Br();
                 }
             }
         }
@@ -118,7 +118,6 @@ namespace Reinforced.Typings.Generators
         protected void WriteFunctionName(bool isStatic, AccessModifier accessModifier, string name, WriterWrapper sw, bool isInterfaceDecl = false)
         {
          
-            sw.Indent();
             if (!isInterfaceDecl)
             {
                 sw.Write("{0} ", accessModifier.ToModifierText());
@@ -141,7 +140,7 @@ namespace Reinforced.Typings.Generators
             }
             else
             {
-                sw.Write(") : {0}", type);
+                sw.Write("): {0}", type);
             }
         }
         /// <summary>
@@ -159,15 +158,14 @@ namespace Reinforced.Typings.Generators
 
             GetFunctionNameAndReturnType(element, resolver, out name, out type);
 
-            Settings.Documentation.WriteDocumentation(element,sw);
-
             sw.Tab();
-
+            Settings.Documentation.WriteDocumentation(element, sw);
+            sw.Indent();
             WriteFunctionName(element.IsStatic, element.GetModifier(), name, sw, isInterfaceMethod);
             WriteMethodParameters(element, resolver, sw);
             WriteRestOfDeclaration(type, sw);
 
-            if (isInterfaceMethod) { sw.Write(";"); sw.WriteLine(); }
+            if (isInterfaceMethod) { sw.Write(";"); sw.Br(); }
             else GenerateBody(type, resolver, sw);
             sw.UnTab();
         }

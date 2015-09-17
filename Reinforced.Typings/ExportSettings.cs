@@ -187,6 +187,11 @@ namespace Reinforced.Typings
             _isLocked = false;
         }
 
-        internal DocumentationManager Documentation { get; set; }
+        /// <summary>
+        /// Documentation manager
+        /// </summary>
+        public DocumentationManager Documentation { get; internal set; }
+
+        internal string CurrentNamespace { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="sw">Output writer</param>
         public override void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
-            var tc = element.GetCustomAttribute<TsInterfaceAttribute>();
+            var tc = element.GetCustomAttribute<TsInterfaceAttribute>(false);
             if (tc == null) throw new ArgumentException("TsInterfaceAttribute is not present", "element");
             Export("interface", element, resolver, sw, tc);
         }

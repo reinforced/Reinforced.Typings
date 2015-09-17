@@ -20,6 +20,7 @@ namespace Reinforced.Typings
         private readonly ITsCodeGenerator<Type> _defaultEnumGenerator;
         private readonly NamespaceCodeGenerator _defaultNsgenerator;
 
+        private readonly ExportSettings _settings;
         private readonly Dictionary<Type, object> _generatorsCache = new Dictionary<Type, object>();
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace Reinforced.Typings
         /// </summary>
         public TypeResolver(ExportSettings settings)
         {
-            _defaultGenerators[MemberTypes.Property] = new PropertyCodeGenerator{Settings = settings};
+            _defaultGenerators[MemberTypes.Property] = new PropertyCodeGenerator { Settings = settings };
             _defaultGenerators[MemberTypes.Field] = new FieldCodeGenerator { Settings = settings };
             _defaultGenerators[MemberTypes.Method] = new MethodCodeGenerator { Settings = settings };
             _defaultGenerators[MemberTypes.Constructor] = new ConstructorCodeGenerator { Settings = settings };
@@ -36,7 +37,7 @@ namespace Reinforced.Typings
             _defaultInterfaceGenerator = new InterfaceCodeGenerator { Settings = settings };
             _defaultEnumGenerator = new EnumGenerator { Settings = settings };
             _defaultNsgenerator = new NamespaceCodeGenerator { Settings = settings };
-
+            _settings = settings;
         }
 
         /// <summary>
@@ -47,18 +48,18 @@ namespace Reinforced.Typings
         /// <param name="member">Type member info</param>
         /// <param name="settings">Export settings</param>
         /// <returns>Code generator for specified type member</returns>
-        public ITsCodeGenerator<T> GeneratorFor<T>(T member,ExportSettings settings) where T : MemberInfo
+        public ITsCodeGenerator<T> GeneratorFor<T>(T member, ExportSettings settings) where T : MemberInfo
         {
-            var attr = member.GetCustomAttribute<TsAttributeBase>();
-            var fromAttr = GetFromAttribute<T>(attr,settings);
+            var attr = member.GetCustomAttribute<TsAttributeBase>(false);
+            var fromAttr = GetFromAttribute<T>(attr, settings);
             if (fromAttr != null) return fromAttr;
             if (member is MethodInfo)
             {
                 var decType = member.DeclaringType;
-                var classAttr = decType.GetCustomAttribute<TsClassAttribute>();
+                var classAttr = decType.GetCustomAttribute<TsClassAttribute>(false);
                 if (classAttr != null && classAttr.DefaultMethodCodeGenerator != null)
                 {
-                    return LazilyInstantiateGenerator<T>(classAttr.DefaultMethodCodeGenerator,settings);
+                    return LazilyInstantiateGenerator<T>(classAttr.DefaultMethodCodeGenerator, settings);
                 }
             }
             var gen = (ITsCodeGenerator<T>)_defaultGenerators[member.MemberType];
@@ -75,8 +76,8 @@ namespace Reinforced.Typings
         /// <returns>Code generator for parameter info</returns>
         public ITsCodeGenerator<ParameterInfo> GeneratorFor(ParameterInfo member, ExportSettings settings)
         {
-            var attr = member.GetCustomAttribute<TsAttributeBase>();
-            var fromAttr = GetFromAttribute<ParameterInfo>(attr,settings);
+            var attr = member.GetCustomAttribute<TsAttributeBase>(false);
+            var fromAttr = GetFromAttribute<ParameterInfo>(attr, settings);
             if (fromAttr != null) return fromAttr;
             return _defaultParameterGenerator;
         }
@@ -90,8 +91,8 @@ namespace Reinforced.Typings
         /// <returns>Code generator for specified type</returns>
         public ITsCodeGenerator<Type> GeneratorFor(Type member, ExportSettings settings)
         {
-            var attr = member.GetCustomAttribute<TsAttributeBase>();
-            var fromAttr = GetFromAttribute<Type>(attr,settings);
+            var attr = member.GetCustomAttribute<TsAttributeBase>(false);
+            var fromAttr = GetFromAttribute<Type>(attr, settings);
             if (fromAttr != null) return fromAttr;
 
             bool isClass = attr is TsClassAttribute;
@@ -119,7 +120,7 @@ namespace Reinforced.Typings
             if (attr != null)
             {
                 var t = attr.CodeGeneratorType;
-                if (t != null) return LazilyInstantiateGenerator<T>(t,settings);
+                if (t != null) return LazilyInstantiateGenerator<T>(t, settings);
             }
             return null;
         }
@@ -131,13 +132,13 @@ namespace Reinforced.Typings
                 if (!_generatorsCache.ContainsKey(generatorType))
                 {
                     _generatorsCache[generatorType] = Activator.CreateInstance(generatorType);
-                    var gen = (ITsCodeGenerator<T>) _generatorsCache[generatorType];
+                    var gen = (ITsCodeGenerator<T>)_generatorsCache[generatorType];
                     gen.Settings = settings;
                 }
                 return (ITsCodeGenerator<T>)_generatorsCache[generatorType];
             }
         }
-        
+
         private readonly HashSet<Type> _numerics = new HashSet<Type>
         {
             typeof(byte),typeof(sbyte),
@@ -155,74 +156,101 @@ namespace Reinforced.Typings
             return String.Format("<{0}>", string.Join(", ", args.Select(ResolveTypeName)));
         }
 
+        private readonly Dictionary<Type, string> _resolveCache = new Dictionary<Type, string>()
+        {
+            {typeof(object),"any"},
+            {typeof(void),"void"},
+            {typeof(string),"string"},
+            {typeof(char),"string"},
+            {typeof(bool),"boolean"},
+            {typeof(byte),"number"},{typeof(sbyte),"number"},{
+            typeof(short),"number"},{typeof(ushort),"number"},{
+            typeof(int),"number"},{typeof(uint),"number"},{
+            typeof(long),"number"},{typeof(ulong),"number"},{
+            typeof(float),"number"},{typeof(double),"number"},{
+            typeof(decimal),"number"}
+
+        };
+
+        private string Cache(Type t, string name)
+        {
+            _resolveCache[t] = name;
+            return TruncateNamespace(name);
+        }
+
+        private string TruncateNamespace(string typeName)
+        {
+            return typeName.Replace(_settings.CurrentNamespace, String.Empty).Trim('.');
+        }
+
         /// <summary>
         /// Returns typescript-friendly type name for specified type. 
         /// This method successfully handles dictionaries, IEnumerables, arrays, another TsExport-ed types, void, delegates, most of CLR built-in types, parametrized types etc. 
         /// It also considers Ts*-attributes while resolving type names
         /// If it cannot handle anything then it will return "any"
         /// </summary>
-        /// <param name="type">Specified type</param>
+        /// <param name="t">Specified type</param>
         /// <returns>Typescript-friendly type name</returns>
-        public string ResolveTypeName(Type type)
+        public string ResolveTypeName(Type t)
         {
-            if (type == typeof(object)) return "any";
-            if (type == typeof(void)) return "void";
-            if (type == typeof(string) || type == typeof(char)) return "string";
-            if (type.IsPrimitive)
-            {
-                if (type == typeof(bool)) return "boolean";
-                if (_numerics.Contains(type)) return "number";
-            }
-            var td = type.GetCustomAttribute<TsDeclarationAttributeBase>();
+            if (_resolveCache.ContainsKey(t)) return TruncateNamespace(_resolveCache[t]);
+
+            var td = t.GetCustomAttribute<TsDeclarationAttributeBase>(false);
             if (td != null)
             {
-                string ns = type.Namespace;
+                string ns = t.Namespace;
                 if (!td.IncludeNamespace) ns = String.Empty;
                 if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
 
-                string name = type.GetName() + GetConcreteGenericArguments(type);
-                if (string.IsNullOrEmpty(ns)) return name;
-                return string.Format("{0}.{1}", ns, name);
+                string name = t.GetName() + GetConcreteGenericArguments(t);
+                if (string.IsNullOrEmpty(ns)) { return Cache(t, name); }
+
+                return Cache(t, string.Format("{0}.{1}", ns, name));
             }
-            if (type.IsNullable())
+            if (t.IsNullable())
             {
-                return ResolveTypeName(type.GetArg());
+                return ResolveTypeName(t.GetArg());
             }
-            if (type.IsDictionary())
+            if (t.IsDictionary())
             {
-                if (!type.IsGenericType) return "{ [key: any]: any }";
-                var gargs = type.GetGenericArguments();
+                if (!t.IsGenericType) { return Cache(t, "{ [key: any]: any }"); }
+                var gargs = t.GetGenericArguments();
                 var key = ResolveTypeName(gargs[0]);
                 var value = ResolveTypeName(gargs[1]);
-                return String.Format("{{ [key: {0}]: {1} }}", key, value);
+                var name = String.Format("{{ [key: {0}]: {1} }}", key, value);
+                return Cache(t, name);
             }
-            if (type.IsNongenericEnumerable())
+            if (t.IsNongenericEnumerable())
             {
-                return "any[]";
+                return Cache(t, "any[]");
             }
-            if (type.IsEnumerable())
+            if (t.IsEnumerable())
             {
-                return ResolveTypeName(type.IsArray ? type.GetElementType() : type.GetArg()) + "[]";
+                return Cache(t, ResolveTypeName(t.IsArray ? t.GetElementType() : t.GetArg()) + "[]");
             }
-            
-            if (type.IsGenericParameter)
+
+            if (t.IsGenericParameter)
             {
-                var genAt = type.GetCustomAttribute<TsGenericAttribute>();
+                var genAt = t.GetCustomAttribute<TsGenericAttribute>(false);
                 if (genAt != null)
                 {
-                    if (genAt.StrongType != null) return ResolveTypeName(genAt.StrongType);
-                    if (genAt.Type != null) return genAt.Type;
+                    if (genAt.StrongType != null) return Cache(t, ResolveTypeName(genAt.StrongType));
+                    if (genAt.Type != null) return Cache(t, genAt.Type);
                 }
-                return type.Name;
+                return Cache(t, t.Name);
             }
-            if (typeof(MulticastDelegate).IsAssignableFrom(type.BaseType))
+            if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
-                var methodInfo = type.GetMethod("Invoke");
-                return ConstructFunctionType(methodInfo);
+                var methodInfo = t.GetMethod("Invoke");
+                return Cache(t, ConstructFunctionType(methodInfo));
             }
 
-            return "any";
+            return Cache(t, "any");
+        }
 
+        internal void PrintCacheInfo()
+        {
+            Console.WriteLine("Types resolving cache contains {0} entries", _resolveCache.Count);
         }
 
         private string ConstructFunctionType(MethodInfo methodInfo)

@@ -19,8 +19,9 @@ namespace Reinforced.Typings.Generators
             var name = element.GetName();
             var fmt = Settings.GetDeclarationFormat(element);
 
+            sw.Tab();
             Settings.Documentation.WriteDocumentation(element, sw);
-
+            sw.Indent();
             sw.WriteLine(String.Format(fmt, "enum {0} {{ "), name);
             sw.Tab();
             for (int index = 0; index < values.Length; index++)
@@ -30,10 +31,11 @@ namespace Reinforced.Typings.Generators
                 sw.Indent();
                 sw.Write("{0} = {1}", n, Convert.ToInt64(v));
                 if (index < values.Length - 1) sw.Write(",");
-                sw.WriteLine();
+                sw.Br();
             }
             sw.UnTab();
             sw.WriteLine("}");
+            sw.UnTab();
         }
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace Reinforced.Typings.Generators
             var t = GetType(element);
             string typeName = null;
             string propName = element.Name;
-            var tp = element.GetCustomAttribute<TsPropertyAttribute>();
+            var tp = element.GetCustomAttribute<TsPropertyAttribute>(false);
             if (tp != null)
             {
                 if (tp.StrongType != null)
@@ -49,10 +49,11 @@ namespace Reinforced.Typings.Generators
             }
 
             sw.Tab();
-            sw.Indent();
             Settings.Documentation.WriteDocumentation(element, sw);
+            sw.Indent();
+            
             sw.Write("{0}: {1};", propName, typeName);
-            sw.WriteLine();
+            sw.Br();
             sw.UnTab();
         }
 

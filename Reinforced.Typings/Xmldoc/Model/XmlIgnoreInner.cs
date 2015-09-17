@@ -2,10 +2,11 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+#pragma warning disable 1591
 
 namespace Reinforced.Typings.Xmldoc.Model
 {
-    internal abstract class XmlIgnoreInner : IXmlSerializable
+    public abstract class XmlIgnoreInner : IXmlSerializable
     {
         public XmlSchema GetSchema()
         {

@@ -43,11 +43,12 @@ namespace Reinforced.Typings.Cli
 
             
             Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded",_totalLoadedAssemblies);
+            
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
             
         }
 
-        private static ExportSettings InstantiateExportSettings()
+        public static ExportSettings InstantiateExportSettings()
         {
             ExportSettings settings = new ExportSettings
             {
@@ -59,12 +60,14 @@ namespace Reinforced.Typings.Cli
                 SourceAssemblies = GetAssembliesFromArgs(),
                 RootNamespace = _parameters.RootNamespace,
                 CamelCaseForMethods = _parameters.CamelCaseForMethods,
-                CamelCaseForProperties = _parameters.CamelCaseForProperties
+                CamelCaseForProperties = _parameters.CamelCaseForProperties,
+                DocumentationFilePath = _parameters.DocumentationFilePath,
+                GenerateDocumentation = _parameters.GenerateDocumentation
             };
             return settings;
         }
 
-        private static void BuildReferencesCache()
+        public static void BuildReferencesCache()
         {
             _referencesCache.Clear();
             foreach (var reference in _parameters.References)
@@ -73,10 +76,10 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-        private static string LookupAssemblyPath(string assemblyNameOrFullPath,bool storeIfFullName = true)
+        public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
             if (!assemblyNameOrFullPath.EndsWith(".dll")) assemblyNameOrFullPath = assemblyNameOrFullPath + ".dll";
-            Console.WriteLine("Looking up for assembly {0}",assemblyNameOrFullPath);
+            //Console.WriteLine("Looking up for assembly {0}",assemblyNameOrFullPath);
 
             if (Path.IsPathRooted(assemblyNameOrFullPath))
             {
@@ -84,20 +87,20 @@ namespace Reinforced.Typings.Cli
                 {
                     _lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
                 }
-                Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
+              //  Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
                 return assemblyNameOrFullPath;
             }
 
             if (_referencesCache.ContainsKey(assemblyNameOrFullPath))
             {
                 var rf = _referencesCache[assemblyNameOrFullPath];
-                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, rf);
+                //Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, rf);
                 return rf;
             }
             var p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
             if (File.Exists(p))
             {
-                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
+                //Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
                 return p;
             }
 
@@ -105,7 +108,7 @@ namespace Reinforced.Typings.Cli
             return assemblyNameOrFullPath;
         }
 
-        private static Assembly[] GetAssembliesFromArgs()
+        public static Assembly[] GetAssembliesFromArgs()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             BuildReferencesCache();
@@ -125,8 +128,9 @@ namespace Reinforced.Typings.Cli
             return assemblies.ToArray();
         }
 
-        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        public static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
+            if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
             AssemblyName nm = new AssemblyName(args.Name);
             string path = LookupAssemblyPath(nm.Name + ".dll",false);
             Assembly a = Assembly.LoadFrom(path);
@@ -135,7 +139,7 @@ namespace Reinforced.Typings.Cli
             return a;
         }
 
-        private static void PrintHelp()
+        public static void PrintHelp()
         {
             Console.WriteLine("Available parameters:");
             Console.WriteLine();
@@ -171,7 +175,7 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-        private static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
+        public static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
         {
             var t = typeof(ExporterConsoleParameters);
             var instance = new ExporterConsoleParameters();

@@ -39,20 +39,22 @@ namespace Reinforced.Typings
         private void ExtractReferences()
         {
             if (_isAnalyzed) return;
-            _allTypes = _settings.SourceAssemblies.SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>() != null)).ToList();
+            _allTypes = _settings.SourceAssemblies.SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null)).ToList();
 
             _allTypesHash = new HashSet<Type>(_allTypes);
 
-            _namespace = _allTypes.GroupBy(c => c.GetNamespace()).ToDictionary(k => k.Key, v => v.ToList());
+            var grp = _allTypes.GroupBy(c => c.GetNamespace());
+            _namespace = grp.Where(g=>!string.IsNullOrEmpty(g.Key)) // avoid anonymous types
+                .ToDictionary(k => k.Key, v => v.ToList());
 
-            _settings.SourceAssemblies.Where(c => c.GetCustomAttribute<TsReferenceAttribute>() != null)
+            _settings.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                     .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
                     .Select(c => string.Format("/// <reference path=\"{0}\"/>", c.Path))
                     .ToList()
                     .ForEach(a => _referenceBuilder.AppendLine(a));
 
             _settings.References = _referenceBuilder.ToString();
-            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null);
+            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null, _settings);
 
             _isAnalyzed = true;
         }
@@ -80,6 +82,7 @@ namespace Reinforced.Typings
 
             sw.Flush();
             _settings.Unlock();
+            tr.PrintCacheInfo();
         }
 
         private void ExportType(Type type, TextWriter tw, TypeResolver resolver)
@@ -133,6 +136,7 @@ namespace Reinforced.Typings
                         }
                     }
                 }
+                tr.PrintCacheInfo();
             }
             _fileOps.DeployTempFiles();
         }

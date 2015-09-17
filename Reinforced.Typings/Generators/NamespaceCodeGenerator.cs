@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Generators
         public virtual void Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver, WriterWrapper sw)
         {
             WriteNamespaceBegin(namespaceName,sw);
-
+            Settings.CurrentNamespace = namespaceName;
             foreach (var type in types)
             {
                 var converter = resolver.GeneratorFor(type,Settings);
@@ -45,7 +45,6 @@ namespace Reinforced.Typings.Generators
             {
                 sw.WriteLine("module {0} {{", namespaceName);
             }
-            
             sw.Tab();
         }
 
@@ -58,8 +57,9 @@ namespace Reinforced.Typings.Generators
         {
             if (string.IsNullOrEmpty(namespaceName)) return;
             sw.UnTab();
-            sw.WriteLine();
+            sw.Indent();
             sw.WriteLine("}");
+            sw.Br();
         }
 
         /// <summary>

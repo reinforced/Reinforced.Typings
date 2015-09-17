@@ -65,7 +65,7 @@
 			RootNamespace="$(RtRootNamespace)"
 			CamelCaseForMethods="$(RtCamelCaseForMethods)"
 			CamelCaseForProperties="$(RtCamelCaseForProperties)"
-			DocumentationFilePath="$(MSBuildProjectDirectory)$(DocumentationFile)"
+			DocumentationFilePath="$(MSBuildProjectDirectory)\$(DocumentationFile)"
 			GenerateDocumentation="$(RtGenerateDocumentation)"
 		/>
 		

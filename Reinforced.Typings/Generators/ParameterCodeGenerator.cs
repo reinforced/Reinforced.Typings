@@ -55,7 +55,7 @@ namespace Reinforced.Typings.Generators
             string type;
             bool isNullable = false;
 
-            var fa = element.GetCustomAttribute<TsParameterAttribute>();
+            var fa = element.GetCustomAttribute<TsParameterAttribute>(false);
             var defaultValue = GetDefaultValue(element, fa);
             if (fa != null)
             {
@@ -83,7 +83,7 @@ namespace Reinforced.Typings.Generators
             if (!Settings.ExportPureTypings)
             {
                 if (isNullable && defaultValue == null) sw.Write("?");
-                sw.Write(":{0}", type);
+                sw.Write(": {0}", type);
                 if (defaultValue != null)
                 {
                     sw.Write(" = {0}", defaultValue);
@@ -93,7 +93,7 @@ namespace Reinforced.Typings.Generators
             {
                 //there are slightly different rules for .d.ts
                 if (isNullable||defaultValue!=null) sw.Write("?");
-                sw.Write(":{0}", type);
+                sw.Write(": {0}", type);
             }
         }
 

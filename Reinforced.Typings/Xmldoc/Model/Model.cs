@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
+#pragma warning disable 1591
 
 namespace Reinforced.Typings.Xmldoc.Model
 {
@@ -8,14 +9,14 @@ namespace Reinforced.Typings.Xmldoc.Model
     [XmlType("doc")]
     [XmlInclude(typeof(DocumentationMember))]
     [XmlInclude(typeof(DocumentationParameter))]
-    internal class Documentation
+    public class Documentation
     {
         [XmlArray("members")]
         [XmlArrayItem("member")]
         public DocumentationMember[] Members { get; set; }
     }
 
-    internal class DocumentationMember
+    public class DocumentationMember
     {
         private string _name;
 
@@ -53,7 +54,7 @@ namespace Reinforced.Typings.Xmldoc.Model
     }
 
 
-    internal class DocumentationParameter : XmlIgnoreInner
+    public class DocumentationParameter : XmlIgnoreInner
     {
         public string Name { get; set; }
 
@@ -75,7 +76,7 @@ namespace Reinforced.Typings.Xmldoc.Model
         }
     }
 
-    internal class DocumentationSummary : XmlIgnoreInner
+    public class DocumentationSummary : XmlIgnoreInner
     {
         public string Text { get; set; }
         public string Cref { get; set; }
@@ -92,7 +93,7 @@ namespace Reinforced.Typings.Xmldoc.Model
         }
     }
 
-    internal class DocumentationReturns : XmlIgnoreInner
+    public class DocumentationReturns : XmlIgnoreInner
     {
         [XmlText]
         public string Text { get; set; }

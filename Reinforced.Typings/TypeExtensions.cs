@@ -94,7 +94,7 @@ namespace Reinforced.Typings
         /// <returns>True, if supplied type should be exported as interface. False otherwise</returns>
         public static bool IsExportingAsInterface(this Type t)
         {
-            return t.GetCustomAttribute<TsInterfaceAttribute>() != null;
+            return t.GetCustomAttribute<TsInterfaceAttribute>(false) != null;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Reinforced.Typings
         /// <returns>Parameter name</returns>
         public static string GetName(this ParameterInfo element)
         {
-            var fa = element.GetCustomAttribute<TsParameterAttribute>();
+            var fa = element.GetCustomAttribute<TsParameterAttribute>(false);
             if (fa != null && !string.IsNullOrEmpty(fa.Name)) return fa.Name;
             return element.Name;
         }
@@ -177,7 +177,7 @@ namespace Reinforced.Typings
         {
             if (t.IsEnum)
             {
-                var te = t.GetCustomAttribute<TsEnumAttribute>();
+                var te = t.GetCustomAttribute<TsEnumAttribute>(false);
                 string ns = t.Name;
                 if (te != null && !string.IsNullOrEmpty(te.Name))
                 {
@@ -186,8 +186,8 @@ namespace Reinforced.Typings
                 return ns;
             }
 
-            var tc = t.GetCustomAttribute<TsClassAttribute>();
-            var ti = t.GetCustomAttribute<TsInterfaceAttribute>();
+            var tc = t.GetCustomAttribute<TsClassAttribute>(false);
+            var ti = t.GetCustomAttribute<TsInterfaceAttribute>(false);
             string nameFromAttr = tc != null ? tc.Name : ti.Name;
             var name = (!string.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName()) + t.SerializeGenericArguments();
             if (ti != null)
@@ -206,7 +206,7 @@ namespace Reinforced.Typings
         {
             if (t.IsEnum)
             {
-                var te = t.GetCustomAttribute<TsEnumAttribute>();
+                var te = t.GetCustomAttribute<TsEnumAttribute>(false);
                 string ns = t.Namespace;
                 if (te != null && te.IncludeNamespace && !string.IsNullOrEmpty(te.Namespace))
                 {
@@ -214,8 +214,9 @@ namespace Reinforced.Typings
                 }
                 return ns;
             }
-            var tc = t.GetCustomAttribute<TsClassAttribute>();
-            var ti = t.GetCustomAttribute<TsInterfaceAttribute>();
+            var tc = t.GetCustomAttribute<TsClassAttribute>(false);
+            var ti = t.GetCustomAttribute<TsInterfaceAttribute>(false);
+            if (tc == null && ti == null) return t.Namespace;
             string nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
             bool includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
             if (!includeNamespace) return String.Empty;

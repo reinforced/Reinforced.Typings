@@ -125,6 +125,10 @@ namespace Reinforced.Typings
             _writer.Write(format, arg);
         }
 
+        public void Br()
+        {
+            _writer.WriteLine();
+        }
         public void WriteLine()
         {
             AppendTabs();

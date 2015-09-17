@@ -20,7 +20,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="sw">Output writer</param>
         public virtual void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
-            var tc = element.GetCustomAttribute<TsClassAttribute>();
+            var tc = element.GetCustomAttribute<TsClassAttribute>(false);
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
             Export("class", element, resolver, sw, tc);
         }
@@ -43,25 +43,35 @@ namespace Reinforced.Typings.Generators
             string name = type.GetName();
 
             Settings.Documentation.WriteDocumentation(type, sw);
+            sw.Indent();
 
-            sw.Tab();
+
             sw.Write(Settings.GetDeclarationFormat(type), declType);
             sw.Write(name);
 
             var ifaces = type.GetInterfaces();
             var bs = type.BaseType;
+            bool baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
             {
-                if (bs.GetCustomAttribute<TsAttributeBase>() != null)
+                if (bs.GetCustomAttribute<TsAttributeBase>(false) != null)
                 {
-                    sw.Write(" extends {0} ", resolver.ResolveTypeName(bs));
+                    if (bs.IsExportingAsInterface()) baseClassIsExportedAsInterface = true;
+                    else
+                    {
+                        sw.Write(" extends {0} ", resolver.ResolveTypeName(bs));
+                    }
                 }
             }
-            var ifacesStrings = ifaces.Where(c => c.GetCustomAttribute<TsInterfaceAttribute>() != null).Select(resolver.ResolveTypeName).ToArray();
-            if (ifacesStrings.Length > 0)
+            var ifacesStrings = ifaces.Where(c => c.GetCustomAttribute<TsInterfaceAttribute>(false) != null).Select(resolver.ResolveTypeName).ToList();
+            if (baseClassIsExportedAsInterface)
+            {
+                ifacesStrings.Add(resolver.ResolveTypeName(bs));
+            }
+            if (ifacesStrings.Any())
             {
                 string implemets = String.Join(", ", ifacesStrings);
-                sw.Write("implements {0}", implemets);
+                sw.Write(" implements {0}", implemets);
             }
 
             sw.Write(" {{");
@@ -69,6 +79,12 @@ namespace Reinforced.Typings.Generators
             ExportMembers(type, resolver, sw, swtch);
             sw.WriteLine("}");
         }
+
+        private const BindingFlags MembersFlags =
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
+            BindingFlags.DeclaredOnly;
+
+        private readonly Func<MemberInfo, bool> _memberPredicate = c => c.GetCustomAttribute<TsIgnoreAttribute>(false) == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
 
         /// <summary>
         /// Exports all type members sequentially
@@ -80,36 +96,62 @@ namespace Reinforced.Typings.Generators
         protected virtual void ExportMembers(Type element, TypeResolver resolver, WriterWrapper sw,
             IAutoexportSwitchAttribute swtch)
         {
-            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
-            Func<MemberInfo, bool> predicate = c => c.GetCustomAttribute<TsIgnoreAttribute>() == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
 
-            var fields = element.GetFields(flags).Where(predicate).OfType<FieldInfo>();
+            ExportFieldsAndProperties(element, resolver, sw, swtch);
+
+            ExportMethodsAndConstructors(element, resolver, sw, swtch);
+
+            if (element.BaseType != null)
+            {
+                if (
+                    element.BaseType.IsExportingAsInterface() && !element.IsExportingAsInterface())
+                {
+                    // well.. bad but often case. 
+                    // Here we should export members also for base class
+                    // we do not export methods - just properties and fields
+                    // but still. It is better thatn nothing
+
+                    Settings.Documentation.WriteComment(sw, String.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
+                    var basExSwtch = element.BaseType.GetCustomAttribute<TsInterfaceAttribute>();
+                    ExportFieldsAndProperties(element.BaseType, resolver, sw, basExSwtch);
+                }
+            }
+        }
+
+        private void ExportFieldsAndProperties(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        {
+            var fields = element.GetFields(MembersFlags).Where(_memberPredicate).OfType<FieldInfo>();
             if (!swtch.AutoExportFields)
             {
-                fields = fields.Where(c => c.GetCustomAttribute<TsPropertyAttribute>() != null);
+                fields = fields.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
             }
             GenerateMembers(element, resolver, sw, fields);
 
-            var properties = element.GetProperties(flags).Where(predicate).OfType<PropertyInfo>();
+            var properties = element.GetProperties(MembersFlags).Where(_memberPredicate).OfType<PropertyInfo>();
             if (!swtch.AutoExportProperties)
             {
-                properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>() != null);
+                properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
             }
             GenerateMembers(element, resolver, sw, properties);
+        }
 
-            var methods = element.GetMethods(flags).Where(c => predicate(c) && !c.IsSpecialName);
+        private void ExportMethodsAndConstructors(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        {
+            var methods = element.GetMethods(MembersFlags).Where(c => _memberPredicate(c) && !c.IsSpecialName);
             if (!swtch.AutoExportMethods)
             {
-                methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>() != null);
+                methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>(false) != null);
             }
             GenerateMembers(element, resolver, sw, methods);
 
             if (!element.IsExportingAsInterface()) // constructors are not allowed on interfaces
             {
-                var constructors = element.GetConstructors(flags).Where(c => predicate(c) && !c.IsSpecialName);
+                var constructors = element.GetConstructors(MembersFlags).Where(c => _memberPredicate(c));
                 GenerateMembers(element, resolver, sw, constructors);
             }
+
         }
+
 
         /// <summary>
         /// Exports list of type members
@@ -122,10 +164,10 @@ namespace Reinforced.Typings.Generators
         protected virtual void GenerateMembers<T>(Type element, TypeResolver resolver, WriterWrapper sw, IEnumerable<T> members) where T : MemberInfo
         {
 
-            foreach (var fieldInfo in members)
+            foreach (var m in members)
             {
-                var generator = resolver.GeneratorFor(fieldInfo, Settings);
-                generator.Generate(fieldInfo, resolver, sw);
+                var generator = resolver.GeneratorFor(m, Settings);
+                generator.Generate(m, resolver, sw);
             }
         }
     }

@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Reinforced.Typings.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
