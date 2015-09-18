@@ -8,17 +8,17 @@ namespace Reinforced.Typings.Attributes
     public interface IAutoexportSwitchAttribute
     {
         /// <summary>
-        /// Export all methods automatically or not. 
+        /// When true, code for all methods will be automatically generated
         /// </summary>
         bool AutoExportMethods { get; }
 
         /// <summary>
-        /// Export all properties automatically or not. 
+        /// When true, code for all properties will be automatically generated
         /// </summary>
         bool AutoExportProperties { get; }
 
         /// <summary>
-        /// Export all fields automatically or not. 
+        /// When true, code for all fields will be automatically generated
         /// </summary>
         bool AutoExportFields { get; }
        
@@ -26,5 +26,10 @@ namespace Reinforced.Typings.Attributes
         /// Reference to code geenrator which will be applied to every method
         /// </summary>
         Type DefaultMethodCodeGenerator { get; }
+
+        /// <summary>
+        /// When true, code for all constructors will be automatically generated
+        /// </summary>
+        bool AutoExportConstructors { get; }
     }
 }

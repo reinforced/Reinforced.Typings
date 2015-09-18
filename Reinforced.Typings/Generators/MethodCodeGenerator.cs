@@ -10,22 +10,6 @@ namespace Reinforced.Typings.Generators
     public class MethodCodeGenerator : ITsCodeGenerator<MethodInfo>
     {
         /// <summary>
-        /// Retrieves return type for specified method. Fell free to override it.
-        /// </summary>
-        /// <param name="element">Method</param>
-        /// <returns>Types which is being returned by this method</returns>
-        protected virtual Type GetReturnFunctionType(MethodInfo element)
-        {
-            Type t = element.ReturnType;
-            var fa = element.GetCustomAttribute<TsFunctionAttribute>(false);
-            if (fa != null)
-            {
-                if (fa.StrongType != null) t = fa.StrongType;
-            }
-            return t;
-        }
-
-        /// <summary>
         /// Retrieves function name corresponding to method and return type. Fell free to override it.
         /// </summary>
         /// <param name="element">Method info</param>

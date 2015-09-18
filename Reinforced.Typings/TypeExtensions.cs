@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
@@ -141,7 +142,7 @@ namespace Reinforced.Typings
         public static string GetName(this ParameterInfo element)
         {
             var fa = element.GetCustomAttribute<TsParameterAttribute>(false);
-            if (fa != null && !string.IsNullOrEmpty(fa.Name)) return fa.Name;
+            if (fa != null && !String.IsNullOrEmpty(fa.Name)) return fa.Name;
             return element.Name;
         }
 
@@ -162,7 +163,7 @@ namespace Reinforced.Typings
             if (t.IsGenericTypeDefinition)
             {
                 var args = t.GetGenericArguments();
-                string argsStr = String.Format("<{0}>", string.Join(", ", args.Select(c => c.Name)));
+                string argsStr = String.Format("<{0}>", String.Join(", ", args.Select(c => c.Name)));
                 return argsStr;
             }
             return String.Empty;
@@ -179,7 +180,7 @@ namespace Reinforced.Typings
             {
                 var te = t.GetCustomAttribute<TsEnumAttribute>(false);
                 string ns = t.Name;
-                if (te != null && !string.IsNullOrEmpty(te.Name))
+                if (te != null && !String.IsNullOrEmpty(te.Name))
                 {
                     ns = te.Name;
                 }
@@ -189,7 +190,7 @@ namespace Reinforced.Typings
             var tc = t.GetCustomAttribute<TsClassAttribute>(false);
             var ti = t.GetCustomAttribute<TsInterfaceAttribute>(false);
             string nameFromAttr = tc != null ? tc.Name : ti.Name;
-            var name = (!string.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName()) + t.SerializeGenericArguments();
+            var name = (!String.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName()) + t.SerializeGenericArguments();
             if (ti != null)
             {
                 if (ti.AutoI && !name.StartsWith("I")) name = "I" + name;
@@ -208,7 +209,7 @@ namespace Reinforced.Typings
             {
                 var te = t.GetCustomAttribute<TsEnumAttribute>(false);
                 string ns = t.Namespace;
-                if (te != null && te.IncludeNamespace && !string.IsNullOrEmpty(te.Namespace))
+                if (te != null && te.IncludeNamespace && !String.IsNullOrEmpty(te.Namespace))
                 {
                     ns = te.Namespace;
                 }
@@ -220,7 +221,7 @@ namespace Reinforced.Typings
             string nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
             bool includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
             if (!includeNamespace) return String.Empty;
-            if (!string.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
+            if (!String.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
             return t.Namespace;
         }
 
@@ -363,5 +364,11 @@ namespace Reinforced.Typings
             }
             return String.Empty;
         }
+
+        public const BindingFlags MembersFlags =
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
+            BindingFlags.DeclaredOnly;
+
+        public static readonly Func<MemberInfo, bool> TypeScriptMemberSearchPredicate = c => c.GetCustomAttribute<TsIgnoreAttribute>(false) == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
     }
 }

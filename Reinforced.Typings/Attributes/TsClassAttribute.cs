@@ -24,14 +24,14 @@ namespace Reinforced.Typings.Attributes
         public virtual bool AutoExportFields { get; set; }
 
         /// <summary>
-        /// Treat auto-properties as fields or generate fair TypeScript properties
-        /// </summary>
-        public bool TreatAutoPropertiesAsFields { get; set; }
-
-        /// <summary>
         /// Reference to code geenrator which will be applied to every method
         /// </summary>
         public virtual Type DefaultMethodCodeGenerator { get; set; }
+
+        /// <summary>
+        /// When true, code for all constructors will be automatically generated
+        /// </summary>
+        public bool AutoExportConstructors { get; set; }
 
         /// <summary>
         /// Constructs new instance of TsClassAttribute
@@ -39,10 +39,10 @@ namespace Reinforced.Typings.Attributes
         public TsClassAttribute()
         {
             AutoExportProperties = true;
-            AutoExportFields = true;
+            AutoExportFields = false;
             AutoExportMethods = true;
             IncludeNamespace = true;
-            TreatAutoPropertiesAsFields = true;
+            AutoExportConstructors = false;
         }
     }
 }

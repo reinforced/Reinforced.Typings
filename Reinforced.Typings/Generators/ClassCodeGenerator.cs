@@ -80,12 +80,6 @@ namespace Reinforced.Typings.Generators
             sw.WriteLine("}");
         }
 
-        private const BindingFlags MembersFlags =
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
-            BindingFlags.DeclaredOnly;
-
-        private readonly Func<MemberInfo, bool> _memberPredicate = c => c.GetCustomAttribute<TsIgnoreAttribute>(false) == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
-
         /// <summary>
         /// Exports all type members sequentially
         /// </summary>
@@ -96,11 +90,22 @@ namespace Reinforced.Typings.Generators
         protected virtual void ExportMembers(Type element, TypeResolver resolver, WriterWrapper sw,
             IAutoexportSwitchAttribute swtch)
         {
+            ExportFields(element, resolver, sw, swtch);
+            ExportProperties(element, resolver, sw, swtch);
+            ExportMethods(element, resolver, sw, swtch);
+            ExportConstructors(element, resolver, sw, swtch);
+            HandleBaseClassExportingAsInterface(element, resolver, sw, swtch);
+        }
 
-            ExportFieldsAndProperties(element, resolver, sw, swtch);
-
-            ExportMethodsAndConstructors(element, resolver, sw, swtch);
-
+        /// <summary>
+        /// Here you can customize what to export when base class is class but exporting as interface
+        /// </summary>
+        /// <param name="element">Type itself</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
+        /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
+        protected virtual void HandleBaseClassExportingAsInterface(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        {
             if (element.BaseType != null)
             {
                 if (
@@ -114,23 +119,40 @@ namespace Reinforced.Typings.Generators
                     Settings.Documentation.WriteComment(sw, String.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
                     var basExSwtch = element.BaseType.GetCustomAttribute<TsInterfaceAttribute>();
                     Settings.SpecialCase = true;
-                    ExportFieldsAndProperties(element.BaseType, resolver, sw, basExSwtch);
-                    ExportMethodsAndConstructors(element.BaseType, resolver, sw, basExSwtch);
+                    ExportFields(element.BaseType, resolver, sw, basExSwtch);
+                    ExportMethods(element.BaseType, resolver, sw, basExSwtch);
                     Settings.SpecialCase = false;
                 }
             }
         }
 
-        private void ExportFieldsAndProperties(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        /// <summary>
+        /// Exports type fields
+        /// </summary>
+        /// <param name="element">Type itself</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
+        /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
+        protected virtual void ExportFields(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
         {
-            var fields = element.GetFields(MembersFlags).Where(_memberPredicate).OfType<FieldInfo>();
+            var fields = element.GetFields(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate).OfType<FieldInfo>();
             if (!swtch.AutoExportFields)
             {
                 fields = fields.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
             }
             GenerateMembers(element, resolver, sw, fields);
+        }
 
-            var properties = element.GetProperties(MembersFlags).Where(_memberPredicate).OfType<PropertyInfo>();
+        /// <summary>
+        /// Exports type properties
+        /// </summary>
+        /// <param name="element">Type itself</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
+        /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
+        protected virtual void ExportProperties(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        {
+            var properties = element.GetProperties(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate).OfType<PropertyInfo>();
             if (!swtch.AutoExportProperties)
             {
                 properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
@@ -138,21 +160,43 @@ namespace Reinforced.Typings.Generators
             GenerateMembers(element, resolver, sw, properties);
         }
 
-        private void ExportMethodsAndConstructors(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        /// <summary>
+        /// Exports type methods
+        /// </summary>
+        /// <param name="element">Type itself</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
+        /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
+        protected virtual void ExportMethods(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
         {
-            var methods = element.GetMethods(MembersFlags).Where(c => _memberPredicate(c) && !c.IsSpecialName);
+            var methods = element.GetMethods(TypeExtensions.MembersFlags).Where(c => TypeExtensions.TypeScriptMemberSearchPredicate(c) && !c.IsSpecialName);
             if (!swtch.AutoExportMethods)
             {
                 methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>(false) != null);
             }
             GenerateMembers(element, resolver, sw, methods);
+        }
 
-            if (!element.IsExportingAsInterface()) // constructors are not allowed on interfaces
+        /// <summary>
+        /// Exports type constructors
+        /// </summary>
+        /// <param name="element">Type itself</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="sw">Output writer</param>
+        /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
+        protected virtual void ExportConstructors(Type element, TypeResolver resolver, WriterWrapper sw,
+            IAutoexportSwitchAttribute swtch)
+        {
+            if (swtch.AutoExportConstructors)
             {
-                var constructors = element.GetConstructors(MembersFlags).Where(c => _memberPredicate(c));
-                GenerateMembers(element, resolver, sw, constructors);
+                if (!element.IsExportingAsInterface()) // constructors are not allowed on interfaces
+                {
+                    var constructors =
+                        element.GetConstructors(TypeExtensions.MembersFlags)
+                            .Where(c => TypeExtensions.TypeScriptMemberSearchPredicate(c));
+                    GenerateMembers(element, resolver, sw, constructors);
+                }
             }
-
         }
 
 

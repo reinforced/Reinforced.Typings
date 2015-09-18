@@ -30,7 +30,7 @@ namespace Reinforced.Typings
 
         public void UnTab()
         {
-            _tabsCount--;
+            if (_tabsCount > 0) _tabsCount--;
             _tabsLine = new string('\t', _tabsCount);
         }
         public void WriteIndented(string str)
@@ -39,7 +39,7 @@ namespace Reinforced.Typings
             foreach (var s in result)
             {
                 AppendTabs();
-                _writer.Write(s.Replace("\n",null).Replace("\r",null));
+                _writer.Write(s.Replace("\n", null).Replace("\r", null));
                 _writer.WriteLine();
             }
             _writer.WriteLine();
