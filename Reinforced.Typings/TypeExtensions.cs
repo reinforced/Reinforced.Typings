@@ -202,8 +202,9 @@ namespace Reinforced.Typings
         /// Retrieves type namespace from type itself or from corresponding Typings attribute
         /// </summary>
         /// <param name="t">Type</param>
+        /// <param name="distinguishAutoTypes">Forces GetNamespace to return "-" for interfaces with IncludeInterface = false and null for anonymous types</param>
         /// <returns>Full-qualified namespace name</returns>
-        public static string GetNamespace(this Type t)
+        public static string GetNamespace(this Type t, bool distinguishAutoTypes = false)
         {
             if (t.IsEnum)
             {
@@ -220,7 +221,7 @@ namespace Reinforced.Typings
             if (tc == null && ti == null) return t.Namespace;
             string nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
             bool includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
-            if (!includeNamespace) return String.Empty;
+            if (!includeNamespace) return distinguishAutoTypes ? "-" : String.Empty;
             if (!String.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
             return t.Namespace;
         }

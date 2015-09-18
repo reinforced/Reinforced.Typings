@@ -43,7 +43,7 @@ namespace Reinforced.Typings
 
             _allTypesHash = new HashSet<Type>(_allTypes);
 
-            var grp = _allTypes.GroupBy(c => c.GetNamespace());
+            var grp = _allTypes.GroupBy(c => c.GetNamespace(true));
             _namespace = grp.Where(g=>!string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
 
@@ -77,7 +77,9 @@ namespace Reinforced.Typings
 
             foreach (var n in _namespace)
             {
-                gen.Generate(n.Value, n.Key, tr, ww);
+                var ns = n.Key;
+                if (ns == "-") ns = String.Empty;
+                gen.Generate(n.Value, ns, tr, ww);
             }
 
             sw.Flush();

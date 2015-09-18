@@ -71,7 +71,8 @@ namespace Reinforced.Typings.Generators
             if (ifacesStrings.Any())
             {
                 string implemets = String.Join(", ", ifacesStrings);
-                sw.Write(" implements {0}", implemets);
+                if (type.IsExportingAsInterface()) sw.Write(" extends {0}", implemets);
+                else sw.Write(" implements {0}", implemets);
             }
 
             sw.Write(" {{");
