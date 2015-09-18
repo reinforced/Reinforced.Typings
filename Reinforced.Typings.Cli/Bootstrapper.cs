@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Reinforced.Typings.Cli
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            Console.WriteLine("Reinforced.Typings CLI generator © 2015 Pavel B. Novikov");
+            Console.WriteLine("Reinforced.Typings CLI generator (c) 2015 by Pavel B. Novikov");
 
             if (args.Length == 0)
             {
@@ -37,15 +38,15 @@ namespace Reinforced.Typings.Cli
                 Environment.Exit(0);
             }
             var settings = InstantiateExportSettings();
-            
+
             TsExporter exporter = new TsExporter(settings);
             exporter.Export();
 
-            
-            Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded",_totalLoadedAssemblies);
-            
+
+            Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded", _totalLoadedAssemblies);
+
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
-            
+
         }
 
         public static ExportSettings InstantiateExportSettings()
@@ -79,7 +80,9 @@ namespace Reinforced.Typings.Cli
         public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
             if (!assemblyNameOrFullPath.EndsWith(".dll")) assemblyNameOrFullPath = assemblyNameOrFullPath + ".dll";
-            //Console.WriteLine("Looking up for assembly {0}",assemblyNameOrFullPath);
+#if DEBUG
+            Console.WriteLine("Looking up for assembly {0}", assemblyNameOrFullPath);
+#endif
 
             if (Path.IsPathRooted(assemblyNameOrFullPath))
             {
@@ -87,20 +90,26 @@ namespace Reinforced.Typings.Cli
                 {
                     _lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
                 }
-              //  Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
+#if DEBUG
+                  Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
+#endif
                 return assemblyNameOrFullPath;
             }
 
             if (_referencesCache.ContainsKey(assemblyNameOrFullPath))
             {
                 var rf = _referencesCache[assemblyNameOrFullPath];
-                //Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, rf);
+#if DEBUG
+                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, rf);
+#endif
                 return rf;
             }
             var p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
             if (File.Exists(p))
             {
-                //Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
+#if DEBUG
+                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
+#endif
                 return p;
             }
 
@@ -121,7 +130,7 @@ namespace Reinforced.Typings.Cli
                 var path = LookupAssemblyPath(assemblyPath);
                 var a = Assembly.LoadFrom(path);
                 _totalLoadedAssemblies++;
-                
+
                 assemblies.Add(a);
             }
 
@@ -132,10 +141,12 @@ namespace Reinforced.Typings.Cli
         {
             if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
             AssemblyName nm = new AssemblyName(args.Name);
-            string path = LookupAssemblyPath(nm.Name + ".dll",false);
+            string path = LookupAssemblyPath(nm.Name + ".dll", false);
             Assembly a = Assembly.LoadFrom(path);
             _totalLoadedAssemblies++;
+#if DEBUG
             Console.WriteLine("{0} additionally resolved", nm);
+#endif
             return a;
         }
 
@@ -167,9 +178,12 @@ namespace Reinforced.Typings.Cli
                     }
                     Console.WriteLine(propertyInfo.Name + " " + requiredText);
 
-                    var s = "\t" + attr.HelpText.Replace("\r",String.Empty).Replace("\n", "\n\t").Replace("\n", Environment.NewLine);
-                    Console.WriteLine(s);
-
+                    var lines = attr.HelpText.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var line in lines)
+                    {
+                        Console.WriteLine("\t{0}",line);
+                    }
+                    
                     Console.WriteLine();
                 }
             }

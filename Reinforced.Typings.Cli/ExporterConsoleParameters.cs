@@ -15,7 +15,8 @@ namespace Reinforced.Typings.Cli
         /// Source assemblies. 
         /// The assemblies to extract typings from
         /// </summary>
-        [ConsoleHelp(@"The semicolon-separated assemblies list to extract typings from.
+        [ConsoleHelp(@"
+The semicolon-separated assemblies list to extract typings from.
 Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll""
 ",Required.Reuired)]
         public string[] SourceAssemblies { get; set; }
@@ -24,7 +25,8 @@ Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProj
         /// Target file where to store generated sources. 
         /// This parameter is not used when Hierarchy is true
         /// </summary>
-        [ConsoleHelp(@"Target file where to store generated sources.
+        [ConsoleHelp(@"
+Target file where to store generated sources.
 Not required if Hirarchy=""true"" specified. Otherwise required.
 Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partially)]
         public string TargetFile { get; set; }
@@ -33,7 +35,8 @@ Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partial
         /// Target directory where to store generated typing files. 
         /// This parameter is not used when Hierarcy is false
         /// </summary>
-        [ConsoleHelp(@"Target directory where to store generated typing files. 
+        [ConsoleHelp(@"
+Target directory where to store generated typing files. 
 Not required if Hirarchy=""false"" or not specified. Otherwise required.
 Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (regardless ending slash)", Required.Partially)]
         public string TargetDirectory { get; set; }
@@ -42,8 +45,10 @@ Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (regardless ending 
         /// Full list of referenced assemblies. 
         /// If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly
         /// </summary>
-        [ConsoleHelp(@"Semicolon-separated full list of referenced assemblies.
-If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly. 
+        [ConsoleHelp(@"
+Semicolon-separated full list of referenced assemblies.
+If not specified then the CLI will try to resolve reference assemblies 
+from same directory as target assembly. 
 Example:   rtcli.exe References=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll"" ")]
         public string[] References { get; set; }
         
@@ -51,7 +56,8 @@ Example:   rtcli.exe References=""C:\TestProject\Assembly1.dll;C:\TestProject\As
         /// True to create project hierarchy in target folder. 
         /// False to store generated typings in single file
         /// </summary>
-        [ConsoleHelp(@"Boolean parameter that switches hierarchy generation ability.
+        [ConsoleHelp(@"
+Boolean parameter that switches hierarchy generation ability.
 True to create project hierarchy in target folder. 
 False (default) to store generated typings in single file. 
 Example:   rtcli.exe Hierarchy=""true"" ")]
@@ -61,7 +67,9 @@ Example:   rtcli.exe Hierarchy=""true"" ")]
         /// True to write warning comment about auto-generated to every file.
         /// False to do not
         /// </summary>
-        [ConsoleHelp(@"Boolean parameter that controls writing of auto-generated warning comment to each generated file.
+        [ConsoleHelp(@"
+Boolean parameter that controls writing of 
+auto-generated warning comment to each generated file.
 True (default) to write warning comment about auto-generated to every file. 
 False to do not. 
 Example:   rtcli.exe WriteWarningComment=""false"" ")]
@@ -71,8 +79,10 @@ Example:   rtcli.exe WriteWarningComment=""false"" ")]
         /// If true, export will be performed in .d.ts manner (only typings, declare module etc).
         /// Otherwise, export will be performed to regulat .ts file
         /// </summary>
-        [ConsoleHelp(@"Boolean parameter that controls generation mode switch between .ts/.d.ts
-If true, export will be performed in .d.ts manner (only typings, declare module etc).
+        [ConsoleHelp(@"
+Boolean parameter that controls generation mode switch 
+between .ts/.d.ts. If true, export will be performed in 
+.d.ts manner (only typings, declare module etc).
 Otherwise, export will be performed to regulat .ts file 
 Example:   rtcli.exe ExportPureTyings=""true"" ")]
         public bool ExportPureTypings { get; set; }
@@ -81,7 +91,8 @@ Example:   rtcli.exe ExportPureTyings=""true"" ")]
         /// Specifies root namespace for hierarchical export.
         /// Helps to avoid creating redundant directories when hierarchical export.
         /// </summary>
-        [ConsoleHelp(@"Specifies root namespace for hierarchical export.
+        [ConsoleHelp(@"
+Specifies root namespace for hierarchical export.
 Helps to avoid creating redundant directories when hierarchical export.
 Example:   rtcli.exe ExportPureTyings=""true"" ")]
         public string RootNamespace { get; set; }
@@ -89,16 +100,20 @@ Example:   rtcli.exe ExportPureTyings=""true"" ")]
         /// <summary>
         /// Use camelCase for methods naming
         /// </summary>
-        [ConsoleHelp(@"Specifies usage of camelCase for methods.
-True to use camelCase while generating methods names. False to remain methods names unchanged.
+        [ConsoleHelp(@"
+Specifies usage of camelCase for methods.
+True to use camelCase while generating methods names. 
+False to remain methods names unchanged.
 Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
         public bool CamelCaseForMethods { get; set; }
 
         /// <summary>
         /// Use camelCase for properties naming
         /// </summary>
-        [ConsoleHelp(@"Specifies usage of camelCase for properties.
-True to use camelCase while generating properties names. False to remain properties names unchanged.
+        [ConsoleHelp(@"
+Specifies usage of camelCase for properties.
+True to use camelCase while generating properties names. 
+False to remain properties names unchanged.
 Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
         public bool CamelCaseForProperties { get; set; }
 
@@ -106,15 +121,19 @@ Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
         /// Full path to assembly's XMLDOC file.
         /// If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
         /// </summary>
-        [ConsoleHelp(@"Full path to assembly's XMLDOC file.
-If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
+        [ConsoleHelp(@"
+Full path to assembly's XMLDOC file.
+If this parameter is not specified or contains invalid path 
+then documentation will not be generated without any exception
 Example:   rtcli.exe DocumentationFilePath=""C:\MyAssembly\Assembly.XML"" ")]
         public string DocumentationFilePath { get; set; }
 
         /// <summary>
         /// Disables or enables documentation generation regardless valid DocumentationFilePath file. True by default.
         /// </summary>
-        [ConsoleHelp(@"Disables or enables documentation generation regardless valid DocumentationFilePath file
+        [ConsoleHelp(@"
+Disables or enables documentation generation regardless 
+valid DocumentationFilePath file.
 False to disable documentation generation. True to enable.
 True by default.
 Example:   rtcli.exe GenerateDocumentation=""false"" ")]
