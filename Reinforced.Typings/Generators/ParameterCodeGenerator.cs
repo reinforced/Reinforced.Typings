@@ -15,7 +15,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Parameter info</param>
         /// <param name="attr">Parameter attribute</param>
         /// <returns>Serialized to string default value of type that is exposed by mentioned parameter</returns>
-        protected string GetDefaultValue(ParameterInfo element, TsParameterAttribute attr)
+        protected virtual string GetDefaultValue(ParameterInfo element, TsParameterAttribute attr)
         {
             object defVal = null;
             if (attr != null)

@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
-        public void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
+        public virtual void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
             var values = Enum.GetValues(element);
             var name = element.GetName();

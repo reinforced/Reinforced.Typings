@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
-        public void Generate(ConstructorInfo element, TypeResolver resolver, WriterWrapper sw)
+        public virtual void Generate(ConstructorInfo element, TypeResolver resolver, WriterWrapper sw)
         {
             if (element.IsIgnored()) return;
             var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface();
