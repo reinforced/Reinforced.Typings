@@ -35,10 +35,10 @@ namespace Reinforced.Typings.Generators
                 }
 
                 if (!string.IsNullOrEmpty(tp.Name)) propName = tp.Name;
-                if (tp.ForceNullable) propName = propName + "?";
+                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase) propName = propName + "?";
             }
             if (string.IsNullOrEmpty(typeName)) typeName = resolver.ResolveTypeName(t);
-            if (!propName.EndsWith("?") && t.IsNullable())
+            if (!propName.EndsWith("?") && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase)
             {
                 propName = propName + "?";
             }
@@ -51,7 +51,11 @@ namespace Reinforced.Typings.Generators
             sw.Tab();
             Settings.Documentation.WriteDocumentation(element, sw);
             sw.Indent();
-            
+            if (!element.DeclaringType.IsExportingAsInterface() || Settings.SpecialCase)
+            {
+                var modifier = Settings.SpecialCase? AccessModifier.Public: element.GetModifier();
+                sw.Write("{0} ",modifier.ToModifierText());
+            }
             sw.Write("{0}: {1};", propName, typeName);
             sw.Br();
             sw.UnTab();

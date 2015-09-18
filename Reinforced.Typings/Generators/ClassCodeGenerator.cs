@@ -113,7 +113,10 @@ namespace Reinforced.Typings.Generators
 
                     Settings.Documentation.WriteComment(sw, String.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
                     var basExSwtch = element.BaseType.GetCustomAttribute<TsInterfaceAttribute>();
+                    Settings.SpecialCase = true;
                     ExportFieldsAndProperties(element.BaseType, resolver, sw, basExSwtch);
+                    ExportMethodsAndConstructors(element.BaseType, resolver, sw, basExSwtch);
+                    Settings.SpecialCase = false;
                 }
             }
         }

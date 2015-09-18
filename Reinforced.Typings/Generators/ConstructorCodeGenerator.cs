@@ -23,6 +23,7 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return;
             var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface();
+            if (element.GetParameters().Length==0) return;
             sw.Tab();
             Settings.Documentation.WriteDocumentation(element, sw);
             sw.Indent();
@@ -55,36 +56,36 @@ namespace Reinforced.Typings.Generators
                 GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", ctorParams));
                 return;
             }
-
-            // 3. Check base constructors
             var baseConstructors = bt.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly);
-            if (baseConstructors.Length == 0)
-            {
-                // 3. If not present then generate empty super() call
-                GenerateBody("somethingnonvoid", resolver, sw, "super();");
-                return;
-            }
 
-            // 4. Trying to lookup constructor with same parameters
+            // 3. Trying to lookup constructor with same parameters
             bool found = false;
-            
+
             var paramTypes = parameters.Select(c => c.ParameterType).ToArray();
             var corresponding = TypeExtensions.GetMethodWithSameParameters(baseConstructors.Cast<MethodBase>().ToArray(), paramTypes);
             found = corresponding != null;
 
             if (found)
             {
-                // 4.If constructor with same parameters found - just use it
+                // 3.If constructor with same parameters found - just use it
                 var ctorParams = string.Join(", ", parameters.Select(c => c.GetName()));
-                GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", ctorParams));
+                GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0}); // Please use [TsBaseParam] attribute here to generate more sensible super() call", ctorParams));
+                return;
+            }
+
+            // 4. Maybe parameterles constructor?
+            if (baseConstructors.Any(c => c.GetParameters().Length == 0))
+            {
+                // 4. If not present then generate empty super() call
+                GenerateBody("somethingnonvoid", resolver, sw, "super(); // Please use [TsBaseParam] attribute here to generate more sensible super() call");
                 return;
             }
 
             // 5. If nothing found - well... we simply leave here super with all nulls supplied
-
-            var mockedCtorParams = string.Join(", ", Enumerable.Repeat("null", parameters.Length));
-            GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0});", mockedCtorParams));
+            var maxParams = baseConstructors.Max(c => c.GetParameters().Length);
+            var mockedCtorParams = string.Join(", ", Enumerable.Repeat("null", maxParams));
+            GenerateBody("somethingnonvoid", resolver, sw, String.Format("super({0}); // Please use [TsBaseParam] attribute here to generate more sensible super() call", mockedCtorParams));
         }
     }
 }

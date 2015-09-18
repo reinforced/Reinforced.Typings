@@ -54,7 +54,7 @@ namespace Reinforced.Typings
                     .ForEach(a => _referenceBuilder.AppendLine(a));
 
             _settings.References = _referenceBuilder.ToString();
-            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null, _settings);
+            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null);
 
             _isAnalyzed = true;
         }

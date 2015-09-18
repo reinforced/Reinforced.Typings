@@ -153,7 +153,7 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return;
 
-            var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface();
+            var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase;
             string name, type;
 
             GetFunctionNameAndReturnType(element, resolver, out name, out type);
@@ -161,7 +161,11 @@ namespace Reinforced.Typings.Generators
             sw.Tab();
             Settings.Documentation.WriteDocumentation(element, sw);
             sw.Indent();
-            WriteFunctionName(element.IsStatic, element.GetModifier(), name, sw, isInterfaceMethod);
+            var modifier = element.GetModifier();
+            
+            if (Settings.SpecialCase) modifier = AccessModifier.Public;
+            
+            WriteFunctionName(element.IsStatic, modifier, name, sw, isInterfaceMethod);
             WriteMethodParameters(element, resolver, sw);
             WriteRestOfDeclaration(type, sw);
 

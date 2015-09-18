@@ -2,18 +2,31 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
         <projectUrl>https://github.com/reinforced/Reinforced.Typings</projectUrl>
         <iconUrl>https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Reinforced.Typings allows to automatically create TypeScript .d.ts and .ts files containing glue code for your ASP.NET MVC server entities (ViewModels, Controllers etc)</description>
-        <summary>Automatic TypeScript typings generator for ASP.NET MVC</summary>
+        <description>Reinforced.Typings is automated, reflection-based TypeScript glue code generator. It is MSBuild-integrated and can generate MVC/WebAPI services glue code, JSDOC and architecture mockups from your assemblies.
+        <summary>Automatic TypeScript typings and glue code generator for ASP.NET MVC</summary>
         <copyright>© 2015 Pavel B. Novikov</copyright>
         <language>en-US</language>
-        <tags>mvc, web, typescript</tags>
+        <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
+		<releaseNotes>
+			* 1.0.2 
+			* * Automated documentation generation (disableable)
+			* * Constructors generation 			
+			* * Attribute for :base() call
+			* * Conditional disabling of TypeScript build via settings
+			* * Conditional disabling generation itself via settings
+			* * Automated pascal case for methods and properties (disableable)
+			* * Enumerations attribute fixed
+			* * Access modifiers during classes generation
+			* * Improved TypeResolver performance
+			* * Bug fixes
+		</releaseNotes>
     </metadata>
 </package>

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Xml.Serialization;
-using Reinforced.Typings.Generators;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Xmldoc
@@ -16,14 +16,9 @@ namespace Reinforced.Typings.Xmldoc
     {
         private bool _isDocumentationExists;
         private Documentation _documentation;
-        private readonly Dictionary<Type, DocumentationMember> _docsForTypes = new Dictionary<Type, DocumentationMember>();
-        private readonly Dictionary<ConstructorInfo, DocumentationMember> _docsForConstructors = new Dictionary<ConstructorInfo, DocumentationMember>();
-        private readonly Dictionary<MemberInfo, DocumentationMember> _docsForMembers = new Dictionary<MemberInfo, DocumentationMember>();
-        private const BindingFlags All = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
-        private readonly ExportSettings _settings;
-        internal DocumentationManager(string docFilePath, ExportSettings settings)
+        private Dictionary<string, DocumentationMember> _documentationCache;
+        internal DocumentationManager(string docFilePath)
         {
-            _settings = settings;
             CacheDocumentation(docFilePath);
         }
 
@@ -38,7 +33,7 @@ namespace Reinforced.Typings.Xmldoc
                 {
                     _documentation = (Documentation)ser.Deserialize(fs);
                 }
-                BuildDocumentationCache();
+                _documentationCache = _documentation.Members.ToDictionary(c => c.Name, c => c);
                 _isDocumentationExists = true;
             }
             catch (Exception)
@@ -46,133 +41,7 @@ namespace Reinforced.Typings.Xmldoc
                 _isDocumentationExists = false;
             }
         }
-
-        private void Store<T>(Dictionary<T, DocumentationMember> d, T member, DocumentationMember doc) where T : class
-        {
-            if (member == null) return;
-            d[member] = doc;
-        }
-        private void BuildDocumentationCache()
-        {
-            foreach (var dm in _documentation.Members)
-            {
-                Type type;
-                MethodBase method;
-                string before, after, parameters;
-
-                switch (dm.MemberType)
-                {
-                    case DocumentationMemberType.Type:
-                        type = _settings.GetSourceAssemblyType(dm.Name);
-                        if (type != null) Store(_docsForTypes, type, dm);
-                        break;
-                    case DocumentationMemberType.Field:
-                    case DocumentationMemberType.Property:
-
-                        GetLastEntityName(dm.Name, out before, out after);
-                        type = _settings.GetSourceAssemblyType(before);
-                        var member = type.GetMember(after, All)[0];
-                        Store(_docsForMembers, member, dm);
-                        break;
-                    case DocumentationMemberType.Method:
-                        if (!dm.Name.Contains('('))
-                        {
-                            GetLastEntityName(dm.Name, out before, out after);
-                            type = _settings.GetSourceAssemblyType(before);
-                            method = type.GetMethod(RemoveGenericQuotes(after));
-                            Store(_docsForMembers, method, dm);
-                            break;
-                        }
-                        var idx = dm.Name.IndexOf('(');
-                        var typeAndMethod = dm.Name.Substring(0, idx);
-                        parameters = dm.Name.Substring(idx).Trim('(').Trim(')');
-                        GetLastEntityName(typeAndMethod, out before, out after);
-                        type = _settings.GetSourceAssemblyType(before);
-                        method = GetMethodWithParams(type, after, parameters);
-                        Store(_docsForMembers, method, dm);
-                        break;
-                    case DocumentationMemberType.Constructor:
-                        var nameParts = dm.Name.Split(new[] { ".#ctor" }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var namePart in nameParts)
-                        {
-                            Console.WriteLine("Namepart: {0}", namePart);
-                        }
-                        type = _settings.GetSourceAssemblyType(nameParts[0]);
-                        parameters = nameParts[1].Trim('(').Trim(')');
-                        method = GetMethodWithParams(type, "#ctor", parameters);
-                        Store(_docsForConstructors, (ConstructorInfo)method, dm);
-                        break;
-                }
-            }
-        }
-
-        private void GetLastEntityName(string fullName, out string before, out string after)
-        {
-            var dotIndex = fullName.LastIndexOf('.');
-            before = fullName.Substring(0, dotIndex);
-            after = fullName.Substring(dotIndex + 1);
-            Console.WriteLine("before {0}", before);
-            Console.WriteLine("after {0}", after);
-        }
-
-        private string RemoveGenericQuotes(string input)
-        {
-            if (!input.Contains('`')) return input;
-            var idx = input.IndexOf('`');
-            return input.Substring(0, idx);
-        }
-        private readonly Dictionary<string, MethodBase> _methodsCache = new Dictionary<string, MethodBase>();
-
-        private MethodBase GetMethodWithParams(Type type, string name, string parametersTypesString)
-        {
-            var key = name + parametersTypesString;
-            if (_methodsCache.ContainsKey(key)) return _methodsCache[key]; //make it a little bit faster
-
-            // lets try simple
-            MethodBase[] methods;
-            if (name == "#ctor") methods = type.GetConstructors(All).Cast<MethodBase>().ToArray();
-            else methods = type.GetMethods(All).Where(c => c.Name == RemoveGenericQuotes(name)).Cast<MethodBase>().ToArray();
-
-            if (!methods.Any()) return null;
-            var single = methods.SingleOrDefault();
-            if (single != null)
-            {
-                _methodsCache.Add(key, single);
-                return single;
-            }
-
-            // okay then
-            // well.. lets go complicated way then
-            var typeGenericArgs = type.GetGenericArguments();
-            var typeGenericsDict = typeGenericArgs
-                .Select((a, i) => new { a, i })
-                .ToDictionary(c => c.a, c => c.i); // type -> `0, type -> `1
-            foreach (var methodBase in methods)
-            {
-                var methodGenericArgs = methodBase.GetGenericArguments();
-                var methodGenericArgsDict = methodGenericArgs
-                    .Select((a, i) => new { a, i })
-                    .ToDictionary(c => c.a, c => c.i); //type -> ``0, type -> ``1
-                List<string> names = new List<string>();
-                foreach (var param in methodBase.GetParameters())
-                {
-                    var friendlyName = GetDocFriendlyParameterName(param.ParameterType, typeGenericsDict,
-                        methodGenericArgsDict);
-                    if (param.IsOut || param.ParameterType.IsByRef) friendlyName = friendlyName + "@";
-                    names.Add(friendlyName);
-                }
-                var generatedTypes = String.Join(",", names);
-
-                _methodsCache[name + generatedTypes] = methodBase;
-
-                if (generatedTypes == parametersTypesString)
-                {
-                    return methodBase;
-                }
-            }
-            return null;
-        }
-
+        
         private static string GetDocFriendlyParameterName(Type parameterType,
             Dictionary<Type, int> typeGenericsDict,
             Dictionary<Type, int> methodGenericArgsDict)
@@ -201,6 +70,71 @@ namespace Reinforced.Typings.Xmldoc
             return parameterType.FullName.Trim('&');
         }
 
+        private string GetIdentifierForMethod(MethodBase method,string name)
+        {
+            var isCtor = name == "#ctor";
+            StringBuilder sb  = new StringBuilder(String.Format("M:{0}.{1}", method.DeclaringType.FullName, name));
+            if (!isCtor)
+            {
+                var cnt = method.GetGenericArguments().Length;
+                if (cnt > 0) sb.AppendFormat("``{0}", cnt);
+            }
+            var prs = method.GetParameters();
+            if (prs.Length > 0)
+            {
+                sb.Append('(');
+
+                var typeGenericsDict = 
+                    method.DeclaringType.GetGenericArguments()
+                    .Select((a, i) => new { a, i })
+                    .ToDictionary(c => c.a, c => c.i); // type -> `0, type -> `1
+
+                
+                var methodGenericArgsDict = isCtor? new Dictionary<Type, int>() : 
+                    method.GetGenericArguments()
+                    .Select((a, i) => new { a, i })
+                    .ToDictionary(c => c.a, c => c.i); //type -> ``0, type -> ``1
+                List<string> names = new List<string>();
+                foreach (var param in prs)
+                {
+                    var friendlyName = GetDocFriendlyParameterName(param.ParameterType, typeGenericsDict,
+                        methodGenericArgsDict);
+                    if (param.IsOut || param.ParameterType.IsByRef) friendlyName = friendlyName + "@";
+                    names.Add(friendlyName);
+                }
+                sb.Append(String.Join(",", names));
+                sb.Append(')');
+            }
+            return sb.ToString();
+        }
+
+        private string GetPrefix(MemberTypes mt)
+        {
+            switch (mt)
+            {
+                    
+                case MemberTypes.Property:return "P";
+                case MemberTypes.Field:return "F";
+                case MemberTypes.Method:return "M";
+                case MemberTypes.Event:return "E";
+            }
+            return String.Empty;
+        }
+        private string GetIdentifierForMember(MemberInfo member)
+        {
+            if (member is MethodInfo) return GetIdentifierForMethod((MethodBase) member,member.Name);
+            string id = String.Format("{0}:{1}.{2}",GetPrefix(member.MemberType),member.DeclaringType.FullName,member.Name);
+            return id;
+        }
+        private string GetIdentifierForType(Type type)
+        {
+            return String.Format("T:{0}",type.FullName);
+        }
+        private string GetIdentifierForConstructor(ConstructorInfo constructor)
+        {
+            return GetIdentifierForMethod(constructor, "#ctor");
+        }
+
         /// <summary>
         /// Outputs documentation for class member
         /// </summary>
@@ -210,14 +144,15 @@ namespace Reinforced.Typings.Xmldoc
         {
             if (member == null) return;
             if (!_isDocumentationExists) return;
-            if (!_docsForMembers.ContainsKey(member)) return;
+            var id = GetIdentifierForMember(member);
+            if (!_documentationCache.ContainsKey(id)) return;
             var info = member as MethodInfo;
             if (info != null)
             {
                 WriteDocumentation(info, sw);
                 return;
             }
-            var doc = _docsForMembers[member];
+            var doc = _documentationCache[id];
             if (!doc.HasSummary()) return;
             Begin(sw);
             Summary(sw, doc.Summary.Text);
@@ -233,8 +168,10 @@ namespace Reinforced.Typings.Xmldoc
         {
             if (method == null) return;
             if (!_isDocumentationExists) return;
-            if (!_docsForMembers.ContainsKey(method)) return;
-            var doc = _docsForMembers[method];
+            var id = GetIdentifierForMethod(method, method.Name);
+            if (!_documentationCache.ContainsKey(id)) return;
+            var doc = _documentationCache[id];
+
             if ((!doc.HasSummary()) && (!doc.HasParameters()) && (!doc.HasReturns())) return;
 
             Begin(sw);
@@ -262,8 +199,9 @@ namespace Reinforced.Typings.Xmldoc
         {
             if (constructor == null) return;
             if (!_isDocumentationExists) return;
-            if (!_docsForConstructors.ContainsKey(constructor)) return;
-            var doc = _docsForConstructors[constructor];
+            var id = GetIdentifierForConstructor(constructor);
+            if (!_documentationCache.ContainsKey(id)) return;
+            var doc = _documentationCache[id];
             if ((!doc.HasSummary()) && (!doc.HasParameters())) return;
 
             Begin(sw);
@@ -275,7 +213,7 @@ namespace Reinforced.Typings.Xmldoc
             Line(sw, "@constructor");
             if (doc.HasParameters())
             {
-                
+
                 WriteParametersDoc(constructor.GetParameters(), doc, sw);
             }
             End(sw);
@@ -291,8 +229,9 @@ namespace Reinforced.Typings.Xmldoc
         {
             if (type == null) return;
             if (!_isDocumentationExists) return;
-            if (!_docsForTypes.ContainsKey(type)) return;
-            var typeDoc = _docsForTypes[type];
+            var id = GetIdentifierForType(type);
+            if (!_documentationCache.ContainsKey(id)) return;
+            var typeDoc = _documentationCache[id];
             if (!typeDoc.HasSummary()) return;
 
             Begin(sw);

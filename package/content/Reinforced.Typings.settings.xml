@@ -63,12 +63,6 @@
 		<RtRootNamespace>My.Application.Root.Namespace</RtRootNamespace>
 		
 		<!--
-			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
-			typings generation.
-		-->
-		<RtDisable>false</RtDisable>
-		
-		<!--
 			Disables typescript compilation in solution. 
 			Use it when your TypeScripts are broken and you need to rebuild project and then regenerate typings 
 			to fix it, but TypeScript compilation fails and failing project build. This option will temporary 
@@ -89,9 +83,17 @@
 		<RtCamelCaseForProperties>false</RtCamelCaseForProperties>
 		
 		<!--
-			This settings conditionally disables jsdoc generation from .NET XMLDOC
+			This settings conditionally disables jsdoc generation from .NET XMLDOC.
+			To use jsdoc generation feature please enable XML documentation generation in your project settings			
 		-->
 		<RtGenerateDocumentation>true</RtGenerateDocumentation>
+		
+		<!--
+			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
+			typings generation.
+		-->
+		<RtDisable>false</RtDisable>		
+		
 	</PropertyGroup>
 	
 	<!--

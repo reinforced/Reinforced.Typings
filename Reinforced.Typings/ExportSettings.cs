@@ -193,5 +193,10 @@ namespace Reinforced.Typings
         public DocumentationManager Documentation { get; internal set; }
 
         internal string CurrentNamespace { get; set; }
+
+        /// <summary>
+        /// There is a case when you are exporting base class as interface. It may lead to some unusual handling of generation, so I'm using this property to denote such cases and fix it in-place
+        /// </summary>
+        internal bool SpecialCase { get; set; }
     }
 }

@@ -274,6 +274,19 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
+        /// Returns access modifier for specified type member
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <returns>Access modifier string</returns>
+        public static AccessModifier GetModifier(this MemberInfo member)
+        {
+            if (member is PropertyInfo) return GetModifier((PropertyInfo)member);
+            if (member is MethodInfo) return GetModifier((MethodInfo)member);
+            if (member is FieldInfo) return GetModifier((FieldInfo)member);
+            return AccessModifier.Public;
+        }
+
+        /// <summary>
         /// Determines if propercy is "bounced". 
         /// It means property with different accesor's access level
         /// </summary>
@@ -332,6 +345,23 @@ namespace Reinforced.Typings
                     return "protected";
             }
             return "public";
+        }
+
+        /// <summary>
+        /// Converts AccessModifier to corresponding TypeScript source text
+        /// </summary>
+        /// <param name="modifier">Access modifier</param>
+        /// <returns>Access modifier text</returns>
+        public static string ToModifierOmitPublic(this AccessModifier modifier)
+        {
+            switch (modifier)
+            {
+                case AccessModifier.Private:
+                    return "private";
+                case AccessModifier.Protected:
+                    return "protected";
+            }
+            return String.Empty;
         }
     }
 }

@@ -11,6 +11,7 @@
             if (name.StartsWith("P:")) return DocumentationMemberType.Property;
             if (name.StartsWith("E:")) return DocumentationMemberType.Event;
             if (name.StartsWith("N:")) return DocumentationMemberType.Namespace;
+            if (name.StartsWith("F:")) return DocumentationMemberType.Field;
             
             return DocumentationMemberType.Unknown;
         }

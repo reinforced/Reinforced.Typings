@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
 {
@@ -18,24 +21,34 @@ namespace Reinforced.Typings.Generators
             var values = Enum.GetValues(element);
             var name = element.GetName();
             var fmt = Settings.GetDeclarationFormat(element);
+            var fields = element.GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
 
-            sw.Tab();
+            
             Settings.Documentation.WriteDocumentation(element, sw);
             sw.Indent();
-            sw.WriteLine(String.Format(fmt, "enum {0} {{ "), name);
+            sw.Write(String.Format(fmt, "enum {0} {{ "), name);
+            sw.Br();
             sw.Tab();
             for (int index = 0; index < values.Length; index++)
             {
                 var v = values.GetValue(index);
                 var n = Enum.GetName(element, v);
-                sw.Indent();
-                sw.Write("{0} = {1}", n, Convert.ToInt64(v));
-                if (index < values.Length - 1) sw.Write(",");
-                sw.Br();
+                if (fields.ContainsKey(n))
+                {
+                    var fieldItself = fields[n];
+                    Settings.Documentation.WriteDocumentation(fieldItself, sw);
+                    
+                    var attr = fieldItself.GetCustomAttribute<TsValueAttribute>();
+                    if (attr != null) n = attr.Name;
+
+                    sw.Indent();
+                    sw.Write("{0} = {1}", n, Convert.ToInt64(v));
+                    if (index < values.Length - 1) sw.Write(",");
+                    sw.Br();
+                }
             }
             sw.UnTab();
             sw.WriteLine("}");
-            sw.UnTab();
         }
 
         /// <summary>

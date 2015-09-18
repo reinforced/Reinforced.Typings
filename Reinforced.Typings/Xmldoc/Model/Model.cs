@@ -28,10 +28,6 @@ namespace Reinforced.Typings.Xmldoc.Model
             {
                 _name = value;
                 MemberType = _name.MeberType();
-                if (MemberType != DocumentationMemberType.Unknown)
-                {
-                    _name = _name.Substring(2);
-                }
             }
         }
 
