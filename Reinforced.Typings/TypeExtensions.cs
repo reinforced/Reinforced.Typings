@@ -365,10 +365,16 @@ namespace Reinforced.Typings
             return String.Empty;
         }
 
+        /// <summary>
+        /// Binding flags for searching all members
+        /// </summary>
         public const BindingFlags MembersFlags =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly;
 
+        /// <summary>
+        /// Search predicate to exclude ignored and compiler-generated items
+        /// </summary>
         public static readonly Func<MemberInfo, bool> TypeScriptMemberSearchPredicate = c => c.GetCustomAttribute<TsIgnoreAttribute>(false) == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
     }
 }
