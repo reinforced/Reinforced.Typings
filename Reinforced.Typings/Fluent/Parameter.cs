@@ -39,7 +39,7 @@ namespace Reinforced.Typings.Fluent
         static Ts()
         {
             Expression<Func<object>> lambda = () => Parameter<object>(a => a.Ignore());
-            ParametrizedParameterMethod = LambdaHelpers.ParseMethodLambda(lambda);
+            ParametrizedParameterMethod = LambdaHelpers.ParseMethodLambda(lambda).GetGenericMethodDefinition();
         }
     }
 }

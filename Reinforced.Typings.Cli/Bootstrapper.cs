@@ -32,17 +32,24 @@ namespace Reinforced.Typings.Cli
                 PrintHelp();
                 return;
             }
-            _parameters = ExtractParametersFromArgs(args);
-            if (_parameters == null)
+            try
             {
-                Console.WriteLine("No valid parameters found. Exiting.");
-                Environment.Exit(0);
+                _parameters = ExtractParametersFromArgs(args);
+                if (_parameters == null)
+                {
+                    Console.WriteLine("No valid parameters found. Exiting.");
+                    Environment.Exit(0);
+                }
+                var settings = InstantiateExportSettings();
+                ResolveFluentMethod(settings);
+                TsExporter exporter = new TsExporter(settings);
+                exporter.Export();
             }
-            var settings = InstantiateExportSettings();
-            ResolveFluentMethod(settings);
-            TsExporter exporter = new TsExporter(settings);
-            exporter.Export();
-
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Environment.Exit(1);
+            }
 
             Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded", _totalLoadedAssemblies);
 

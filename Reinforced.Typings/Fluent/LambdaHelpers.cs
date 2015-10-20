@@ -82,7 +82,7 @@ namespace Reinforced.Typings.Fluent
         public static MethodInfo ParseMethodLambda(LambdaExpression lambda)
         {
             var mex = lambda.Body as MethodCallExpression;
-            if (mex == null) throw new Exception("Here should be method");
+            if (mex == null) throw new Exception("MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
             return mex.Method;
         }
     }

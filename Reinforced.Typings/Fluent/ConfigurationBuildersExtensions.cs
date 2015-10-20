@@ -224,7 +224,7 @@ namespace Reinforced.Typings.Fluent
             var prop = LambdaHelpers.ParseMethodLambda(method);
             ITypeConfigurationBuilder tcb = tc;
             var methodConf = (IExportConfiguration<TsFunctionAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodExportConfiguration());
-            //todo parameters!
+            ExtractParameters(tcb, method);
             return methodConf;
         }
 
@@ -240,7 +240,7 @@ namespace Reinforced.Typings.Fluent
             var prop = LambdaHelpers.ParseMethodLambda(method);
             ITypeConfigurationBuilder tcb = tc;
             var methodConf = (IExportConfiguration<TsFunctionAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodExportConfiguration());
-            //todo parameters!
+            ExtractParameters(tcb,method);
             return methodConf;
         }
 
@@ -471,7 +471,7 @@ namespace Reinforced.Typings.Fluent
             foreach (var type in types)
             {
                 var tp = type;
-                var conf = (IEnumConfigurationBuidler)builder.EnumConfigurationBuilders.GetOrCreate(type, () =>
+                var conf = builder.EnumConfigurationBuilders.GetOrCreate(type, () =>
                 {
                     var t = typeof(EnumConfigurationBuilder<>).MakeGenericType(tp);
                     return (IEnumConfigurationBuidler)Activator.CreateInstance(t);
@@ -510,5 +510,64 @@ namespace Reinforced.Typings.Fluent
             return c;
         }
         #endregion
+
+        private static void ExtractParameters(ITypeConfigurationBuilder conf, LambdaExpression methodLambda)
+        {
+            var mex = methodLambda.Body as MethodCallExpression;
+            if (mex == null) throw new Exception("MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
+            var mi = mex.Method;
+
+            var methodParameters = mi.GetParameters();
+            if (methodParameters.Length == 0) return;
+
+
+            int i = 0;
+            foreach (var expression in mex.Arguments)
+            {
+                ParameterInfo pi = methodParameters[i];
+                i++;
+
+                var call = expression as MethodCallExpression;
+                if (call != null)
+                {
+                    if (call.Method.IsGenericMethod && call.Method.GetGenericMethodDefinition() == Ts.ParametrizedParameterMethod)
+                    {
+                        ParameterConfigurationBuilder pcb = (ParameterConfigurationBuilder)conf.ParametersConfiguration.GetOrCreate(pi, () => new ParameterConfigurationBuilder());
+
+                        bool parsed = false;
+                        var arg = call.Arguments[0] as LambdaExpression;
+                        if (arg != null)
+                        {
+                            var delg = arg.Compile();
+                            delg.DynamicInvoke(pcb);
+                            parsed = true;
+                        }
+                        var uarg = call.Arguments[0] as UnaryExpression; // convert expression
+                        if (uarg != null)
+                        {
+                            var operand = uarg.Operand as MethodCallExpression;
+                            if (operand != null)
+                            {
+                                var actionArg = operand.Object as ConstantExpression;
+                                if (actionArg != null)
+                                {
+                                    var value = actionArg.Value as MethodInfo;
+                                    if (value != null)
+                                    {
+                                        var param = Expression.Parameter(typeof(ParameterConfigurationBuilder));
+                                        var newCall = Expression.Call(value, param);
+                                        var newLambda = Expression.Lambda(newCall, param);
+                                        var delg = newLambda.Compile();
+                                        delg.DynamicInvoke(pcb);
+                                        parsed = true;
+                                    }
+                                }
+                            }
+                            if (!parsed) throw new Exception(String.Format("Sorry, but {0} is not very good idea for parameter configuration. Try using simple lambda expression.", call.Arguments[0]));
+                        }
+                    }
+                }
+            }
+        }
     }
 }
