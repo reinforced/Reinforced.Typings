@@ -13,51 +13,6 @@ namespace Reinforced.Typings.Fluent
     /// </summary>
     public static class ConfigurationBuildersExtensions
     {
-        #region Properties
-        public static IExportConfiguration<TsPropertyAttribute> WithProperty<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> property)
-        {
-            var prop = LambdaHelpers.ParsePropertyLambda(property);
-            ITypeConfigurationBuilder tcb = tc;
-            return (IExportConfiguration<TsPropertyAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
-        }
-
-        public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate) where T : ITypeConfigurationBuilder
-        {
-            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags).Where(predicate);
-            return ApplyMembersConfiguration(tc, prop);
-        }
-
-        public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
-        {
-            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags).Where(predicate);
-            return ApplyMembersConfiguration(tc, prop, configuration);
-        }
-
-        public static T WithProperties<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsPropertyAttribute>> configuration)
-            where T : ITypeConfigurationBuilder
-        {
-            var prop = typeof(T).GetProperties(bindingFlags);
-            return ApplyMembersConfiguration(tc, prop, configuration);
-        }
-
-        public static T WithProperties<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
-        {
-            var prop = typeof(T).GetProperties(bindingFlags);
-            return ApplyMembersConfiguration(tc, prop);
-        }
-
-        public static T WithProperties<T>(this T tc) where T : ITypeConfigurationBuilder
-        {
-            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags);
-            return ApplyMembersConfiguration(tc, prop);
-        }
-
-        public static T WithPublicProperties<T>(this T tc) where T : ITypeConfigurationBuilder
-        {
-            var prop = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            return ApplyMembersConfiguration(tc, prop);
-        }
-
         private static T ApplyMembersConfiguration<T>(T tc, IEnumerable<MemberInfo> prop, Action<IExportConfiguration<TsPropertyAttribute>> configuration = null)
             where T : ITypeConfigurationBuilder
         {
@@ -79,9 +34,103 @@ namespace Reinforced.Typings.Fluent
             }
             return tc;
         }
+
+        #region Properties
+
+        /// <summary>
+        /// Include specified property to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="property">Property to include</param>
+        /// <returns>Fluent</returns>
+        public static IExportConfiguration<TsPropertyAttribute> WithProperty<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> property)
+        {
+            var prop = LambdaHelpers.ParsePropertyLambda(property);
+            ITypeConfigurationBuilder tcb = tc;
+            return (IExportConfiguration<TsPropertyAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
+        }
+
+        /// <summary>
+        /// Include specified properties to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="predicate">Predicate function that should mathc for properties to include</param>
+        /// <returns>Fluent</returns>
+        public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate) where T : ITypeConfigurationBuilder
+        {
+            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags).Where(predicate);
+            return ApplyMembersConfiguration(tc, prop);
+        }
+
+        /// <summary>
+        /// Include specified properties to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="predicate">Predicate function for properties to include</param>
+        /// <param name="configuration">Configuration to be applied to each property</param>
+        /// <returns>Fluent</returns>
+        public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
+        {
+            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags).Where(predicate);
+            return ApplyMembersConfiguration(tc, prop, configuration);
+        }
+
+        /// <summary>
+        /// Include specified properties to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="bindingFlags">BindingFlags describing properties to include</param>
+        /// <param name="configuration">Configuration to be applied to each property</param>
+        /// <returns>Fluent</returns>
+        public static T WithProperties<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsPropertyAttribute>> configuration)
+            where T : ITypeConfigurationBuilder
+        {
+            var prop = typeof(T).GetProperties(bindingFlags);
+            return ApplyMembersConfiguration(tc, prop, configuration);
+        }
+
+        /// <summary>
+        /// Include specified properties to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="bindingFlags">BindingFlags describing properties to include</param>
+        /// <returns>Fluent</returns>
+        public static T WithProperties<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
+        {
+            var prop = typeof(T).GetProperties(bindingFlags);
+            return ApplyMembersConfiguration(tc, prop);
+        }
+
+        /// <summary>
+        /// Include all properties to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <returns>Fluent</returns>
+        public static T WithAllProperties<T>(this T tc) where T : ITypeConfigurationBuilder
+        {
+            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags);
+            return ApplyMembersConfiguration(tc, prop);
+        }
+
+        /// <summary>
+        /// Include all public properties to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <returns>Fluent</returns>
+        public static T WithPublicProperties<T>(this T tc) where T : ITypeConfigurationBuilder
+        {
+            var prop = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            return ApplyMembersConfiguration(tc, prop);
+        }
         #endregion
 
         #region Fields
+        /// <summary>
+        /// Include specified field to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="field">Field to include</param>
+        /// <returns>Fluent</returns>
         public static IExportConfiguration<TsPropertyAttribute> WithField<T, TData>(this TypeConfigurationBuilder<T> tc,Expression<Func<T, TData>> field)
         {
             var prop = LambdaHelpers.ParseFieldLambda(field);
@@ -89,34 +138,72 @@ namespace Reinforced.Typings.Fluent
             return (IExportConfiguration<TsPropertyAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
         }
 
+        /// <summary>
+        /// Include specified fields to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="predicate">Predicate function that should mathc for fields to include</param>
+        /// <param name="configuration">Configuration to be applied to each field</param>
+        /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMembersConfiguration(tc, prop, configuration);
         }
 
+        /// <summary>
+        /// Include specified fields to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="predicate">Predicate function for fields to include</param>
+        /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMembersConfiguration(tc, prop);
         }
 
+        /// <summary>
+        /// Include specified fields to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="bindingFlags">BindingFlags describing fields to include</param>
+        /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetFields(bindingFlags);
             return ApplyMembersConfiguration(tc, prop);
         }
-        public static T WithFields<T>(this T tc) where T : ITypeConfigurationBuilder
+
+        /// <summary>
+        /// Include all fields to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <returns>Fluent</returns>
+        public static T WithAllFields<T>(this T tc) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetFields(TypeExtensions.MembersFlags);
             return ApplyMembersConfiguration(tc, prop);
         }
+
+        /// <summary>
+        /// Include all public fields to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <returns>Fluent</returns>
         public static T WithPublicFields<T>(this T tc) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Instance);
             return ApplyMembersConfiguration(tc, prop);
         }
 
+        /// <summary>
+        /// Include specified fields to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="bindingFlags">BindingFlags describing fields to include</param>
+        /// <param name="configuration">Configuration to be applied to each field</param>
+        /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetFields(bindingFlags);
@@ -125,6 +212,13 @@ namespace Reinforced.Typings.Fluent
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Include specified method to resulting typing. 
+        /// User <see cref="Ts.Parameter{T}()"/> to mock up method parameters or specify configuration for perticular method parameter
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="method">Method to include</param>
+        /// <returns>Fluent</returns>
         public static IExportConfiguration<TsFunctionAttribute> WithMethod<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> method)
         {
             var prop = LambdaHelpers.ParseMethodLambda(method);
@@ -134,6 +228,13 @@ namespace Reinforced.Typings.Fluent
             return methodConf;
         }
 
+        /// <summary>
+        /// Include specified method to resulting typing. 
+        /// User <see cref="Ts.Parameter{T}()"/> to mock up method parameters or specify configuration for perticular method parameter
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="method">Method to include</param>
+        /// <returns>Fluent</returns>
         public static IExportConfiguration<TsFunctionAttribute> WithMethod<T>(this TypeConfigurationBuilder<T> tc, Expression<Action<T>> method)
         {
             var prop = LambdaHelpers.ParseMethodLambda(method);
@@ -143,35 +244,72 @@ namespace Reinforced.Typings.Fluent
             return methodConf;
         }
 
+        /// <summary>
+        /// Include specified methods to resulting typing. 
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="predicate">Predicate function that should mathc for methods to include</param>
+        /// <param name="configuration">Configuration to be applied to each method</param>
+        /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, Func<MethodInfo, bool> predicate, Action<IExportConfiguration<TsFunctionAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetMethods(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMethodsConfiguration(tc, prop, configuration);
         }
 
+        /// <summary>
+        /// Include specified methods to resulting typing. 
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="bindingFlags">BindingFlags describing methods to include</param>
+        /// <param name="configuration">Configuration to be applied to each method</param>
+        /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsFunctionAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetMethods(bindingFlags);
             return ApplyMethodsConfiguration(tc, prop, configuration);
         }
 
+        /// <summary>
+        /// Include specified methods to resulting typing. 
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="predicate">Predicate function that should mathc for methods to include</param>
+        /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, Func<MethodInfo, bool> predicate) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetMethods(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMethodsConfiguration(tc, prop);
         }
 
+        /// <summary>
+        /// Include specified methods to resulting typing. 
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="bindingFlags">BindingFlags describing methods to include</param>
+        /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetMethods(bindingFlags);
             return ApplyMethodsConfiguration(tc, prop);
         }
 
-        public static T WithMethods<T>(this T tc) where T : ITypeConfigurationBuilder
+        /// <summary>
+        /// Include all methods to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <returns>Fluent</returns>
+        public static T WithAllMethods<T>(this T tc) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetMethods(TypeExtensions.MembersFlags);
             return ApplyMethodsConfiguration(tc, prop);
         }
+
+        /// <summary>
+        /// Include all methods to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <returns>Fluent</returns>
         public static T WithPublicMethods<T>(this T tc) where T : ITypeConfigurationBuilder
         {
             var prop = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
@@ -181,11 +319,23 @@ namespace Reinforced.Typings.Fluent
 
         #region Interfaces
 
+        /// <summary>
+        /// Includes specified type to resulting typing exported as interface
+        /// </summary>
+        /// <typeparam name="T">Type to include</typeparam>
+        /// <param name="builder">Configuration builder</param>
+        /// <returns>Fluent</returns>
         public static InterfaceConfigurationBuilder<T> ExportAsInterface<T>(this ConfigurationBuilder builder)
         {
             return (InterfaceConfigurationBuilder<T>)builder.TypeConfigurationBuilders.GetOrCreate(typeof(T), () => new InterfaceConfigurationBuilder<T>());
         }
 
+        /// <summary>
+        /// Includes specified types to resulting typing exported as interfaces
+        /// </summary>
+        /// <param name="builder">Configuration builder</param>
+        /// <param name="types">Types to include</param>
+        /// <returns>Fluent</returns>
         public static void ExportAsInterfaces(this ConfigurationBuilder builder, IEnumerable<Type> types)
         {
             foreach (var type in types)
@@ -199,6 +349,13 @@ namespace Reinforced.Typings.Fluent
             }
         }
 
+        /// <summary>
+        /// Includes specified types to resulting typing exported as interfaces
+        /// </summary>
+        /// <param name="builder">Configuration builder</param>
+        /// <param name="types">Types to include</param>
+        /// <param name="configuration">Configuration to be applied to each type</param>
+        /// <returns>Fluent</returns>
         public static void ExportAsInterfaces(this ConfigurationBuilder builder, IEnumerable<Type> types, Action<IInterfaceConfigurationBuilder> configuration)
         {
             foreach (var type in types)
@@ -216,11 +373,24 @@ namespace Reinforced.Typings.Fluent
         #endregion
 
         #region Classes
+
+        /// <summary>
+        /// Includes specified type to resulting typing exported as TypeScript class
+        /// </summary>
+        /// <typeparam name="T">Type to include</typeparam>
+        /// <param name="builder">Configuration builder</param>
+        /// <returns>Fluent</returns>
         public static ClassConfigurationBuilder<T> ExportAsClass<T>(this ConfigurationBuilder builder)
         {
             return (ClassConfigurationBuilder<T>)builder.TypeConfigurationBuilders.GetOrCreate(typeof(T), () => new ClassConfigurationBuilder<T>());
         }
 
+        /// <summary>
+        /// Includes specified types to resulting typing exported as TypeScript classes
+        /// </summary>
+        /// <param name="builder">Configuration builder</param>
+        /// <param name="types">Types to include</param>
+        /// <returns>Fluent</returns>
         public static void ExportAsClasses(this ConfigurationBuilder builder, IEnumerable<Type> types)
         {
             foreach (var type in types)
@@ -234,6 +404,13 @@ namespace Reinforced.Typings.Fluent
             }
         }
 
+        /// <summary>
+        /// Includes specified types to resulting typing exported as TypeScript classes
+        /// </summary>
+        /// <param name="builder">Configuration builder</param>
+        /// <param name="types">Types to include</param>
+        /// <param name="configuration">Configuration to be applied to each type</param>
+        /// <returns>Fluent</returns>
         public static void ExportAsClasses(this ConfigurationBuilder builder, IEnumerable<Type> types, Action<IClassConfigurationBuilder> configuration)
         {
             foreach (var type in types)
@@ -250,12 +427,25 @@ namespace Reinforced.Typings.Fluent
         #endregion
 
         #region Enums
+
+        /// <summary>
+        /// Includes specified type to resulting typing exported as TypeScript enumeration
+        /// </summary>
+        /// <typeparam name="T">Type to include</typeparam>
+        /// <param name="builder">Configuration builder</param>
+        /// <returns>Fluent</returns>
         public static EnumConfigurationBuilder<T> ExportAsEnum<T>(this ConfigurationBuilder builder)
             where T:struct 
         {
             return (EnumConfigurationBuilder<T>)builder.EnumConfigurationBuilders.GetOrCreate(typeof(T), () => new EnumConfigurationBuilder<T>());
         }
 
+        /// <summary>
+        /// Includes specified types to resulting typing exported as TypeScript enumerations
+        /// </summary>
+        /// <param name="builder">Configuration builder</param>
+        /// <param name="types">Types to include</param>
+        /// <returns>Fluent</returns>
         public static void ExportAsEnums(this ConfigurationBuilder builder, IEnumerable<Type> types)
         {
             foreach (var type in types)
@@ -269,6 +459,13 @@ namespace Reinforced.Typings.Fluent
             }
         }
 
+        /// <summary>
+        /// Includes specified types to resulting typing exported as TypeScript enumerations
+        /// </summary>
+        /// <param name="builder">Configuration builder</param>
+        /// <param name="types">Types to include</param>
+        /// <param name="configuration">Configuration to be applied to each type</param>
+        /// <returns>Fluent</returns>
         public static void ExportAsEnums(this ConfigurationBuilder builder, IEnumerable<Type> types, Action<IEnumConfigurationBuidler> configuration)
         {
             foreach (var type in types)
@@ -283,6 +480,13 @@ namespace Reinforced.Typings.Fluent
             }
         }
 
+        /// <summary>
+        /// Retrieves configuration builder for particular enumeration value
+        /// </summary>
+        /// <typeparam name="T">Enumeration type</typeparam>
+        /// <param name="conf">Configuration builder</param>
+        /// <param name="value">Enum value</param>
+        /// <returns>Configuration builder</returns>
         public static EnumValueExportConfiguration Value<T>(this EnumConfigurationBuilder<T> conf, T value)
             where T:struct 
         {
@@ -293,6 +497,12 @@ namespace Reinforced.Typings.Fluent
             return c;
         }
 
+        /// <summary>
+        /// Retrieves configuration builder for particular enumeration value
+        /// </summary>
+        /// <param name="conf">Configuration builder</param>
+        /// <param name="propertyName">String enum property name</param>
+        /// <returns>Configuration builder</returns>
         public static EnumValueExportConfiguration Value(this IEnumConfigurationBuidler conf, string propertyName)
         {
             var field = conf.EnumType.GetField(propertyName);
