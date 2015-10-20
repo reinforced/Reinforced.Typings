@@ -3,7 +3,7 @@ using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
 {
-    internal class PropertyExportConfiguration : IExportConfiguration<TsPropertyAttribute>, IIgnorable
+    public class PropertyExportConfiguration : IExportConfiguration<TsPropertyAttribute>, IIgnorable
     {
         bool IIgnorable.Ignore { get; set; }
         private TsPropertyAttribute AttributePrototype { get; set; }

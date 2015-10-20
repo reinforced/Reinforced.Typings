@@ -39,7 +39,7 @@ namespace Reinforced.Typings.Fluent
 
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
 
-        ICollection<TsAddTypeReferenceAttribute> IReferenceConfiguration.References
+        ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
         {
             get { return this._references; }
         }

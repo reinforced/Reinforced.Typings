@@ -90,7 +90,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="configuration">Configurator</param>
         /// <param name="referenceFile">Path to referenced file</param>
-        public static T AddReference<T>(this T configuration,string referenceFile) where T : IReferenceConfiguration
+        public static T AddReference<T>(this T configuration,string referenceFile) where T : IReferenceConfigurationBuilder
         {
             configuration.References.Add(new TsAddTypeReferenceAttribute(referenceFile));
             return configuration;
@@ -101,7 +101,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="configuration">Configurator</param>
         /// <param name="referencedType">Another generated type that should be referenced</param>
-        public static T AddReference<T>(this T configuration, Type referencedType) where T : IReferenceConfiguration
+        public static T AddReference<T>(this T configuration, Type referencedType) where T : IReferenceConfigurationBuilder
         {
             configuration.References.Add(new TsAddTypeReferenceAttribute(referencedType));
             return configuration;

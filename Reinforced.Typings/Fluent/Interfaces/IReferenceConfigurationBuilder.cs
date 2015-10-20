@@ -3,7 +3,7 @@ using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Fluent.Interfaces
 {
-    public interface IReferenceConfiguration
+    public interface IReferenceConfigurationBuilder
     {
         ICollection<TsAddTypeReferenceAttribute> References { get; }
     }

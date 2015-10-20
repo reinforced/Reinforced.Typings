@@ -43,11 +43,11 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="property">Property to include</param>
         /// <returns>Fluent</returns>
-        public static IExportConfiguration<TsPropertyAttribute> WithProperty<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> property)
+        public static PropertyExportConfiguration WithProperty<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> property)
         {
             var prop = LambdaHelpers.ParsePropertyLambda(property);
             ITypeConfigurationBuilder tcb = tc;
-            return (IExportConfiguration<TsPropertyAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
+            return (PropertyExportConfiguration)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
         }
 
         /// <summary>
@@ -131,11 +131,11 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="field">Field to include</param>
         /// <returns>Fluent</returns>
-        public static IExportConfiguration<TsPropertyAttribute> WithField<T, TData>(this TypeConfigurationBuilder<T> tc,Expression<Func<T, TData>> field)
+        public static PropertyExportConfiguration WithField<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> field)
         {
             var prop = LambdaHelpers.ParseFieldLambda(field);
             ITypeConfigurationBuilder tcb = tc;
-            return (IExportConfiguration<TsPropertyAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
+            return (PropertyExportConfiguration)tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
         }
 
         /// <summary>
@@ -219,11 +219,11 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="method">Method to include</param>
         /// <returns>Fluent</returns>
-        public static IExportConfiguration<TsFunctionAttribute> WithMethod<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> method)
+        public static MethodExportConfiguration WithMethod<T, TData>(this TypeConfigurationBuilder<T> tc, Expression<Func<T, TData>> method)
         {
             var prop = LambdaHelpers.ParseMethodLambda(method);
             ITypeConfigurationBuilder tcb = tc;
-            var methodConf = (IExportConfiguration<TsFunctionAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodExportConfiguration());
+            var methodConf = (MethodExportConfiguration)tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodExportConfiguration());
             ExtractParameters(tcb, method);
             return methodConf;
         }
@@ -235,11 +235,11 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="method">Method to include</param>
         /// <returns>Fluent</returns>
-        public static IExportConfiguration<TsFunctionAttribute> WithMethod<T>(this TypeConfigurationBuilder<T> tc, Expression<Action<T>> method)
+        public static MethodExportConfiguration WithMethod<T>(this TypeConfigurationBuilder<T> tc, Expression<Action<T>> method)
         {
             var prop = LambdaHelpers.ParseMethodLambda(method);
             ITypeConfigurationBuilder tcb = tc;
-            var methodConf = (IExportConfiguration<TsFunctionAttribute>)tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodExportConfiguration());
+            var methodConf = (MethodExportConfiguration)tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodExportConfiguration());
             ExtractParameters(tcb,method);
             return methodConf;
         }

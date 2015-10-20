@@ -3,7 +3,7 @@ using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
 {
-    internal class MethodExportConfiguration : IExportConfiguration<TsFunctionAttribute>, IIgnorable
+    public class MethodExportConfiguration : IExportConfiguration<TsFunctionAttribute>, IIgnorable
     {
         bool IIgnorable.Ignore { get; set; }
         private TsFunctionAttribute AttributePrototype { get; set; }

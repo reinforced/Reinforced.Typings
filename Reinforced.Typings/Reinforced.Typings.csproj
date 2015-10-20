@@ -76,9 +76,9 @@
     <Compile Include="Fluent\Interfaces\IClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IEnumConfigurationBuidler.cs" />
     <Compile Include="Fluent\Interfaces\IExportConfiguration.cs" />
-    <Compile Include="Fluent\Interfaces\IExportConfigurationNongeneric.cs" />
+    <Compile Include="Fluent\Interfaces\IIgnorable.cs" />
     <Compile Include="Fluent\Interfaces\IInterfaceConfigurationBuilder.cs" />
-    <Compile Include="Fluent\Interfaces\IReferenceConfiguration.cs" />
+    <Compile Include="Fluent\Interfaces\IReferenceConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\ITypeConfigurationBuilder.cs" />
     <Compile Include="Fluent\ParameterConfigurationBuilder.cs" />
     <Compile Include="Fluent\InterfaceConfigurationBuilder.cs" />
