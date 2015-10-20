@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Attributes
     /// <summary>
     /// Base attribute for class members and method parameters
     /// </summary>
-    public abstract class TsTypedMemberAttributeBase : TsTypedAttributeBase
+    public abstract class TsTypedMemberAttributeBase : TsTypedAttributeBase, INameOverrideAttribute
     {
         /// <summary>
         /// Overrides member name

@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Attributes
     /// We need this attribute because it is programmatically impossible to determine :base call parameters
     /// via reflection. So in this case we need some help from user's side
     /// </summary>
-    [AttributeUsage(AttributeTargets.Constructor,AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Constructor)]
     public class TsBaseParamAttribute : Attribute
     {
         /// <summary>

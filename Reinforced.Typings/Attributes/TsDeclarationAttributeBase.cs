@@ -3,7 +3,7 @@
     /// <summary>
     /// Base attribute for so-called compilation unit (class, enum, interface etc)
     /// </summary>
-    public abstract class TsDeclarationAttributeBase : TsAttributeBase
+    public abstract class TsDeclarationAttributeBase : TsAttributeBase, INameOverrideAttribute
     {
         /// <summary>
         /// Place to corresponding namespace

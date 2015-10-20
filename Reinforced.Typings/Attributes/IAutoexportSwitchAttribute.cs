@@ -3,19 +3,19 @@
 namespace Reinforced.Typings.Attributes
 {
     /// <summary>
-    /// Interface <c>containing</c> base properties for some attributes
+    /// Interface containing base properties for some attributes
     /// </summary>
     public interface IAutoexportSwitchAttribute
     {
         /// <summary>
         /// When true, code for all methods will be automatically generated
         /// </summary>
-        bool AutoExportMethods { get; }
+        bool AutoExportMethods { get; set; }
 
         /// <summary>
         /// When true, code for all properties will be automatically generated
         /// </summary>
-        bool AutoExportProperties { get; }
+        bool AutoExportProperties { get; set; }
 
         /// <summary>
         /// When true, code for all fields will be automatically generated

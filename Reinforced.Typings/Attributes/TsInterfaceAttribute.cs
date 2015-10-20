@@ -33,7 +33,10 @@ namespace Reinforced.Typings.Attributes
             get { return null; }
         }
 
-        bool IAutoexportSwitchAttribute.AutoExportConstructors { get { return false; } }
+        bool IAutoexportSwitchAttribute.AutoExportConstructors
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Constructs new instance of TsInterfaceAttribute

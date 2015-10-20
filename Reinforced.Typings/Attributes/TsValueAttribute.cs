@@ -6,7 +6,7 @@ namespace Reinforced.Typings.Attributes
     /// Specifies exporting enum value
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class TsValueAttribute : TsAttributeBase
+    public class TsValueAttribute : TsAttributeBase, INameOverrideAttribute
     {
         /// <summary>
         /// Overrides enum value name

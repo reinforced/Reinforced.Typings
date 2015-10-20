@@ -39,7 +39,6 @@ namespace Reinforced.Typings.Attributes
         public TsClassAttribute()
         {
             AutoExportProperties = true;
-            AutoExportFields = false;
             AutoExportMethods = true;
             IncludeNamespace = true;
             AutoExportConstructors = false;
