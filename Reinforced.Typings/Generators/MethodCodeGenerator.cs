@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Generators
         protected virtual void GetFunctionNameAndReturnType(MethodInfo element, TypeResolver resolver, out string name, out string type)
         {
             name = element.Name;
-            var fa = element.GetCustomAttribute<TsFunctionAttribute>(false);
+            var fa = ConfigurationRepository.Instance.ForMember(element);
 
             if (fa != null)
             {

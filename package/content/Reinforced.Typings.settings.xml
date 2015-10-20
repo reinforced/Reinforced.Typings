@@ -20,6 +20,23 @@
 		<RtTargetFile>$(ProjectDir)Scripts\project.ts</RtTargetFile>
 		
 		<!--
+			This property sets RT configuration method for fluent configuration.
+			If you dont want to use attributes for some reason then here you can
+			specify full-qualified configuration method name (including namespace, 
+			type and method name, e.g. My.Assembly.Configuration.ConfigureTypings) 
+			of method that consumes Reinforce.Typings.Fluent.ConfigurationBuilder type
+			and is void (nothing returns). This method will be executed to build 
+			types exporting configuration in fluent manner.
+			Surely you can continue using attributes. Also fluent configuration methods
+			could not provide a way to configure some specific things (generics parameters
+			override and classes' TsBaseParam). However in this case fluent configuration
+			would be preferred. It means that if member configuration is supplied both 
+			in attributes and in fluent methods then configuration from fluent methods will
+			be used.
+		-->
+		<RtConfigurationMethod></RtConfigurationMethod>
+		
+		<!--
 			Boolean parameter that controls writing of "auto-generated warning" comment to each generated file.
 			It meant the comment like "// This code was generated blah blah blah..."
 			'true' (default) to write warning comment about auto-generated to every file. 

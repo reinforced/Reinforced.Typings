@@ -50,13 +50,13 @@ namespace Reinforced.Typings
         /// <returns>Code generator for specified type member</returns>
         public ITsCodeGenerator<T> GeneratorFor<T>(T member, ExportSettings settings) where T : MemberInfo
         {
-            var attr = member.GetCustomAttribute<TsAttributeBase>(false);
+            var attr = ConfigurationRepository.Instance.ForMember<TsTypedMemberAttributeBase>(member);
             var fromAttr = GetFromAttribute<T>(attr, settings);
             if (fromAttr != null) return fromAttr;
             if (member is MethodInfo)
             {
                 var decType = member.DeclaringType;
-                var classAttr = decType.GetCustomAttribute<TsClassAttribute>(false);
+                var classAttr = ConfigurationRepository.Instance.ForType<TsClassAttribute>(decType);
                 if (classAttr != null && classAttr.DefaultMethodCodeGenerator != null)
                 {
                     return LazilyInstantiateGenerator<T>(classAttr.DefaultMethodCodeGenerator, settings);
@@ -76,7 +76,7 @@ namespace Reinforced.Typings
         /// <returns>Code generator for parameter info</returns>
         public ITsCodeGenerator<ParameterInfo> GeneratorFor(ParameterInfo member, ExportSettings settings)
         {
-            var attr = member.GetCustomAttribute<TsAttributeBase>(false);
+            var attr =ConfigurationRepository.Instance.ForMember(member);
             var fromAttr = GetFromAttribute<ParameterInfo>(attr, settings);
             if (fromAttr != null) return fromAttr;
             return _defaultParameterGenerator;
@@ -91,7 +91,7 @@ namespace Reinforced.Typings
         /// <returns>Code generator for specified type</returns>
         public ITsCodeGenerator<Type> GeneratorFor(Type member, ExportSettings settings)
         {
-            var attr = member.GetCustomAttribute<TsAttributeBase>(false);
+            var attr = ConfigurationRepository.Instance.ForType(member);
             var fromAttr = GetFromAttribute<Type>(attr, settings);
             if (fromAttr != null) return fromAttr;
 
@@ -139,16 +139,6 @@ namespace Reinforced.Typings
             }
         }
 
-        private readonly HashSet<Type> _numerics = new HashSet<Type>
-        {
-            typeof(byte),typeof(sbyte),
-            typeof(short),typeof(ushort),
-            typeof(int),typeof(uint),
-            typeof(long),typeof(ulong),
-            typeof(float),typeof(double),
-            typeof(decimal)
-        };
-
         private string GetConcreteGenericArguments(Type t)
         {
             if (!t.IsGenericType) return String.Empty;
@@ -195,7 +185,7 @@ namespace Reinforced.Typings
         {
             if (_resolveCache.ContainsKey(t)) return TruncateNamespace(_resolveCache[t]);
 
-            var td = t.GetCustomAttribute<TsDeclarationAttributeBase>(false);
+            var td = ConfigurationRepository.Instance.ForType(t);
             if (td != null)
             {
                 string ns = t.Namespace;

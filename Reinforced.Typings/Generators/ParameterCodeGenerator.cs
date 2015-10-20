@@ -55,7 +55,7 @@ namespace Reinforced.Typings.Generators
             string type;
             bool isNullable = false;
 
-            var fa = element.GetCustomAttribute<TsParameterAttribute>(false);
+            var fa = ConfigurationRepository.Instance.ForMember(element);
             var defaultValue = GetDefaultValue(element, fa);
             if (fa != null)
             {

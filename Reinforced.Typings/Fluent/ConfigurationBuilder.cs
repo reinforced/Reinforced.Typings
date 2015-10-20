@@ -9,11 +9,19 @@ using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
 {
+    /// <summary>
+    /// Fluent configuration builder
+    /// </summary>
     public class ConfigurationBuilder
     {
         private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders = new Dictionary<Type, ITypeConfigurationBuilder>();
         private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders = new Dictionary<Type, IEnumConfigurationBuidler>();
+        private readonly List<string> _references = new List<string>();
 
+        internal List<string> References
+        {
+            get { return _references; }
+        }
 
         internal Dictionary<Type, ITypeConfigurationBuilder> TypeConfigurationBuilders
         {
@@ -74,7 +82,12 @@ namespace Reinforced.Typings.Fluent
                     }
                     repository.AttributesForParameters[kvp.Key] = kvp.Value.AttributePrototype;
                 }
+                var refsList = repository.ReferenceAttributes.GetOrCreate(kv.Key);
+                refsList.AddRange(kv.Value.References);
+                var attrs = kv.Key.GetCustomAttributes<TsAddTypeReferenceAttribute>();
+                if (attrs != null) refsList.AddRange(attrs);
             }
+            repository.References.AddRange(_references);
             return repository;
         }
     }

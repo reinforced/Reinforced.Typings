@@ -92,6 +92,11 @@ namespace Reinforced.Typings.Integrate
         /// Documentation generator switch
         /// </summary>
         public bool GenerateDocumentation { get; set; }
+
+        /// <summary>
+        /// Full-qualified name of fluent configuration method
+        /// </summary>
+        public string ConfigurationMethod { get; set; }
         
         protected override string GenerateFullPathToTool()
         {

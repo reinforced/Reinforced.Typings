@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -20,6 +22,7 @@ namespace Reinforced.Typings
         private bool _camelCaseForProperties;
         private string _documentationFilePath;
         private bool _generateDocumentation;
+        private Action<ConfigurationBuilder> _configurationMethod;
 
         /// <summary>
         /// The assemblies to extract typings from. 
@@ -157,6 +160,19 @@ namespace Reinforced.Typings
             {
                 if (_isLocked) return;
                 _documentationFilePath = value;
+            }
+        }
+
+        /// <summary>
+        /// Fluent configuration method
+        /// </summary>
+        public Action<ConfigurationBuilder> ConfigurationMethod
+        {
+            get { return _configurationMethod; }
+            set
+            {
+                if (_isLocked) return;
+                _configurationMethod = value;
             }
         }
 

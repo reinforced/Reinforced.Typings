@@ -36,5 +36,12 @@ namespace Reinforced.Typings.Fluent
         }
 
         Type IEnumConfigurationBuidler.EnumType { get { return typeof (TEnum); } }
+
+        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
+
+        ICollection<TsAddTypeReferenceAttribute> IReferenceConfiguration.References
+        {
+            get { return this._references; }
+        }
     }
 }

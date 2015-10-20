@@ -5,7 +5,7 @@ using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Fluent.Interfaces
 {
-    public interface IEnumConfigurationBuidler : IExportConfiguration<TsEnumAttribute>
+    public interface IEnumConfigurationBuidler : IExportConfiguration<TsEnumAttribute>, IReferenceConfiguration
     {
         Type EnumType { get; }
         Dictionary<FieldInfo, EnumValueExportConfiguration> ValueExportConfigurations { get; }

@@ -5,7 +5,7 @@ using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Fluent.Interfaces
 {
-    public interface ITypeConfigurationBuilder
+    public interface ITypeConfigurationBuilder : IReferenceConfiguration
     {
         Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> ParametersConfiguration { get; }
         Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>> MembersConfiguration { get; }

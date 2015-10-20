@@ -86,7 +86,7 @@ namespace Reinforced.Typings.Fluent
 
         /// <summary>
         /// Adds reference directive to file containing single TS class typing. 
-        /// It method is only used while splitting generated type sto different files
+        /// This method is only used while splitting generated types to different files
         /// </summary>
         /// <param name="configuration">Configurator</param>
         /// <param name="referenceFile">Path to referenced file</param>
@@ -97,7 +97,7 @@ namespace Reinforced.Typings.Fluent
         }
         /// <summary>
         /// Adds reference directive to file containing single TS class typing. 
-        /// It method is only used while splitting generated type sto different files
+        /// This method is only used while splitting generated types to different files
         /// </summary>
         /// <param name="configuration">Configurator</param>
         /// <param name="referencedType">Another generated type that should be referenced</param>
@@ -322,6 +322,18 @@ namespace Reinforced.Typings.Fluent
         public static T AutoI<T>(this T conf, bool auto = true) where T : IExportConfiguration<TsInterfaceAttribute>
         {
             conf.AttributePrototype.AutoI = auto;
+            return conf;
+        }
+
+        /// <summary>
+        /// Adds global reference to another typescript library
+        /// </summary>
+        /// <param name="conf">Table configurator</param>
+        /// <param name="reference">Full path to .d.ts or .ts file</param>
+        /// <returns>Fluent</returns>
+        public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string reference)
+        {
+            conf.References.Add(reference);
             return conf;
         }
         #endregion

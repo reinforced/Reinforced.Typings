@@ -38,7 +38,7 @@ namespace Reinforced.Typings.Generators
                     var fieldItself = fields[n];
                     Settings.Documentation.WriteDocumentation(fieldItself, sw);
                     
-                    var attr = fieldItself.GetCustomAttribute<TsValueAttribute>();
+                    var attr = ConfigurationRepository.Instance.ForEnumValue(fieldItself);
                     if (attr != null) n = attr.Name;
 
                     sw.Indent();

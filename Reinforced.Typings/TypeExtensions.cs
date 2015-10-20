@@ -11,7 +11,7 @@ namespace Reinforced.Typings
     /// <summary>
     /// Useful extensions for reflection
     /// </summary>
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
         /// <summary>
         /// Determines is type derived from Nullable or not
@@ -95,7 +95,7 @@ namespace Reinforced.Typings
         /// <returns>True, if supplied type should be exported as interface. False otherwise</returns>
         public static bool IsExportingAsInterface(this Type t)
         {
-            return t.GetCustomAttribute<TsInterfaceAttribute>(false) != null;
+            return ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t)  != null;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Reinforced.Typings
         /// <returns>True if type member should be ignored, false otherwise</returns>
         public static bool IsIgnored(this MemberInfo t)
         {
-            return t.GetCustomAttribute<TsIgnoreAttribute>() != null;
+            return ConfigurationRepository.Instance.IsIgnored(t);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Reinforced.Typings
         /// <returns>True if parameter should be ignored, false otherwise</returns>
         public static bool IsIgnored(this ParameterInfo t)
         {
-            return t.GetCustomAttribute<TsIgnoreAttribute>() != null;
+            return ConfigurationRepository.Instance.IsIgnored(t);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Reinforced.Typings
         /// <returns>Parameter name</returns>
         public static string GetName(this ParameterInfo element)
         {
-            var fa = element.GetCustomAttribute<TsParameterAttribute>(false);
+            var fa = ConfigurationRepository.Instance.ForMember(element);
             if (fa != null && !String.IsNullOrEmpty(fa.Name)) return fa.Name;
             return element.Name;
         }
@@ -178,7 +178,7 @@ namespace Reinforced.Typings
         {
             if (t.IsEnum)
             {
-                var te = t.GetCustomAttribute<TsEnumAttribute>(false);
+                var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
                 string ns = t.Name;
                 if (te != null && !String.IsNullOrEmpty(te.Name))
                 {
@@ -187,8 +187,8 @@ namespace Reinforced.Typings
                 return ns;
             }
 
-            var tc = t.GetCustomAttribute<TsClassAttribute>(false);
-            var ti = t.GetCustomAttribute<TsInterfaceAttribute>(false);
+            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
+            var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
             string nameFromAttr = tc != null ? tc.Name : ti.Name;
             var name = (!String.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName()) + t.SerializeGenericArguments();
             if (ti != null)
@@ -208,7 +208,7 @@ namespace Reinforced.Typings
         {
             if (t.IsEnum)
             {
-                var te = t.GetCustomAttribute<TsEnumAttribute>(false);
+                var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
                 string ns = t.Namespace;
                 if (te != null && te.IncludeNamespace && !String.IsNullOrEmpty(te.Namespace))
                 {
@@ -216,8 +216,8 @@ namespace Reinforced.Typings
                 }
                 return ns;
             }
-            var tc = t.GetCustomAttribute<TsClassAttribute>(false);
-            var ti = t.GetCustomAttribute<TsInterfaceAttribute>(false);
+            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
+            var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
             if (tc == null && ti == null) return t.Namespace;
             string nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
             bool includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
@@ -376,6 +376,7 @@ namespace Reinforced.Typings
         /// <summary>
         /// Search predicate to exclude ignored and compiler-generated items
         /// </summary>
-        public static readonly Func<MemberInfo, bool> TypeScriptMemberSearchPredicate = c => c.GetCustomAttribute<TsIgnoreAttribute>(false) == null && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
+        public static readonly Func<MemberInfo, bool> TypeScriptMemberSearchPredicate = 
+            c => !ConfigurationRepository.Instance.IsIgnored(c) && c.GetCustomAttribute<CompilerGeneratedAttribute>() == null;
     }
 }

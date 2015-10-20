@@ -140,6 +140,20 @@ Example:   rtcli.exe GenerateDocumentation=""false"" ")]
         public bool GenerateDocumentation { get; set; }
 
         /// <summary>
+        /// Sets full-qualified name of configuration method to be applied to retrieve fluent configuration instead of attribute-based configuration.
+        /// Configuration method should be static and consume Reinforced.Typings.Fluent.ConfigurationBuilder as first parameter. 
+        /// Warning! It is important for Configuration method to be full-qualified and it should be located in the one of referenced assemblies!
+        /// </summary>
+        [ConsoleHelp(@"
+Sets full-qualified name of configuration method 
+to be applied to retrieve fluent configuration 
+instead of attribute-based configuration. 
+Configuration method should be static and consume 
+ConfigurationBuilder as first parameter.
+Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.ConfigureTypings"" ")]
+        public string ConfigurationMethod { get; set; }
+
+        /// <summary>
         /// Validates input parameters
         /// </summary>
         public void Validate()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -21,6 +22,7 @@ namespace Reinforced.Typings
         private List<Type> _allTypes;
         private HashSet<Type> _allTypesHash;
         private readonly FilesOperations _fileOps;
+        private ConfigurationRepository _configurationRepository;
 
         #region Constructors
 
@@ -32,6 +34,7 @@ namespace Reinforced.Typings
         {
             _settings = settings;
             _fileOps = new FilesOperations(settings);
+
         }
 
         #endregion
@@ -39,17 +42,29 @@ namespace Reinforced.Typings
         private void ExtractReferences()
         {
             if (_isAnalyzed) return;
-            _allTypes = _settings.SourceAssemblies.SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null)).ToList();
+            if (_settings.ConfigurationMethod != null)
+            {
+                ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+                _settings.ConfigurationMethod(configurationBuilder);
+                _configurationRepository = configurationBuilder.Build();
+                ConfigurationRepository.Instance = _configurationRepository;
+            }
+
+            _allTypes = _settings.SourceAssemblies
+                .SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
+                .Union(ConfigurationRepository.Instance.AttributesForType.Keys).Distinct()
+                .ToList();
 
             _allTypesHash = new HashSet<Type>(_allTypes);
 
             var grp = _allTypes.GroupBy(c => c.GetNamespace(true));
-            _namespace = grp.Where(g=>!string.IsNullOrEmpty(g.Key)) // avoid anonymous types
+            _namespace = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
 
             _settings.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                     .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
                     .Select(c => string.Format("/// <reference path=\"{0}\"/>", c.Path))
+                    .Union(ConfigurationRepository.Instance.References.Select(c => string.Format("/// <reference path=\"{0}\"/>", c)))
                     .ToList()
                     .ForEach(a => _referenceBuilder.AppendLine(a));
 

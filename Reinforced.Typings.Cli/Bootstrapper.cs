@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Reinforced.Typings.Fluent;
 
 namespace Reinforced.Typings.Cli
 {
@@ -38,7 +39,7 @@ namespace Reinforced.Typings.Cli
                 Environment.Exit(0);
             }
             var settings = InstantiateExportSettings();
-
+            ResolveFluentMethod(settings);
             TsExporter exporter = new TsExporter(settings);
             exporter.Export();
 
@@ -47,6 +48,34 @@ namespace Reinforced.Typings.Cli
 
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
 
+        }
+
+        private static void ResolveFluentMethod(ExportSettings settings)
+        {
+            if (string.IsNullOrEmpty(_parameters.ConfigurationMethod)) return;
+            var methodPath = _parameters.ConfigurationMethod;
+            var path = new Stack<string>(methodPath.Split('.'));
+            var method = path.Pop();
+            var fullQualifiedType = string.Join(".", path);
+
+            foreach (var sourceAssembly in settings.SourceAssemblies)
+            {
+                var type = sourceAssembly.GetType(fullQualifiedType, false);
+                if (type != null)
+                {
+                    var constrMethod = type.GetMethod(method);
+                    if (constrMethod != null && constrMethod.IsStatic)
+                    {
+
+                        var pars = constrMethod.GetParameters();
+                        if (pars.Length == 1 && pars[0].ParameterType == typeof(ConfigurationBuilder))
+                        {
+                            settings.ConfigurationMethod = builder => constrMethod.Invoke(null, new object[] { builder });
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public static ExportSettings InstantiateExportSettings()
@@ -178,12 +207,12 @@ namespace Reinforced.Typings.Cli
                     }
                     Console.WriteLine(propertyInfo.Name + " " + requiredText);
 
-                    var lines = attr.HelpText.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = attr.HelpText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var line in lines)
                     {
-                        Console.WriteLine("\t{0}",line);
+                        Console.WriteLine("\t{0}", line);
                     }
-                    
+
                     Console.WriteLine();
                 }
             }

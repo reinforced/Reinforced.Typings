@@ -15,10 +15,10 @@ namespace Reinforced.Typings.Fluent
     /// <typeparam name="TType"></typeparam>
     public abstract class TypeConfigurationBuilder<TType> : ITypeConfigurationBuilder
     {
-        Type ITypeConfigurationBuilder.Type { get { return typeof (TType); } }
+        Type ITypeConfigurationBuilder.Type { get { return typeof(TType); } }
 
-        private readonly Dictionary<MemberInfo,IExportConfiguration<TsAttributeBase>> _membersConfiguration = new Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>>();
-        private readonly Dictionary<ParameterInfo,IExportConfiguration<TsParameterAttribute>> _parametersConfiguration = new Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>>();
+        private readonly Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>> _membersConfiguration = new Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>>();
+        private readonly Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> _parametersConfiguration = new Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>>();
 
 
         Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> ITypeConfigurationBuilder.ParametersConfiguration
@@ -30,6 +30,13 @@ namespace Reinforced.Typings.Fluent
         Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>> ITypeConfigurationBuilder.MembersConfiguration
         {
             get { return _membersConfiguration; }
+        }
+
+        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
+
+        ICollection<TsAddTypeReferenceAttribute> IReferenceConfiguration.References
+        {
+            get { return this._references; }
         }
     }
 }

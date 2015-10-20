@@ -20,7 +20,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="sw">Output writer</param>
         public virtual void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
-            var tc = element.GetCustomAttribute<TsClassAttribute>(false);
+            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(element);
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
             Export("class", element, resolver, sw, tc);
         }
@@ -54,7 +54,7 @@ namespace Reinforced.Typings.Generators
             bool baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
             {
-                if (bs.GetCustomAttribute<TsAttributeBase>(false) != null)
+                if (ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs) != null)
                 {
                     if (bs.IsExportingAsInterface()) baseClassIsExportedAsInterface = true;
                     else
@@ -63,7 +63,8 @@ namespace Reinforced.Typings.Generators
                     }
                 }
             }
-            var ifacesStrings = ifaces.Where(c => c.GetCustomAttribute<TsInterfaceAttribute>(false) != null).Select(resolver.ResolveTypeName).ToList();
+            var ifacesStrings = ifaces.Where(c => ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(c) != null)
+                .Select(resolver.ResolveTypeName).ToList();
             if (baseClassIsExportedAsInterface)
             {
                 ifacesStrings.Add(resolver.ResolveTypeName(bs));
@@ -118,7 +119,7 @@ namespace Reinforced.Typings.Generators
                     // but still. It is better thatn nothing
 
                     Settings.Documentation.WriteComment(sw, String.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
-                    var basExSwtch = element.BaseType.GetCustomAttribute<TsInterfaceAttribute>();
+                    var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element);
                     Settings.SpecialCase = true;
                     ExportFields(element.BaseType, resolver, sw, basExSwtch);
                     ExportMethods(element.BaseType, resolver, sw, basExSwtch);
@@ -139,7 +140,7 @@ namespace Reinforced.Typings.Generators
             var fields = element.GetFields(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate).OfType<FieldInfo>();
             if (!swtch.AutoExportFields)
             {
-                fields = fields.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
+                fields = fields.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
             }
             GenerateMembers(element, resolver, sw, fields);
         }
@@ -156,7 +157,7 @@ namespace Reinforced.Typings.Generators
             var properties = element.GetProperties(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate).OfType<PropertyInfo>();
             if (!swtch.AutoExportProperties)
             {
-                properties = properties.Where(c => c.GetCustomAttribute<TsPropertyAttribute>(false) != null);
+                properties = properties.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
             }
             GenerateMembers(element, resolver, sw, properties);
         }
@@ -173,7 +174,7 @@ namespace Reinforced.Typings.Generators
             var methods = element.GetMethods(TypeExtensions.MembersFlags).Where(c => TypeExtensions.TypeScriptMemberSearchPredicate(c) && !c.IsSpecialName);
             if (!swtch.AutoExportMethods)
             {
-                methods = methods.Where(c => c.GetCustomAttribute<TsFunctionAttribute>(false) != null);
+                methods = methods.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
             }
             GenerateMembers(element, resolver, sw, methods);
         }

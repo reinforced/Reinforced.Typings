@@ -22,7 +22,7 @@ namespace Reinforced.Typings.Generators
             var t = GetType(element);
             string typeName = null;
             string propName = element.Name;
-            var tp = element.GetCustomAttribute<TsPropertyAttribute>(false);
+            var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
             if (tp != null)
             {
                 if (tp.StrongType != null)

@@ -67,6 +67,7 @@
 			CamelCaseForProperties="$(RtCamelCaseForProperties)"
 			DocumentationFilePath="$(MSBuildProjectDirectory)\$(DocumentationFile)"
 			GenerateDocumentation="$(RtGenerateDocumentation)"
+			ConfigurationMethod="$(RtConfigurationMethod)"
 		/>
 		
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != ''" />
