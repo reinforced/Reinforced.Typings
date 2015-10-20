@@ -119,7 +119,7 @@ namespace Reinforced.Typings.Generators
                     // but still. It is better thatn nothing
 
                     Settings.Documentation.WriteComment(sw, String.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
-                    var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element);
+                    var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element.BaseType);
                     Settings.SpecialCase = true;
                     ExportFields(element.BaseType, resolver, sw, basExSwtch);
                     ExportMethods(element.BaseType, resolver, sw, basExSwtch);
@@ -137,7 +137,10 @@ namespace Reinforced.Typings.Generators
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
         protected virtual void ExportFields(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
         {
-            var fields = element.GetFields(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate).OfType<FieldInfo>();
+            var fields =
+                element.GetFields(TypeExtensions.MembersFlags)
+                    .Where(TypeExtensions.TypeScriptMemberSearchPredicate)
+                    .OfType<FieldInfo>();
             if (!swtch.AutoExportFields)
             {
                 fields = fields.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);

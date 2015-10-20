@@ -63,7 +63,7 @@ namespace Reinforced.Typings.Cli
             var methodPath = _parameters.ConfigurationMethod;
             var path = new Stack<string>(methodPath.Split('.'));
             var method = path.Pop();
-            var fullQualifiedType = string.Join(".", path);
+            var fullQualifiedType = string.Join(".", path.Reverse());
 
             foreach (var sourceAssembly in settings.SourceAssemblies)
             {

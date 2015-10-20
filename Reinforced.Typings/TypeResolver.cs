@@ -170,6 +170,7 @@ namespace Reinforced.Typings
 
         private string TruncateNamespace(string typeName)
         {
+            if (string.IsNullOrEmpty(_settings.CurrentNamespace)) return typeName;
             return typeName.Replace(_settings.CurrentNamespace, String.Empty).Trim('.');
         }
 

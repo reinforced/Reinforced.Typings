@@ -123,7 +123,8 @@ namespace Reinforced.Typings.Integrate
                 CamelCaseForProperties = CamelCaseForProperties,
                 CamelCaseForMethods = CamelCaseForMethods,
                 DocumentationFilePath = DocumentationFilePath,
-                GenerateDocumentation = GenerateDocumentation
+                GenerateDocumentation = GenerateDocumentation,
+                ConfigurationMethod = ConfigurationMethod
             };
 
             return consoleParams.ExportConsoleParameters();

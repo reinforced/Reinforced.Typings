@@ -58,7 +58,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -71,7 +71,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMembersConfiguration(tc, prop, configuration);
         }
 
@@ -85,7 +85,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithProperties<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsPropertyAttribute>> configuration)
             where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetProperties(bindingFlags);
+            var prop = tc.Type.GetProperties(bindingFlags);
             return ApplyMembersConfiguration(tc, prop, configuration);
         }
 
@@ -97,7 +97,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithProperties<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetProperties(bindingFlags);
+            var prop = tc.Type.GetProperties(bindingFlags);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -108,7 +108,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithAllProperties<T>(this T tc) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetProperties(TypeExtensions.MembersFlags);
+            var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -119,7 +119,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithPublicProperties<T>(this T tc) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var prop = tc.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return ApplyMembersConfiguration(tc, prop);
         }
         #endregion
@@ -147,7 +147,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetFields(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type.GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMembersConfiguration(tc, prop, configuration);
         }
 
@@ -159,7 +159,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetFields(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type.GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -171,7 +171,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetFields(bindingFlags);
+            var prop = tc.Type.GetFields(bindingFlags);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -182,7 +182,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithAllFields<T>(this T tc) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetFields(TypeExtensions.MembersFlags);
+            var prop = tc.Type.GetFields(TypeExtensions.MembersFlags);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -193,7 +193,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithPublicFields<T>(this T tc) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Instance);
+            var prop = tc.Type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return ApplyMembersConfiguration(tc, prop);
         }
 
@@ -206,7 +206,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsPropertyAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetFields(bindingFlags);
+            var prop = tc.Type.GetFields(bindingFlags);
             return ApplyMembersConfiguration(tc, prop, configuration);
         }
         #endregion
@@ -253,7 +253,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, Func<MethodInfo, bool> predicate, Action<IExportConfiguration<TsFunctionAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetMethods(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type.GetMethods(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMethodsConfiguration(tc, prop, configuration);
         }
 
@@ -266,7 +266,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, BindingFlags bindingFlags, Action<IExportConfiguration<TsFunctionAttribute>> configuration) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetMethods(bindingFlags);
+            var prop = tc.Type.GetMethods(bindingFlags);
             return ApplyMethodsConfiguration(tc, prop, configuration);
         }
 
@@ -278,7 +278,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, Func<MethodInfo, bool> predicate) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetMethods(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type.GetMethods(TypeExtensions.MembersFlags).Where(predicate);
             return ApplyMethodsConfiguration(tc, prop);
         }
 
@@ -290,7 +290,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithMethods<T>(this T tc, BindingFlags bindingFlags) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetMethods(bindingFlags);
+            var prop = tc.Type.GetMethods(bindingFlags);
             return ApplyMethodsConfiguration(tc, prop);
         }
 
@@ -301,7 +301,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithAllMethods<T>(this T tc) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetMethods(TypeExtensions.MembersFlags);
+            var prop = tc.Type.GetMethods(TypeExtensions.MembersFlags);
             return ApplyMethodsConfiguration(tc, prop);
         }
 
@@ -312,7 +312,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static T WithPublicMethods<T>(this T tc) where T : ITypeConfigurationBuilder
         {
-            var prop = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            var prop = tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return ApplyMethodsConfiguration(tc, prop);
         }
         #endregion
