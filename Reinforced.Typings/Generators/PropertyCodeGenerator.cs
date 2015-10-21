@@ -47,6 +47,7 @@ namespace Reinforced.Typings.Generators
             {
                 propName = Settings.ConditionallyConvertPropertyNameToCamelCase(propName);
             }
+            propName = element.CamelCaseFromAttribute(propName);
 
             sw.Tab();
             Settings.Documentation.WriteDocumentation(element, sw);

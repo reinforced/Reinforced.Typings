@@ -10,4 +10,9 @@ namespace Reinforced.Typings.Attributes
     {
         string Name { get; set; }
     }
+
+    public interface ICamelCaseableAttribute
+    {
+        bool ShouldBeCamelCased { get; set; }
+    }
 }

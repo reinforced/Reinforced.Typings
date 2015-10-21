@@ -85,7 +85,12 @@ namespace Reinforced.Typings
         /// <returns>True if supplied type is nongeneric enumerable. False otherwise</returns>
         public static bool IsNongenericEnumerable(this Type t)
         {
-            return (typeof(IEnumerable).IsAssignableFrom(t));
+            var interfaces = t.GetInterfaces();
+            bool containsEnumerable = interfaces.Contains(typeof (IEnumerable));
+            bool containsGenericEnumerable =
+                interfaces.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof (IEnumerable<>));
+
+            return containsEnumerable && !containsGenericEnumerable;
         }
 
         /// <summary>

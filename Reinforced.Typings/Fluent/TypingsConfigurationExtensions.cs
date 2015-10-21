@@ -182,6 +182,16 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        /// Forces member name to be camelCase
+        /// </summary>
+        /// <param name="conf">Configuration</param>
+        public static T CamelCase<T>(this T conf) where T : IExportConfiguration<ICamelCaseableAttribute>
+        {
+            conf.AttributePrototype.ShouldBeCamelCased = true;
+            return conf;
+        }
+
+        /// <summary>
         /// Configures exporter dont to export member to corresponding namespace
         /// </summary>
         public static T DontIncludeToNamespace<T>(this T conf,bool include = false) where T : IExportConfiguration<TsDeclarationAttributeBase>

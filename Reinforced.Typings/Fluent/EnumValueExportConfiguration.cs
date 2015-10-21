@@ -10,7 +10,7 @@ namespace Reinforced.Typings.Fluent
     {
         bool IIgnorable.Ignore { get; set; }
 
-        private TsValueAttribute AttributePrototype { get; set; }
+        internal TsValueAttribute AttributePrototype { get; set; }
 
         TsValueAttribute IExportConfiguration<TsValueAttribute>.AttributePrototype
         {

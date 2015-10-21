@@ -34,7 +34,7 @@ namespace Reinforced.Typings.Generators
                 type = resolver.ResolveTypeName(element.ReturnType);
             }
             name = Settings.ConditionallyConvertMethodNameToCamelCase(name);
-
+            name = element.CamelCaseFromAttribute(name);
         }
 
 

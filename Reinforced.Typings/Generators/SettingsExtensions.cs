@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
 {
@@ -51,6 +53,19 @@ namespace Reinforced.Typings.Generators
         {
             if (!settings.CamelCaseForProperties) return regularName;
             return ConvertToCamelCase(regularName);
+        }
+
+        /// <summary>
+        /// Conditionally (based on attribute setting) turns member name to camelCase
+        /// </summary>
+        /// <param name="member">Member</param>
+        /// <param name="regularName">Regular property name</param>
+        /// <returns>Property name in camelCase if camelCasing enabled, initial string otherwise</returns>
+        public static string CamelCaseFromAttribute(this MemberInfo member, string regularName)
+        {
+            var attr = ConfigurationRepository.Instance.ForMember<TsTypedMemberAttributeBase>(member);
+            if (attr.ShouldBeCamelCased) return ConvertToCamelCase(regularName);
+            return regularName;
         }
 
         private static string ConvertToCamelCase(string s)

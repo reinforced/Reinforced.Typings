@@ -79,13 +79,28 @@ namespace Reinforced.Typings.Fluent
                     }
                     repository.AttributesForParameters[kvp.Key] = kvp.Value.AttributePrototype;
                 }
-                var refsList = repository.ReferenceAttributes.GetOrCreate(kv.Key);
-                refsList.AddRange(kv.Value.References);
-                var attrs = kv.Key.GetCustomAttributes<TsAddTypeReferenceAttribute>();
-                if (attrs != null) refsList.AddRange(attrs);
+                AddReferences(repository, kv.Key, kv.Value);
+            }
+            foreach (var kv in _enumConfigurationBuilders)
+            {
+                repository.AttributesForType[kv.Key] = kv.Value.AttributePrototype;
+                foreach (var enumValueExportConfiguration in kv.Value.ValueExportConfigurations)
+                {
+                    repository.AttributesForEnumValues[enumValueExportConfiguration.Key] =
+                        enumValueExportConfiguration.Value.AttributePrototype;
+                }
+                AddReferences(repository,kv.Key,kv.Value);
             }
             repository.References.AddRange(_references);
             return repository;
+        }
+
+        private static void AddReferences(ConfigurationRepository repository,Type type,IReferenceConfigurationBuilder refs)
+        {
+            var refsList = repository.ReferenceAttributes.GetOrCreate(type);
+            refsList.AddRange(refs.References);
+            var attrs = type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
+            if (attrs != null) refsList.AddRange(attrs);
         }
     }
 }

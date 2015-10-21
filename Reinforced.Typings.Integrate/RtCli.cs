@@ -122,7 +122,7 @@ namespace Reinforced.Typings.Integrate
                 RootNamespace = RootNamespace,
                 CamelCaseForProperties = CamelCaseForProperties,
                 CamelCaseForMethods = CamelCaseForMethods,
-                DocumentationFilePath = DocumentationFilePath,
+                DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",StringComparison.InvariantCultureIgnoreCase)?DocumentationFilePath:String.Empty,
                 GenerateDocumentation = GenerateDocumentation,
                 ConfigurationMethod = ConfigurationMethod
             };
