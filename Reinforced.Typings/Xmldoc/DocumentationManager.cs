@@ -30,7 +30,7 @@ namespace Reinforced.Typings.Xmldoc
             }
         }
 
-        public void CacheDocumentation(string docFilePath)
+        internal void CacheDocumentation(string docFilePath)
         {
             if (string.IsNullOrEmpty(docFilePath)) return;
             if (!File.Exists(docFilePath)) return;
