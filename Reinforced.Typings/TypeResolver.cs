@@ -217,7 +217,21 @@ namespace Reinforced.Typings
             }
             if (t.IsEnumerable())
             {
-                return Cache(t, ResolveTypeName(t.IsArray ? t.GetElementType() : t.GetArg()) + "[]");
+                if (t.IsArray)
+                {
+                    return Cache(t, ResolveTypeName(t.GetElementType()) + "[]");
+                }
+                else
+                {
+                    var enumerable = t.GetInterfaces().FirstOrDefault(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof (IEnumerable<>));
+                    if (enumerable == null)
+                    {
+                        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof (IEnumerable<>)) enumerable = t;
+                    }
+                    if (enumerable == null) return Cache(t, "any[]");
+                    return Cache(t, ResolveTypeName(enumerable.GetArg()) + "[]");
+                }
+                
             }
 
             if (t.IsGenericParameter)

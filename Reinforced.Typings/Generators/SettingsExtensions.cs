@@ -64,6 +64,7 @@ namespace Reinforced.Typings.Generators
         public static string CamelCaseFromAttribute(this MemberInfo member, string regularName)
         {
             var attr = ConfigurationRepository.Instance.ForMember<TsTypedMemberAttributeBase>(member);
+            if (attr == null) return regularName;
             if (attr.ShouldBeCamelCased) return ConvertToCamelCase(regularName);
             return regularName;
         }

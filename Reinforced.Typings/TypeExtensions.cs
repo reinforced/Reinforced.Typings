@@ -11,7 +11,7 @@ namespace Reinforced.Typings
     /// <summary>
     /// Useful extensions for reflection
     /// </summary>
-    internal static class TypeExtensions
+    public static class TypeExtensions
     {
         /// <summary>
         /// Determines is type derived from Nullable or not

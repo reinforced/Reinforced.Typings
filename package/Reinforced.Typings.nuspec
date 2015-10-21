@@ -19,6 +19,9 @@
 			* 1.0.5
 			* * Fluent configuration. 
 			* * Added more XMLDOC documentation.
+			* * Ability to generate documentation from several sources (supported only with fluent configuration)
+			* * camelCase for selected type members
+			* * Minor bugfixes
 			* 1.0.4
 			* * Fixed invalid handling of IncludeNamespace parameter
 			* * Fixed invalid interfaces extension
