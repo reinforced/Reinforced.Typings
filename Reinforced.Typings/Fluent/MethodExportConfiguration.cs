@@ -3,6 +3,9 @@ using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
 {
+    /// <summary>
+    /// Fluent configuration builder for exported methods
+    /// </summary>
     public class MethodExportConfiguration : IExportConfiguration<TsFunctionAttribute>, IIgnorable
     {
         bool IIgnorable.Ignore { get; set; }

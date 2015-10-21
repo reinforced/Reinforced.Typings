@@ -3,6 +3,9 @@ using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
 {
+    /// <summary>
+    /// Fluent configuration builder for exported properties
+    /// </summary>
     public class PropertyExportConfiguration : IExportConfiguration<TsPropertyAttribute>, IIgnorable
     {
         bool IIgnorable.Ignore { get; set; }
