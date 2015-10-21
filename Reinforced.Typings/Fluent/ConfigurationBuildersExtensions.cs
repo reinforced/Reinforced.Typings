@@ -200,7 +200,7 @@ namespace Reinforced.Typings.Fluent
             var prop = tc.Type.GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return tc.WithFields(prop, configuration);
         }
-        
+
         /// <summary>
         /// Include all fields to resulting typing
         /// </summary>
@@ -210,7 +210,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllFields<T>(this T tc, Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetFields(TypeExtensions.MembersFlags);
-            return tc.WithFields(prop,configuration);
+            return tc.WithFields(prop, configuration);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithPublicFields<T>(this T tc, Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            return tc.WithFields(prop,configuration);
+            return tc.WithFields(prop, configuration);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace Reinforced.Typings.Fluent
             var prop = tc.Type.GetMethods(bindingFlags);
             return tc.WithMethods(prop, configuration);
         }
-        
+
         /// <summary>
         /// Include specified methods to resulting typing. 
         /// </summary>
@@ -383,7 +383,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllMethods<T>(this T tc, Action<MethodExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetMethods(TypeExtensions.MembersFlags);
-            return tc.WithMethods(prop,configuration);
+            return tc.WithMethods(prop, configuration);
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithPublicMethods<T>(this T tc, Action<MethodExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            return tc.WithMethods(prop);
+            return tc.WithMethods(prop, configuration);
         }
         #endregion
 
@@ -427,9 +427,9 @@ namespace Reinforced.Typings.Fluent
                 var conf = (IInterfaceConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                 {
                     var t = typeof(InterfaceConfigurationBuilder<>).MakeGenericType(tp);
-                    return (ITypeConfigurationBuilder)Activator.CreateInstance(t);
+                    return (ITypeConfigurationBuilder)Activator.CreateInstance(t, nonPublic: true);
                 });
-                if (configuration!=null) configuration(conf);
+                if (configuration != null) configuration(conf);
             }
         }
 
@@ -447,7 +447,7 @@ namespace Reinforced.Typings.Fluent
         {
             return (ClassConfigurationBuilder<T>)builder.TypeConfigurationBuilders.GetOrCreate(typeof(T), () => new ClassConfigurationBuilder<T>());
         }
-       
+
         /// <summary>
         /// Includes specified types to resulting typing exported as TypeScript classes
         /// </summary>
@@ -463,9 +463,9 @@ namespace Reinforced.Typings.Fluent
                 var conf = (IClassConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                 {
                     var t = typeof(ClassConfigurationBuilder<>).MakeGenericType(tp);
-                    return (IClassConfigurationBuilder)Activator.CreateInstance(t);
+                    return (IClassConfigurationBuilder)Activator.CreateInstance(t, nonPublic: true);
                 });
-                if (configuration!=null) configuration(conf);
+                if (configuration != null) configuration(conf);
             }
         }
         #endregion
@@ -499,9 +499,9 @@ namespace Reinforced.Typings.Fluent
                 var conf = builder.EnumConfigurationBuilders.GetOrCreate(type, () =>
                 {
                     var t = typeof(EnumConfigurationBuilder<>).MakeGenericType(tp);
-                    return (IEnumConfigurationBuidler)Activator.CreateInstance(t);
+                    return (IEnumConfigurationBuidler)Activator.CreateInstance(t, nonPublic: true);
                 });
-                if (configuration!=null) configuration(conf);
+                if (configuration != null) configuration(conf);
             }
         }
 
