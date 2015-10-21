@@ -6,34 +6,46 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using Reinforced.Typings.Xmldoc.Model;
+// ReSharper disable PossibleNullReferenceException
 
 namespace Reinforced.Typings.Xmldoc
 {
     /// <summary>
-    /// Generation documentation manager
+    /// XMLDOC documentation manager
     /// </summary>
     public class DocumentationManager
     {
         private bool _isDocumentationExists;
-        private Documentation _documentation;
-        private Dictionary<string, DocumentationMember> _documentationCache;
+        private readonly Dictionary<string, DocumentationMember> _documentationCache = new Dictionary<string, DocumentationMember>();
         internal DocumentationManager(string docFilePath)
         {
             CacheDocumentation(docFilePath);
         }
 
-        private void CacheDocumentation(string docFilePath)
+        internal DocumentationManager(string[] docFilePath)
+        {
+            foreach (var s in docFilePath)
+            {
+                CacheDocumentation(s);
+            }
+        }
+
+        public void CacheDocumentation(string docFilePath)
         {
             if (string.IsNullOrEmpty(docFilePath)) return;
             if (!File.Exists(docFilePath)) return;
             try
             {
                 XmlSerializer ser = new XmlSerializer(typeof(Documentation));
+                Documentation documentation;
                 using (var fs = File.OpenRead(docFilePath))
                 {
-                    _documentation = (Documentation)ser.Deserialize(fs);
+                    documentation = (Documentation)ser.Deserialize(fs);
                 }
-                _documentationCache = _documentation.Members.ToDictionary(c => c.Name, c => c);
+                foreach (var documentationMember in documentation.Members)
+                {
+                    _documentationCache[documentationMember.Name] = documentationMember;
+                }
                 _isDocumentationExists = true;
             }
             catch (Exception)

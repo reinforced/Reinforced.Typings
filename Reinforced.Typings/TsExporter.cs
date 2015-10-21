@@ -42,12 +42,19 @@ namespace Reinforced.Typings
         private void ExtractReferences()
         {
             if (_isAnalyzed) return;
+            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null);
             if (_settings.ConfigurationMethod != null)
             {
                 ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
                 _settings.ConfigurationMethod(configurationBuilder);
                 _configurationRepository = configurationBuilder.Build();
                 ConfigurationRepository.Instance = _configurationRepository;
+
+                foreach (var additionalDocumentationPath in _configurationRepository.AdditionalDocumentationPathes)
+                {
+                    _settings.Documentation.CacheDocumentation(additionalDocumentationPath);
+                }
+
             }
 
             _allTypes = _settings.SourceAssemblies
@@ -69,7 +76,8 @@ namespace Reinforced.Typings
                     .ForEach(a => _referenceBuilder.AppendLine(a));
 
             _settings.References = _referenceBuilder.ToString();
-            _settings.Documentation = new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null);
+
+            
 
             _isAnalyzed = true;
         }

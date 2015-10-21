@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
@@ -346,6 +347,26 @@ namespace Reinforced.Typings.Fluent
             conf.References.Add(reference);
             return conf;
         }
+
+        /// <summary>
+        /// Tries to find documentation .xml file for specified assembly and take it in account when generating documentaion
+        /// </summary>
+        /// <param name="conf">Table configurator</param>
+        /// <param name="assmbly">Assembly which documentation should be included</param>
+        /// <param name="documentationFileName">Override XMLDOC file name if differs (please include .xml extension)</param>
+        /// <returns>Fluent</returns>
+        public static ConfigurationBuilder TryLookupDocumentationForAssembly(this ConfigurationBuilder conf, Assembly assmbly,string documentationFileName = null)
+        {
+            var assemblyDir = Path.GetDirectoryName(assmbly.Location);
+            var file = String.IsNullOrEmpty(documentationFileName) ? Path.GetFileNameWithoutExtension(assmbly.Location) + ".xml" : documentationFileName;
+            var filePath = Path.Combine(assemblyDir, file);
+            if (File.Exists(filePath))
+            {
+                conf.AdditionalDocumentationPathes.Add(filePath);
+            }
+            return conf;
+        }
+
         #endregion
     }
 }

@@ -14,6 +14,12 @@ namespace Reinforced.Typings.Fluent
         private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders = new Dictionary<Type, ITypeConfigurationBuilder>();
         private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders = new Dictionary<Type, IEnumConfigurationBuidler>();
         private readonly List<string> _references = new List<string>();
+        private readonly List<string> _additionalDocumentationPathes = new List<string>();
+
+        internal List<string> AdditionalDocumentationPathes
+        {
+            get { return _additionalDocumentationPathes; }
+        }
 
         internal List<string> References
         {
@@ -92,6 +98,7 @@ namespace Reinforced.Typings.Fluent
                 AddReferences(repository,kv.Key,kv.Value);
             }
             repository.References.AddRange(_references);
+            repository.AdditionalDocumentationPathes.AddRange(_additionalDocumentationPathes);
             return repository;
         }
 

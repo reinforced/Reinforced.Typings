@@ -10,7 +10,7 @@ namespace Reinforced.Typings
 {
     internal class ConfigurationRepository
     {
-        internal static ConfigurationRepository Instance
+        public static ConfigurationRepository Instance
         {
             get { return _instance ?? (_instance = new ConfigurationRepository()); }
             set { _instance = value; }
@@ -27,53 +27,59 @@ namespace Reinforced.Typings
         private readonly HashSet<object> _ignored = new HashSet<object>();
         private static ConfigurationRepository _instance;
         private readonly List<string> _references = new List<string>();
+        private readonly List<string> _additionalDocumentationPathes = new List<string>();
+
+        public List<string> AdditionalDocumentationPathes
+        {
+            get { return _additionalDocumentationPathes; }
+        }
 
         public List<TsAddTypeReferenceAttribute> ReferencesForType(Type t)
         {
             return _referenceAttributes.GetOr(t, () => new List<TsAddTypeReferenceAttribute>());
         }
 
-        internal Dictionary<Type, List<TsAddTypeReferenceAttribute>> ReferenceAttributes
+        public Dictionary<Type, List<TsAddTypeReferenceAttribute>> ReferenceAttributes
         {
             get { return _referenceAttributes; }
         }
 
-        internal List<string> References
+        public List<string> References
         {
             get { return _references; }
         }
 
-        internal Dictionary<ParameterInfo, TsParameterAttribute> AttributesForParameters
+        public Dictionary<ParameterInfo, TsParameterAttribute> AttributesForParameters
         {
             get { return _attributesForParameters; }
         }
 
-        internal HashSet<object> Ignored
+        public HashSet<object> Ignored
         {
             get { return _ignored; }
         }
 
-        internal Dictionary<Type, TsDeclarationAttributeBase> AttributesForType
+        public Dictionary<Type, TsDeclarationAttributeBase> AttributesForType
         {
             get { return _attributesForType; }
         }
 
-        internal Dictionary<MethodInfo, TsFunctionAttribute> AttributesForMethods
+        public Dictionary<MethodInfo, TsFunctionAttribute> AttributesForMethods
         {
             get { return _attributesForMethods; }
         }
 
-        internal Dictionary<PropertyInfo, TsPropertyAttribute> AttributesForProperties
+        public Dictionary<PropertyInfo, TsPropertyAttribute> AttributesForProperties
         {
             get { return _attributesForProperties; }
         }
 
-        internal Dictionary<FieldInfo, TsPropertyAttribute> AttributesForFields
+        public Dictionary<FieldInfo, TsPropertyAttribute> AttributesForFields
         {
             get { return _attributesForFields; }
         }
 
-        internal Dictionary<FieldInfo, TsValueAttribute> AttributesForEnumValues
+        public Dictionary<FieldInfo, TsValueAttribute> AttributesForEnumValues
         {
             get { return _attributesForEnumValues; }
         }
