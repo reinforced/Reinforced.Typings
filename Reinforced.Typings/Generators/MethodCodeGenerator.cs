@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Attributes;
 
@@ -35,6 +36,15 @@ namespace Reinforced.Typings.Generators
             }
             name = Settings.ConditionallyConvertMethodNameToCamelCase(name);
             name = element.CamelCaseFromAttribute(name);
+            if (element.IsGenericMethod)
+            {
+                if (!(name.Contains("<") || name.Contains(">")))
+                {
+                    var args = element.GetGenericArguments();
+                    var names = args.Select(c => resolver.ResolveTypeName(c));
+                    name = String.Concat(name, "<", String.Join(",", names), ">");
+                }
+            }
         }
 
 
@@ -101,7 +111,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="isInterfaceDecl">Is this method interface declaration or not (access modifiers prohibited on interface declaration methods)</param>
         protected void WriteFunctionName(bool isStatic, AccessModifier accessModifier, string name, WriterWrapper sw, bool isInterfaceDecl = false)
         {
-         
+
             if (!isInterfaceDecl)
             {
                 sw.Write("{0} ", accessModifier.ToModifierText());
@@ -146,9 +156,9 @@ namespace Reinforced.Typings.Generators
             Settings.Documentation.WriteDocumentation(element, sw);
             sw.Indent();
             var modifier = element.GetModifier();
-            
+
             if (Settings.SpecialCase) modifier = AccessModifier.Public;
-            
+
             WriteFunctionName(element.IsStatic, modifier, name, sw, isInterfaceMethod);
             WriteMethodParameters(element, resolver, sw);
             WriteRestOfDeclaration(type, sw);
