@@ -54,7 +54,6 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded", _totalLoadedAssemblies);
 
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
-
         }
 
         private static void ResolveFluentMethod(ExportSettings settings)

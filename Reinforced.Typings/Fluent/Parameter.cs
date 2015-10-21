@@ -26,9 +26,9 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         /// Parameter mock with parameter configuration
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Parameter type</typeparam>
+        /// <param name="configuration">Fluent parameter configuration</param>
+        /// <returns>Mock</returns>
         public static T Parameter<T>(Action<ParameterConfigurationBuilder> configuration)
         {
             return default(T);
