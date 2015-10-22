@@ -1,4 +1,6 @@
+
 #pragma warning disable 1591
+
 namespace Reinforced.Typings.Xmldoc.Model
 {
     public enum DocumentationMemberType

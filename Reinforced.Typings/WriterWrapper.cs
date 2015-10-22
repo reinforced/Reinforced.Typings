@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 #pragma warning disable 1591
 
@@ -14,7 +13,7 @@ namespace Reinforced.Typings
         public WriterWrapper(TextWriter writer)
         {
             _writer = writer;
-            _tabsLine = String.Empty;
+            _tabsLine = string.Empty;
         }
 
         private void AppendTabs()
@@ -33,9 +32,10 @@ namespace Reinforced.Typings
             if (_tabsCount > 0) _tabsCount--;
             _tabsLine = new string('\t', _tabsCount);
         }
+
         public void WriteIndented(string str)
         {
-            string[] result = str.Split('\n');
+            var result = str.Split('\n');
             foreach (var s in result)
             {
                 AppendTabs();
@@ -44,10 +44,11 @@ namespace Reinforced.Typings
             }
             _writer.WriteLine();
         }
+
         public void WriteIndented(string format, params object[] args)
         {
             var formatted = string.Format(format, args);
-            string[] result = formatted.Split('\n');
+            var result = formatted.Split('\n');
             foreach (var s in result)
             {
                 AppendTabs();
@@ -56,10 +57,12 @@ namespace Reinforced.Typings
             }
             _writer.WriteLine();
         }
+
         public void Indent()
         {
             AppendTabs();
         }
+
         public void Write(bool value)
         {
             _writer.Write(value);
@@ -129,6 +132,7 @@ namespace Reinforced.Typings
         {
             _writer.WriteLine();
         }
+
         public void WriteLine()
         {
             AppendTabs();

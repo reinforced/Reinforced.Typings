@@ -6,17 +6,21 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using Reinforced.Typings.Xmldoc.Model;
+
 // ReSharper disable PossibleNullReferenceException
 
 namespace Reinforced.Typings.Xmldoc
 {
     /// <summary>
-    /// XMLDOC documentation manager
+    ///     XMLDOC documentation manager
     /// </summary>
     public class DocumentationManager
     {
+        private readonly Dictionary<string, DocumentationMember> _documentationCache =
+            new Dictionary<string, DocumentationMember>();
+
         private bool _isDocumentationExists;
-        private readonly Dictionary<string, DocumentationMember> _documentationCache = new Dictionary<string, DocumentationMember>();
+
         internal DocumentationManager(string docFilePath)
         {
             CacheDocumentation(docFilePath);
@@ -36,11 +40,11 @@ namespace Reinforced.Typings.Xmldoc
             if (!File.Exists(docFilePath)) return;
             try
             {
-                XmlSerializer ser = new XmlSerializer(typeof(Documentation));
+                var ser = new XmlSerializer(typeof (Documentation));
                 Documentation documentation;
                 using (var fs = File.OpenRead(docFilePath))
                 {
-                    documentation = (Documentation)ser.Deserialize(fs);
+                    documentation = (Documentation) ser.Deserialize(fs);
                 }
                 foreach (var documentationMember in documentation.Members)
                 {
@@ -53,7 +57,7 @@ namespace Reinforced.Typings.Xmldoc
                 _isDocumentationExists = false;
             }
         }
-        
+
         private static string GetDocFriendlyParameterName(Type parameterType,
             Dictionary<Type, int> typeGenericsDict,
             Dictionary<Type, int> methodGenericArgsDict)
@@ -75,17 +79,16 @@ namespace Reinforced.Typings.Xmldoc
                 name = name.Substring(0, quote);
                 var genericParams = parameterType.GetGenericArguments()
                     .Select(c => GetDocFriendlyParameterName(c, typeGenericsDict, methodGenericArgsDict)).ToArray();
-                name = String.Format("{0}{{{1}}}", name, string.Join(",", genericParams));
+                name = string.Format("{0}{{{1}}}", name, string.Join(",", genericParams));
                 return name;
-
             }
             return parameterType.FullName.Trim('&');
         }
 
-        private string GetIdentifierForMethod(MethodBase method,string name)
+        private string GetIdentifierForMethod(MethodBase method, string name)
         {
             var isCtor = name == "#ctor";
-            StringBuilder sb  = new StringBuilder(String.Format("M:{0}.{1}", method.DeclaringType.FullName, name));
+            var sb = new StringBuilder(string.Format("M:{0}.{1}", method.DeclaringType.FullName, name));
             if (!isCtor)
             {
                 var cnt = method.GetGenericArguments().Length;
@@ -96,17 +99,18 @@ namespace Reinforced.Typings.Xmldoc
             {
                 sb.Append('(');
 
-                var typeGenericsDict = 
+                var typeGenericsDict =
                     method.DeclaringType.GetGenericArguments()
-                    .Select((a, i) => new { a, i })
-                    .ToDictionary(c => c.a, c => c.i); // type -> `0, type -> `1
+                        .Select((a, i) => new {a, i})
+                        .ToDictionary(c => c.a, c => c.i); // type -> `0, type -> `1
 
-                
-                var methodGenericArgsDict = isCtor? new Dictionary<Type, int>() : 
-                    method.GetGenericArguments()
-                    .Select((a, i) => new { a, i })
-                    .ToDictionary(c => c.a, c => c.i); //type -> ``0, type -> ``1
-                List<string> names = new List<string>();
+
+                var methodGenericArgsDict = isCtor
+                    ? new Dictionary<Type, int>()
+                    : method.GetGenericArguments()
+                        .Select((a, i) => new {a, i})
+                        .ToDictionary(c => c.a, c => c.i); //type -> ``0, type -> ``1
+                var names = new List<string>();
                 foreach (var param in prs)
                 {
                     var friendlyName = GetDocFriendlyParameterName(param.ParameterType, typeGenericsDict,
@@ -114,7 +118,7 @@ namespace Reinforced.Typings.Xmldoc
                     if (param.IsOut || param.ParameterType.IsByRef) friendlyName = friendlyName + "@";
                     names.Add(friendlyName);
                 }
-                sb.Append(String.Join(",", names));
+                sb.Append(string.Join(",", names));
                 sb.Append(')');
             }
             return sb.ToString();
@@ -124,31 +128,38 @@ namespace Reinforced.Typings.Xmldoc
         {
             switch (mt)
             {
-                    
-                case MemberTypes.Property:return "P";
-                case MemberTypes.Field:return "F";
-                case MemberTypes.Method:return "M";
-                case MemberTypes.Event:return "E";
+                case MemberTypes.Property:
+                    return "P";
+                case MemberTypes.Field:
+                    return "F";
+                case MemberTypes.Method:
+                    return "M";
+                case MemberTypes.Event:
+                    return "E";
             }
-            return String.Empty;
+            return string.Empty;
         }
+
         private string GetIdentifierForMember(MemberInfo member)
         {
-            if (member is MethodInfo) return GetIdentifierForMethod((MethodBase) member,member.Name);
-            string id = String.Format("{0}:{1}.{2}",GetPrefix(member.MemberType),member.DeclaringType.FullName,member.Name);
+            if (member is MethodInfo) return GetIdentifierForMethod((MethodBase) member, member.Name);
+            var id = string.Format("{0}:{1}.{2}", GetPrefix(member.MemberType), member.DeclaringType.FullName,
+                member.Name);
             return id;
         }
+
         private string GetIdentifierForType(Type type)
         {
-            return String.Format("T:{0}",type.FullName);
+            return string.Format("T:{0}", type.FullName);
         }
+
         private string GetIdentifierForConstructor(ConstructorInfo constructor)
         {
             return GetIdentifierForMethod(constructor, "#ctor");
         }
 
         /// <summary>
-        /// Outputs documentation for class member
+        ///     Outputs documentation for class member
         /// </summary>
         /// <param name="member">Class member</param>
         /// <param name="sw">Text writer</param>
@@ -172,7 +183,7 @@ namespace Reinforced.Typings.Xmldoc
         }
 
         /// <summary>
-        /// Outputs documentation for method
+        ///     Outputs documentation for method
         /// </summary>
         /// <param name="method">Method</param>
         /// <param name="sw">Text writer</param>
@@ -199,11 +210,10 @@ namespace Reinforced.Typings.Xmldoc
                 Line(sw, string.Format("@returns {0}", doc.Returns.Text));
             }
             End(sw);
-
         }
 
         /// <summary>
-        /// Outputs documentation for constructor
+        ///     Outputs documentation for constructor
         /// </summary>
         /// <param name="constructor">Constructor</param>
         /// <param name="sw">Text writer</param>
@@ -225,15 +235,13 @@ namespace Reinforced.Typings.Xmldoc
             Line(sw, "@constructor");
             if (doc.HasParameters())
             {
-
                 WriteParametersDoc(constructor.GetParameters(), doc, sw);
             }
             End(sw);
-
         }
 
         /// <summary>
-        /// Outputs documentation for type
+        ///     Outputs documentation for type
         /// </summary>
         /// <param name="type">Type</param>
         /// <param name="sw">Text writer</param>
@@ -258,7 +266,7 @@ namespace Reinforced.Typings.Xmldoc
                 var doc = docMember.Parameters.SingleOrDefault(c => c.Name == parameterInfo.Name);
                 if (doc == null) continue;
                 var name = parameterInfo.GetName();
-                Line(sw, String.Format("@param {0} {1}", name, doc.Description));
+                Line(sw, string.Format("@param {0} {1}", name, doc.Description));
             }
         }
 
@@ -270,7 +278,7 @@ namespace Reinforced.Typings.Xmldoc
         private void Summary(WriterWrapper sw, string summary)
         {
             if (string.IsNullOrEmpty(summary)) return;
-            var summaryLines = summary.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var summaryLines = summary.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var summaryLine in summaryLines)
             {
                 Line(sw, summaryLine);
@@ -284,7 +292,7 @@ namespace Reinforced.Typings.Xmldoc
         }
 
         /// <summary>
-        /// Writes output comment with automatic multiline division
+        ///     Writes output comment with automatic multiline division
         /// </summary>
         /// <param name="sw">Output writer</param>
         /// <param name="comment">Comment (multiline allowed)</param>
@@ -292,7 +300,7 @@ namespace Reinforced.Typings.Xmldoc
         {
             sw.Br();
             sw.Indent();
-            var lines = comment.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = comment.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
             if (lines.Length == 1)
             {
                 sw.WriteLine("// {0} ", lines[0]);
@@ -302,19 +310,16 @@ namespace Reinforced.Typings.Xmldoc
                 Begin(sw);
                 foreach (var line in lines)
                 {
-                    Line(sw,line);
+                    Line(sw, line);
                 }
                 End(sw);
                 sw.Br();
             }
-
         }
-        
+
         private void End(WriterWrapper sw)
         {
             sw.WriteLine("*/");
         }
-
-
     }
 }

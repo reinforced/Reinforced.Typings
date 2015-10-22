@@ -1,72 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
 {
     internal static class ReferenceInspector
     {
         internal static string GenerateInspectedReferences(this FilesOperations fileOps, Type element,
-            HashSet<Type> alltypes, string currentNamespace)
+            HashSet<Type> alltypes)
         {
             var inspectedTypes = InspectReferences(element, alltypes);
-            StringBuilder sb = new StringBuilder();
+
+            var references = new HashSet<string>();
+
             var types = ConfigurationRepository.Instance.ReferencesForType(element);
             if (types != null)
             {
                 foreach (var attr in types)
                 {
-                    var path = attr.Type != null ? fileOps.GetRelativePathForType(attr.Type, currentNamespace) : attr.RawPath;
-                    sb.AppendLine(String.Format("/// <reference path=\"{0}\"/>", path));
+                    var path = attr.Type != null ? fileOps.GetRelativePathForType(attr.Type, element) : attr.RawPath;
+                    references.AddIfNotExists(path);
                 }
             }
             foreach (var inspectedType in inspectedTypes)
             {
-                sb.AppendLine(String.Format("/// <reference path=\"{0}\"/>", fileOps.GetRelativePathForType(inspectedType, currentNamespace)));
+                var path = fileOps.GetRelativePathForType(inspectedType, element);
+                references.AddIfNotExists(path);
+            }
+            var sb = new StringBuilder();
+            foreach (var reference in references)
+            {
+                if (!string.IsNullOrEmpty(reference))
+                    sb.AppendLine(string.Format("/// <reference path=\"{0}\"/>", reference));
             }
 
-            return sb.ToString();
+            return sb.ToString().Trim();
+        }
+
+        private static Type GetOverridenType(MemberInfo info)
+        {
+            var attr = ConfigurationRepository.Instance.ForMember(info);
+            if (attr != null && attr.StrongType != null) return attr.StrongType;
+            if (info is PropertyInfo) return ((PropertyInfo) info).PropertyType;
+            if (info is FieldInfo) return ((FieldInfo) info).FieldType;
+            if (info is MethodInfo) return ((MethodInfo) info).ReturnType;
+            return null;
         }
 
         internal static HashSet<Type> InspectReferences(Type element, HashSet<Type> alltypes)
         {
-            HashSet<Type> references = new HashSet<Type>();
-            IAutoexportSwitchAttribute swtch = ConfigurationRepository.Instance.ForType<TsClassAttribute>(element) ??
-                                               (IAutoexportSwitchAttribute)ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element);
+            var references = new HashSet<Type>();
+            if (element.IsEnum) return references;
 
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
-
-            Func<MemberInfo, bool> predicate = c => ConfigurationRepository.Instance.IsIgnored(c);
-
-            var fields = element.GetFields(flags).Where(predicate).OfType<FieldInfo>();
-
-            if (!swtch.AutoExportFields) fields = fields.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
-
-            foreach (var fi in fields) InspectArgumentReferences(fi.FieldType, alltypes, references);
-
-            var properties = element.GetProperties(flags).Where(predicate).OfType<PropertyInfo>();
-            if (!swtch.AutoExportProperties) properties = properties.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
-
-            foreach (var pi in properties) InspectArgumentReferences(pi.PropertyType, alltypes, references);
-
-            var methods = element.GetMethods(flags).Where(c => predicate(c) && !c.IsSpecialName);
-            if (!swtch.AutoExportMethods) methods = methods.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
-
-            foreach (var mi in methods)
+            foreach (var fi in element.GetExportedFields())
+                InspectTypeReferences(GetOverridenType(fi), alltypes, references);
+            foreach (var pi in element.GetExportedProperties())
+                InspectTypeReferences(GetOverridenType(pi), alltypes, references);
+            foreach (var mi in element.GetExportedMethods())
             {
-                InspectArgumentReferences(mi.ReturnType, alltypes, references);
+                InspectTypeReferences(GetOverridenType(mi), alltypes, references);
+
                 foreach (var parameterInfo in mi.GetParameters())
-                    InspectArgumentReferences(parameterInfo.ParameterType, alltypes, references);
+                {
+                    if (parameterInfo.IsIgnored()) continue;
+
+                    var paramAttr = ConfigurationRepository.Instance.ForMember(parameterInfo);
+                    if (paramAttr != null && paramAttr.StrongType != null)
+                        InspectTypeReferences(paramAttr.StrongType, alltypes, references);
+                    else InspectTypeReferences(parameterInfo.ParameterType, alltypes, references);
+                }
+            }
+            if (element.BaseType != null) InspectTypeReferences(element.BaseType, alltypes, references);
+            var interfaces = element.GetInterfaces();
+            foreach (var iface in interfaces)
+            {
+                InspectTypeReferences(iface, alltypes, references);
             }
 
             return references;
         }
 
-        private static void InspectArgumentReferences(Type argument, HashSet<Type> alltypes, HashSet<Type> referenceContainer)
+        private static void InspectTypeReferences(Type argument, HashSet<Type> alltypes,
+            HashSet<Type> referenceContainer)
         {
             if (alltypes.Contains(argument)) referenceContainer.AddIfNotExists(argument);
             if (argument.IsGenericType)
@@ -74,7 +90,7 @@ namespace Reinforced.Typings
                 var args = argument.GetGenericArguments();
                 foreach (var type in args)
                 {
-                    if (alltypes.Contains(type)) referenceContainer.AddIfNotExists(type);
+                    InspectTypeReferences(type, alltypes, referenceContainer);
                 }
             }
         }
@@ -84,6 +100,5 @@ namespace Reinforced.Typings
             if (hashSet.Contains(val)) return;
             hashSet.Add(val);
         }
-
     }
 }

@@ -6,20 +6,20 @@ using Reinforced.Typings.Attributes;
 namespace Reinforced.Typings.Generators
 {
     /// <summary>
-    /// Various extensions for settings
+    ///     Various extensions for settings
     /// </summary>
     public static class SettingsExtensions
     {
         /// <summary>
-        /// Returns declaration format for supplied Type (export/declare/nothing)
+        ///     Returns declaration format for supplied Type (export/declare/nothing)
         /// </summary>
         /// <param name="settings">Export settings</param>
         /// <param name="element">Type</param>
         /// <returns>Declaration format - just supply your compilation unit type and name</returns>
-        public static string GetDeclarationFormat(this ExportSettings settings,Type element)
+        public static string GetDeclarationFormat(this ExportSettings settings, Type element)
         {
             var ns = element.GetNamespace();
-            bool needsExports = !string.IsNullOrEmpty(ns);
+            var needsExports = !string.IsNullOrEmpty(ns);
             if (settings.ExportPureTypings)
             {
                 if (element.IsExportingAsInterface()) return "{0} "; // no declare or export for interfaces
@@ -32,7 +32,7 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Conditionally (based on settings) turns method name to camelCase
+        ///     Conditionally (based on settings) turns method name to camelCase
         /// </summary>
         /// <param name="settings">Settings object</param>
         /// <param name="regularName">Regular method name</param>
@@ -44,19 +44,20 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Conditionally (based on settings) turns property name to camelCase
+        ///     Conditionally (based on settings) turns property name to camelCase
         /// </summary>
         /// <param name="settings">Settings object</param>
         /// <param name="regularName">Regular property name</param>
         /// <returns>Property name in camelCase if camelCasing enabled, initial string otherwise</returns>
-        public static string ConditionallyConvertPropertyNameToCamelCase(this ExportSettings settings, string regularName)
+        public static string ConditionallyConvertPropertyNameToCamelCase(this ExportSettings settings,
+            string regularName)
         {
             if (!settings.CamelCaseForProperties) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
         /// <summary>
-        /// Conditionally (based on attribute setting) turns member name to camelCase
+        ///     Conditionally (based on attribute setting) turns member name to camelCase
         /// </summary>
         /// <param name="member">Member</param>
         /// <param name="regularName">Regular property name</param>
@@ -80,14 +81,16 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Retrieves type from source assemblies by name
+        ///     Retrieves type from source assemblies by name
         /// </summary>
         /// <param name="settings">Settings</param>
         /// <param name="typeName">Type name</param>
         /// <returns>Type (or null)</returns>
         public static Type GetSourceAssemblyType(this ExportSettings settings, string typeName)
         {
-            return settings.SourceAssemblies.Select(sourceAssembly => sourceAssembly.GetType(typeName, false)).FirstOrDefault(t => t != null);
+            return
+                settings.SourceAssemblies.Select(sourceAssembly => sourceAssembly.GetType(typeName, false))
+                    .FirstOrDefault(t => t != null);
         }
     }
 }

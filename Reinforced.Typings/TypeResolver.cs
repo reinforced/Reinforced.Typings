@@ -9,40 +9,60 @@ using Reinforced.Typings.Generators;
 namespace Reinforced.Typings
 {
     /// <summary>
-    /// Type resolver. It is helper class to convert source types, members and parameter names to typescript ones
+    ///     Type resolver. It is helper class to convert source types, members and parameter names to typescript ones
     /// </summary>
     public class TypeResolver
     {
-        private readonly Dictionary<MemberTypes, object> _defaultGenerators = new Dictionary<MemberTypes, object>();
-        private readonly ITsCodeGenerator<ParameterInfo> _defaultParameterGenerator;
-        private readonly ITsCodeGenerator<Type> _defaultInterfaceGenerator;
         private readonly ITsCodeGenerator<Type> _defaultClassGenerator;
         private readonly ITsCodeGenerator<Type> _defaultEnumGenerator;
+        private readonly Dictionary<MemberTypes, object> _defaultGenerators = new Dictionary<MemberTypes, object>();
+        private readonly ITsCodeGenerator<Type> _defaultInterfaceGenerator;
         private readonly NamespaceCodeGenerator _defaultNsgenerator;
-
-        private readonly ExportSettings _settings;
+        private readonly ITsCodeGenerator<ParameterInfo> _defaultParameterGenerator;
         private readonly Dictionary<Type, object> _generatorsCache = new Dictionary<Type, object>();
 
+        private readonly Dictionary<Type, string> _resolveCache = new Dictionary<Type, string>
+        {
+            {typeof (object), "any"},
+            {typeof (void), "void"},
+            {typeof (string), "string"},
+            {typeof (char), "string"},
+            {typeof (bool), "boolean"},
+            {typeof (byte), "number"},
+            {typeof (sbyte), "number"},
+            {typeof (short), "number"},
+            {typeof (ushort), "number"},
+            {typeof (int), "number"},
+            {typeof (uint), "number"},
+            {typeof (long), "number"},
+            {typeof (ulong), "number"},
+            {typeof (float), "number"},
+            {typeof (double), "number"},
+            {typeof (decimal), "number"}
+        };
+
+        private readonly ExportSettings _settings;
+
         /// <summary>
-        /// Constructs new type resolver
+        ///     Constructs new type resolver
         /// </summary>
         public TypeResolver(ExportSettings settings)
         {
-            _defaultGenerators[MemberTypes.Property] = new PropertyCodeGenerator { Settings = settings };
-            _defaultGenerators[MemberTypes.Field] = new FieldCodeGenerator { Settings = settings };
-            _defaultGenerators[MemberTypes.Method] = new MethodCodeGenerator { Settings = settings };
-            _defaultGenerators[MemberTypes.Constructor] = new ConstructorCodeGenerator { Settings = settings };
-            _defaultParameterGenerator = new ParameterCodeGenerator { Settings = settings };
-            _defaultClassGenerator = new ClassCodeGenerator { Settings = settings };
-            _defaultInterfaceGenerator = new InterfaceCodeGenerator { Settings = settings };
-            _defaultEnumGenerator = new EnumGenerator { Settings = settings };
-            _defaultNsgenerator = new NamespaceCodeGenerator { Settings = settings };
+            _defaultGenerators[MemberTypes.Property] = new PropertyCodeGenerator {Settings = settings};
+            _defaultGenerators[MemberTypes.Field] = new FieldCodeGenerator {Settings = settings};
+            _defaultGenerators[MemberTypes.Method] = new MethodCodeGenerator {Settings = settings};
+            _defaultGenerators[MemberTypes.Constructor] = new ConstructorCodeGenerator {Settings = settings};
+            _defaultParameterGenerator = new ParameterCodeGenerator {Settings = settings};
+            _defaultClassGenerator = new ClassCodeGenerator {Settings = settings};
+            _defaultInterfaceGenerator = new InterfaceCodeGenerator {Settings = settings};
+            _defaultEnumGenerator = new EnumGenerator {Settings = settings};
+            _defaultNsgenerator = new NamespaceCodeGenerator {Settings = settings};
             _settings = settings;
         }
 
         /// <summary>
-        /// Reteieves code generator instance for specified type member. 
-        /// Also this method considers Typings attribute and instantiates generator specified there if necessary
+        ///     Reteieves code generator instance for specified type member.
+        ///     Also this method considers Typings attribute and instantiates generator specified there if necessary
         /// </summary>
         /// <typeparam name="T">Type member info type</typeparam>
         /// <param name="member">Type member info</param>
@@ -62,29 +82,29 @@ namespace Reinforced.Typings
                     return LazilyInstantiateGenerator<T>(classAttr.DefaultMethodCodeGenerator, settings);
                 }
             }
-            var gen = (ITsCodeGenerator<T>)_defaultGenerators[member.MemberType];
+            var gen = (ITsCodeGenerator<T>) _defaultGenerators[member.MemberType];
             gen.Settings = settings;
             return gen;
         }
 
         /// <summary>
-        /// Retrieves code generator for ParameterInfo (since ParameterInfo does not derive from MemberInfo). 
-        /// Also this method considers Typings attribute and instantiates generator specified there if necessary
+        ///     Retrieves code generator for ParameterInfo (since ParameterInfo does not derive from MemberInfo).
+        ///     Also this method considers Typings attribute and instantiates generator specified there if necessary
         /// </summary>
         /// <param name="member">Parameter info</param>
         /// <param name="settings">Export settings</param>
         /// <returns>Code generator for parameter info</returns>
         public ITsCodeGenerator<ParameterInfo> GeneratorFor(ParameterInfo member, ExportSettings settings)
         {
-            var attr =ConfigurationRepository.Instance.ForMember(member);
+            var attr = ConfigurationRepository.Instance.ForMember(member);
             var fromAttr = GetFromAttribute<ParameterInfo>(attr, settings);
             if (fromAttr != null) return fromAttr;
             return _defaultParameterGenerator;
         }
 
         /// <summary>
-        /// Retrieves code generator for specified type
-        /// Also this method considers Typings attribute and instantiates generator specified there if necessary
+        ///     Retrieves code generator for specified type
+        ///     Also this method considers Typings attribute and instantiates generator specified there if necessary
         /// </summary>
         /// <param name="member">Type info</param>
         /// <param name="settings">Export settings</param>
@@ -95,9 +115,9 @@ namespace Reinforced.Typings
             var fromAttr = GetFromAttribute<Type>(attr, settings);
             if (fromAttr != null) return fromAttr;
 
-            bool isClass = attr is TsClassAttribute;
-            bool isInterface = attr is TsInterfaceAttribute;
-            bool isEnum = attr is TsEnumAttribute;
+            var isClass = attr is TsClassAttribute;
+            var isInterface = attr is TsInterfaceAttribute;
+            var isEnum = attr is TsEnumAttribute;
 
             if (isClass) return _defaultClassGenerator;
             if (isInterface) return _defaultInterfaceGenerator;
@@ -106,7 +126,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Retrieves code generator for namespaces
+        ///     Retrieves code generator for namespaces
         /// </summary>
         /// <returns></returns>
         public NamespaceCodeGenerator GeneratorForNamespace(ExportSettings settings)
@@ -132,35 +152,19 @@ namespace Reinforced.Typings
                 if (!_generatorsCache.ContainsKey(generatorType))
                 {
                     _generatorsCache[generatorType] = Activator.CreateInstance(generatorType);
-                    var gen = (ITsCodeGenerator<T>)_generatorsCache[generatorType];
+                    var gen = (ITsCodeGenerator<T>) _generatorsCache[generatorType];
                     gen.Settings = settings;
                 }
-                return (ITsCodeGenerator<T>)_generatorsCache[generatorType];
+                return (ITsCodeGenerator<T>) _generatorsCache[generatorType];
             }
         }
 
         private string GetConcreteGenericArguments(Type t)
         {
-            if (!t.IsGenericType) return String.Empty;
+            if (!t.IsGenericType) return string.Empty;
             var args = t.GetGenericArguments();
-            return String.Format("<{0}>", string.Join(", ", args.Select(ResolveTypeName)));
+            return string.Format("<{0}>", string.Join(", ", args.Select(ResolveTypeName)));
         }
-
-        private readonly Dictionary<Type, string> _resolveCache = new Dictionary<Type, string>()
-        {
-            {typeof(object),"any"},
-            {typeof(void),"void"},
-            {typeof(string),"string"},
-            {typeof(char),"string"},
-            {typeof(bool),"boolean"},
-            {typeof(byte),"number"},{typeof(sbyte),"number"},{
-            typeof(short),"number"},{typeof(ushort),"number"},{
-            typeof(int),"number"},{typeof(uint),"number"},{
-            typeof(long),"number"},{typeof(ulong),"number"},{
-            typeof(float),"number"},{typeof(double),"number"},{
-            typeof(decimal),"number"}
-
-        };
 
         private string Cache(Type t, string name)
         {
@@ -171,14 +175,15 @@ namespace Reinforced.Typings
         private string TruncateNamespace(string typeName)
         {
             if (string.IsNullOrEmpty(_settings.CurrentNamespace)) return typeName;
-            return typeName.Replace(_settings.CurrentNamespace, String.Empty).Trim('.');
+            return typeName.Replace(_settings.CurrentNamespace, string.Empty).Trim('.');
         }
 
         /// <summary>
-        /// Returns typescript-friendly type name for specified type. 
-        /// This method successfully handles dictionaries, IEnumerables, arrays, another TsExport-ed types, void, delegates, most of CLR built-in types, parametrized types etc. 
-        /// It also considers Ts*-attributes while resolving type names
-        /// If it cannot handle anything then it will return "any"
+        ///     Returns typescript-friendly type name for specified type.
+        ///     This method successfully handles dictionaries, IEnumerables, arrays, another TsExport-ed types, void, delegates,
+        ///     most of CLR built-in types, parametrized types etc.
+        ///     It also considers Ts*-attributes while resolving type names
+        ///     If it cannot handle anything then it will return "any"
         /// </summary>
         /// <param name="t">Specified type</param>
         /// <returns>Typescript-friendly type name</returns>
@@ -189,12 +194,15 @@ namespace Reinforced.Typings
             var td = ConfigurationRepository.Instance.ForType(t);
             if (td != null)
             {
-                string ns = t.Namespace;
-                if (!td.IncludeNamespace) ns = String.Empty;
+                var ns = t.Namespace;
+                if (!td.IncludeNamespace) ns = string.Empty;
                 if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
 
-                string name = t.GetName() + GetConcreteGenericArguments(t);
-                if (string.IsNullOrEmpty(ns)) { return Cache(t, name); }
+                var name = t.GetName() + GetConcreteGenericArguments(t);
+                if (string.IsNullOrEmpty(ns))
+                {
+                    return Cache(t, name);
+                }
 
                 return Cache(t, string.Format("{0}.{1}", ns, name));
             }
@@ -204,11 +212,14 @@ namespace Reinforced.Typings
             }
             if (t.IsDictionary())
             {
-                if (!t.IsGenericType) { return Cache(t, "{ [key: any]: any }"); }
+                if (!t.IsGenericType)
+                {
+                    return Cache(t, "{ [key: any]: any }");
+                }
                 var gargs = t.GetGenericArguments();
                 var key = ResolveTypeName(gargs[0]);
                 var value = ResolveTypeName(gargs[1]);
-                var name = String.Format("{{ [key: {0}]: {1} }}", key, value);
+                var name = string.Format("{{ [key: {0}]: {1} }}", key, value);
                 return Cache(t, name);
             }
             if (t.IsNongenericEnumerable())
@@ -221,17 +232,15 @@ namespace Reinforced.Typings
                 {
                     return Cache(t, ResolveTypeName(t.GetElementType()) + "[]");
                 }
-                else
+                var enumerable =
+                    t.GetInterfaces()
+                        .FirstOrDefault(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof (IEnumerable<>));
+                if (enumerable == null)
                 {
-                    var enumerable = t.GetInterfaces().FirstOrDefault(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof (IEnumerable<>));
-                    if (enumerable == null)
-                    {
-                        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof (IEnumerable<>)) enumerable = t;
-                    }
-                    if (enumerable == null) return Cache(t, "any[]");
-                    return Cache(t, ResolveTypeName(enumerable.GetArg()) + "[]");
+                    if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof (IEnumerable<>)) enumerable = t;
                 }
-                
+                if (enumerable == null) return Cache(t, "any[]");
+                return Cache(t, ResolveTypeName(enumerable.GetArg()) + "[]");
             }
 
             if (t.IsGenericParameter)
@@ -244,7 +253,7 @@ namespace Reinforced.Typings
                 }
                 return Cache(t, t.Name);
             }
-            if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
+            if (typeof (MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
                 var methodInfo = t.GetMethod("Invoke");
                 return Cache(t, ConstructFunctionType(methodInfo));
@@ -261,13 +270,13 @@ namespace Reinforced.Typings
         private string ConstructFunctionType(MethodInfo methodInfo)
         {
             var retType = ResolveTypeName(methodInfo.ReturnType);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("(");
-            int argAggreagtor = 0;
-            bool first = true;
+            var argAggreagtor = 0;
+            var first = true;
             foreach (var parameterInfo in methodInfo.GetParameters())
             {
-                string argName = argAggreagtor > 0 ? "arg" + argAggreagtor : "arg";
+                var argName = argAggreagtor > 0 ? "arg" + argAggreagtor : "arg";
                 var typeName = ResolveTypeName(parameterInfo.ParameterType);
                 if (!first)
                 {

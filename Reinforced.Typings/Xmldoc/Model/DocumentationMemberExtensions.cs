@@ -12,7 +12,7 @@
             if (name.StartsWith("E:")) return DocumentationMemberType.Event;
             if (name.StartsWith("N:")) return DocumentationMemberType.Namespace;
             if (name.StartsWith("F:")) return DocumentationMemberType.Field;
-            
+
             return DocumentationMemberType.Unknown;
         }
 
@@ -30,6 +30,5 @@
         {
             return dm.Returns != null && !string.IsNullOrEmpty(dm.Returns.Text);
         }
-
     }
 }

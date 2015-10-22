@@ -57,6 +57,7 @@
     <Compile Include="Attributes\TsBaseParamAttribute.cs" />
     <Compile Include="Attributes\TsDeclarationAttributeBase.cs" />
     <Compile Include="Attributes\TsEnumAttribute.cs" />
+    <Compile Include="Attributes\TsFile.cs" />
     <Compile Include="Attributes\TsFunctionAttribute.cs" />
     <Compile Include="Attributes\TsGenericAttribute.cs" />
     <Compile Include="Attributes\TsIgnoreAttribute.cs" />

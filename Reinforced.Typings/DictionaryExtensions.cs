@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings
@@ -12,7 +11,8 @@ namespace Reinforced.Typings
             if (!dictionary.ContainsKey(key)) return default(TV);
             return dictionary[key];
         }
-        public static TV GetOr<T, TV>(this Dictionary<T, TV> dictionary, T key,Func<TV> or)
+
+        public static TV GetOr<T, TV>(this Dictionary<T, TV> dictionary, T key, Func<TV> or)
         {
             if (!dictionary.ContainsKey(key))
             {

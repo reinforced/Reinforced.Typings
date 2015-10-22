@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Reinforced.Typings
+﻿namespace Reinforced.Typings
 {
     /// <summary>
-    /// Represents member's access modifier
+    ///     Represents member's access modifier
     /// </summary>
     public enum AccessModifier
     {
         /// <summary>
-        /// private
+        ///     private
         /// </summary>
         Private,
+
         /// <summary>
-        /// protected
+        ///     protected
         /// </summary>
         Protected,
+
         /// <summary>
-        /// public
+        ///     public
         /// </summary>
         Public
     }

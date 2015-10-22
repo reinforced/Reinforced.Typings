@@ -6,29 +6,29 @@ using Reinforced.Typings.Xmldoc;
 namespace Reinforced.Typings
 {
     /// <summary>
-    /// TsExport exporting settings
+    ///     TsExport exporting settings
     /// </summary>
     public class ExportSettings
     {
-        private bool _isLocked;
-        private string _targetFile;
-        private string _targetDirectory;
-        private bool _writeWarningComment;
-        private bool _hierarchical;
-        private Assembly[] _sourceAssemblies;
-        private bool _exportPureTyings;
-        private string _rootNamespace;
         private bool _camelCaseForMethods;
         private bool _camelCaseForProperties;
-        private string _documentationFilePath;
-        private bool _generateDocumentation;
         private Action<ConfigurationBuilder> _configurationMethod;
+        private string _documentationFilePath;
+        private bool _exportPureTyings;
+        private bool _generateDocumentation;
+        private bool _hierarchical;
+        private bool _isLocked;
+        private string _rootNamespace;
+        private Assembly[] _sourceAssemblies;
+        private string _targetDirectory;
+        private string _targetFile;
+        private bool _writeWarningComment;
 
         /// <summary>
-        /// The assemblies to extract typings from. 
-        /// Important! TsExporter do not perform any job for loading assemblies. It is left upon a calling side. 
-        /// That is because loading assemblies is highly dependent on calling side's AppDomain. 
-        /// TsExporter shouldnt handle all this shit
+        ///     The assemblies to extract typings from.
+        ///     Important! TsExporter do not perform any job for loading assemblies. It is left upon a calling side.
+        ///     That is because loading assemblies is highly dependent on calling side's AppDomain.
+        ///     TsExporter shouldnt handle all this shit
         /// </summary>
         public Assembly[] SourceAssemblies
         {
@@ -41,8 +41,8 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// True to create project hierarchy in target folder. 
-        /// False to store generated typings in single file
+        ///     True to create project hierarchy in target folder.
+        ///     False to store generated typings in single file
         /// </summary>
         public bool Hierarchical
         {
@@ -55,8 +55,8 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// True to write warning comment about auto-generated to every file.
-        /// False to do not
+        ///     True to write warning comment about auto-generated to every file.
+        ///     False to do not
         /// </summary>
         public bool WriteWarningComment
         {
@@ -69,8 +69,8 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Target directory where to store generated typing files. 
-        /// This parameter is not used when Hierarcy is false
+        ///     Target directory where to store generated typing files.
+        ///     This parameter is not used when Hierarcy is false
         /// </summary>
         public string TargetDirectory
         {
@@ -83,8 +83,8 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Target file where to store generated sources. 
-        /// This parameter is not used when Hierarchy is true
+        ///     Target file where to store generated sources.
+        ///     This parameter is not used when Hierarchy is true
         /// </summary>
         public string TargetFile
         {
@@ -97,8 +97,8 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// If true, export will be performed in .d.ts manner (only typings, declare module etc).
-        /// Otherwise, export will be performed to regulat .ts file
+        ///     If true, export will be performed in .d.ts manner (only typings, declare module etc).
+        ///     Otherwise, export will be performed to regulat .ts file
         /// </summary>
         public bool ExportPureTypings
         {
@@ -111,8 +111,8 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Specifies root namespace for hierarchical export.
-        /// Helps to avoid creating redundant directories when hierarchical export.
+        ///     Specifies root namespace for hierarchical export.
+        ///     Helps to avoid creating redundant directories when hierarchical export.
         /// </summary>
         public string RootNamespace
         {
@@ -125,7 +125,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Use camelCase for methods naming
+        ///     Use camelCase for methods naming
         /// </summary>
         public bool CamelCaseForMethods
         {
@@ -138,7 +138,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Use camelCase for properties naming
+        ///     Use camelCase for properties naming
         /// </summary>
         public bool CamelCaseForProperties
         {
@@ -151,7 +151,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Path to assembly's XMLDOC file
+        ///     Path to assembly's XMLDOC file
         /// </summary>
         public string DocumentationFilePath
         {
@@ -164,7 +164,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Fluent configuration method
+        ///     Fluent configuration method
         /// </summary>
         public Action<ConfigurationBuilder> ConfigurationMethod
         {
@@ -177,7 +177,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// Enables or disables documentation generator
+        ///     Enables or disables documentation generator
         /// </summary>
         public bool GenerateDocumentation
         {
@@ -191,28 +191,27 @@ namespace Reinforced.Typings
 
         internal string References { get; set; }
 
-
-        internal void Lock()
-        {
-            _isLocked = true;
-        }
-
-
-        internal void Unlock()
-        {
-            _isLocked = false;
-        }
-
         /// <summary>
-        /// Documentation manager
+        ///     Documentation manager
         /// </summary>
         public DocumentationManager Documentation { get; internal set; }
 
         internal string CurrentNamespace { get; set; }
 
         /// <summary>
-        /// There is a case when you are exporting base class as interface. It may lead to some unusual handling of generation, so I'm using this property to denote such cases and fix it in-place
+        ///     There is a case when you are exporting base class as interface. It may lead to some unusual handling of generation,
+        ///     so I'm using this property to denote such cases and fix it in-place
         /// </summary>
         internal bool SpecialCase { get; set; }
+
+        internal void Lock()
+        {
+            _isLocked = true;
+        }
+
+        internal void Unlock()
+        {
+            _isLocked = false;
+        }
     }
 }

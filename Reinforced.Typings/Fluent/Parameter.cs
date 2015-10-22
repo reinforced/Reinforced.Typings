@@ -1,20 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reinforced.Typings.Fluent
 {
     /// <summary>
-    /// Shortcut for method parameters mocking
+    ///     Shortcut for method parameters mocking
     /// </summary>
     public class Ts
     {
+        internal static MethodInfo ParametrizedParameterMethod;
+
+        static Ts()
+        {
+            Expression<Func<object>> lambda = () => Parameter<object>(a => a.Ignore());
+            ParametrizedParameterMethod = LambdaHelpers.ParseMethodLambda(lambda).GetGenericMethodDefinition();
+        }
+
         /// <summary>
-        /// Parameter mock for specified type
+        ///     Parameter mock for specified type
         /// </summary>
         /// <typeparam name="T">Parameter type</typeparam>
         /// <returns>Mock</returns>
@@ -24,7 +28,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Parameter mock with parameter configuration
+        ///     Parameter mock with parameter configuration
         /// </summary>
         /// <typeparam name="T">Parameter type</typeparam>
         /// <param name="configuration">Fluent parameter configuration</param>
@@ -32,14 +36,6 @@ namespace Reinforced.Typings.Fluent
         public static T Parameter<T>(Action<ParameterConfigurationBuilder> configuration)
         {
             return default(T);
-        }
-
-        internal static MethodInfo ParametrizedParameterMethod;
-
-        static Ts()
-        {
-            Expression<Func<object>> lambda = () => Parameter<object>(a => a.Ignore());
-            ParametrizedParameterMethod = LambdaHelpers.ParseMethodLambda(lambda).GetGenericMethodDefinition();
         }
     }
 }

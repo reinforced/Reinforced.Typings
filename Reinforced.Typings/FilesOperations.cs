@@ -51,6 +51,10 @@ namespace Reinforced.Typings
 
         public string GetPathForType(Type t)
         {
+            var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);
+            if (!string.IsNullOrEmpty(fromConfiguration))
+                return Path.Combine(_settings.TargetDirectory, fromConfiguration).Replace("/", "\\");
+
             var ns = t.GetNamespace();
             var tn = t.GetName();
 
@@ -62,49 +66,49 @@ namespace Reinforced.Typings
             if (string.IsNullOrEmpty(ns)) return Path.Combine(_settings.TargetDirectory, tn);
             if (!string.IsNullOrEmpty(_settings.RootNamespace))
             {
-                ns = ns.Replace(_settings.RootNamespace, String.Empty);
+                ns = ns.Replace(_settings.RootNamespace, string.Empty);
             }
             ns = ns.Trim('.').Replace('.', '\\');
 
-            var pth = Path.Combine(!string.IsNullOrEmpty(ns) ? Path.Combine(_settings.TargetDirectory, ns) : _settings.TargetDirectory, tn);
+            var pth =
+                Path.Combine(
+                    !string.IsNullOrEmpty(ns) ? Path.Combine(_settings.TargetDirectory, ns) : _settings.TargetDirectory,
+                    tn);
 
             return pth;
         }
 
-        public string GetRelativePathForType(Type t, string currentNamespace)
+        public string GetRelativePathForType(Type typeToReference, Type currentlyExportingType)
         {
-            currentNamespace = currentNamespace.Replace(_settings.RootNamespace, String.Empty);
+            var currentFile = GetPathForType(currentlyExportingType);
+            var desiredFile = GetPathForType(typeToReference);
+            var desiredFileName = Path.GetFileName(desiredFile);
 
-            currentNamespace = currentNamespace.Replace('.', '\\').Trim('\\');
+            var relPath = GetRelativeNamespacePath(Path.GetDirectoryName(currentFile),
+                Path.GetDirectoryName(desiredFile));
 
-            var path = GetPathForType(t).Replace(_settings.TargetDirectory, String.Empty);
-            var fileName = Path.GetFileName(path);
-            var desiredNamespace = Path.GetDirectoryName(path).Trim('\\');
-
-            var relPath = GetRelativeNamespacePath(currentNamespace, desiredNamespace);
-
-            relPath = Path.Combine(relPath, fileName);
+            relPath = Path.Combine(relPath, desiredFileName);
             relPath = relPath.Replace('\\', '/');
             return relPath;
         }
 
         private string GetRelativeNamespacePath(string currentNamespace, string desiredNamespace)
         {
-            if (currentNamespace==desiredNamespace) return String.Empty;
+            if (currentNamespace == desiredNamespace) return string.Empty;
             if (string.IsNullOrEmpty(currentNamespace)) return desiredNamespace;
-            
+
 
             var current = currentNamespace.Split('\\');
             var desired = desiredNamespace.Split('\\');
-            
-            StringBuilder result = new StringBuilder();
+
+            var result = new StringBuilder();
             if (string.IsNullOrEmpty(desiredNamespace))
             {
-                for (int i = 0; i < current.Length; i++) result.Append("..\\");
+                for (var i = 0; i < current.Length; i++) result.Append("..\\");
             }
             else
             {
-                int level = current.Length - 1;
+                var level = current.Length - 1;
                 while (level >= 0 && (current.I(level) != desired.I(level)))
                 {
                     result.Append("..\\");
@@ -123,7 +127,6 @@ namespace Reinforced.Typings
         {
             _tmpFiles.Clear();
         }
-
     }
 
     internal static class ArrayExtensions

@@ -7,14 +7,19 @@ using Reinforced.Typings.Fluent.Interfaces;
 namespace Reinforced.Typings.Fluent
 {
     /// <summary>
-    /// Fluent configuration builder
+    ///     Fluent configuration builder
     /// </summary>
     public class ConfigurationBuilder
     {
-        private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders = new Dictionary<Type, ITypeConfigurationBuilder>();
-        private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders = new Dictionary<Type, IEnumConfigurationBuidler>();
-        private readonly List<string> _references = new List<string>();
         private readonly List<string> _additionalDocumentationPathes = new List<string>();
+
+        private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders =
+            new Dictionary<Type, IEnumConfigurationBuidler>();
+
+        private readonly List<string> _references = new List<string>();
+
+        private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders =
+            new Dictionary<Type, ITypeConfigurationBuilder>();
 
         internal List<string> AdditionalDocumentationPathes
         {
@@ -38,7 +43,7 @@ namespace Reinforced.Typings.Fluent
 
         internal ConfigurationRepository Build()
         {
-            ConfigurationRepository repository = new ConfigurationRepository();
+            var repository = new ConfigurationRepository();
             foreach (var kv in _typeConfigurationBuilders)
             {
                 var cls = kv.Value as IClassConfigurationBuilder;
@@ -65,15 +70,15 @@ namespace Reinforced.Typings.Fluent
                     var method = kvm.Key as MethodInfo;
                     if (prop != null)
                     {
-                        repository.AttributesForProperties[prop] = (TsPropertyAttribute)kvm.Value.AttributePrototype;
+                        repository.AttributesForProperties[prop] = (TsPropertyAttribute) kvm.Value.AttributePrototype;
                     }
                     if (field != null)
                     {
-                        repository.AttributesForFields[field] = (TsPropertyAttribute)kvm.Value.AttributePrototype;
+                        repository.AttributesForFields[field] = (TsPropertyAttribute) kvm.Value.AttributePrototype;
                     }
                     if (method != null)
                     {
-                        repository.AttributesForMethods[method] = (TsFunctionAttribute)kvm.Value.AttributePrototype;
+                        repository.AttributesForMethods[method] = (TsFunctionAttribute) kvm.Value.AttributePrototype;
                     }
                 }
                 foreach (var kvp in kv.Value.ParametersConfiguration)
@@ -85,7 +90,7 @@ namespace Reinforced.Typings.Fluent
                     }
                     repository.AttributesForParameters[kvp.Key] = kvp.Value.AttributePrototype;
                 }
-                AddReferences(repository, kv.Key, kv.Value);
+                repository.AddFileSeparationSettings(kv.Key, kv.Value);
             }
             foreach (var kv in _enumConfigurationBuilders)
             {
@@ -95,19 +100,11 @@ namespace Reinforced.Typings.Fluent
                     repository.AttributesForEnumValues[enumValueExportConfiguration.Key] =
                         enumValueExportConfiguration.Value.AttributePrototype;
                 }
-                AddReferences(repository,kv.Key,kv.Value);
+                repository.AddFileSeparationSettings(kv.Key, kv.Value);
             }
             repository.References.AddRange(_references);
             repository.AdditionalDocumentationPathes.AddRange(_additionalDocumentationPathes);
             return repository;
-        }
-
-        private static void AddReferences(ConfigurationRepository repository,Type type,IReferenceConfigurationBuilder refs)
-        {
-            var refsList = repository.ReferenceAttributes.GetOrCreate(type);
-            refsList.AddRange(refs.References);
-            var attrs = type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
-            if (attrs != null) refsList.AddRange(attrs);
         }
     }
 }

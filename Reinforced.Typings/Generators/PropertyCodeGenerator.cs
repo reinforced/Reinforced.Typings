@@ -5,12 +5,13 @@ using Reinforced.Typings.Attributes;
 namespace Reinforced.Typings.Generators
 {
     /// <summary>
-    /// Default code generator for properties
+    ///     Default code generator for properties
     /// </summary>
     public class PropertyCodeGenerator : ITsCodeGenerator<MemberInfo>
     {
         /// <summary>
-        /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
+        ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
+        ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
@@ -21,7 +22,7 @@ namespace Reinforced.Typings.Generators
 
             var t = GetType(element);
             string typeName = null;
-            string propName = element.Name;
+            var propName = element.Name;
             var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
             if (tp != null)
             {
@@ -35,10 +36,12 @@ namespace Reinforced.Typings.Generators
                 }
 
                 if (!string.IsNullOrEmpty(tp.Name)) propName = tp.Name;
-                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase) propName = propName + "?";
+                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase)
+                    propName = propName + "?";
             }
             if (string.IsNullOrEmpty(typeName)) typeName = resolver.ResolveTypeName(t);
-            if (!propName.EndsWith("?") && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase)
+            if (!propName.EndsWith("?") && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
+                !Settings.SpecialCase)
             {
                 propName = propName + "?";
             }
@@ -54,8 +57,8 @@ namespace Reinforced.Typings.Generators
             sw.Indent();
             if (!element.DeclaringType.IsExportingAsInterface() || Settings.SpecialCase)
             {
-                var modifier = Settings.SpecialCase? AccessModifier.Public: element.GetModifier();
-                sw.Write("{0} ",modifier.ToModifierText());
+                var modifier = Settings.SpecialCase ? AccessModifier.Public : element.GetModifier();
+                sw.Write("{0} ", modifier.ToModifierText());
             }
             sw.Write("{0}: {1};", propName, typeName);
             sw.Br();
@@ -63,18 +66,18 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Export settings
+        ///     Export settings
         /// </summary>
         public ExportSettings Settings { get; set; }
 
         /// <summary>
-        /// Returns type of specified property. It is useful for overloads sometimes
+        ///     Returns type of specified property. It is useful for overloads sometimes
         /// </summary>
         /// <param name="mi">Method Info</param>
         /// <returns>Property info type</returns>
         protected virtual Type GetType(MemberInfo mi)
         {
-            PropertyInfo pi = (PropertyInfo)mi;
+            var pi = (PropertyInfo) mi;
             return pi.PropertyType;
         }
     }

@@ -5,13 +5,12 @@ using System.Reflection;
 namespace Reinforced.Typings.Fluent
 {
     /// <summary>
-    /// Set of helper reflection methods
+    ///     Set of helper reflection methods
     /// </summary>
     internal static class LambdaHelpers
     {
-        
         /// <summary>
-        /// Parses supplied lambda expression and retrieves PropertyInfo from it
+        ///     Parses supplied lambda expression and retrieves PropertyInfo from it
         /// </summary>
         /// <typeparam name="T1">T1</typeparam>
         /// <typeparam name="T2">T2</typeparam>
@@ -27,7 +26,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Parses supplied lambda expression and retrieves PropertyInfo from it
+        ///     Parses supplied lambda expression and retrieves PropertyInfo from it
         /// </summary>
         /// <param name="lambda">Property Lambda expression</param>
         /// <returns>PropertyInfo referenced by this expression</returns>
@@ -41,7 +40,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Parses supplied lambda expression and retrieves PropertyInfo from it
+        ///     Parses supplied lambda expression and retrieves PropertyInfo from it
         /// </summary>
         /// <typeparam name="T1">T1</typeparam>
         /// <typeparam name="T2">T2</typeparam>
@@ -57,7 +56,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Parses supplied lambda expression and retrieves PropertyInfo from it
+        ///     Parses supplied lambda expression and retrieves PropertyInfo from it
         /// </summary>
         /// <param name="lambda">Property Lambda expression</param>
         /// <returns>PropertyInfo referenced by this expression</returns>
@@ -71,14 +70,16 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Parses supplied lambda expression and retrieves PropertyInfo from it
+        ///     Parses supplied lambda expression and retrieves PropertyInfo from it
         /// </summary>
         /// <param name="lambda">Property Lambda expression</param>
         /// <returns>PropertyInfo referenced by this expression</returns>
         public static MethodInfo ParseMethodLambda(LambdaExpression lambda)
         {
             var mex = lambda.Body as MethodCallExpression;
-            if (mex == null) throw new Exception("MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
+            if (mex == null)
+                throw new Exception(
+                    "MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
             return mex.Method;
         }
     }

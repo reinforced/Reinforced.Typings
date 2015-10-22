@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
 {
     /// <summary>
-    /// Default code generator for CLR type (class) 
+    ///     Default code generator for CLR type (class)
     /// </summary>
     public class ClassCodeGenerator : ITsCodeGenerator<Type>
     {
         /// <summary>
-        /// Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to WriterWrapper (3rd argument) using TypeResolver if necessary
+        ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
+        ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
@@ -26,21 +26,25 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Export settings
+        ///     Export settings
         /// </summary>
         public ExportSettings Settings { get; set; }
 
         /// <summary>
-        /// Exports entire class to specified writer
+        ///     Exports entire class to specified writer
         /// </summary>
-        /// <param name="declType">Declaration type. Used in "export $gt;class&lt; ... " line. This parameter allows switch it to "interface"</param>
+        /// <param name="declType">
+        ///     Declaration type. Used in "export $gt;class&lt; ... " line. This parameter allows switch it to
+        ///     "interface"
+        /// </param>
         /// <param name="type">Exporting class type</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
-        protected virtual void Export(string declType, Type type, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        protected virtual void Export(string declType, Type type, TypeResolver resolver, WriterWrapper sw,
+            IAutoexportSwitchAttribute swtch)
         {
-            string name = type.GetName();
+            var name = type.GetName();
 
             Settings.Documentation.WriteDocumentation(type, sw);
             sw.Indent();
@@ -51,8 +55,8 @@ namespace Reinforced.Typings.Generators
 
             var ifaces = type.GetInterfaces();
             var bs = type.BaseType;
-            bool baseClassIsExportedAsInterface = false;
-            if (bs != null && bs != typeof(object))
+            var baseClassIsExportedAsInterface = false;
+            if (bs != null && bs != typeof (object))
             {
                 if (ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs) != null)
                 {
@@ -63,15 +67,16 @@ namespace Reinforced.Typings.Generators
                     }
                 }
             }
-            var ifacesStrings = ifaces.Where(c => ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(c) != null)
-                .Select(resolver.ResolveTypeName).ToList();
+            var ifacesStrings =
+                ifaces.Where(c => ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(c) != null)
+                    .Select(resolver.ResolveTypeName).ToList();
             if (baseClassIsExportedAsInterface)
             {
                 ifacesStrings.Add(resolver.ResolveTypeName(bs));
             }
             if (ifacesStrings.Any())
             {
-                string implemets = String.Join(", ", ifacesStrings);
+                var implemets = string.Join(", ", ifacesStrings);
                 if (type.IsExportingAsInterface()) sw.Write(" extends {0}", implemets);
                 else sw.Write(" implements {0}", implemets);
             }
@@ -83,7 +88,7 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Exports all type members sequentially
+        ///     Exports all type members sequentially
         /// </summary>
         /// <param name="element">Type itself</param>
         /// <param name="resolver">Type resolver</param>
@@ -100,13 +105,14 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Here you can customize what to export when base class is class but exporting as interface
+        ///     Here you can customize what to export when base class is class but exporting as interface
         /// </summary>
         /// <param name="element">Type itself</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
-        protected virtual void HandleBaseClassExportingAsInterface(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        protected virtual void HandleBaseClassExportingAsInterface(Type element, TypeResolver resolver, WriterWrapper sw,
+            IAutoexportSwitchAttribute swtch)
         {
             if (element.BaseType != null)
             {
@@ -118,7 +124,8 @@ namespace Reinforced.Typings.Generators
                     // we do not export methods - just properties and fields
                     // but still. It is better thatn nothing
 
-                    Settings.Documentation.WriteComment(sw, String.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
+                    Settings.Documentation.WriteComment(sw,
+                        string.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType)));
                     var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element.BaseType);
                     Settings.SpecialCase = true;
                     ExportFields(element.BaseType, resolver, sw, basExSwtch);
@@ -129,61 +136,46 @@ namespace Reinforced.Typings.Generators
         }
 
         /// <summary>
-        /// Exports type fields
+        ///     Exports type fields
         /// </summary>
         /// <param name="element">Type itself</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
-        protected virtual void ExportFields(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        protected virtual void ExportFields(Type element, TypeResolver resolver, WriterWrapper sw,
+            IAutoexportSwitchAttribute swtch)
         {
-            var fields =
-                element.GetFields(TypeExtensions.MembersFlags)
-                    .Where(TypeExtensions.TypeScriptMemberSearchPredicate)
-                    .OfType<FieldInfo>();
-            if (!swtch.AutoExportFields)
-            {
-                fields = fields.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
-            }
-            GenerateMembers(element, resolver, sw, fields);
+            GenerateMembers(element, resolver, sw, element.GetExportedFields());
         }
 
         /// <summary>
-        /// Exports type properties
+        ///     Exports type properties
         /// </summary>
         /// <param name="element">Type itself</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
-        protected virtual void ExportProperties(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        protected virtual void ExportProperties(Type element, TypeResolver resolver, WriterWrapper sw,
+            IAutoexportSwitchAttribute swtch)
         {
-            var properties = element.GetProperties(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate).OfType<PropertyInfo>();
-            if (!swtch.AutoExportProperties)
-            {
-                properties = properties.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
-            }
-            GenerateMembers(element, resolver, sw, properties);
+            GenerateMembers(element, resolver, sw, element.GetExportedProperties());
         }
 
         /// <summary>
-        /// Exports type methods
+        ///     Exports type methods
         /// </summary>
         /// <param name="element">Type itself</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
-        protected virtual void ExportMethods(Type element, TypeResolver resolver, WriterWrapper sw, IAutoexportSwitchAttribute swtch)
+        protected virtual void ExportMethods(Type element, TypeResolver resolver, WriterWrapper sw,
+            IAutoexportSwitchAttribute swtch)
         {
-            var methods = element.GetMethods(TypeExtensions.MembersFlags).Where(c => TypeExtensions.TypeScriptMemberSearchPredicate(c) && !c.IsSpecialName);
-            if (!swtch.AutoExportMethods)
-            {
-                methods = methods.Where(c => ConfigurationRepository.Instance.ForMember(c) != null);
-            }
-            GenerateMembers(element, resolver, sw, methods);
+            GenerateMembers(element, resolver, sw, element.GetExportedMethods());
         }
 
         /// <summary>
-        /// Exports type constructors
+        ///     Exports type constructors
         /// </summary>
         /// <param name="element">Type itself</param>
         /// <param name="resolver">Type resolver</param>
@@ -204,18 +196,17 @@ namespace Reinforced.Typings.Generators
             }
         }
 
-
         /// <summary>
-        /// Exports list of type members
+        ///     Exports list of type members
         /// </summary>
         /// <typeparam name="T">Type member type</typeparam>
         /// <param name="element">Exporting class</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
         /// <param name="members">Type members to export</param>
-        protected virtual void GenerateMembers<T>(Type element, TypeResolver resolver, WriterWrapper sw, IEnumerable<T> members) where T : MemberInfo
+        protected virtual void GenerateMembers<T>(Type element, TypeResolver resolver, WriterWrapper sw,
+            IEnumerable<T> members) where T : MemberInfo
         {
-
             foreach (var m in members)
             {
                 var generator = resolver.GeneratorFor(m, Settings);

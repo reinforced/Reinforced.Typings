@@ -1,14 +1,14 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
+
 #pragma warning disable 1591
 
 namespace Reinforced.Typings.Xmldoc.Model
 {
     [XmlRoot("doc")]
     [XmlType("doc")]
-    [XmlInclude(typeof(DocumentationMember))]
-    [XmlInclude(typeof(DocumentationParameter))]
+    [XmlInclude(typeof (DocumentationMember))]
+    [XmlInclude(typeof (DocumentationParameter))]
     public class Documentation
     {
         [XmlArray("members")]
@@ -40,20 +40,19 @@ namespace Reinforced.Typings.Xmldoc.Model
         [XmlElement(ElementName = "param")]
         public DocumentationParameter[] Parameters { get; set; }
 
-        public override string ToString()
-        {
-            return String.Format("({0}) {1}", MemberType, Name);
-        }
-
         [XmlElement(ElementName = "returns")]
         public DocumentationReturns Returns { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("({0}) {1}", MemberType, Name);
+        }
     }
 
 
     public class DocumentationParameter : XmlIgnoreInner
     {
         public string Name { get; set; }
-
         public string Description { get; set; }
 
         public override void ReadXml(XmlReader reader)
@@ -62,7 +61,6 @@ namespace Reinforced.Typings.Xmldoc.Model
             Description = reader.ReadInnerXml().Trim();
             if (Description.Contains("this method interface declaration"))
             {
-
             }
         }
 
