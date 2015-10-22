@@ -107,6 +107,7 @@ namespace Reinforced.Typings
 
         private void ExportReferences(TextWriter tw, IEnumerable<Type> types = null)
         {
+            tw.WriteLine(_referenceBuilder.ToString());
             WriteWarning(tw);
             if (types != null)
             {
