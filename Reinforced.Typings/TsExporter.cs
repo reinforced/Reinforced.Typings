@@ -107,21 +107,17 @@ namespace Reinforced.Typings
 
         private void ExportReferences(TextWriter tw, IEnumerable<Type> types = null)
         {
-            tw.WriteLine(_referenceBuilder.ToString());
             WriteWarning(tw);
+            tw.WriteLine(_referenceBuilder.ToString());
             if (types != null)
             {
-                var atLeast = false;
+            
                 foreach (var type in types)
                 {
                     var inspected = _fileOps.GenerateInspectedReferences(type, _allTypesHash);
-                    if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected))
-                    {
-                        tw.WriteLine(inspected);
-                        atLeast = true;
-                    }
+                    if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected)) tw.WriteLine(inspected);
                 }
-                if (atLeast) tw.WriteLine();
+            
             }
         }
 
