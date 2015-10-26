@@ -82,6 +82,8 @@ namespace Reinforced.Typings
         {
             var currentFile = GetPathForType(currentlyExportingType);
             var desiredFile = GetPathForType(typeToReference);
+            if (currentFile==desiredFile) return String.Empty;
+
             var desiredFileName = Path.GetFileName(desiredFile);
 
             var relPath = GetRelativeNamespacePath(Path.GetDirectoryName(currentFile),

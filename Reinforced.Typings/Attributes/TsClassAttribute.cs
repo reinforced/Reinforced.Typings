@@ -42,6 +42,6 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         ///     When true, code for all constructors will be automatically generated
         /// </summary>
-        public bool AutoExportConstructors { get; set; }
+        public virtual bool AutoExportConstructors { get; set; }
     }
 }

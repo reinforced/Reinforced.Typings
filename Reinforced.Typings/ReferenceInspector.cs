@@ -11,22 +11,26 @@ namespace Reinforced.Typings
             HashSet<Type> alltypes)
         {
             var inspectedTypes = InspectReferences(element, alltypes);
-
             var references = new HashSet<string>();
-
             var types = ConfigurationRepository.Instance.ReferencesForType(element);
             if (types != null)
             {
                 foreach (var attr in types)
                 {
-                    var path = attr.Type != null ? fileOps.GetRelativePathForType(attr.Type, element) : attr.RawPath;
-                    references.AddIfNotExists(path);
+                    if (attr.Type != element)
+                    {
+                        var path = attr.Type != null ? fileOps.GetRelativePathForType(attr.Type, element) : attr.RawPath;
+                        if (!string.IsNullOrEmpty(path)) references.AddIfNotExists(path);
+                    }
                 }
             }
             foreach (var inspectedType in inspectedTypes)
             {
-                var path = fileOps.GetRelativePathForType(inspectedType, element);
-                references.AddIfNotExists(path);
+                if (inspectedType != element)
+                {
+                    var path = fileOps.GetRelativePathForType(inspectedType, element);
+                    if (!string.IsNullOrEmpty(path)) references.AddIfNotExists(path);
+                }
             }
             var sb = new StringBuilder();
             foreach (var reference in references)
@@ -42,9 +46,9 @@ namespace Reinforced.Typings
         {
             var attr = ConfigurationRepository.Instance.ForMember(info);
             if (attr != null && attr.StrongType != null) return attr.StrongType;
-            if (info is PropertyInfo) return ((PropertyInfo) info).PropertyType;
-            if (info is FieldInfo) return ((FieldInfo) info).FieldType;
-            if (info is MethodInfo) return ((MethodInfo) info).ReturnType;
+            if (info is PropertyInfo) return ((PropertyInfo)info).PropertyType;
+            if (info is FieldInfo) return ((FieldInfo)info).FieldType;
+            if (info is MethodInfo) return ((MethodInfo)info).ReturnType;
             return null;
         }
 
@@ -95,7 +99,7 @@ namespace Reinforced.Typings
             }
         }
 
-        private static void AddIfNotExists<T>(this HashSet<T> hashSet, T val)
+        internal static void AddIfNotExists<T>(this HashSet<T> hashSet, T val)
         {
             if (hashSet.Contains(val)) return;
             hashSet.Add(val);

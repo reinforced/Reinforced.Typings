@@ -111,13 +111,20 @@ namespace Reinforced.Typings
             tw.WriteLine(_referenceBuilder.ToString());
             if (types != null)
             {
-            
+                HashSet<string> pathes = new HashSet<string>();
                 foreach (var type in types)
                 {
                     var inspected = _fileOps.GenerateInspectedReferences(type, _allTypesHash);
-                    if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected)) tw.WriteLine(inspected);
+                    if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected))
+                    {
+                        pathes.AddIfNotExists(inspected);
+                    }
                 }
-            
+                foreach (var path in pathes)
+                {
+                    tw.WriteLine(path);
+                }
+
             }
         }
 
