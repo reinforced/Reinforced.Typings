@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 #pragma warning disable 1591
 
@@ -73,6 +74,7 @@ namespace Reinforced.Typings
             _writer.Write(value);
         }
 
+        [CLSCompliantAttribute(false)]
         public void Write(uint value)
         {
             _writer.Write(value);
@@ -83,6 +85,7 @@ namespace Reinforced.Typings
             _writer.Write(value);
         }
 
+        [CLSCompliantAttribute(false)]
         public void Write(ulong value)
         {
             _writer.Write(value);
@@ -179,6 +182,7 @@ namespace Reinforced.Typings
             _writer.WriteLine();
         }
 
+        [CLSCompliantAttribute(false)]
         public void WriteLine(uint value)
         {
             AppendTabs();
@@ -195,6 +199,7 @@ namespace Reinforced.Typings
             _writer.WriteLine();
         }
 
+        [CLSCompliantAttribute(false)]
         public void WriteLine(ulong value)
         {
             AppendTabs();
