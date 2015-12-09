@@ -74,6 +74,9 @@
     <Compile Include="Fluent\ConfigurationBuildersExtensions.cs" />
     <Compile Include="Fluent\EnumConfigurationBuilder.cs" />
     <Compile Include="Fluent\EnumValueExportConfiguration.cs" />
+    <Compile Include="Fluent\Generic\GenericClassConfigurationBuilder.cs" />
+    <Compile Include="Fluent\Generic\GenericConfigurationBuilderBase.cs" />
+    <Compile Include="Fluent\Generic\GenericInterfaceConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IEnumConfigurationBuidler.cs" />
     <Compile Include="Fluent\Interfaces\IExportConfiguration.cs" />

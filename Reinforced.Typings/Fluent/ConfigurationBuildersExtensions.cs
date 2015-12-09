@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Reinforced.Typings.Fluent.Generic;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
@@ -87,7 +88,7 @@ namespace Reinforced.Typings.Fluent
                                     var value = actionArg.Value as MethodInfo;
                                     if (value != null)
                                     {
-                                        var param = Expression.Parameter(typeof (ParameterConfigurationBuilder));
+                                        var param = Expression.Parameter(typeof(ParameterConfigurationBuilder));
                                         var newCall = Expression.Call(value, param);
                                         var newLambda = Expression.Lambda(newCall, param);
                                         var delg = newLambda.Compile();
@@ -135,7 +136,7 @@ namespace Reinforced.Typings.Fluent
         public static InterfaceConfigurationBuilder<T> WithProperty<T, TData>(this InterfaceConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
         {
-            return tc.WithProperties(new[] {LambdaHelpers.ParsePropertyLambda(property)}, configuration);
+            return tc.WithProperties(new[] { LambdaHelpers.ParsePropertyLambda(property) }, configuration);
         }
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace Reinforced.Typings.Fluent
         public static ClassConfigurationBuilder<T> WithProperty<T, TData>(this ClassConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
         {
-            return tc.WithProperties(new[] {LambdaHelpers.ParsePropertyLambda(property)}, configuration);
+            return tc.WithProperties(new[] { LambdaHelpers.ParsePropertyLambda(property) }, configuration);
         }
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace Reinforced.Typings.Fluent
         public static InterfaceConfigurationBuilder<T> WithField<T, TData>(this InterfaceConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
         {
-            ApplyMembersConfiguration(tc, new[] {LambdaHelpers.ParseFieldLambda(property)}, configuration);
+            ApplyMembersConfiguration(tc, new[] { LambdaHelpers.ParseFieldLambda(property) }, configuration);
             return tc;
         }
 
@@ -263,7 +264,7 @@ namespace Reinforced.Typings.Fluent
         public static ClassConfigurationBuilder<T> WithField<T, TData>(this ClassConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
         {
-            return tc.WithFields(new[] {LambdaHelpers.ParseFieldLambda(property)}, configuration);
+            return tc.WithFields(new[] { LambdaHelpers.ParseFieldLambda(property) }, configuration);
         }
 
         /// <summary>
@@ -369,7 +370,7 @@ namespace Reinforced.Typings.Fluent
         public static InterfaceConfigurationBuilder<T> WithMethod<T, TData>(this InterfaceConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> method, Action<MethodExportConfiguration> configuration)
         {
-            tc.WithMethods(new[] {LambdaHelpers.ParseMethodLambda(method)}, configuration);
+            tc.WithMethods(new[] { LambdaHelpers.ParseMethodLambda(method) }, configuration);
             ITypeConfigurationBuilder tcb = tc;
             ExtractParameters(tcb, method);
             return tc;
@@ -387,7 +388,7 @@ namespace Reinforced.Typings.Fluent
         public static ClassConfigurationBuilder<T> WithMethod<T, TData>(this ClassConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> method, Action<MethodExportConfiguration> configuration)
         {
-            tc.WithMethods(new[] {LambdaHelpers.ParseMethodLambda(method)}, configuration);
+            tc.WithMethods(new[] { LambdaHelpers.ParseMethodLambda(method) }, configuration);
             ITypeConfigurationBuilder tcb = tc;
             ExtractParameters(tcb, method);
             return tc;
@@ -425,7 +426,7 @@ namespace Reinforced.Typings.Fluent
         public static InterfaceConfigurationBuilder<T> WithMethod<T>(this InterfaceConfigurationBuilder<T> tc,
             Expression<Action<T>> method, Action<MethodExportConfiguration> configuration)
         {
-            tc.WithMethods(new[] {LambdaHelpers.ParseMethodLambda(method)}, configuration);
+            tc.WithMethods(new[] { LambdaHelpers.ParseMethodLambda(method) }, configuration);
             ITypeConfigurationBuilder tcb = tc;
             ExtractParameters(tcb, method);
             return tc;
@@ -443,7 +444,7 @@ namespace Reinforced.Typings.Fluent
         public static ClassConfigurationBuilder<T> WithMethod<T>(this ClassConfigurationBuilder<T> tc,
             Expression<Action<T>> method, Action<MethodExportConfiguration> configuration)
         {
-            tc.WithMethods(new[] {LambdaHelpers.ParseMethodLambda(method)}, configuration);
+            tc.WithMethods(new[] { LambdaHelpers.ParseMethodLambda(method) }, configuration);
             ITypeConfigurationBuilder tcb = tc;
             ExtractParameters(tcb, method);
             return tc;
@@ -530,7 +531,7 @@ namespace Reinforced.Typings.Fluent
         {
             return
                 (InterfaceConfigurationBuilder<T>)
-                    builder.TypeConfigurationBuilders.GetOrCreate(typeof (T),
+                    builder.TypeConfigurationBuilders.GetOrCreate(typeof(T),
                         () => new InterfaceConfigurationBuilder<T>());
         }
 
@@ -547,10 +548,16 @@ namespace Reinforced.Typings.Fluent
             foreach (var type in types)
             {
                 var tp = type;
-                var conf = (IInterfaceConfigurationBuilder) builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
+                var conf = (IInterfaceConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                 {
-                    var t = typeof (InterfaceConfigurationBuilder<>).MakeGenericType(tp);
-                    return (ITypeConfigurationBuilder) Activator.CreateInstance(t, true);
+                    Type t = null;
+                    if (!tp.IsGenericType)
+                    {
+                        t = typeof(InterfaceConfigurationBuilder<>).MakeGenericType(tp);
+                        return (ITypeConfigurationBuilder)Activator.CreateInstance(t, true);
+                    }
+                    t = typeof(GenericInterfaceConfigurationBuilder);
+                    return (ITypeConfigurationBuilder)Activator.CreateInstance(t, tp);
                 });
                 if (configuration != null) configuration(conf);
             }
@@ -570,7 +577,7 @@ namespace Reinforced.Typings.Fluent
         {
             return
                 (ClassConfigurationBuilder<T>)
-                    builder.TypeConfigurationBuilders.GetOrCreate(typeof (T), () => new ClassConfigurationBuilder<T>());
+                    builder.TypeConfigurationBuilders.GetOrCreate(typeof(T), () => new ClassConfigurationBuilder<T>());
         }
 
         /// <summary>
@@ -586,10 +593,17 @@ namespace Reinforced.Typings.Fluent
             foreach (var type in types)
             {
                 var tp = type;
-                var conf = (IClassConfigurationBuilder) builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
+                var conf = (IClassConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                 {
-                    var t = typeof (ClassConfigurationBuilder<>).MakeGenericType(tp);
-                    return (IClassConfigurationBuilder) Activator.CreateInstance(t, true);
+                    Type t = null;
+                    if (!tp.IsGenericType)
+                    {
+                        t = typeof(ClassConfigurationBuilder<>).MakeGenericType(tp);
+                        return (IClassConfigurationBuilder)Activator.CreateInstance(t, true);
+                    }
+                    t = typeof(GenericClassConfigurationBuilder);
+                    return (ITypeConfigurationBuilder)Activator.CreateInstance(t, tp);
+                    
                 });
                 if (configuration != null) configuration(conf);
             }
@@ -610,7 +624,7 @@ namespace Reinforced.Typings.Fluent
         {
             return
                 (EnumConfigurationBuilder<T>)
-                    builder.EnumConfigurationBuilders.GetOrCreate(typeof (T), () => new EnumConfigurationBuilder<T>());
+                    builder.EnumConfigurationBuilders.GetOrCreate(typeof(T), () => new EnumConfigurationBuilder<T>());
         }
 
         /// <summary>
@@ -628,8 +642,8 @@ namespace Reinforced.Typings.Fluent
                 var tp = type;
                 var conf = builder.EnumConfigurationBuilders.GetOrCreate(type, () =>
                 {
-                    var t = typeof (EnumConfigurationBuilder<>).MakeGenericType(tp);
-                    return (IEnumConfigurationBuidler) Activator.CreateInstance(t, true);
+                    var t = typeof(EnumConfigurationBuilder<>).MakeGenericType(tp);
+                    return (IEnumConfigurationBuidler)Activator.CreateInstance(t, true);
                 });
                 if (configuration != null) configuration(conf);
             }
@@ -645,8 +659,8 @@ namespace Reinforced.Typings.Fluent
         public static EnumValueExportConfiguration Value<T>(this EnumConfigurationBuilder<T> conf, T value)
             where T : struct
         {
-            var n = Enum.GetName(typeof (T), value);
-            var field = typeof (T).GetField(n);
+            var n = Enum.GetName(typeof(T), value);
+            var field = typeof(T).GetField(n);
             IEnumConfigurationBuidler ecb = conf;
             var c = ecb.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration());
             return c;
