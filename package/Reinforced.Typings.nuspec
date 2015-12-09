@@ -17,7 +17,7 @@
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
 			* 1.0.9
-			* * Fluent export of multiple generic types
+			* * Fluent export of multiple generic types fix
 			* 1.0.8
 			* * Circular references bugfix
 			* 1.0.7
