@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,6 +16,8 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
+			* 1.0.9
+			* * Fluent export of multiple generic types
 			* 1.0.8
 			* * Circular references bugfix
 			* 1.0.7
