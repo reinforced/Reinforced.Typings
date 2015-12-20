@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Generators
         public virtual void Generate(Type element, TypeResolver resolver, WriterWrapper sw)
         {
             var values = Enum.GetValues(element);
-            var name = element.GetName();
+            var name = GetName(element);
             var fmt = Settings.GetDeclarationFormat(element);
             var fields = element.GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
 
@@ -54,5 +54,15 @@ namespace Reinforced.Typings.Generators
         ///     Export settings
         /// </summary>
         public ExportSettings Settings { get; set; }
-    }
+
+        /// <summary>
+        ///     Gets resulting typescript type name of exporting type
+        /// </summary>
+        /// <param name="element">Exporting class</param>
+        /// <returns>Resulting ts type name</returns>
+        protected virtual string GetName(Type element)
+        {
+            return element.GetName();
+        }
+	}
 }
