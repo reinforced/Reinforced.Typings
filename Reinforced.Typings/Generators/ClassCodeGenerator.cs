@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Generators
         protected virtual void Export(string declType, Type type, TypeResolver resolver, WriterWrapper sw,
             IAutoexportSwitchAttribute swtch)
         {
-            var name = type.GetName();
+            var name = GetName(type);
 
             Settings.Documentation.WriteDocumentation(type, sw);
             sw.Indent();
@@ -212,6 +212,16 @@ namespace Reinforced.Typings.Generators
                 var generator = resolver.GeneratorFor(m, Settings);
                 generator.Generate(m, resolver, sw);
             }
+        }
+
+        /// <summary>
+        ///     Gets resulting typescript type name of exporting type
+        /// </summary>
+        /// <param name="element">Exporting class</param>
+        /// <returns>Resulting ts type name</returns>
+        protected virtual string GetName(Type element)
+        {
+            return element.GetName();
         }
     }
 }
