@@ -5,7 +5,7 @@
 PM> Install-Package Reinforced.Typings
 ```
 
-**Find out more details in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
+**Find out detailed quickstart in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
 
 What is that?
 -------------
