@@ -1,9 +1,11 @@
-﻿Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/)
+﻿Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
 -------------
 
 ```sh
 PM> Install-Package Reinforced.Typings
 ```
+
+**Find out more details in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
 
 What is that?
 -------------
