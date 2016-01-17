@@ -201,5 +201,5 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
-/Playground
+Playground/
 /Reinforced.Typings.Private.sln
