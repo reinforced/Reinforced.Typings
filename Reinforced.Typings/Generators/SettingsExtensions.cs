@@ -10,27 +10,7 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public static class SettingsExtensions
     {
-        /// <summary>
-        ///     Returns declaration format for supplied Type (export/declare/nothing)
-        /// </summary>
-        /// <param name="settings">Export settings</param>
-        /// <param name="element">Type</param>
-        /// <returns>Declaration format - just supply your compilation unit type and name</returns>
-        public static string GetDeclarationFormat(this ExportSettings settings, Type element)
-        {
-            var ns = element.GetNamespace();
-            var needsExports = !string.IsNullOrEmpty(ns);
-            if (settings.ExportPureTypings)
-            {
-                if (element.IsExportingAsInterface()) return "{0} "; // no declare or export for interfaces
-
-                if (!needsExports) return "declare {0} "; //no export directive allowed in .d.ts
-                return "export {0} ";
-            }
-            if (needsExports) return "export {0} ";
-            return "{0} ";
-        }
-
+        
         /// <summary>
         ///     Conditionally (based on settings) turns method name to camelCase
         /// </summary>
@@ -78,19 +58,6 @@ namespace Reinforced.Typings.Generators
                 return char.ToLower(s[0]) + s.Substring(1);
             }
             return s;
-        }
-
-        /// <summary>
-        ///     Retrieves type from source assemblies by name
-        /// </summary>
-        /// <param name="settings">Settings</param>
-        /// <param name="typeName">Type name</param>
-        /// <returns>Type (or null)</returns>
-        public static Type GetSourceAssemblyType(this ExportSettings settings, string typeName)
-        {
-            return
-                settings.SourceAssemblies.Select(sourceAssembly => sourceAssembly.GetType(typeName, false))
-                    .FirstOrDefault(t => t != null);
         }
     }
 }

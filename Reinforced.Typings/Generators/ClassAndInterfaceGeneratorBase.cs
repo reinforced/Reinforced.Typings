@@ -10,13 +10,8 @@ using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {
-    public class ClassAndInterfaceGeneratorBase
+    public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type,TNode> where TNode : RtNode
     {
-        /// <summary>
-        ///     Export settings
-        /// </summary>
-        public ExportSettings Settings { get; set; }
-
         /// <summary>
         ///     Exports entire class to specified writer
         /// </summary>
@@ -181,7 +176,7 @@ namespace Reinforced.Typings.Generators
         {
             foreach (var m in members)
             {
-                var generator = resolver.GeneratorFor<T, RtMember>(m, Settings);
+                var generator = resolver.GeneratorFor<T>(m, Settings);
                 var member = generator.Generate(m, resolver);
                 typeMember.Members.Add(member);
             }

@@ -118,6 +118,7 @@
     <Compile Include="Fluent\ConfigurationBuilder.cs" />
     <Compile Include="Fluent\TypingsConfigurationExtensions.cs" />
     <Compile Include="Generators\ClassAndInterfaceGeneratorBase.cs" />
+    <Compile Include="Generators\TsCodeGeneratorBase.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />
     <Compile Include="Visitors\TypeScriptExportVisitor.cs" />

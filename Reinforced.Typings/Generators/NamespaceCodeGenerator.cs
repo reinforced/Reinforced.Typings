@@ -20,7 +20,6 @@ namespace Reinforced.Typings.Generators
         /// <param name="types">Types list</param>
         /// <param name="namespaceName">Namespace name</param>
         /// <param name="resolver">Type resolver</param>
-        /// <param name="sw">Output writer</param>
         public virtual RtModule Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver)
         {
             RtModule module = new RtModule();

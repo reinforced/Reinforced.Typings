@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for method parameter
     /// </summary>
-    public class ParameterCodeGenerator : ITsCodeGenerator<ParameterInfo,RtArgument>
+    public class ParameterCodeGenerator : TsCodeGeneratorBase<ParameterInfo,RtArgument>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtArgument Generate(ParameterInfo element, TypeResolver resolver)
+        public override RtArgument GenerateNode(ParameterInfo element, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
             RtArgument result = new RtArgument();
@@ -65,11 +65,6 @@ namespace Reinforced.Typings.Generators
 
             return result;
         }
-
-        /// <summary>
-        ///     Export settings
-        /// </summary>
-        public ExportSettings Settings { get; set; }
 
         /// <summary>
         ///     Returns default value for specified parameter info

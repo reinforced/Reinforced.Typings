@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for enums
     /// </summary>
-    public class EnumGenerator : ITsCodeGenerator<Type,RtEnum>
+    public class EnumGenerator : TsCodeGeneratorBase<Type,RtEnum>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -17,7 +17,7 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtEnum Generate(Type element, TypeResolver resolver)
+        public override RtEnum GenerateNode(Type element, TypeResolver resolver)
         {
             RtEnum result = new RtEnum();
             var values = Enum.GetValues(element);
@@ -62,10 +62,5 @@ namespace Reinforced.Typings.Generators
             result.Values.AddRange(valuesResult);
             return result;
         }
-
-        /// <summary>
-        ///     Export settings
-        /// </summary>
-        public ExportSettings Settings { get; set; }
     }
 }

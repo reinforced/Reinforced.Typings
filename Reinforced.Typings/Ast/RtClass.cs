@@ -16,11 +16,11 @@ namespace Reinforced.Typings.Ast
 
         public RtTypeName Extendee { get; set; }
 
-        public List<RtMember> Members { get; private set; }
+        public List<RtNode> Members { get; private set; }
 
         public RtClass()
         {
-            Members = new List<RtMember>();
+            Members = new List<RtNode>();
             Implementees = new List<RtSimpleTypeName>();
         }
 

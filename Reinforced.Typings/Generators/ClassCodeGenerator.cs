@@ -11,16 +11,15 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for CLR type (class)
     /// </summary>
-    public class ClassCodeGenerator :ClassAndInterfaceGeneratorBase, ITsCodeGenerator<Type, RtClass>
+    public class ClassCodeGenerator : ClassAndInterfaceGeneratorBase<RtClass>
     {
-
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtClass Generate(Type element, TypeResolver resolver)
+        public override RtClass GenerateNode(Type element, TypeResolver resolver)
         {
             var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(element);
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");

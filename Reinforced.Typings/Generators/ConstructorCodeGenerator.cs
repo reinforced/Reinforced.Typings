@@ -8,17 +8,16 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for constructor
     /// </summary>
-    public class ConstructorCodeGenerator : ITsCodeGenerator<ConstructorInfo,RtConstructor>
+    public class ConstructorCodeGenerator : TsCodeGeneratorBase<ConstructorInfo,RtConstructor>
     {
-        public ExportSettings Settings { get; set; }
-
+       
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtConstructor Generate(ConstructorInfo element, TypeResolver resolver)
+        public override RtConstructor GenerateNode(ConstructorInfo element, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
             if (element.GetParameters().Length == 0) return null;
@@ -29,7 +28,7 @@ namespace Reinforced.Typings.Generators
                 if (param.IsIgnored()) continue;
                 var generator = resolver.GeneratorFor(param, Settings);
                 var argument = generator.Generate(param, resolver);
-                result.Arguments.Add(argument);
+                result.Arguments.Add((RtArgument) argument);
             }
             SetupSuperCall(result, element);
             return result;

@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for properties
     /// </summary>
-    public class PropertyCodeGenerator : ITsCodeGenerator<MemberInfo, RtField>
+    public class PropertyCodeGenerator : TsCodeGeneratorBase<MemberInfo, RtField>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtField Generate(MemberInfo element, TypeResolver resolver)
+        public override RtField GenerateNode(MemberInfo element, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
             RtField result = new RtField();
@@ -67,11 +67,6 @@ namespace Reinforced.Typings.Generators
 
             return result;
         }
-
-        /// <summary>
-        ///     Export settings
-        /// </summary>
-        public ExportSettings Settings { get; set; }
 
         /// <summary>
         ///     Returns type of specified property. It is useful for overloads sometimes

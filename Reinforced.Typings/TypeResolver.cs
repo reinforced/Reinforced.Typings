@@ -14,12 +14,12 @@ namespace Reinforced.Typings
     /// </summary>
     public class TypeResolver
     {
-        private readonly ITsCodeGenerator<Type, RtClass> _defaultClassGenerator;
-        private readonly ITsCodeGenerator<Type, RtEnum> _defaultEnumGenerator;
+        private readonly ITsCodeGenerator<Type> _defaultClassGenerator;
+        private readonly ITsCodeGenerator<Type> _defaultEnumGenerator;
         private readonly Dictionary<MemberTypes, object> _defaultGenerators = new Dictionary<MemberTypes, object>();
-        private readonly ITsCodeGenerator<Type, RtInterface> _defaultInterfaceGenerator;
+        private readonly ITsCodeGenerator<Type> _defaultInterfaceGenerator;
         private readonly NamespaceCodeGenerator _defaultNsgenerator;
-        private readonly ITsCodeGenerator<ParameterInfo, RtArgument> _defaultParameterGenerator;
+        private readonly ITsCodeGenerator<ParameterInfo> _defaultParameterGenerator;
         private readonly Dictionary<Type, object> _generatorsCache = new Dictionary<Type, object>();
 
         private static readonly RtSimpleTypeName AnyType = new RtSimpleTypeName("any");
@@ -71,12 +71,11 @@ namespace Reinforced.Typings
         /// <param name="member">Type member info</param>
         /// <param name="settings">Export settings</param>
         /// <returns>Code generator for specified type member</returns>
-        public ITsCodeGenerator<T, TNode> GeneratorFor<T, TNode>(T member, ExportSettings settings)
+        public ITsCodeGenerator<T> GeneratorFor<T>(T member, ExportSettings settings)
             where T : MemberInfo
-            where TNode : RtNode
         {
             var attr = ConfigurationRepository.Instance.ForMember<TsTypedMemberAttributeBase>(member);
-            var fromAttr = GetFromAttribute<T, TNode>(attr, settings);
+            var fromAttr = GetFromAttribute<T>(attr, settings);
             if (fromAttr != null) return fromAttr;
             if (member is MethodInfo)
             {
@@ -84,10 +83,10 @@ namespace Reinforced.Typings
                 var classAttr = ConfigurationRepository.Instance.ForType<TsClassAttribute>(decType);
                 if (classAttr != null && classAttr.DefaultMethodCodeGenerator != null)
                 {
-                    return LazilyInstantiateGenerator<T, TNode>(classAttr.DefaultMethodCodeGenerator, settings);
+                    return LazilyInstantiateGenerator<T>(classAttr.DefaultMethodCodeGenerator, settings);
                 }
             }
-            var gen = (ITsCodeGenerator<T, TNode>)_defaultGenerators[member.MemberType];
+            var gen = (ITsCodeGenerator<T>)_defaultGenerators[member.MemberType];
             gen.Settings = settings;
             return gen;
         }
@@ -99,10 +98,10 @@ namespace Reinforced.Typings
         /// <param name="member">Parameter info</param>
         /// <param name="settings">Export settings</param>
         /// <returns>Code generator for parameter info</returns>
-        public ITsCodeGenerator<ParameterInfo, RtArgument> GeneratorFor(ParameterInfo member, ExportSettings settings)
+        public ITsCodeGenerator<ParameterInfo> GeneratorFor(ParameterInfo member, ExportSettings settings)
         {
             var attr = ConfigurationRepository.Instance.ForMember(member);
-            var fromAttr = GetFromAttribute<ParameterInfo, RtArgument>(attr, settings);
+            var fromAttr = GetFromAttribute<ParameterInfo>(attr, settings);
             if (fromAttr != null) return fromAttr;
             return _defaultParameterGenerator;
         }
@@ -114,10 +113,10 @@ namespace Reinforced.Typings
         /// <param name="member">Type info</param>
         /// <param name="settings">Export settings</param>
         /// <returns>Code generator for specified type</returns>
-        public ITsCodeGenerator<Type, RtCompilationUnit> GeneratorFor(Type member, ExportSettings settings)
+        public ITsCodeGenerator<Type> GeneratorFor(Type member, ExportSettings settings)
         {
             var attr = ConfigurationRepository.Instance.ForType(member);
-            var fromAttr = GetFromAttribute<Type, RtCompilationUnit>(attr, settings);
+            var fromAttr = GetFromAttribute<Type>(attr, settings);
             if (fromAttr != null) return fromAttr;
 
             var isClass = attr is TsClassAttribute;
@@ -140,27 +139,27 @@ namespace Reinforced.Typings
             return _defaultNsgenerator;
         }
 
-        private ITsCodeGenerator<T, TNode> GetFromAttribute<T, TNode>(TsAttributeBase attr, ExportSettings settings) where TNode : RtNode
+        private ITsCodeGenerator<T> GetFromAttribute<T>(TsAttributeBase attr, ExportSettings settings) 
         {
             if (attr != null)
             {
                 var t = attr.CodeGeneratorType;
-                if (t != null) return LazilyInstantiateGenerator<T, TNode>(t, settings);
+                if (t != null) return LazilyInstantiateGenerator<T>(t, settings);
             }
             return null;
         }
 
-        private ITsCodeGenerator<T, TNode> LazilyInstantiateGenerator<T, TNode>(Type generatorType, ExportSettings settings) where TNode : RtNode
+        private ITsCodeGenerator<T> LazilyInstantiateGenerator<T>(Type generatorType, ExportSettings settings) 
         {
             lock (_generatorsCache)
             {
                 if (!_generatorsCache.ContainsKey(generatorType))
                 {
                     _generatorsCache[generatorType] = Activator.CreateInstance(generatorType);
-                    var gen = (ITsCodeGenerator<T, TNode>)_generatorsCache[generatorType];
+                    var gen = (ITsCodeGenerator<T>)_generatorsCache[generatorType];
                     gen.Settings = settings;
                 }
-                return (ITsCodeGenerator<T, TNode>)_generatorsCache[generatorType];
+                return (ITsCodeGenerator<T>)_generatorsCache[generatorType];
             }
         }
 

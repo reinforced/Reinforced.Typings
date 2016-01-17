@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Ast
     public interface ITypeMember
     {
         RtJsdocNode Documentation { get; set; }
-        List<RtMember> Members { get; }
+        List<RtNode> Members { get; }
         RtSimpleTypeName Name { get; set; }
         bool NeedsExports { get; set; }
         List<RtSimpleTypeName> Implementees { get; }

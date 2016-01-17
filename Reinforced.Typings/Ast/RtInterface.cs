@@ -12,7 +12,7 @@ namespace Reinforced.Typings.Ast
 
         public RtJsdocNode Documentation { get; set; }
 
-        public List<RtMember> Members { get; private set; }
+        public List<RtNode> Members { get; private set; }
 
         public override IEnumerable<RtNode> Children
         {
@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Ast
 
         public RtInterface()
         {
-            Members = new List<RtMember>();
+            Members = new List<RtNode>();
             Implementees = new List<RtSimpleTypeName>();
         }
     }

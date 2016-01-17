@@ -29,7 +29,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsClassAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsClassAttribute> conf)
-            where T : ITsCodeGenerator<Type, RtClass>
+            where T : ITsCodeGenerator<Type>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
@@ -40,7 +40,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsInterfaceAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsInterfaceAttribute> conf)
-            where T : ITsCodeGenerator<Type, RtInterface>
+            where T : ITsCodeGenerator<Type>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
@@ -51,7 +51,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsEnumAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsEnumAttribute> conf)
-            where T : ITsCodeGenerator<Type, RtEnum>
+            where T : ITsCodeGenerator<Type>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
@@ -62,7 +62,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsPropertyAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsPropertyAttribute> conf)
-            where T : ITsCodeGenerator<MemberInfo,RtField>
+            where T : ITsCodeGenerator<MemberInfo>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
@@ -73,7 +73,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsFunctionAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsFunctionAttribute> conf)
-            where T : ITsCodeGenerator<MethodInfo, RtFuncion>
+            where T : ITsCodeGenerator<MethodInfo>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
@@ -84,7 +84,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsParameterAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsParameterAttribute> conf)
-            where T : ITsCodeGenerator<ParameterInfo,RtArgument>
+            where T : TsCodeGeneratorBase<ParameterInfo,RtArgument>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;

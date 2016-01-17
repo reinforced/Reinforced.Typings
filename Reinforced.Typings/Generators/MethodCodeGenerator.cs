@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default typescript code generator for method
     /// </summary>
-    public class MethodCodeGenerator : ITsCodeGenerator<MethodInfo,RtFuncion>
+    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo,RtFuncion>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -17,7 +17,7 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtFuncion Generate(MethodInfo element, TypeResolver resolver)
+        public override RtFuncion GenerateNode(MethodInfo element, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
 
@@ -56,16 +56,11 @@ namespace Reinforced.Typings.Generators
                 if (param.IsIgnored()) continue;
                 var generator = resolver.GeneratorFor(param, Settings);
                 var argument = generator.Generate(param, resolver);
-                result.Arguments.Add(argument);
+                result.Arguments.Add((RtArgument) argument);
             }
 
             return result;
         }
-
-        /// <summary>
-        ///     Export settings
-        /// </summary>
-        public ExportSettings Settings { get; set; }
 
         /// <summary>
         ///     Retrieves function name corresponding to method and return type. Fell free to override it.
