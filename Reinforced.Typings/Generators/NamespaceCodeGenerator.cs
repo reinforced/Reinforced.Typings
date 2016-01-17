@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Reinforced.Typings.Ast;
 
 namespace Reinforced.Typings.Generators
 {
@@ -20,52 +21,20 @@ namespace Reinforced.Typings.Generators
         /// <param name="namespaceName">Namespace name</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
-        public virtual void Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver,
-            WriterWrapper sw)
+        public virtual RtModule Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver)
         {
-            WriteNamespaceBegin(namespaceName, sw);
+            RtModule module = new RtModule();
+            if (string.IsNullOrEmpty(namespaceName)) module.IsAbstractModule = true;
             Settings.CurrentNamespace = namespaceName;
             foreach (var type in types)
             {
                 var converter = resolver.GeneratorFor(type, Settings);
-                converter.Generate(type, resolver, sw);
+                converter.Generate(type, resolver);
                 Console.WriteLine("Exported {0}", type);
             }
 
-            WriteNamespaceEnd(namespaceName, sw);
-        }
-
-        /// <summary>
-        ///     Writes to output file opening namespace declaration
-        /// </summary>
-        /// <param name="namespaceName">Namespace name</param>
-        /// <param name="sw">Output writer</param>
-        public virtual void WriteNamespaceBegin(string namespaceName, WriterWrapper sw)
-        {
-            if (string.IsNullOrEmpty(namespaceName)) return;
-            if (Settings.ExportPureTypings)
-            {
-                sw.WriteLine("declare module {0} {{", namespaceName);
-            }
-            else
-            {
-                sw.WriteLine("module {0} {{", namespaceName);
-            }
-            sw.Tab();
-        }
-
-        /// <summary>
-        ///     Writes to ouput file namespace closing
-        /// </summary>
-        /// <param name="namespaceName">Namespace name</param>
-        /// <param name="sw">Output writer</param>
-        public virtual void WriteNamespaceEnd(string namespaceName, WriterWrapper sw)
-        {
-            if (string.IsNullOrEmpty(namespaceName)) return;
-            sw.UnTab();
-            sw.Indent();
-            sw.WriteLine("}");
-            sw.Br();
+            Settings.CurrentNamespace = null;
+            return module;
         }
     }
 }

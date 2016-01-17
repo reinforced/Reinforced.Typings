@@ -1,10 +1,13 @@
-﻿namespace Reinforced.Typings.Generators
+﻿using Reinforced.Typings.Ast;
+
+namespace Reinforced.Typings.Generators
 {
     /// <summary>
     ///     TypeScript code generator interface
     /// </summary>
     /// <typeparam name="TElement"></typeparam>
-    public interface ITsCodeGenerator<in TElement>
+    /// <typeparam name="TNode"></typeparam>
+    public interface ITsCodeGenerator<in TElement,out TNode> where TNode : RtNode
     {
         /// <summary>
         ///     Export settings
@@ -18,6 +21,6 @@
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
         /// <param name="sw">Output writer</param>
-        void Generate(TElement element, TypeResolver resolver, WriterWrapper sw);
+        TNode Generate(TElement element, TypeResolver resolver);
     }
 }

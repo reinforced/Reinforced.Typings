@@ -10,6 +10,7 @@ namespace Reinforced.Typings.Attributes
     {
         /// <summary>
         ///     Forces property to be a nullable
+        ///     E.g. `field:boolean` becomes `field?:boolean` when you specify `[TsProperty(ForceNullable = true)]` in attribute configuration
         /// </summary>
         public virtual bool ForceNullable { get; set; }
     }

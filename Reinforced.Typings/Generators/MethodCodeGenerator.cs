@@ -1,12 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
+using Reinforced.Typings.Ast;
+using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {
     /// <summary>
     ///     Default typescript code generator for method
     /// </summary>
-    public class MethodCodeGenerator : ITsCodeGenerator<MethodInfo>
+    public class MethodCodeGenerator : ITsCodeGenerator<MethodInfo,RtFuncion>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -14,34 +17,49 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        /// <param name="sw">Output writer</param>
-        public virtual void Generate(MethodInfo element, TypeResolver resolver, WriterWrapper sw)
+        public virtual RtFuncion Generate(MethodInfo element, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return;
+            if (element.IsIgnored()) return null;
 
-            var isInterfaceMethod = element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase;
-            string name, type;
-
+            RtFuncion result = new RtFuncion();
+            
+            string name;
+            RtTypeName type;
+            
             GetFunctionNameAndReturnType(element, resolver, out name, out type);
-
-            sw.Tab();
-            Settings.Documentation.WriteDocumentation(element, sw);
-            sw.Indent();
-            var modifier = element.GetModifier();
-
-            if (Settings.SpecialCase) modifier = AccessModifier.Public;
-
-            WriteFunctionName(element.IsStatic, modifier, name, sw, isInterfaceMethod);
-            WriteMethodParameters(element, resolver, sw);
-            WriteRestOfDeclaration(type, sw);
-
-            if (isInterfaceMethod)
+            result.Identifier = new RtIdentifier(name);
+            result.ReturnType = type;
+            
+            var doc = Settings.Documentation.GetDocumentationMember(element);
+            if (doc != null)
             {
-                sw.Write(";");
-                sw.Br();
+                RtJsdocNode jsdoc = new RtJsdocNode {Description = doc.Summary.Text};
+                foreach (var documentationParameter in doc.Parameters)
+                {
+                    jsdoc.TagToDescription.Add(new Tuple<DocTag,string>(DocTag.Param, documentationParameter.Name + " " + documentationParameter.Description));
+                }
+
+                if (doc.HasReturns())
+                {
+                    jsdoc.TagToDescription.Add(new Tuple<DocTag,string>(DocTag.Returns, doc.Returns.Text));
+                }
             }
-            else GenerateBody(type, resolver, sw);
-            sw.UnTab();
+            
+            result.AccessModifier = element.GetModifier();
+            if (Settings.SpecialCase) result.AccessModifier = AccessModifier.Public;
+            result.Identifier = new RtIdentifier(name);
+            result.IsStatic = element.IsStatic;
+
+            var p = element.GetParameters();
+            foreach (var param in p)
+            {
+                if (param.IsIgnored()) continue;
+                var generator = resolver.GeneratorFor(param, Settings);
+                var argument = generator.Generate(param, resolver);
+                result.Arguments.Add(argument);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -56,8 +74,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         /// <param name="name">Resulting method name</param>
         /// <param name="type">Resulting return type name</param>
-        protected virtual void GetFunctionNameAndReturnType(MethodInfo element, TypeResolver resolver, out string name,
-            out string type)
+        protected virtual void GetFunctionNameAndReturnType(MethodInfo element, TypeResolver resolver, out string name, out RtTypeName type)
         {
             name = element.Name;
             var fa = ConfigurationRepository.Instance.ForMember(element);
@@ -66,7 +83,7 @@ namespace Reinforced.Typings.Generators
             {
                 if (!string.IsNullOrEmpty(fa.Name)) name = fa.Name;
 
-                if (!string.IsNullOrEmpty(fa.Type)) type = fa.Type;
+                if (!string.IsNullOrEmpty(fa.Type)) type = new RtSimpleTypeName(fa.Type);
                 else if (fa.StrongType != null) type = resolver.ResolveTypeName(fa.StrongType);
                 else type = resolver.ResolveTypeName(element.ReturnType);
             }
@@ -74,6 +91,7 @@ namespace Reinforced.Typings.Generators
             {
                 type = resolver.ResolveTypeName(element.ReturnType);
             }
+
             name = Settings.ConditionallyConvertMethodNameToCamelCase(name);
             name = element.CamelCaseFromAttribute(name);
             if (element.IsGenericMethod)
@@ -81,103 +99,9 @@ namespace Reinforced.Typings.Generators
                 if (!(name.Contains("<") || name.Contains(">")))
                 {
                     var args = element.GetGenericArguments();
-                    var names = args.Select(c => resolver.ResolveTypeName(c));
+                    var names = args.Select(resolver.ResolveTypeName);
                     name = string.Concat(name, "<", string.Join(",", names), ">");
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Writes all method's parameters to output writer.
-        /// </summary>
-        /// <param name="element">Method info</param>
-        /// <param name="resolver">Type resolver</param>
-        /// <param name="sw">Output writer</param>
-        protected virtual void WriteMethodParameters(MethodBase element, TypeResolver resolver, WriterWrapper sw)
-        {
-            var p = element.GetParameters();
-            for (var index = 0; index < p.Length; index++)
-            {
-                var param = p[index];
-                if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param, Settings);
-                generator.Generate(param, resolver, sw);
-                if (index != p.Length - 1 && !p[index + 1].IsIgnored())
-                {
-                    sw.Write(", ");
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Writes method body to output writer
-        /// </summary>
-        /// <param name="returnType">Method return type</param>
-        /// <param name="resolver">Type resolver</param>
-        /// <param name="sw">Output writer</param>
-        /// <param name="content">Content for non-void body</param>
-        protected virtual void GenerateBody(string returnType, TypeResolver resolver, WriterWrapper sw,
-            string content = "return null;")
-        {
-            if (Settings.ExportPureTypings) //Ambient class declarations cannot have a body
-            {
-                sw.Write(";");
-                sw.Br();
-            }
-            else
-            {
-                if (returnType != "void")
-                {
-                    sw.WriteLine();
-                    sw.WriteIndented(@"{{ 
-    {0}
-}}", content);
-                }
-                else
-                {
-                    sw.Write(" {{ }}");
-                    sw.Br();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Writes method name, accessor and opening brace to output writer
-        /// </summary>
-        /// <param name="isStatic">Is method static or not</param>
-        /// <param name="accessModifier">Access modifier for method</param>
-        /// <param name="name">Method name</param>
-        /// <param name="sw">Output writer</param>
-        /// <param name="isInterfaceDecl">
-        ///     Is this method interface declaration or not (access modifiers prohibited on interface
-        ///     declaration methods)
-        /// </param>
-        protected void WriteFunctionName(bool isStatic, AccessModifier accessModifier, string name, WriterWrapper sw,
-            bool isInterfaceDecl = false)
-        {
-            if (!isInterfaceDecl)
-            {
-                sw.Write("{0} ", accessModifier.ToModifierText());
-                if (isStatic) sw.Write("static ");
-            }
-
-            sw.Write("{0}(", name);
-        }
-
-        /// <summary>
-        ///     Writes rest of method declaration to output writer (after formal parameters list)
-        /// </summary>
-        /// <param name="type">Returning type name</param>
-        /// <param name="sw">Output writer</param>
-        protected void WriteRestOfDeclaration(string type, WriterWrapper sw)
-        {
-            if (string.IsNullOrEmpty(type))
-            {
-                sw.Write(")");
-            }
-            else
-            {
-                sw.Write("): {0}", type);
             }
         }
     }

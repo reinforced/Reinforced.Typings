@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
@@ -7,7 +8,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for properties
     /// </summary>
-    public class PropertyCodeGenerator : ITsCodeGenerator<MemberInfo>
+    public class PropertyCodeGenerator : ITsCodeGenerator<MemberInfo, RtField>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -15,54 +16,56 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        /// <param name="sw">Output writer</param>
-        public virtual void Generate(MemberInfo element, TypeResolver resolver, WriterWrapper sw)
+        public virtual RtField Generate(MemberInfo element, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return;
+            if (element.IsIgnored()) return null;
+            RtField result = new RtField();
+
+            var doc = Settings.Documentation.GetDocumentationMember(element);
+            if (doc != null)
+            {
+                RtJsdocNode jsdoc = new RtJsdocNode();
+                jsdoc.Description = doc.Summary.Text;
+            }
 
             var t = GetType(element);
-            string typeName = null;
-            var propName = element.Name;
+            RtTypeName type = null;
+            var propName = new RtIdentifier(element.Name);
+            
             var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
             if (tp != null)
             {
                 if (tp.StrongType != null)
                 {
-                    typeName = resolver.ResolveTypeName(tp.StrongType);
+                    type = resolver.ResolveTypeName(tp.StrongType);
                 }
                 else if (!string.IsNullOrEmpty(tp.Type))
                 {
-                    typeName = tp.Type;
+                    type = new RtSimpleTypeName(tp.Type);
                 }
 
-                if (!string.IsNullOrEmpty(tp.Name)) propName = tp.Name;
+                if (!string.IsNullOrEmpty(tp.Name)) propName = new RtIdentifier(tp.Name);
                 if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase)
-                    propName = propName + "?";
+                    propName.IsNullable = true;
             }
-            if (string.IsNullOrEmpty(typeName)) typeName = resolver.ResolveTypeName(t);
-            if (!propName.EndsWith("?") && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
+
+            if (type == null) type = resolver.ResolveTypeName(t);
+            if (!propName.IsNullable && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
                 !Settings.SpecialCase)
             {
-                propName = propName + "?";
+                result.Identifier.IsNullable = true;
             }
 
             if (element is PropertyInfo)
             {
-                propName = Settings.ConditionallyConvertPropertyNameToCamelCase(propName);
+                propName.IdentifierName = Settings.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
             }
-            propName = element.CamelCaseFromAttribute(propName);
+            propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
 
-            sw.Tab();
-            Settings.Documentation.WriteDocumentation(element, sw);
-            sw.Indent();
-            if (!element.DeclaringType.IsExportingAsInterface() || Settings.SpecialCase)
-            {
-                var modifier = Settings.SpecialCase ? AccessModifier.Public : element.GetModifier();
-                sw.Write("{0} ", modifier.ToModifierText());
-            }
-            sw.Write("{0}: {1};", propName, typeName);
-            sw.Br();
-            sw.UnTab();
+            result.AccessModifier = Settings.SpecialCase ? AccessModifier.Public : element.GetModifier();
+            result.Type = type;
+
+            return result;
         }
 
         /// <summary>
@@ -77,7 +80,7 @@ namespace Reinforced.Typings.Generators
         /// <returns>Property info type</returns>
         protected virtual Type GetType(MemberInfo mi)
         {
-            var pi = (PropertyInfo) mi;
+            var pi = (PropertyInfo)mi;
             return pi.PropertyType;
         }
     }

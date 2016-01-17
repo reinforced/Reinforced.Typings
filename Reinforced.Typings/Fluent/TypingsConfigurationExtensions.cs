@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 using Reinforced.Typings.Generators;
@@ -28,9 +29,9 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsClassAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsClassAttribute> conf)
-            where T : ITsCodeGenerator<Type>
+            where T : ITsCodeGenerator<Type, RtClass>
         {
-            conf.AttributePrototype.CodeGeneratorType = typeof (T);
+            conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
         }
 
@@ -39,9 +40,9 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsInterfaceAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsInterfaceAttribute> conf)
-            where T : ITsCodeGenerator<Type>
+            where T : ITsCodeGenerator<Type, RtInterface>
         {
-            conf.AttributePrototype.CodeGeneratorType = typeof (T);
+            conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
         }
 
@@ -50,9 +51,9 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsEnumAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsEnumAttribute> conf)
-            where T : ITsCodeGenerator<Type>
+            where T : ITsCodeGenerator<Type, RtEnum>
         {
-            conf.AttributePrototype.CodeGeneratorType = typeof (T);
+            conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
         }
 
@@ -61,9 +62,9 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsPropertyAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsPropertyAttribute> conf)
-            where T : ITsCodeGenerator<MemberInfo>
+            where T : ITsCodeGenerator<MemberInfo,RtField>
         {
-            conf.AttributePrototype.CodeGeneratorType = typeof (T);
+            conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
         }
 
@@ -72,9 +73,9 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsFunctionAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsFunctionAttribute> conf)
-            where T : ITsCodeGenerator<MethodInfo>
+            where T : ITsCodeGenerator<MethodInfo, RtFuncion>
         {
-            conf.AttributePrototype.CodeGeneratorType = typeof (T);
+            conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
         }
 
@@ -83,9 +84,9 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsParameterAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsParameterAttribute> conf)
-            where T : ITsCodeGenerator<ParameterInfo>
+            where T : ITsCodeGenerator<ParameterInfo,RtArgument>
         {
-            conf.AttributePrototype.CodeGeneratorType = typeof (T);
+            conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
         }
 
@@ -266,7 +267,7 @@ namespace Reinforced.Typings.Fluent
         public static IExportConfiguration<TsTypedAttributeBase> Type<T>(
             this IExportConfiguration<TsTypedAttributeBase> conf)
         {
-            conf.AttributePrototype.StrongType = typeof (T);
+            conf.AttributePrototype.StrongType = typeof(T);
             return conf;
         }
 
@@ -309,7 +310,7 @@ namespace Reinforced.Typings.Fluent
         public static IExportConfiguration<TsTypedAttributeBase> Returns<T>(
             this IExportConfiguration<TsFunctionAttribute> conf)
         {
-            conf.AttributePrototype.StrongType = typeof (T);
+            conf.AttributePrototype.StrongType = typeof(T);
             return conf;
         }
 

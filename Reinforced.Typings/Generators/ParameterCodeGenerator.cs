@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
@@ -7,7 +8,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for method parameter
     /// </summary>
-    public class ParameterCodeGenerator : ITsCodeGenerator<ParameterInfo>
+    public class ParameterCodeGenerator : ITsCodeGenerator<ParameterInfo,RtArgument>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -15,12 +16,13 @@ namespace Reinforced.Typings.Generators
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>
-        /// <param name="sw">Output writer</param>
-        public virtual void Generate(ParameterInfo element, TypeResolver resolver, WriterWrapper sw)
+        public virtual RtArgument Generate(ParameterInfo element, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return;
+            if (element.IsIgnored()) return null;
+            RtArgument result = new RtArgument();
+
             var name = element.Name;
-            string type;
+            RtTypeName type;
             var isNullable = false;
 
             var fa = ConfigurationRepository.Instance.ForMember(element);
@@ -29,7 +31,7 @@ namespace Reinforced.Typings.Generators
             {
                 if (!string.IsNullOrEmpty(fa.Name)) name = fa.Name;
 
-                if (!string.IsNullOrEmpty(fa.Type)) type = fa.Type;
+                if (!string.IsNullOrEmpty(fa.Type)) type = new RtSimpleTypeName(fa.Type);
                 else if (fa.StrongType != null)
                 {
                     type = resolver.ResolveTypeName(fa.StrongType);
@@ -44,25 +46,24 @@ namespace Reinforced.Typings.Generators
             }
             if (element.GetCustomAttribute<ParamArrayAttribute>() != null)
             {
-                sw.Write("...");
+                result.IsVariableParameters = true; //sw.Write("...");
             }
-            sw.Write(name);
+            result.Identifier = new RtIdentifier(name);
+            result.Type = type;
 
             if (!Settings.ExportPureTypings)
             {
-                if (isNullable && defaultValue == null) sw.Write("?");
-                sw.Write(": {0}", type);
-                if (defaultValue != null)
-                {
-                    sw.Write(" = {0}", defaultValue);
-                }
+                if (isNullable && defaultValue == null) result.Identifier.IsNullable = true;
+                
+                if (defaultValue != null) result.DefaultValue = defaultValue;//    sw.Write(" = {0}", defaultValue);
             }
             else
             {
                 //there are slightly different rules for .d.ts
-                if (isNullable || defaultValue != null) sw.Write("?");
-                sw.Write(": {0}", type);
+                if (isNullable || defaultValue != null) result.Identifier.IsNullable = true;
             }
+
+            return result;
         }
 
         /// <summary>

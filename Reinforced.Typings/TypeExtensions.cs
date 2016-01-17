@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
@@ -65,7 +66,7 @@ namespace Reinforced.Typings
         /// <returns>True if type is nullable value type. False otherwise</returns>
         public static bool IsNullable(this Type t)
         {
-            return (t.IsGenericType && (t.GetGenericTypeDefinition() == typeof (Nullable<>)));
+            return (t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(Nullable<>)));
         }
 
         /// <summary>
@@ -89,14 +90,14 @@ namespace Reinforced.Typings
             {
                 var tg = t.GetGenericTypeDefinition();
 
-                if (typeof (IDictionary<,>).IsAssignableFrom(tg)) return true;
-                if (typeof (IReadOnlyDictionary<,>).IsAssignableFrom(tg)) return true;
-                if (typeof (Dictionary<,>).IsAssignableFrom(tg)) return true;
-                if (typeof (IDictionary).IsAssignableFrom(t)) return true;
+                if (typeof(IDictionary<,>).IsAssignableFrom(tg)) return true;
+                if (typeof(IReadOnlyDictionary<,>).IsAssignableFrom(tg)) return true;
+                if (typeof(Dictionary<,>).IsAssignableFrom(tg)) return true;
+                if (typeof(IDictionary).IsAssignableFrom(t)) return true;
             }
             else
             {
-                if (typeof (IDictionary).IsAssignableFrom(t)) return true;
+                if (typeof(IDictionary).IsAssignableFrom(t)) return true;
             }
             return false;
         }
@@ -109,11 +110,11 @@ namespace Reinforced.Typings
         public static bool IsEnumerable(this Type t)
         {
             if (t.IsArray) return true;
-            if (typeof (IEnumerable).IsAssignableFrom(t)) return true;
+            if (typeof(IEnumerable).IsAssignableFrom(t)) return true;
             if (t.IsGenericType)
             {
                 var tg = t.GetGenericTypeDefinition();
-                if (typeof (IEnumerable<>).IsAssignableFrom(tg)) return true;
+                if (typeof(IEnumerable<>).IsAssignableFrom(tg)) return true;
             }
             return false;
         }
@@ -125,11 +126,11 @@ namespace Reinforced.Typings
         /// <returns>True if supplied type is nongeneric enumerable. False otherwise</returns>
         public static bool IsNongenericEnumerable(this Type t)
         {
-            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof (IEnumerable<>)) return false;
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) return false;
             var interfaces = t.GetInterfaces();
-            var containsEnumerable = interfaces.Contains(typeof (IEnumerable));
+            var containsEnumerable = interfaces.Contains(typeof(IEnumerable));
             var containsGenericEnumerable =
-                interfaces.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof (IEnumerable<>));
+                interfaces.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 
             return containsEnumerable && !containsGenericEnumerable;
         }
@@ -201,28 +202,30 @@ namespace Reinforced.Typings
         public static bool IsDelegate(this Type t)
         {
             if (t.BaseType == null) return false;
-            return typeof (MulticastDelegate).IsAssignableFrom(t.BaseType);
+            return typeof(MulticastDelegate).IsAssignableFrom(t.BaseType);
         }
 
-        private static string SerializeGenericArguments(this Type t)
+        private static RtTypeName[] SerializeGenericArguments(this Type t)
         {
-            if (!t.IsGenericTypeDefinition) return string.Empty;
+            if (!t.IsGenericTypeDefinition) return new RtTypeName[0];
             if (t.IsGenericTypeDefinition)
             {
                 var args = t.GetGenericArguments();
-                var argsStr = string.Format("<{0}>", string.Join(", ", args.Select(c => c.Name)));
+                var argsStr = args.Select(c => new RtSimpleTypeName(c.Name)).Cast<RtTypeName>().ToArray();
                 return argsStr;
             }
-            return string.Empty;
+            return new RtTypeName[0];
         }
 
         /// <summary>
         ///     Retrieves type name from type itself or from corresponding Reinforced.Typings attribute
         /// </summary>
         /// <param name="t">Type</param>
+        /// <param name="genericArguments">Generic arguments to be substituted to type</param>
         /// <returns>Type name</returns>
-        public static string GetName(this Type t)
+        public static RtSimpleTypeName GetName(this Type t, RtTypeName[] genericArguments = null)
         {
+            string typeName = null;
             if (t.IsEnum)
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
@@ -231,19 +234,20 @@ namespace Reinforced.Typings
                 {
                     ns = te.Name;
                 }
-                return ns;
+                return new RtSimpleTypeName(ns);
             }
 
             var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
             var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
             var nameFromAttr = tc != null ? tc.Name : ti.Name;
-            var name = (!string.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName()) +
-                       t.SerializeGenericArguments();
+            var name = (!string.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName());
+            if (genericArguments == null) genericArguments = t.SerializeGenericArguments();
+
             if (ti != null)
             {
                 if (ti.AutoI && !name.StartsWith("I")) name = "I" + name;
             }
-            return name;
+            return new RtSimpleTypeName(name, genericArguments);
         }
 
         /// <summary>
@@ -333,9 +337,9 @@ namespace Reinforced.Typings
         /// <returns>Access modifier string</returns>
         public static AccessModifier GetModifier(this MemberInfo member)
         {
-            if (member is PropertyInfo) return GetModifier((PropertyInfo) member);
-            if (member is MethodInfo) return GetModifier((MethodInfo) member);
-            if (member is FieldInfo) return GetModifier((FieldInfo) member);
+            if (member is PropertyInfo) return GetModifier((PropertyInfo)member);
+            if (member is MethodInfo) return GetModifier((MethodInfo)member);
+            if (member is FieldInfo) return GetModifier((FieldInfo)member);
             return AccessModifier.Public;
         }
 

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
+using Reinforced.Typings.Visitors;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -181,12 +182,14 @@ namespace Reinforced.Typings
             var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
 
-            var ww = new WriterWrapper(tw);
+            var visitor = new TypeScriptExportVisitor(tw);
+
             foreach (var n in nsp)
             {
                 var ns = n.Key;
                 if (ns == "-") ns = string.Empty;
-                gen.Generate(n.Value, ns, tr, ww);
+                var module = gen.Generate(n.Value, ns, tr);
+                visitor.Visit(module);
             }
             tw.Flush();
         }

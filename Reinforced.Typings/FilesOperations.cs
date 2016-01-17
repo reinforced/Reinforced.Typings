@@ -56,7 +56,7 @@ namespace Reinforced.Typings
                 return Path.Combine(_settings.TargetDirectory, fromConfiguration).Replace("/", "\\");
 
             var ns = t.GetNamespace();
-            var tn = t.GetName();
+            var tn = t.GetName().ToString();
 
             var idx = tn.IndexOf('<');
             if (idx != -1) tn = tn.Substring(0, idx);
