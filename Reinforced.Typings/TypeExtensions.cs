@@ -309,10 +309,6 @@ namespace Reinforced.Typings
         /// <returns>Access modifier string</returns>
         public static AccessModifier GetModifier(this MethodInfo methodInfo)
         {
-            if (methodInfo == null)
-            {
-                int a = 0;
-            }
             if (methodInfo.IsPrivate) return AccessModifier.Private;
             if (methodInfo.IsFamily) return AccessModifier.Protected;
             return AccessModifier.Public;
