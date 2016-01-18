@@ -12,7 +12,7 @@ namespace Reinforced.Typings.Generators
         /// <summary>
         ///     Export settings
         /// </summary>
-        public ExportSettings Settings { get; set; }
+        public ExportContext Context { get; set; }
 
         /// <summary>
         ///     Generates namespace source code
@@ -24,15 +24,17 @@ namespace Reinforced.Typings.Generators
         {
             RtModule module = new RtModule();
             if (string.IsNullOrEmpty(namespaceName)) module.IsAbstractModule = true;
-            Settings.CurrentNamespace = namespaceName;
+            Context.CurrentNamespace = namespaceName;
+            Context.Location.SetLocation(module);
             foreach (var type in types)
             {
-                var converter = resolver.GeneratorFor(type, Settings);
+                var converter = resolver.GeneratorFor(type, Context);
                 converter.Generate(type, resolver);
                 Console.WriteLine("Exported {0}", type);
             }
 
-            Settings.CurrentNamespace = null;
+            Context.CurrentNamespace = null;
+            Context.Location.ResetLocation(module);
             return module;
         }
     }

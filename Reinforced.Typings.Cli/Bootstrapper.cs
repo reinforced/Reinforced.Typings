@@ -56,7 +56,7 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
         }
 
-        private static void ResolveFluentMethod(ExportSettings settings)
+        private static void ResolveFluentMethod(ExportContext context)
         {
             if (string.IsNullOrEmpty(_parameters.ConfigurationMethod)) return;
             var methodPath = _parameters.ConfigurationMethod;
@@ -64,7 +64,7 @@ namespace Reinforced.Typings.Cli
             var method = path.Pop();
             var fullQualifiedType = string.Join(".", path.Reverse());
 
-            foreach (var sourceAssembly in settings.SourceAssemblies)
+            foreach (var sourceAssembly in context.SourceAssemblies)
             {
                 var type = sourceAssembly.GetType(fullQualifiedType, false);
                 if (type != null)
@@ -76,7 +76,7 @@ namespace Reinforced.Typings.Cli
                         var pars = constrMethod.GetParameters();
                         if (pars.Length == 1 && pars[0].ParameterType == typeof(ConfigurationBuilder))
                         {
-                            settings.ConfigurationMethod = builder => constrMethod.Invoke(null, new object[] { builder });
+                            context.ConfigurationMethod = builder => constrMethod.Invoke(null, new object[] { builder });
                             break;
                         }
                     }
@@ -84,9 +84,9 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-        public static ExportSettings InstantiateExportSettings()
+        public static ExportContext InstantiateExportSettings()
         {
-            ExportSettings settings = new ExportSettings
+            ExportContext context = new ExportContext
             {
                 ExportPureTypings = _parameters.ExportPureTypings,
                 Hierarchical = _parameters.Hierarchy,
@@ -100,7 +100,7 @@ namespace Reinforced.Typings.Cli
                 DocumentationFilePath = _parameters.DocumentationFilePath,
                 GenerateDocumentation = _parameters.GenerateDocumentation
             };
-            return settings;
+            return context;
         }
 
         public static void BuildReferencesCache()

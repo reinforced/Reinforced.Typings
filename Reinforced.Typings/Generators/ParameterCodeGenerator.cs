@@ -15,12 +15,11 @@ namespace Reinforced.Typings.Generators
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
+        /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtArgument GenerateNode(ParameterInfo element, TypeResolver resolver)
+        public override RtArgument GenerateNode(ParameterInfo element,RtArgument result, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
-            RtArgument result = new RtArgument();
-
             var name = element.Name;
             RtTypeName type;
             var isNullable = false;
@@ -46,22 +45,12 @@ namespace Reinforced.Typings.Generators
             }
             if (element.GetCustomAttribute<ParamArrayAttribute>() != null)
             {
-                result.IsVariableParameters = true; //sw.Write("...");
+                result.IsVariableParameters = true;
             }
             result.Identifier = new RtIdentifier(name);
             result.Type = type;
-
-            if (!Settings.ExportPureTypings)
-            {
-                if (isNullable && defaultValue == null) result.Identifier.IsNullable = true;
-                
-                if (defaultValue != null) result.DefaultValue = defaultValue;//    sw.Write(" = {0}", defaultValue);
-            }
-            else
-            {
-                //there are slightly different rules for .d.ts
-                if (isNullable || defaultValue != null) result.Identifier.IsNullable = true;
-            }
+            if (isNullable && defaultValue == null) result.Identifier.IsNullable = true;
+            if (defaultValue != null) result.DefaultValue = defaultValue;
 
             return result;
         }

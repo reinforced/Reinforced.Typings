@@ -10,7 +10,7 @@ using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {
-    public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type,TNode> where TNode : RtNode
+    public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type,TNode> where TNode : RtNode, new()
     {
         /// <summary>
         ///     Exports entire class to specified writer
@@ -23,7 +23,7 @@ namespace Reinforced.Typings.Generators
         {
             result.Name = type.GetName();
 
-            var doc = Settings.Documentation.GetDocumentationMember(type);
+            var doc = Context.Documentation.GetDocumentationMember(type);
             if (doc != null)
             {
                 RtJsdocNode docNode = new RtJsdocNode();
@@ -98,10 +98,10 @@ namespace Reinforced.Typings.Generators
                         string.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType))));
 
                     var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element.BaseType);
-                    Settings.SpecialCase = true;
+                    Context.SpecialCase = true;
                     ExportFields(sw, element.BaseType, resolver, basExSwtch);
                     ExportMethods(sw, element.BaseType, resolver, basExSwtch);
-                    Settings.SpecialCase = false;
+                    Context.SpecialCase = false;
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace Reinforced.Typings.Generators
         {
             foreach (var m in members)
             {
-                var generator = resolver.GeneratorFor<T>(m, Settings);
+                var generator = resolver.GeneratorFor<T>(m, Context);
                 var member = generator.Generate(m, resolver);
                 typeMember.Members.Add(member);
             }

@@ -8,31 +8,31 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Various extensions for settings
     /// </summary>
-    public static class SettingsExtensions
+    public static class ContextExtensions
     {
         
         /// <summary>
         ///     Conditionally (based on settings) turns method name to camelCase
         /// </summary>
-        /// <param name="settings">Settings object</param>
+        /// <param name="context">Settings object</param>
         /// <param name="regularName">Regular method name</param>
         /// <returns>Method name in camelCase if camelCasing enabled, initial string otherwise</returns>
-        public static string ConditionallyConvertMethodNameToCamelCase(this ExportSettings settings, string regularName)
+        public static string ConditionallyConvertMethodNameToCamelCase(this ExportContext context, string regularName)
         {
-            if (!settings.CamelCaseForMethods) return regularName;
+            if (!context.CamelCaseForMethods) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
         /// <summary>
         ///     Conditionally (based on settings) turns property name to camelCase
         /// </summary>
-        /// <param name="settings">Settings object</param>
+        /// <param name="context">Settings object</param>
         /// <param name="regularName">Regular property name</param>
         /// <returns>Property name in camelCase if camelCasing enabled, initial string otherwise</returns>
-        public static string ConditionallyConvertPropertyNameToCamelCase(this ExportSettings settings,
+        public static string ConditionallyConvertPropertyNameToCamelCase(this ExportContext context,
             string regularName)
         {
-            if (!settings.CamelCaseForProperties) return regularName;
+            if (!context.CamelCaseForProperties) return regularName;
             return ConvertToCamelCase(regularName);
         }
 

@@ -7,12 +7,12 @@ namespace Reinforced.Typings
 {
     internal class FilesOperations
     {
-        private readonly ExportSettings _settings;
+        private readonly ExportContext _context;
         private readonly List<string> _tmpFiles = new List<string>();
 
-        public FilesOperations(ExportSettings settings)
+        public FilesOperations(ExportContext context)
         {
-            _settings = settings;
+            _context = context;
         }
 
         public void DeployTempFiles()
@@ -53,26 +53,26 @@ namespace Reinforced.Typings
         {
             var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);
             if (!string.IsNullOrEmpty(fromConfiguration))
-                return Path.Combine(_settings.TargetDirectory, fromConfiguration).Replace("/", "\\");
+                return Path.Combine(_context.TargetDirectory, fromConfiguration).Replace("/", "\\");
 
             var ns = t.GetNamespace();
             var tn = t.GetName().ToString();
 
             var idx = tn.IndexOf('<');
             if (idx != -1) tn = tn.Substring(0, idx);
-            if (_settings.ExportPureTypings) tn = tn + ".d.ts";
+            if (_context.ExportPureTypings) tn = tn + ".d.ts";
             else tn = tn + ".ts";
 
-            if (string.IsNullOrEmpty(ns)) return Path.Combine(_settings.TargetDirectory, tn);
-            if (!string.IsNullOrEmpty(_settings.RootNamespace))
+            if (string.IsNullOrEmpty(ns)) return Path.Combine(_context.TargetDirectory, tn);
+            if (!string.IsNullOrEmpty(_context.RootNamespace))
             {
-                ns = ns.Replace(_settings.RootNamespace, string.Empty);
+                ns = ns.Replace(_context.RootNamespace, string.Empty);
             }
             ns = ns.Trim('.').Replace('.', '\\');
 
             var pth =
                 Path.Combine(
-                    !string.IsNullOrEmpty(ns) ? Path.Combine(_settings.TargetDirectory, ns) : _settings.TargetDirectory,
+                    !string.IsNullOrEmpty(ns) ? Path.Combine(_context.TargetDirectory, ns) : _context.TargetDirectory,
                     tn);
 
             return pth;

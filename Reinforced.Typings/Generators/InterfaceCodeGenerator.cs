@@ -15,13 +15,12 @@ namespace Reinforced.Typings.Generators
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
+        /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-
-        public override RtInterface GenerateNode(Type element, TypeResolver resolver)
+        public override RtInterface GenerateNode(Type element,RtInterface result, TypeResolver resolver)
         {
             var tc = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element);
             if (tc == null) throw new ArgumentException("TsInterfaceAttribute is not present", "element");
-            var result = new RtInterface();
             Export(result, element, resolver, tc);
             return result;
         }

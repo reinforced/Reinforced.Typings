@@ -7,7 +7,7 @@ using Reinforced.Typings.Ast;
 
 namespace Reinforced.Typings.Visitors
 {
-    public abstract class TypedVisitorBase<T> : IRtVisitor<T>
+    abstract class TypedVisitorBase<T> : IRtVisitor<T>
     {
         public T Visit(RtNode node)
         {

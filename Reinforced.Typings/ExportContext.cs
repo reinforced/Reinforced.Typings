@@ -8,7 +8,7 @@ namespace Reinforced.Typings
     /// <summary>
     ///     TsExport exporting settings
     /// </summary>
-    public class ExportSettings
+    public class ExportContext
     {
         private bool _camelCaseForMethods;
         private bool _camelCaseForProperties;
@@ -23,6 +23,17 @@ namespace Reinforced.Typings
         private string _targetDirectory;
         private string _targetFile;
         private bool _writeWarningComment;
+
+        public ExportContext()
+        {
+            Location = new Location();
+        }
+
+        /// <summary>
+        /// Identifies where current export is performed in terms of AST. 
+        /// Context.Location could be used to conditionally add members to different places of generated source code
+        /// </summary>
+        public Location Location { get; private set; }
 
         /// <summary>
         ///     The assemblies to extract typings from.

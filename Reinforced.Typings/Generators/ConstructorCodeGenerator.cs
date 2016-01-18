@@ -10,23 +10,22 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public class ConstructorCodeGenerator : TsCodeGeneratorBase<ConstructorInfo,RtConstructor>
     {
-       
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
+        /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtConstructor GenerateNode(ConstructorInfo element, TypeResolver resolver)
+        public override RtConstructor GenerateNode(ConstructorInfo element, RtConstructor result, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
             if (element.GetParameters().Length == 0) return null;
-            RtConstructor result = new RtConstructor();
             var p = element.GetParameters();
             foreach (var param in p)
             {
                 if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param, Settings);
+                var generator = resolver.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument) argument);
             }

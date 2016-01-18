@@ -8,17 +8,17 @@ using Reinforced.Typings.Ast;
 
 namespace Reinforced.Typings.Visitors
 {
-    public class TypeScriptExportVisitor : TextExportingVisitor
+    class TypeScriptExportVisitor : TextExportingVisitor
     {
-        private WriterContext _context;
+        protected WriterContext Context { get; set; }
 
         public TypeScriptExportVisitor(TextWriter writer)
             : base(writer)
         {
-            _context = WriterContext.None;
+            Context = WriterContext.None;
         }
 
-        private void Modifiers(RtMember member)
+        protected void Modifiers(RtMember member)
         {
             if (member.AccessModifier != null)
             {
@@ -74,7 +74,7 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Documentation);
             AppendTabs();
 
-            if (_context != WriterContext.Interface) Modifiers(node);
+            if (Context != WriterContext.Interface) Modifiers(node);
             Visit(node.Identifier);
             Write(": ");
             Visit(node.Type);
@@ -86,8 +86,8 @@ namespace Reinforced.Typings.Visitors
         {
             if (node==null) return;
             Visit(node.Documentation);
-            var prev = _context;
-            _context = WriterContext.Interface;
+            var prev = Context;
+            Context = WriterContext.Interface;
             AppendTabs();
             if (prev == WriterContext.Module) Write("export ");
             Write("interface ");
@@ -106,14 +106,14 @@ namespace Reinforced.Typings.Visitors
             }
             UnTab();
             Write("}");
-            _context = prev;
+            Context = prev;
         }
 
         public override void Visit(RtFuncion node)
         {
             if (node==null) return;
             Visit(node.Documentation);
-            if (_context != WriterContext.Interface) Modifiers(node);
+            if (Context != WriterContext.Interface) Modifiers(node);
             Visit(node.Identifier);
             Write("(");
             SequentialVisit(node.Arguments,", ");
@@ -123,7 +123,7 @@ namespace Reinforced.Typings.Visitors
                 Write(": "); Visit(node.ReturnType);
             }
 
-            if (_context == WriterContext.Interface)
+            if (Context == WriterContext.Interface)
             {
                 WriteLine(";");
             }
@@ -192,12 +192,35 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtClass node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Visit(node.Documentation);
-            var prev = _context;
-             _context = WriterContext.Class;
-            //throw new NotImplementedException();
-            _context = prev;
+            var prev = Context;
+            Context = WriterContext.Class;
+            AppendTabs();
+            if (prev == WriterContext.Module) Write("export ");
+            Write("class ");
+            Visit(node.Name);
+            if (node.Extendee != null)
+            {
+                Write("extends ");
+                Visit(node.Extendee);
+            }
+            if (node.Implementees.Count > 0)
+            {
+                Write("implements ");
+                SequentialVisit(node.Implementees, ", ");
+            }
+            Br(); AppendTabs();
+            Write("{"); Br();
+            Tab();
+            var members = node.Members.OrderBy(c => c is RtConstructor ? 0 : 1);
+            foreach (var rtMember in members)
+            {
+                AppendTabs(); Visit(rtMember);
+            }
+            UnTab();
+            Write("}");
+            Context = prev;
         }
 
         public override void Visit(RtIdentifier node)
@@ -236,7 +259,7 @@ namespace Reinforced.Typings.Visitors
             
             if (!node.IsAbstractModule)
             {
-                _context = WriterContext.Module;
+                Context = WriterContext.Module;
                 AppendTabs();
                 WriteLine(String.Format("module {0} {{",node.NamespaceName));
                 Tab();
@@ -247,7 +270,7 @@ namespace Reinforced.Typings.Visitors
             }
             if (!node.IsAbstractModule)
             {
-                _context = WriterContext.None;
+                Context = WriterContext.None;
                 UnTab();
                 AppendTabs();
                 WriteLine("}");
@@ -271,8 +294,8 @@ namespace Reinforced.Typings.Visitors
         {
             if (node==null) return;
             Visit(node.Documentation);
-            var prev = _context;
-            _context = WriterContext.Interface;
+            var prev = Context;
+            Context = WriterContext.Interface;
             AppendTabs(); 
             if (prev == WriterContext.Module) Write("export ");
             Write("enum ");
@@ -285,7 +308,7 @@ namespace Reinforced.Typings.Visitors
             }
             UnTab();
             WriteLine("}");
-            _context = prev;
+            Context = prev;
         }
 
         #region Types
@@ -298,7 +321,7 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Result);
         }
 
-        private void SequentialVisit<T>(IEnumerable<T> nodes, string separator)
+        protected void SequentialVisit<T>(IEnumerable<T> nodes, string separator)
             where T: RtNode
         {
             var n = nodes.ToArray();
@@ -342,6 +365,8 @@ namespace Reinforced.Typings.Visitors
         public override void Visit(RtConstructor node)
         {
             if (node==null) return;
+            if (Context==WriterContext.Interface) return;
+
             AppendTabs(); Write("constructor (");
             SequentialVisit(node.Arguments,", ");
             Write(")");

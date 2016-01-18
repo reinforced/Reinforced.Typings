@@ -19,23 +19,22 @@ namespace Reinforced.Typings
     {
         private readonly FilesOperations _fileOps;
         private readonly StringBuilder _referenceBuilder = new StringBuilder();
-        private readonly ExportSettings _settings;
+        private readonly ExportContext _context;
         private List<Type> _allTypes;
         private HashSet<Type> _allTypesHash;
         private ConfigurationRepository _configurationRepository;
         private bool _isAnalyzed;
-        private Dictionary<string, List<Type>> _namespace = new Dictionary<string, List<Type>>();
 
         #region Constructors
 
         /// <summary>
         ///     Constructs new instance of TypeScript exporter
         /// </summary>
-        /// <param name="settings"></param>
-        public TsExporter(ExportSettings settings)
+        /// <param name="context"></param>
+        public TsExporter(ExportContext context)
         {
-            _settings = settings;
-            _fileOps = new FilesOperations(settings);
+            _context = context;
+            _fileOps = new FilesOperations(context);
         }
 
         #endregion
@@ -43,30 +42,30 @@ namespace Reinforced.Typings
         private void ExtractReferences()
         {
             if (_isAnalyzed) return;
-            _settings.Documentation =
-                new DocumentationManager(_settings.GenerateDocumentation ? _settings.DocumentationFilePath : null);
-            var fluentConfigurationPresents = _settings.ConfigurationMethod != null;
+            _context.Documentation =
+                new DocumentationManager(_context.GenerateDocumentation ? _context.DocumentationFilePath : null);
+            var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
             {
                 var configurationBuilder = new ConfigurationBuilder();
-                _settings.ConfigurationMethod(configurationBuilder);
+                _context.ConfigurationMethod(configurationBuilder);
                 _configurationRepository = configurationBuilder.Build();
                 ConfigurationRepository.Instance = _configurationRepository;
 
                 foreach (var additionalDocumentationPath in _configurationRepository.AdditionalDocumentationPathes)
                 {
-                    _settings.Documentation.CacheDocumentation(additionalDocumentationPath);
+                    _context.Documentation.CacheDocumentation(additionalDocumentationPath);
                 }
             }
 
-            _allTypes = _settings.SourceAssemblies
+            _allTypes = _context.SourceAssemblies
                 .SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
                 .Union(ConfigurationRepository.Instance.AttributesForType.Keys).Distinct()
                 .ToList();
 
             _allTypesHash = new HashSet<Type>(_allTypes);
 
-            if (_settings.Hierarchical)
+            if (_context.Hierarchical)
             {
                 foreach (var type in _allTypesHash)
                 {
@@ -75,10 +74,8 @@ namespace Reinforced.Typings
             }
 
             var grp = _allTypes.GroupBy(c => c.GetNamespace(true));
-            _namespace = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
-                .ToDictionary(k => k.Key, v => v.ToList());
 
-            _settings.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
+            _context.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
                 .Select(c => string.Format("/// <reference path=\"{0}\"/>", c.Path))
                 .Union(
@@ -87,7 +84,7 @@ namespace Reinforced.Typings
                 .ToList()
                 .ForEach(a => _referenceBuilder.AppendLine(a));
 
-            _settings.References = _referenceBuilder.ToString();
+            _context.References = _referenceBuilder.ToString();
 
 
             _isAnalyzed = true;
@@ -136,12 +133,12 @@ namespace Reinforced.Typings
         {
             _fileOps.ClearTempRegistry();
             ExtractReferences();
-            var tr = new TypeResolver(_settings);
-            _settings.Lock();
+            var tr = new TypeResolver(_context);
+            _context.Lock();
 
-            if (!_settings.Hierarchical)
+            if (!_context.Hierarchical)
             {
-                var file = _fileOps.GetTmpFile(_settings.TargetFile);
+                var file = _fileOps.GetTmpFile(_context.TargetFile);
                 using (var fs = File.OpenWrite(file))
                 {
                     using (var tw = new StreamWriter(fs))
@@ -170,19 +167,19 @@ namespace Reinforced.Typings
                 }
             }
 
-            _settings.Unlock();
+            _context.Unlock();
             _fileOps.DeployTempFiles();
             tr.PrintCacheInfo();
         }
 
         private void ExportNamespaces(IEnumerable<Type> types, TypeResolver tr, TextWriter tw)
         {
-            var gen = tr.GeneratorForNamespace(_settings);
+            var gen = tr.GeneratorForNamespace(_context);
             var grp = types.GroupBy(c => c.GetNamespace(true));
             var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
 
-            var visitor = new TypeScriptExportVisitor(tw);
+            var visitor = _context.ExportPureTypings ? new TypingsExportVisitor(tw) : new TypeScriptExportVisitor(tw);
 
             foreach (var n in nsp)
             {
@@ -196,7 +193,7 @@ namespace Reinforced.Typings
 
         private void WriteWarning(TextWriter tw)
         {
-            if (_settings.WriteWarningComment)
+            if (_context.WriteWarningComment)
             {
                 tw.WriteLine("//     This code was generated by a Reinforced.Typings tool. ");
                 tw.WriteLine("//     Changes to this file may cause incorrect behavior and will be lost if");
@@ -211,16 +208,16 @@ namespace Reinforced.Typings
         /// <returns>String containig generated TypeScript source for specified assemblies</returns>
         public string ExportAll()
         {
-            _settings.Lock();
+            _context.Lock();
             ExtractReferences();
 
             var sb = new StringBuilder();
-            var tr = new TypeResolver(_settings);
+            var tr = new TypeResolver(_context);
             using (var sw = new StringWriter(sb))
             {
                 ExportTypes(sw, tr);
             }
-            _settings.Unlock();
+            _context.Unlock();
             return sb.ToString();
         }
     }

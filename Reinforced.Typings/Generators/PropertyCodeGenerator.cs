@@ -15,13 +15,13 @@ namespace Reinforced.Typings.Generators
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
+        /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtField GenerateNode(MemberInfo element, TypeResolver resolver)
+        public override RtField GenerateNode(MemberInfo element,RtField result, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
-            RtField result = new RtField();
-
-            var doc = Settings.Documentation.GetDocumentationMember(element);
+            
+            var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
                 RtJsdocNode jsdoc = new RtJsdocNode();
@@ -45,24 +45,24 @@ namespace Reinforced.Typings.Generators
                 }
 
                 if (!string.IsNullOrEmpty(tp.Name)) propName = new RtIdentifier(tp.Name);
-                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Settings.SpecialCase)
+                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Context.SpecialCase)
                     propName.IsNullable = true;
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);
             if (!propName.IsNullable && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
-                !Settings.SpecialCase)
+                !Context.SpecialCase)
             {
                 result.Identifier.IsNullable = true;
             }
 
             if (element is PropertyInfo)
             {
-                propName.IdentifierName = Settings.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
+                propName.IdentifierName = Context.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
             }
             propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
 
-            result.AccessModifier = Settings.SpecialCase ? AccessModifier.Public : element.GetModifier();
+            result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;
 
             return result;

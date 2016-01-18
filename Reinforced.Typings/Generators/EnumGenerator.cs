@@ -16,14 +16,14 @@ namespace Reinforced.Typings.Generators
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
+        /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtEnum GenerateNode(Type element, TypeResolver resolver)
+        public override RtEnum GenerateNode(Type element,RtEnum result, TypeResolver resolver)
         {
-            RtEnum result = new RtEnum();
             var values = Enum.GetValues(element);
             result.EnumName = element.GetName();
             var fields = element.GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
-            var doc = Settings.Documentation.GetDocumentationMember(element);
+            var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
                 RtJsdocNode docNode = new RtJsdocNode();
@@ -48,7 +48,7 @@ namespace Reinforced.Typings.Generators
                         EnumValue = Convert.ToInt64(v).ToString()
                     };
 
-                    var valueDoc = Settings.Documentation.GetDocumentationMember(fieldItself);
+                    var valueDoc = Context.Documentation.GetDocumentationMember(fieldItself);
                     if (valueDoc != null)
                     {
                         RtJsdocNode docNode = new RtJsdocNode();

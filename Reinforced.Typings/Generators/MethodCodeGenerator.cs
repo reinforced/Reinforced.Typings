@@ -16,13 +16,12 @@ namespace Reinforced.Typings.Generators
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
+        /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtFuncion GenerateNode(MethodInfo element, TypeResolver resolver)
+        public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
 
-            RtFuncion result = new RtFuncion();
-            
             string name;
             RtTypeName type;
             
@@ -30,7 +29,7 @@ namespace Reinforced.Typings.Generators
             result.Identifier = new RtIdentifier(name);
             result.ReturnType = type;
             
-            var doc = Settings.Documentation.GetDocumentationMember(element);
+            var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
                 RtJsdocNode jsdoc = new RtJsdocNode {Description = doc.Summary.Text};
@@ -46,7 +45,7 @@ namespace Reinforced.Typings.Generators
             }
             
             result.AccessModifier = element.GetModifier();
-            if (Settings.SpecialCase) result.AccessModifier = AccessModifier.Public;
+            if (Context.SpecialCase) result.AccessModifier = AccessModifier.Public;
             result.Identifier = new RtIdentifier(name);
             result.IsStatic = element.IsStatic;
 
@@ -54,7 +53,7 @@ namespace Reinforced.Typings.Generators
             foreach (var param in p)
             {
                 if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param, Settings);
+                var generator = resolver.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument) argument);
             }
@@ -87,7 +86,7 @@ namespace Reinforced.Typings.Generators
                 type = resolver.ResolveTypeName(element.ReturnType);
             }
 
-            name = Settings.ConditionallyConvertMethodNameToCamelCase(name);
+            name = Context.ConditionallyConvertMethodNameToCamelCase(name);
             name = element.CamelCaseFromAttribute(name);
             if (element.IsGenericMethod)
             {

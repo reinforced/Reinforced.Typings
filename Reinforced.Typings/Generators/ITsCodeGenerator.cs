@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Generators
         /// <summary>
         ///     Export settings
         /// </summary>
-        ExportSettings Settings { get; set; }
+        ExportContext Context { get; set; }
 
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
