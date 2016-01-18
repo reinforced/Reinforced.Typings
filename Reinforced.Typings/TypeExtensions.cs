@@ -146,6 +146,16 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
+        ///     Determines should type be exported as class or not
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>True, if supplied type should be exported as interface. False otherwise</returns>
+        public static bool IsExportingAsClass(this Type t)
+        {
+            return ConfigurationRepository.Instance.ForType<TsClassAttribute>(t) != null;
+        }
+
+        /// <summary>
         ///     Determines if type member should be ignored for translation using corresponding Typings attribute
         /// </summary>
         /// <param name="t">Type member info</param>

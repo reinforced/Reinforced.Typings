@@ -70,10 +70,10 @@ namespace Reinforced.Typings.Generators
         protected virtual void ExportMembers(Type element, TypeResolver resolver, ITypeMember typeMember,
             IAutoexportSwitchAttribute swtch)
         {
+            ExportConstructors(typeMember, element, resolver, swtch);
             ExportFields(typeMember, element, resolver, swtch);
             ExportProperties(typeMember, element, resolver, swtch);
             ExportMethods(typeMember, element, resolver, swtch);
-            ExportConstructors(typeMember, element, resolver, swtch);
             HandleBaseClassExportingAsInterface(typeMember, element, resolver, swtch);
         }
 
@@ -103,6 +103,7 @@ namespace Reinforced.Typings.Generators
                     var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element.BaseType);
                     Context.SpecialCase = true;
                     ExportFields(sw, element.BaseType, resolver, basExSwtch);
+                    ExportProperties(sw, element.BaseType, resolver, basExSwtch);
                     ExportMethods(sw, element.BaseType, resolver, basExSwtch);
                     Context.SpecialCase = false;
                 }

@@ -144,7 +144,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (returnType == null || returnType.IsVoid())
             {
-                Write(" { } ");
+                WriteLine(" { } ");
             }
             else
             {
@@ -240,17 +240,26 @@ namespace Reinforced.Typings.Visitors
         public override void Visit(RtJsdocNode node)
         {
             if (node==null) return;
-            AppendTabs(); WriteLine("/**");
-            if (!string.IsNullOrEmpty(node.Description))
+
+            if (!node.Description.Contains("\n") && node.TagToDescription.Count == 0)
             {
-                Summary(node.Description);
+                //handle single-line JSDOC
+                AppendTabs(); Write("/** "); Write(node.Description); WriteLine(" */");
             }
-            if (node.TagToDescription.Count>0) DocLine();
-            foreach (var tuple in node.TagToDescription)
+            else
             {
-                DocTag(tuple.Item1,tuple.Item2);
+                AppendTabs(); WriteLine("/**");
+                if (!string.IsNullOrEmpty(node.Description))
+                {
+                    Summary(node.Description);
+                }
+                if (node.TagToDescription.Count > 0) DocLine();
+                foreach (var tuple in node.TagToDescription)
+                {
+                    DocTag(tuple.Item1, tuple.Item2);
+                }
+                AppendTabs(); WriteLine("*/");
             }
-            AppendTabs(); WriteLine("*/");
         }
 
         public override void Visit(RtModule node)

@@ -70,10 +70,10 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        ///     Parses supplied lambda expression and retrieves PropertyInfo from it
+        ///     Parses supplied lambda expression and retrieves MethodInfo from it
         /// </summary>
-        /// <param name="lambda">Property Lambda expression</param>
-        /// <returns>PropertyInfo referenced by this expression</returns>
+        /// <param name="lambda">Method lambda expression</param>
+        /// <returns>MethodInfo referenced by this expression</returns>
         public static MethodInfo ParseMethodLambda(LambdaExpression lambda)
         {
             var mex = lambda.Body as MethodCallExpression;
@@ -81,6 +81,20 @@ namespace Reinforced.Typings.Fluent
                 throw new Exception(
                     "MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
             return mex.Method;
+        }
+
+        /// <summary>
+        ///     Parses supplied lambda expression and retrieves ConstructorInfo from it
+        /// </summary>
+        /// <param name="lambda">Constructor lambda expression ( => new Obejct(Ts.Parameter...))</param>
+        /// <returns>Constructor referenced by this expression</returns>
+        public static ConstructorInfo ParseConstructorLambda(LambdaExpression lambda)
+        {
+            var nex = lambda.Body as NewExpression;
+            if (nex == null)
+                throw new Exception(
+                    "NewExpression should be provided for .WithConstructor call. Please use only lamba expressions in this place.");
+            return nex.Constructor;
         }
     }
 }

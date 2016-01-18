@@ -53,8 +53,8 @@ namespace Reinforced.Typings.Generators
             constructor.SuperCallParameters.Clear();
             // 1. Check presence of base type 
             var bt = element.DeclaringType != null ? element.DeclaringType.BaseType : null;
-            if (bt == typeof (object) || bt.IsExportingAsInterface()) bt = null;
-
+            if ((bt == typeof (object) || bt.IsExportingAsInterface()) || !bt.IsExportingAsClass()) bt = null;
+            
             if (bt == null)
             {
                 // 1. If not present then generate empty constructor body
