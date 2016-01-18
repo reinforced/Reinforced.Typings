@@ -225,7 +225,6 @@ namespace Reinforced.Typings
         /// <returns>Type name</returns>
         public static RtSimpleTypeName GetName(this Type t, RtTypeName[] genericArguments = null)
         {
-            string typeName = null;
             if (t.IsEnum)
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);

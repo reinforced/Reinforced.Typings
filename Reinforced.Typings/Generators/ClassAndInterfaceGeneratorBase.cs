@@ -10,6 +10,10 @@ using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {
+    /// <summary>
+    /// Base code generator both for TypeScript class and interface
+    /// </summary>
+    /// <typeparam name="TNode">Resulting node type (RtClass or RtInterface)</typeparam>
     public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type,TNode> where TNode : RtNode, new()
     {
         /// <summary>
@@ -30,8 +34,7 @@ namespace Reinforced.Typings.Generators
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
             }
-            result.NeedsExports = !string.IsNullOrEmpty(type.GetNamespace());
-
+            
             var ifaces = type.GetInterfaces();
             var bs = type.BaseType;
             var baseClassIsExportedAsInterface = false;

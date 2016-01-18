@@ -196,10 +196,9 @@ namespace Reinforced.Typings.Xmldoc
         }
 
         /// <summary>
-        ///     Outputs documentation for constructor
+        ///     Returns documentation for constructor
         /// </summary>
         /// <param name="constructor">Constructor</param>
-        /// <param name="sw">Text writer</param>
         public DocumentationMember GetDocumentationMember(ConstructorInfo constructor)
         {
             if (constructor == null) return null;
@@ -213,7 +212,7 @@ namespace Reinforced.Typings.Xmldoc
 
 
         /// <summary>
-        ///     Outputs documentation for type
+        ///     Returns documentation for type
         /// </summary>
         /// <param name="type">Type</param>
         public DocumentationMember GetDocumentationMember(Type type)

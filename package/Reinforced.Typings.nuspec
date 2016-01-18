@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.0.9</version>
+        <version>1.1</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,6 +16,9 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
+            * 1.1
+            * * Introduced AST instead of direct code writing
+            * * Improved custom export
 			* 1.0.9
 			* * Fluent export of multiple generic types fix
 			* 1.0.8

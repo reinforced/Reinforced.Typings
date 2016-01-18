@@ -1,4 +1,5 @@
-﻿namespace Reinforced.Typings.Ast
+﻿#pragma warning disable 1591
+namespace Reinforced.Typings.Ast
 {
     /// <summary>
     /// Base interface for visitor traversing simple TypeScript AST tree

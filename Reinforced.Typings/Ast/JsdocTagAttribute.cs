@@ -12,6 +12,10 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         public string RawTagName { get; set; }
 
+        /// <summary>
+        /// Constructs new instance of JsdicTag attribute
+        /// </summary>
+        /// <param name="rawTagName">Raw tag name</param>
         public JsdocTagAttribute(string rawTagName)
         {
             RawTagName = rawTagName;

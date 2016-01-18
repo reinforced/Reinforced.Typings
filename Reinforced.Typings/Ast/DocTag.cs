@@ -198,8 +198,16 @@ namespace Reinforced.Typings.Ast
 
     }
 
+    /// <summary>
+    /// Extension methods for DocTag enum
+    /// </summary>
     public static class DocTagExtensions
     {
+        /// <summary>
+        /// Converts DocTag value to corresponding JSDOC-friendly name
+        /// </summary>
+        /// <param name="tag">Tag instance</param>
+        /// <returns>JSDOC-friendly name</returns>
         public static string Tagname(this DocTag tag)
         {
             var member = typeof (DocTag).GetField(tag.ToString());

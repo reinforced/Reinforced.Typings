@@ -261,7 +261,7 @@ namespace Reinforced.Typings.Visitors
             {
                 Context = WriterContext.Module;
                 AppendTabs();
-                WriteLine(String.Format("module {0} {{",node.NamespaceName));
+                WriteLine(String.Format("module {0} {{",node.ModuleName));
                 Tab();
             }
             foreach (var rtCompilationUnit in node.CompilationUnits)
@@ -383,7 +383,7 @@ namespace Reinforced.Typings.Visitors
         }
     }
 
-    public enum WriterContext
+    internal enum WriterContext
     {
         None,
         Class,
@@ -392,7 +392,7 @@ namespace Reinforced.Typings.Visitors
         Module
     }
 
-    public static class ExportExtensions
+    internal static class ExportExtensions
     {
         public static bool IsVoid(this RtTypeName typeName)
         {

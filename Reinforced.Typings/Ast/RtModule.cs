@@ -2,24 +2,47 @@
 
 namespace Reinforced.Typings.Ast
 {
+    /// <summary>
+    /// AST node for TypeScript module
+    /// </summary>
     public class RtModule : RtNode
     {
+        /// <summary>
+        /// Identifies nameless module that only wraps CompilationUnits without module name
+        /// </summary>
         public bool IsAbstractModule { get; set; }
 
-        public string NamespaceName { get; set; }
+        /// <summary>
+        /// Module name
+        /// </summary>
+        public string ModuleName { get; set; }
 
+        /// <summary>
+        /// Members of module - compilation units. Classes/enums/interfaces
+        /// </summary>
         public List<RtCompilationUnit> CompilationUnits { get; set; }
 
+        /// <summary>
+        /// Child nodes
+        /// </summary>
         public override IEnumerable<RtNode> Children
         {
             get { return CompilationUnits; }
         }
 
+        /// <summary>
+        /// Visitor acceptance
+        /// </summary>
+        /// <param name="visitor">Visitor</param>
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <summary>
+        /// Typed visitor acceptance
+        /// </summary>
+        /// <param name="visitor">Visitor</param>
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);

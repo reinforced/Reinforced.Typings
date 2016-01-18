@@ -24,6 +24,10 @@ namespace Reinforced.Typings
         private string _targetFile;
         private bool _writeWarningComment;
 
+
+        /// <summary>
+        /// Instantiates new ExportContext instance (only for testing/integration)
+        /// </summary>
         public ExportContext()
         {
             Location = new Location();

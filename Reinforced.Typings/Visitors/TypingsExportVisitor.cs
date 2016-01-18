@@ -40,7 +40,7 @@ namespace Reinforced.Typings.Visitors
             {
                 Context = WriterContext.Module;
                 AppendTabs();
-                WriteLine(String.Format("declare module {0} {{", node.NamespaceName));
+                WriteLine(String.Format("declare module {0} {{", node.ModuleName));
                 Tab();
             }
             foreach (var rtCompilationUnit in node.CompilationUnits)
