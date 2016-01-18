@@ -19,6 +19,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (node == null) return;
             Visit(node.Documentation);
+            AppendTabs();
             if (Context != WriterContext.Interface) Modifiers(node);
             if (Context == WriterContext.Module) Write("export function ");
             Visit(node.Identifier);
@@ -68,7 +69,7 @@ namespace Reinforced.Typings.Visitors
                 Write("constructor (");
             }
             SequentialVisit(node.Arguments, ", ");
-            Write("); ");
+            WriteLine("); ");
 
         }
 
@@ -86,12 +87,12 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Name);
             if (node.Extendee != null)
             {
-                Write("extends ");
+                Write(" extends ");
                 Visit(node.Extendee);
             }
             if (node.Implementees.Count > 0)
             {
-                Write("implements ");
+                Write(" implements ");
                 SequentialVisit(node.Implementees, ", ");
             }
             Br(); AppendTabs();
@@ -100,7 +101,7 @@ namespace Reinforced.Typings.Visitors
             var members = node.Members.OrderBy(c => c is RtConstructor ? 0 : 1);
             foreach (var rtMember in members)
             {
-                AppendTabs(); Visit(rtMember);
+                Visit(rtMember);
             }
             UnTab();
             AppendTabs(); WriteLine("}");
@@ -120,8 +121,7 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Identifier);
             Write(": ");
             Visit(node.Type);
-            Write(";");
-            Br();
+            WriteLine(";");
         }
     }
 }

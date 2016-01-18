@@ -216,7 +216,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithPublicProperties<T>(this T tc, Action<PropertyExportConfiguration> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var prop = tc.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -316,7 +316,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithPublicFields<T>(this T tc, Action<PropertyExportConfiguration> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var prop = tc.Type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return tc.WithFields(prop, configuration);
         }
 
@@ -513,7 +513,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithPublicMethods<T>(this T tc, Action<MethodExportConfiguration> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var prop = tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Static |BindingFlags.Instance| BindingFlags.DeclaredOnly);
             return tc.WithMethods(prop, configuration);
         }
 

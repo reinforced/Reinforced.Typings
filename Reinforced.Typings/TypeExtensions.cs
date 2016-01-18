@@ -70,6 +70,48 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
+        ///     Determines is type is static
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>True if type is static. False otherwise</returns>
+        public static bool IsStatic(this Type t)
+        {
+            return (t.IsAbstract && t.IsSealed);
+        }
+
+        /// <summary>
+        ///     Determines is member static or not
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <returns>True if member is static. False otherwise</returns>
+        public static bool IsStatic(this MemberInfo member)
+        {
+            if (member is PropertyInfo) return IsStatic((PropertyInfo)member);
+            if (member is MethodInfo) return ((MethodInfo)member).IsStatic;
+            if (member is FieldInfo) return ((FieldInfo)member).IsStatic;
+            return false;
+        }
+
+        /// <summary>
+        ///     Determines is property static or not
+        /// </summary>
+        /// <param name="propertyInfo">Property</param>
+        /// <returns>True if member is static. False otherwise</returns>
+        public static bool IsStatic(this PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.GetMethod != null)
+            {
+                return propertyInfo.GetMethod.IsStatic;
+            }
+
+            if (propertyInfo.SetMethod != null)
+            {
+                return propertyInfo.SetMethod.IsStatic;
+            }
+            return false;
+        }
+
+        /// <summary>
         ///     Retrieves first type argument of type
         /// </summary>
         /// <param name="t">Type</param>

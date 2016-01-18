@@ -20,6 +20,7 @@ namespace Reinforced.Typings.Generators
         public override RtField GenerateNode(MemberInfo element,RtField result, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
+            result.IsStatic = element.IsStatic();
             
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)

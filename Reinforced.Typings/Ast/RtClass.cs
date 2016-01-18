@@ -8,11 +8,6 @@ namespace Reinforced.Typings.Ast
     public class RtClass : RtCompilationUnit, ITypeMember
     {
         /// <summary>
-        /// Is class static or not
-        /// </summary>
-        public bool IsStatic { get; set; }
-
-        /// <summary>
         /// JSDOC
         /// </summary>
         public RtJsdocNode Documentation { get; set; }
