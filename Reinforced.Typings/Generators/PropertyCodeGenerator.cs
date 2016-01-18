@@ -24,8 +24,8 @@ namespace Reinforced.Typings.Generators
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
-                RtJsdocNode jsdoc = new RtJsdocNode();
-                jsdoc.Description = doc.Summary.Text;
+                RtJsdocNode jsdoc = new RtJsdocNode {Description = doc.Summary.Text};
+                result.Documentation = jsdoc;
             }
 
             var t = GetType(element);
@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Generators
                     type = new RtSimpleTypeName(tp.Type);
                 }
 
-                if (!string.IsNullOrEmpty(tp.Name)) propName = new RtIdentifier(tp.Name);
+                if (!string.IsNullOrEmpty(tp.Name)) propName.IdentifierName = tp.Name;
                 if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Context.SpecialCase)
                     propName.IsNullable = true;
             }
@@ -53,7 +53,7 @@ namespace Reinforced.Typings.Generators
             if (!propName.IsNullable && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
                 !Context.SpecialCase)
             {
-                result.Identifier.IsNullable = true;
+                propName.IsNullable = true;
             }
 
             if (element is PropertyInfo)
@@ -62,6 +62,7 @@ namespace Reinforced.Typings.Generators
             }
             propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
 
+            result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;
 

@@ -72,8 +72,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (node == null) return;
             Visit(node.Documentation);
-            AppendTabs();
-
+            AppendTabs(); 
             if (Context != WriterContext.Interface) Modifiers(node);
             Visit(node.Identifier);
             Write(": ");
@@ -94,7 +93,7 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Name);
             if (node.Implementees.Count > 0)
             {
-                Write("extends ");
+                Write(" extends ");
                 SequentialVisit(node.Implementees,", ");
             }
             Br(); AppendTabs();
@@ -102,10 +101,10 @@ namespace Reinforced.Typings.Visitors
             Tab();
             foreach (var rtMember in node.Members)
             {
-                AppendTabs(); Visit(rtMember);
+                Visit(rtMember);
             }
             UnTab();
-            Write("}");
+            AppendTabs(); WriteLine("}");
             Context = prev;
         }
 
@@ -113,6 +112,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (node==null) return;
             Visit(node.Documentation);
+            AppendTabs(); 
             if (Context != WriterContext.Interface) Modifiers(node);
             Visit(node.Identifier);
             Write("(");
@@ -202,12 +202,12 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Name);
             if (node.Extendee != null)
             {
-                Write("extends ");
+                Write(" extends ");
                 Visit(node.Extendee);
             }
             if (node.Implementees.Count > 0)
             {
-                Write("implements ");
+                Write(" implements ");
                 SequentialVisit(node.Implementees, ", ");
             }
             Br(); AppendTabs();
@@ -216,10 +216,10 @@ namespace Reinforced.Typings.Visitors
             var members = node.Members.OrderBy(c => c is RtConstructor ? 0 : 1);
             foreach (var rtMember in members)
             {
-                AppendTabs(); Visit(rtMember);
+                Visit(rtMember);
             }
             UnTab();
-            Write("}");
+            AppendTabs(); WriteLine("}");
             Context = prev;
         }
 
@@ -244,8 +244,8 @@ namespace Reinforced.Typings.Visitors
             if (!string.IsNullOrEmpty(node.Description))
             {
                 Summary(node.Description);
-                DocLine();
             }
+            if (node.TagToDescription.Count>0) DocLine();
             foreach (var tuple in node.TagToDescription)
             {
                 DocTag(tuple.Item1,tuple.Item2);
@@ -307,7 +307,7 @@ namespace Reinforced.Typings.Visitors
                 Visit(rtEnumValue);
             }
             UnTab();
-            WriteLine("}");
+            AppendTabs(); WriteLine("}");
             Context = prev;
         }
 

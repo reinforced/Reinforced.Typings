@@ -54,10 +54,8 @@ namespace Reinforced.Typings.Visitors
             foreach (var s in result)
             {
                 AppendTabs();
-                _writer.Write(s.Replace("\n", null).Replace("\r", null));
-                _writer.WriteLine();
+                _writer.WriteLine(s.Replace("\n", null).Replace("\r", null));
             }
-            _writer.WriteLine();
         }
 
         protected void WriteLines(string format, params object[] args)
@@ -70,7 +68,6 @@ namespace Reinforced.Typings.Visitors
                 _writer.Write(s.Replace("\n", null).Replace("\r", null));
                 _writer.WriteLine();
             }
-            _writer.WriteLine();
         }
 
         protected void Write(string text)

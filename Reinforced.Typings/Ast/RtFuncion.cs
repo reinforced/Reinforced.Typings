@@ -8,6 +8,14 @@ namespace Reinforced.Typings.Ast
     public class RtFuncion : RtMember
     {
         /// <summary>
+        /// Constructs new instance of AST node
+        /// </summary>
+        public RtFuncion()
+        {
+            Arguments = new List<RtArgument>();
+        }
+
+        /// <summary>
         /// Function name
         /// </summary>
         public RtIdentifier Identifier { get; set; }
@@ -20,7 +28,7 @@ namespace Reinforced.Typings.Ast
         /// <summary>
         /// Function parameters
         /// </summary>
-        public List<RtArgument> Arguments { get; set; }
+        public List<RtArgument> Arguments { get; private set; }
 
         /// <summary>
         /// Function body (supplied as raw text)

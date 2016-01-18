@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {
@@ -21,6 +23,19 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return null;
             if (element.GetParameters().Length == 0) return null;
+
+            var doc = Context.Documentation.GetDocumentationMember(element);
+            if (doc != null)
+            {
+                RtJsdocNode jsdoc = new RtJsdocNode { Description = doc.Summary.Text };
+                foreach (var documentationParameter in doc.Parameters)
+                {
+                    jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Param,
+                        documentationParameter.Name + " " + documentationParameter.Description));
+                }
+                result.Documentation = jsdoc;
+            }
+
             var p = element.GetParameters();
             foreach (var param in p)
             {

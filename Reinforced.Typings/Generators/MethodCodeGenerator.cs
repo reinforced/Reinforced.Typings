@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default typescript code generator for method
     /// </summary>
-    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo,RtFuncion>
+    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo, RtFuncion>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -24,26 +24,28 @@ namespace Reinforced.Typings.Generators
 
             string name;
             RtTypeName type;
-            
+
             GetFunctionNameAndReturnType(element, resolver, out name, out type);
             result.Identifier = new RtIdentifier(name);
             result.ReturnType = type;
-            
+
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
-                RtJsdocNode jsdoc = new RtJsdocNode {Description = doc.Summary.Text};
+                RtJsdocNode jsdoc = new RtJsdocNode { Description = doc.Summary.Text };
                 foreach (var documentationParameter in doc.Parameters)
                 {
-                    jsdoc.TagToDescription.Add(new Tuple<DocTag,string>(DocTag.Param, documentationParameter.Name + " " + documentationParameter.Description));
+                    jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Param,
+                        documentationParameter.Name + " " + documentationParameter.Description));
                 }
 
                 if (doc.HasReturns())
                 {
-                    jsdoc.TagToDescription.Add(new Tuple<DocTag,string>(DocTag.Returns, doc.Returns.Text));
+                    jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Returns, doc.Returns.Text));
                 }
+                result.Documentation = jsdoc;
             }
-            
+
             result.AccessModifier = element.GetModifier();
             if (Context.SpecialCase) result.AccessModifier = AccessModifier.Public;
             result.Identifier = new RtIdentifier(name);
@@ -55,7 +57,7 @@ namespace Reinforced.Typings.Generators
                 if (param.IsIgnored()) continue;
                 var generator = resolver.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
-                result.Arguments.Add((RtArgument) argument);
+                result.Arguments.Add((RtArgument)argument);
             }
 
             return result;

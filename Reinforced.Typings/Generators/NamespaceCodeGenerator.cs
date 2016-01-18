@@ -24,12 +24,15 @@ namespace Reinforced.Typings.Generators
         {
             RtModule module = new RtModule();
             if (string.IsNullOrEmpty(namespaceName)) module.IsAbstractModule = true;
+            module.ModuleName = namespaceName;
+
             Context.CurrentNamespace = namespaceName;
             Context.Location.SetLocation(module);
             foreach (var type in types)
             {
                 var converter = resolver.GeneratorFor(type, Context);
-                converter.Generate(type, resolver);
+                var member = converter.Generate(type, resolver);
+                module.CompilationUnits.Add(member);
                 Console.WriteLine("Exported {0}", type);
             }
 

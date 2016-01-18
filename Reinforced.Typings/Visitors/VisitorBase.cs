@@ -12,22 +12,23 @@ namespace Reinforced.Typings.Visitors
         public void Visit(RtNode node)
         {
             if (node == null) return;
-            if (node is RtField) Visit((RtField)node);
-            if (node is RtInterface) Visit((RtInterface)node);
-            if (node is RtFuncion) Visit((RtFuncion)node);
-            if (node is RtArgument) Visit((RtArgument)node);
-            if (node is RtClass) Visit((RtClass)node);
-            if (node is RtIdentifier) Visit((RtIdentifier)node);
-            if (node is RtDelegateType) Visit((RtDelegateType)node);
-            if (node is RtSimpleTypeName) Visit((RtSimpleTypeName)node);
-            if (node is RtRaw) Visit((RtRaw)node);
-            if (node is RtJsdocNode) Visit((RtJsdocNode)node);
-            if (node is RtModule) Visit((RtModule)node);
-            if (node is RtEnumValue) Visit((RtEnumValue)node);
-            if (node is RtEnum) Visit((RtEnum)node);
-            if (node is RtDictionaryType) Visit((RtDictionaryType)node);
-            if (node is RtArrayType) Visit((RtArrayType)node);
-            if (node is RtConstructor) Visit((RtConstructor)node);
+            if (node is RtField) { Visit((RtField)node); return; }
+            if (node is RtInterface) { Visit((RtInterface)node); return; }
+            if (node is RtFuncion) { Visit((RtFuncion)node); return; }
+            if (node is RtArgument) { Visit((RtArgument)node); return; }
+            if (node is RtClass) { Visit((RtClass)node); return; }
+            if (node is RtIdentifier) { Visit((RtIdentifier)node); return; }
+            if (node is RtDelegateType) { Visit((RtDelegateType)node); return; }
+            if (node is RtSimpleTypeName) { Visit((RtSimpleTypeName)node); return; }
+            if (node is RtRaw) { Visit((RtRaw)node); return; }
+            if (node is RtJsdocNode) { Visit((RtJsdocNode)node); return; }
+            if (node is RtModule) { Visit((RtModule)node); return; }
+            if (node is RtEnumValue) { Visit((RtEnumValue)node); return; }
+            if (node is RtEnum) { Visit((RtEnum)node); return; }
+            if (node is RtDictionaryType) { Visit((RtDictionaryType)node); return; }
+            if (node is RtArrayType) { Visit((RtArrayType)node); return; }
+            if (node is RtConstructor) { Visit((RtConstructor)node); return; }
+
             throw new Exception("Unknown node passed");
         }
 

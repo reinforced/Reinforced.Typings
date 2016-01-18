@@ -8,6 +8,14 @@ namespace Reinforced.Typings.Ast
     public class RtModule : RtNode
     {
         /// <summary>
+        /// Constructs new instance of AST node
+        /// </summary>
+        public RtModule()
+        {
+            CompilationUnits = new List<RtNode>();
+        }
+
+        /// <summary>
         /// Identifies nameless module that only wraps CompilationUnits without module name
         /// </summary>
         public bool IsAbstractModule { get; set; }
@@ -20,7 +28,7 @@ namespace Reinforced.Typings.Ast
         /// <summary>
         /// Members of module - compilation units. Classes/enums/interfaces
         /// </summary>
-        public List<RtCompilationUnit> CompilationUnits { get; set; }
+        public List<RtNode> CompilationUnits { get; set; }
 
         /// <summary>
         /// Child nodes

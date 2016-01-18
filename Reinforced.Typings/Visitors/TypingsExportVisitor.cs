@@ -51,8 +51,7 @@ namespace Reinforced.Typings.Visitors
             {
                 Context = WriterContext.None;
                 UnTab();
-                AppendTabs();
-                WriteLine("}");
+                AppendTabs(); WriteLine("}");
             }
         }
 
@@ -104,7 +103,7 @@ namespace Reinforced.Typings.Visitors
                 AppendTabs(); Visit(rtMember);
             }
             UnTab();
-            Write("}");
+            AppendTabs(); WriteLine("}");
             Context = prev;
         }
 

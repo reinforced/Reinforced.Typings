@@ -299,6 +299,10 @@ namespace Reinforced.Typings
         /// <returns>Access modifier string</returns>
         public static AccessModifier GetModifier(this MethodInfo methodInfo)
         {
+            if (methodInfo == null)
+            {
+                int a = 0;
+            }
             if (methodInfo.IsPrivate) return AccessModifier.Private;
             if (methodInfo.IsFamily) return AccessModifier.Protected;
             return AccessModifier.Public;
@@ -323,6 +327,15 @@ namespace Reinforced.Typings
         /// <returns>Access modifier string</returns>
         public static AccessModifier GetModifier(this PropertyInfo propertyInfo)
         {
+            if (propertyInfo.GetMethod == null)
+            {
+                return GetModifier(propertyInfo.SetMethod);
+            }
+
+            if (propertyInfo.SetMethod == null)
+            {
+                return GetModifier(propertyInfo.GetMethod);
+            }
             var getAccessor = GetModifier(propertyInfo.GetMethod);
             var setAccessor = GetModifier(propertyInfo.SetMethod);
 
