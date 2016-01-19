@@ -67,7 +67,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
 
             // Here we override TS method return type to make it JQueryPromise
             // We are using RtSimpleType with generig parameter of existing method type
-            result.ReturnType = new RtSimpleTypeName("JQueryPromise", new[] { result.ReturnType });
+            result.ReturnType = new RtSimpleTypeName("JQueryPromise", new[] { retType });
 
             // Here we retrieve method parameters
             // We are using .GetName() extension method to retrieve parameter name
@@ -86,7 +86,9 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
 
             // Here we are constructing our glue code
             string code = String.Format(
-@"return QueryController.query<{2}>('{0}', {{ {1} }}, 
+@"return QueryController.query<{2}>(
+        '{0}', 
+        {{ {1} }}, 
         loadingPlaceholderSelector,
         disableElement
     );", 

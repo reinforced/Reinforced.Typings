@@ -14,7 +14,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings
         {
             // Configuration for exporting JQuery infrastructure
             builder.ExportAsClass<JQueryController>();
-            builder.ExportAsInterface<JQuerySampleResponseModel>();
+            builder.ExportAsInterface<JQuerySampleResponseModel>().WithPublicProperties();
 
         }
     }

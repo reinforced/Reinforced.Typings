@@ -36,6 +36,11 @@ var Reinforced;
                                 if (disableElement === void 0) { disableElement = ''; }
                                 return QueryController.query('/JQuery/ControllerReturningObjectWithParameters', { 'echo': echo }, loadingPlaceholderSelector, disableElement);
                             };
+                            JQueryController.VoidMethodWithParameters = function (model, loadingPlaceholderSelector, disableElement) {
+                                if (loadingPlaceholderSelector === void 0) { loadingPlaceholderSelector = ''; }
+                                if (disableElement === void 0) { disableElement = ''; }
+                                return QueryController.query('/JQuery/VoidMethodWithParameters', { 'model': model }, loadingPlaceholderSelector, disableElement);
+                            };
                             return JQueryController;
                         })();
                         Controllers.JQueryController = JQueryController;

@@ -4,43 +4,60 @@
 
 
 module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
-    import IjQuerySampleResponseModel = Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel;
-
-    export class JQueryController
+	export class JQueryController
 	{
 		public static SimpleIntControllerMethod(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<number>
 		{
-			return QueryController.query<number>('/JQuery/SimpleIntControllerMethod', {  }, 
+			return QueryController.query<number>(
+			        '/JQuery/SimpleIntControllerMethod', 
+			        {  }, 
 			        loadingPlaceholderSelector,
 			        disableElement
 			    );
 		}
 		public static ControllerMethodWithParameters(number: number, s: string, boolValue: boolean, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<string>
 		{
-			return QueryController.query<string>('/JQuery/ControllerMethodWithParameters', { 'number': number, 's': s, 'boolValue': boolValue }, 
+			return QueryController.query<string>(
+			        '/JQuery/ControllerMethodWithParameters', 
+			        { 'number': number, 's': s, 'boolValue': boolValue }, 
 			        loadingPlaceholderSelector,
 			        disableElement
 			    );
 		}
 		public static ControllerReturningObject(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>
 		{
-			return QueryController.query<IjQuerySampleResponseModel>('/JQuery/ControllerReturningObject', {  }, 
+			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>(
+			        '/JQuery/ControllerReturningObject', 
+			        {  }, 
 			        loadingPlaceholderSelector,
 			        disableElement
 			    );
 		}
 		public static ControllerReturningObjectWithParameters(echo: string, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>
 		{
-			return QueryController.query<IjQuerySampleResponseModel>('/JQuery/ControllerReturningObjectWithParameters', { 'echo': echo }, 
+			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>(
+			        '/JQuery/ControllerReturningObjectWithParameters', 
+			        { 'echo': echo }, 
+			        loadingPlaceholderSelector,
+			        disableElement
+			    );
+		}
+		public static VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<any>
+		{
+			return QueryController.query<any>(
+			        '/JQuery/VoidMethodWithParameters', 
+			        { 'model': model }, 
 			        loadingPlaceholderSelector,
 			        disableElement
 			    );
 		}
 	}
 }
-
 module Reinforced.Typings.Samples.Difficult.CodeGenerators.Models {
 	export interface IJQuerySampleResponseModel
 	{
+		Message: string;
+		Success: boolean;
+		CurrentTime: string;
 	}
 }

@@ -49,5 +49,11 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
             };
             return Json(result);
         }
+
+        [TsReturns(typeof(void))]
+        public ActionResult VoidMethodWithParameters(JQuerySampleResponseModel model)
+        {
+            return null;
+        }
     }
 }
