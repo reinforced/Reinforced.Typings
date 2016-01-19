@@ -26,7 +26,7 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 		}
 		public static ControllerReturningObject(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>
 		{
-			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>(
+			return QueryController.query<IJQuerySampleResponseModel>(
 			        '/JQuery/ControllerReturningObject', 
 			        {  }, 
 			        loadingPlaceholderSelector,
@@ -35,7 +35,7 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 		}
 		public static ControllerReturningObjectWithParameters(echo: string, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>
 		{
-			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>(
+			return QueryController.query<IJQuerySampleResponseModel>(
 			        '/JQuery/ControllerReturningObjectWithParameters', 
 			        { 'echo': echo }, 
 			        loadingPlaceholderSelector,
@@ -46,6 +46,15 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 		{
 			return QueryController.query<any>(
 			        '/JQuery/VoidMethodWithParameters', 
+			        { 'model': model }, 
+			        loadingPlaceholderSelector,
+			        disableElement
+			    );
+		}
+		public static VoidMethodWithParameters1(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<(arg: number, arg1: string) => any>
+		{
+			return QueryController.query<Reinforced.Typings.Ast.RtDelegateType>(
+			        '/JQuery/VoidMethodWithParameters1', 
 			        { 'model': model }, 
 			        loadingPlaceholderSelector,
 			        disableElement

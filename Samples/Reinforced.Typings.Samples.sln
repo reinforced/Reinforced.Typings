@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reinforced.Typings.Samples.Simple.Quickstart", "Simple\Reinforced.Typings.Samples.Simple.Quickstart\Reinforced.Typings.Samples.Simple.Quickstart.csproj", "{ABEAA485-7FE0-49CA-8F83-065BD767C2D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reinforced.Typings.Samples.Difficult.CodeGenerators", "Reinforced.Typings.Samples.Difficult.CodeGenerators\Reinforced.Typings.Samples.Difficult.CodeGenerators.csproj", "{8014B424-7ADF-4FA3-8772-7271861B6CB3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reinforced.Typings.Samples.Difficult.CodeGenerators", "Difficult\Reinforced.Typings.Samples.Difficult.CodeGenerators\Reinforced.Typings.Samples.Difficult.CodeGenerators.csproj", "{8014B424-7ADF-4FA3-8772-7271861B6CB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -24,7 +24,7 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         /// <param name="keySimpleType">Type for dictionary key</param>
         /// <param name="valueSimpleType">Type for disctionary value</param>
-        public RtDictionaryType(string keySimpleType,string valueSimpleType)
+        public RtDictionaryType(string keySimpleType, string valueSimpleType)
         {
             KeyType = new RtSimpleTypeName(keySimpleType);
             ValueType = new RtSimpleTypeName(valueSimpleType);
@@ -87,7 +87,7 @@ namespace Reinforced.Typings.Ast
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("{{ [{0}: key]: {1} }}",KeyType,ValueType);
+            return String.Format("{{ [key: {0}]: {1} }}", KeyType, ValueType);
         }
     }
 }

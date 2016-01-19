@@ -55,5 +55,11 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
         {
             return null;
         }
+
+        [TsReturns(typeof(Func<int,string,object>))]
+        public ActionResult VoidMethodWithParameters1(JQuerySampleResponseModel model)
+        {
+            return null;
+        }
     }
 }
