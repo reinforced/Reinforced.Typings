@@ -16,40 +16,9 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-            * 1.1
-            * * Introduced AST instead of direct code writing
-            * * Improved custom export
-			* 1.0.9
-			* * Fluent export of multiple generic types fix
-			* 1.0.8
-			* * Circular references bugfix
-			* 1.0.7
-			* * Bugfixes
-			* 1.0.6
-			* * Improved multiple files export
-			* * Fixed automatic references bugs
-			* 1.0.5
-			* * Fluent configuration. 
-			* * Added more XMLDOC documentation.
-			* * Ability to generate documentation from several sources (supported only with fluent configuration)
-			* * camelCase for selected type members
-			* * Minor bugfixes
-			* 1.0.4
-			* * Fixed invalid handling of IncludeNamespace parameter
-			* * Fixed invalid interfaces extension
-			* 1.0.3
-			* * Flexibility and usability fixes (adjusted defaults, added overloads)
-			* 1.0.2 
-			* * Automated documentation generation (disableable)
-			* * Constructors generation 			
-			* * Attribute for :base() call
-			* * Conditional disabling of TypeScript build via settings
-			* * Conditional disabling generation itself via settings
-			* * Automated pascal case for methods and properties (disableable)
-			* * Enumerations attribute fixed
-			* * Access modifiers during classes generation
-			* * Improved TypeResolver performance
-			* * Bug fixes
+            - Introduced AST instead of direct code writing
+            - Warning! All previously written code generators should be rewritten!
+            - Improved custom export			
 		</releaseNotes>
     </metadata>
 </package>
