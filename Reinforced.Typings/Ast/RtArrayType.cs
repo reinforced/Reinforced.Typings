@@ -50,5 +50,13 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        public override string ToString()
+        {
+            return String.Format("{0}[]",ElementType);
+        }
     }
 }

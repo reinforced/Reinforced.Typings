@@ -96,7 +96,12 @@ namespace Reinforced.Typings.Ast
         public override string ToString()
         {
             string generics = _genericArguments.Length > 0 ? "<" + String.Join(",", _genericArguments.AsEnumerable()) + ">" : null;
-            return String.Concat(TypeName, generics);
+            var result = String.Concat(TypeName, generics);
+            if (!string.IsNullOrEmpty(Namespace))
+            {
+                result =  Namespace + "." + result;
+            }
+            return result;
         }
     }
 }

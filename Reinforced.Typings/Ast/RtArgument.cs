@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Reinforced.Typings.Ast
 {
@@ -55,6 +56,21 @@ namespace Reinforced.Typings.Ast
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
+        }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (IsVariableParameters) sb.Append("...");
+            sb.AppendFormat("{0}: {1}", Identifier, Type);
+            if (!string.IsNullOrEmpty(DefaultValue))
+            {
+                sb.AppendFormat(" = {0}", DefaultValue);
+            }
+            return sb.ToString();
         }
     }
 }

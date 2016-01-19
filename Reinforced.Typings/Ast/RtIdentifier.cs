@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reinforced.Typings.Ast
 {
@@ -57,6 +58,15 @@ namespace Reinforced.Typings.Ast
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
+        }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return IdentifierName + (IsNullable?"?":String.Empty);
         }
     }
 }

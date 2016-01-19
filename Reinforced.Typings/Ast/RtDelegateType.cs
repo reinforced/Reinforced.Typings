@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Reinforced.Typings.Ast
 {
@@ -64,6 +66,14 @@ namespace Reinforced.Typings.Ast
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
+        }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        public override string ToString()
+        {
+            return String.Format("({0}) => {1}", String.Join(", ", Arguments.AsEnumerable()), Result);
         }
     }
 }

@@ -80,5 +80,14 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return String.Format("{{ [{0}: key]: {1} }}",KeyType,ValueType);
+        }
     }
 }
