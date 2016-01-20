@@ -1,5 +1,8 @@
-﻿class QueryController {
-    public static query<T>(url: string, data: any, progressSelector: string, disableSelector:string = ''): JQueryPromise<T> {
+var QueryController = (function () {
+    function QueryController() {
+    }
+    QueryController.query = function (url, data, progressSelector, disableSelector) {
+        if (disableSelector === void 0) { disableSelector = ''; }
         var promise = jQuery.Deferred();
         var query = {
             data: JSON.stringify(data),
@@ -7,7 +10,7 @@
             dataType: 'json',
             timeout: 9000000,
             traditional: false,
-            complete: () => {
+            complete: function () {
                 if (progressSelector && progressSelector.length > 0) {
                     $(progressSelector).find('span[data-role="progressContainer"]').remove();
                 }
@@ -15,23 +18,22 @@
                     $(disableSelector).prop('disabled', false);
                 }
             },
-            success: (response: T) => {
+            success: function (response) {
                 promise.resolve(response);
             },
-            error: (request, status, error) => {
+            error: function (request, status, error) {
                 promise.reject({ Success: false, Message: error.toString(), Data: error });
             }
         };
-
         if (progressSelector && progressSelector.length > 0) {
             $(progressSelector).append('<span data-role="progressContainer"> Loading ... </span>');
         }
-
         if (disableSelector && disableSelector.length > 0) {
-            $(disableSelector).prop('disabled',true);
+            $(disableSelector).prop('disabled', true);
         }
-
-        $.ajax(url,<any>query);
+        $.ajax(url, query);
         return promise;
-    }
-} 
+    };
+    return QueryController;
+})();
+//# sourceMappingURL=query.js.map

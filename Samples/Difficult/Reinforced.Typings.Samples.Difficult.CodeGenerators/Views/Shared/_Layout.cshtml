@@ -4,12 +4,16 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Reinforced.Typings Test Application</title>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-2.1.4.min.js")"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css"/>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/ReinforcedTypings/query.js"></script>
+    <script type="text/javascript" src="/Scripts/ReinforcedTypings/GeneratedTypings.js"></script>
     @RenderSection("Scripts", required: false)
 </head>
 <body>
-<div>
-    @RenderBody()
-</div>
+    <div class="container">
+        @RenderBody()
+    </div>
 </body>
 </html>

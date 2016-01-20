@@ -85,6 +85,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             string path = String.Format("/{0}/{1}", controller, element.Name);
 
             // Here we are constructing our glue code
+            // Please refer to /Scripts/ReinforcedTypings/query.ts for implementation of QueryController.query method
             string code = String.Format(
 @"return QueryController.query<{2}>(
         '{0}', 
@@ -96,6 +97,12 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
 
             // Here we just set method body and return method node
             result.Body = new RtRaw(code);
+
+            // Also here we will add some JSDOC
+            result.Documentation = new RtJsdocNode(){Description = String.Format("Wrapper method for call {0} of {1}",element.Name,element.DeclaringType.Name)};
+
+            // That's all. here we return node that will be written to target file.
+            // Check result in /Scripts/ReinforcedTypings/GeneratedTypings.ts
             return result;
         }
     }

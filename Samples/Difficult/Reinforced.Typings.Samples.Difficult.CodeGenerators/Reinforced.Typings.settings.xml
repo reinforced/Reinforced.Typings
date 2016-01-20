@@ -17,7 +17,7 @@
 			It is not used if RtDivideTypesAmongFiles='true' specified.
 			Important! Do not forget to include generated file to solution.
 		-->
-		<RtTargetFile>$(ProjectDir)Scripts\project.ts</RtTargetFile>
+		<RtTargetFile>$(ProjectDir)Scripts\ReinforcedTypings\GeneratedTypings.ts</RtTargetFile>
 		
 		<!--
 			This property sets RT configuration method for fluent configuration.

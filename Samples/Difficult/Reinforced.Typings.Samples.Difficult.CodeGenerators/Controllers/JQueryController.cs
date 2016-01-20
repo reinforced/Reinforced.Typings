@@ -15,19 +15,19 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
     public class JQueryController : Controller
     {
         [TsReturns(typeof(int))]
-        public ActionResult SimpleIntControllerMethod()
+        public ActionResult SimpleIntMethod()
         {
-            return Json(0);
+            return Json(new Random().Next(100));
         }
 
         [TsReturns(typeof(string))]
-        public ActionResult ControllerMethodWithParameters(int number, string s, bool boolValue)
+        public ActionResult MethodWithParameters(int num, string s, bool boolValue)
         {
-            return Json(string.Format("{0}-{1}-{2}", number, s, boolValue));
+            return Json(string.Format("{0}-{1}-{2}", num, s, boolValue));
         }
 
         [TsReturns(typeof(JQuerySampleResponseModel))]
-        public ActionResult ControllerReturningObject()
+        public ActionResult ReturningObject()
         {
             var result = new JQuerySampleResponseModel()
             {
@@ -39,7 +39,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
         }
 
         [TsReturns(typeof(JQuerySampleResponseModel))]
-        public ActionResult ControllerReturningObjectWithParameters(string echo)
+        public ActionResult ReturningObjectWithParameters(string echo)
         {
             var result = new JQuerySampleResponseModel()
             {
@@ -52,12 +52,6 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
 
         [TsReturns(typeof(void))]
         public ActionResult VoidMethodWithParameters(JQuerySampleResponseModel model)
-        {
-            return null;
-        }
-
-        [TsReturns(typeof(Func<int,string,object>))]
-        public ActionResult VoidMethodWithParameters1(JQuerySampleResponseModel model)
         {
             return null;
         }

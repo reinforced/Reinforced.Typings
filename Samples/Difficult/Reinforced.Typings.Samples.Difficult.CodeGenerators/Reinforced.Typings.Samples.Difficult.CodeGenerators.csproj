@@ -21,7 +21,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <NuGetPackageImportStamp>96a1bd26</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>a0b0e5eb</NuGetPackageImportStamp>
     <TypeScriptToolsVersion>1.5</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -43,8 +43,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Reinforced.Typings">
-      <HintPath>..\..\packages\Reinforced.Typings.1.1\lib\net45\Reinforced.Typings.dll</HintPath>
+    <Reference Include="Reinforced.Typings, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Reinforced.Typings.1.2\lib\net45\Reinforced.Typings.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -176,13 +177,24 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Reinforced.Typings.settings.xml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -215,7 +227,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\project.ts" />
+    <TypeScriptCompile Include="Scripts\ReinforcedTypings\GeneratedTypings.ts" />
+    <TypeScriptCompile Include="Scripts\ReinforcedTypings\IndexPage.ts" />
     <TypeScriptCompile Include="Scripts\ReinforcedTypings\query.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
@@ -248,12 +261,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\..\packages\Reinforced.Typings.1.1\build\Reinforced.Typings.targets" Condition="Exists('..\..\packages\Reinforced.Typings.1.1\build\Reinforced.Typings.targets')" />
+  <Import Project="..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets" Condition="Exists('..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Reinforced.Typings.1.1\build\Reinforced.Typings.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Reinforced.Typings.1.1\build\Reinforced.Typings.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
