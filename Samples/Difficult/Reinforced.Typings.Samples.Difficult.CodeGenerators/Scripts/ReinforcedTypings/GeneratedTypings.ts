@@ -3,53 +3,15 @@
 //     the code is regenerated.
 
 
-module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
-	app.factory('Api.AngularController', ['$http', ($http: ng.IHttpService) => new AngularController($http)]);
-	export class AngularController
+module Reinforced.Typings.Samples.Difficult.CodeGenerators.Models {
+	export interface ISampleResponseModel
 	{
-		constructor ($http: ng.IHttpService) { } 
-		public SimpleIntMethod() : ng.IPromise<number>
-		{
-			
-			var params = {  };
-			return this.http.post('/Angular/SimpleIntMethod', params)
-			    .then((response) => { response.data['requestParams'] = params; return response.data; });
-			
-		}
-		public MethodWithParameters(num: number, s: string, boolValue: boolean) : ng.IPromise<string>
-		{
-			
-			var params = { 'num': num, 's': s, 'boolValue': boolValue };
-			return this.http.post('/Angular/MethodWithParameters', params)
-			    .then((response) => { response.data['requestParams'] = params; return response.data; });
-			
-		}
-		public ReturningObject() : ng.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
-		{
-			
-			var params = {  };
-			return this.http.post('/Angular/ReturningObject', params)
-			    .then((response) => { response.data['requestParams'] = params; return response.data; });
-			
-		}
-		public ReturningObjectWithParameters(echo: string) : ng.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
-		{
-			
-			var params = { 'echo': echo };
-			return this.http.post('/Angular/ReturningObjectWithParameters', params)
-			    .then((response) => { response.data['requestParams'] = params; return response.data; });
-			
-		}
-		public VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel) : ng.IPromise<any>
-		{
-			
-			var params = { 'model': model };
-			return this.http.post('/Angular/VoidMethodWithParameters', params)
-			    .then((response) => { response.data['requestParams'] = params; return response.data; });
-			
-		}
-		private http: ng.IHttpService;
+		Message: string;
+		Success: boolean;
+		CurrentTime: string;
 	}
+}
+module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 	export class JQueryController
 	{
 		/** Wrapper method for call SimpleIntMethod of JQueryController */
@@ -103,12 +65,45 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 			    );
 		}
 	}
-}
-module Reinforced.Typings.Samples.Difficult.CodeGenerators.Models {
-	export interface ISampleResponseModel
+	app.factory('Api.AngularController', ['$http', ($http: ng.IHttpService) => new AngularController($http)]);
+	/** Result of AngularControllerGenerator activity */
+	export class AngularController
 	{
-		Message: string;
-		Success: boolean;
-		CurrentTime: string;
+		constructor ($http: ng.IHttpService)
+		{
+			this.http = $http;
+		}
+		public SimpleIntMethod() : ng.IPromise<number>
+		{
+			var params = {  };
+			return this.http.post('/Angular/SimpleIntMethod', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+		}
+		public MethodWithParameters(num: number, s: string, boolValue: boolean) : ng.IPromise<string>
+		{
+			var params = { 'num': num, 's': s, 'boolValue': boolValue };
+			return this.http.post('/Angular/MethodWithParameters', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+		}
+		public ReturningObject() : ng.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
+		{
+			var params = {  };
+			return this.http.post('/Angular/ReturningObject', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+		}
+		public ReturningObjectWithParameters(echo: string) : ng.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
+		{
+			var params = { 'echo': echo };
+			return this.http.post('/Angular/ReturningObjectWithParameters', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+		}
+		public VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel) : ng.IPromise<any>
+		{
+			var params = { 'model': model };
+			return this.http.post('/Angular/VoidMethodWithParameters', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+		}
+		/** Keeps $http instance received on construction */
+		private http: ng.IHttpService;
 	}
 }

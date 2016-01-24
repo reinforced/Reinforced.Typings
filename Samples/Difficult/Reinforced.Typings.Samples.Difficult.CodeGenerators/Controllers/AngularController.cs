@@ -8,7 +8,6 @@ using Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Angu
 
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
 {
-    [AngularController]
     public class AngularController : Controller
     {
         [AngularMethod(typeof(int))]

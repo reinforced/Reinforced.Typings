@@ -8,6 +8,10 @@ using Reinforced.Typings.Generators;
 
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Angular
 {
+    /// <summary>
+    /// Action call generator for controller method inside angularjs glue-class is quite similar
+    /// to jQuery's one.
+    /// </summary>
     public class AngularActionCallGenerator : MethodCodeGenerator
     {
         public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
@@ -15,9 +19,8 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             result = base.GenerateNode(element, result, resolver);
             if (result == null) return null;
 
+            // here we are overriding return type to corresponding promise
             var retType = result.ReturnType;
-
-            // ... and in case of void we just replace it with "any"
             bool isVoid = (retType is RtSimpleTypeName) && (((RtSimpleTypeName)retType).TypeName == "void");
 
             // we use TypeResolver to get "any" type to avoid redundant type name construction
@@ -43,14 +46,15 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             string controller = element.DeclaringType.Name.Replace("Controller", String.Empty);
             string path = String.Format("/{0}/{1}", controller, element.Name);
 
-            const string code = @"
-var params = {{ {1} }};
+            const string code = @"var params = {{ {1} }};
 return this.http.post('{0}', params)
-    .then((response) => {{ response.data['requestParams'] = params; return response.data; }});
-";
+    .then((response) => {{ response.data['requestParams'] = params; return response.data; }});";
+
             RtRaw body = new RtRaw(String.Format(code, path, dataParameters));
             result.Body = body;
 
+            // That's all. here we return node that will be written to target file.
+            // Check result in /Scripts/ReinforcedTypings/GeneratedTypings.ts
             return result;
         }
     }

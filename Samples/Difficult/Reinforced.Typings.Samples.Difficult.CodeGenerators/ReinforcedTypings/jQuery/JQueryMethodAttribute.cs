@@ -11,9 +11,9 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
     /// anyway have to specify exported methods in fluent configuration either 
     /// via attributes.
     /// </summary>
-    public class JQueryMethod : TsFunctionAttribute
+    public class JQueryMethodAttribute : TsFunctionAttribute
     {
-        public JQueryMethod(Type returnType)
+        public JQueryMethodAttribute(Type returnType)
         {
             // Here we override method return type for TypeScript export
             StrongType = returnType;

@@ -21,7 +21,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <NuGetPackageImportStamp>a0b0e5eb</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>17d2dfc3</NuGetPackageImportStamp>
     <TypeScriptToolsVersion>1.5</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -45,7 +45,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Reinforced.Typings, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Reinforced.Typings.1.2\lib\net45\Reinforced.Typings.dll</HintPath>
+      <HintPath>..\..\packages\Reinforced.Typings.1.2.1\lib\net45\Reinforced.Typings.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -177,7 +177,7 @@
     <Compile Include="ReinforcedTypings\Angular\AngularMethodAttribute.cs" />
     <Compile Include="ReinforcedTypings\Configuration.cs" />
     <Compile Include="ReinforcedTypings\jQuery\JQueryActionCallGenerator.cs" />
-    <Compile Include="ReinforcedTypings\jQuery\JQueryMethod.cs" />
+    <Compile Include="ReinforcedTypings\jQuery\JQueryMethodAttribute.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1055,12 +1055,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets" Condition="Exists('..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets')" />
+  <Import Project="..\..\packages\Reinforced.Typings.1.2.1\build\Reinforced.Typings.targets" Condition="Exists('..\..\packages\Reinforced.Typings.1.2.1\build\Reinforced.Typings.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Reinforced.Typings.1.2\build\Reinforced.Typings.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Reinforced.Typings.1.2.1\build\Reinforced.Typings.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Reinforced.Typings.1.2.1\build\Reinforced.Typings.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

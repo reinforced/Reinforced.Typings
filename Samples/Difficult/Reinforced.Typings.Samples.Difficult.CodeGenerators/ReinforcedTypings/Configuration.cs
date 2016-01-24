@@ -5,6 +5,7 @@ using System.Web;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers;
 using Reinforced.Typings.Samples.Difficult.CodeGenerators.Models;
+using Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Angular;
 
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings
 {
@@ -13,8 +14,19 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings
         public static void Configure(ConfigurationBuilder builder)
         {
             // Configuration for exporting JQuery infrastructure
-            builder.ExportAsClass<JQueryController>();
+
+            // Configuration exporting test model class as interface
             builder.ExportAsInterface<SampleResponseModel>().WithPublicProperties();
+
+            // Configuration for JQueryController
+            // Setting code generator for each method performed in JQueryMethodAttribute
+            builder.ExportAsClass<JQueryController>();
+
+            // Configuration for Angular.js-firndly controller
+            // Setting code generator for methods also performed in attribute - see AngularMethodAttribute
+            builder.ExportAsClass<AngularController>().WithCodeGenerator<AngularControllerGenerator>();
+            
+            
 
         }
     }
