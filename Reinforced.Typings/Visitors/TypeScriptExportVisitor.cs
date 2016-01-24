@@ -42,7 +42,7 @@ namespace Reinforced.Typings.Visitors
             else
             {
                 value = value.Replace("\r", null).Replace("\n", null);
-                DocLine(String.Format("{0} {1}",tagText,value));
+                DocLine(String.Format("{0} {1}", tagText, value));
             }
         }
         protected void DocLine(string line = null)
@@ -56,7 +56,7 @@ namespace Reinforced.Typings.Visitors
                 AppendTabs(); WriteLine(String.Format("* {0}", line));
             }
         }
-        
+
         private void Summary(string summary)
         {
             if (string.IsNullOrEmpty(summary)) return;
@@ -72,7 +72,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (node == null) return;
             Visit(node.Documentation);
-            AppendTabs(); 
+            AppendTabs();
             if (Context != WriterContext.Interface) Modifiers(node);
             Visit(node.Identifier);
             Write(": ");
@@ -83,7 +83,7 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtInterface node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Visit(node.Documentation);
             var prev = Context;
             Context = WriterContext.Interface;
@@ -94,7 +94,7 @@ namespace Reinforced.Typings.Visitors
             if (node.Implementees.Count > 0)
             {
                 Write(" extends ");
-                SequentialVisit(node.Implementees,", ");
+                SequentialVisit(node.Implementees, ", ");
             }
             Br(); AppendTabs();
             Write("{"); Br();
@@ -110,13 +110,13 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtFuncion node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Visit(node.Documentation);
-            AppendTabs(); 
+            AppendTabs();
             if (Context != WriterContext.Interface) Modifiers(node);
             Visit(node.Identifier);
             Write("(");
-            SequentialVisit(node.Arguments,", ");
+            SequentialVisit(node.Arguments, ", ");
             Write(") ");
             if (node.ReturnType != null)
             {
@@ -158,7 +158,7 @@ namespace Reinforced.Typings.Visitors
             AppendTabs();
             WriteLine("{");
             Tab();
-                WriteLines(content);
+            WriteLines(content);
             UnTab();
             AppendTabs();
             WriteLine("}");
@@ -170,7 +170,7 @@ namespace Reinforced.Typings.Visitors
             AppendTabs();
             WriteLine("{");
             Tab();
-                Visit(content);
+            Visit(content);
             UnTab();
             AppendTabs();
             WriteLine("}");
@@ -178,7 +178,7 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtArgument node)
         {
-            if (node==null) return;
+            if (node == null) return;
             if (node.IsVariableParameters) Write("...");
             Visit(node.Identifier);
             Write(": ");
@@ -225,21 +225,21 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtIdentifier node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Write(node.IdentifierName);
             if (node.IsNullable) Write("?");
         }
 
         public override void Visit(RtRaw node)
         {
-            if (node==null) return;
+            if (node == null) return;
             if (string.IsNullOrEmpty(node.RawContent)) return;
             WriteLines(node.RawContent);
         }
 
         public override void Visit(RtJsdocNode node)
         {
-            if (node==null) return;
+            if (node == null) return;
 
             if (!node.Description.Contains("\n") && node.TagToDescription.Count == 0)
             {
@@ -264,13 +264,13 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtModule node)
         {
-            if (node==null) return;
-            
+            if (node == null) return;
+
             if (!node.IsAbstractModule)
             {
                 Context = WriterContext.Module;
                 AppendTabs();
-                WriteLine(String.Format("module {0} {{",node.ModuleName));
+                WriteLine(String.Format("module {0} {{", node.ModuleName));
                 Tab();
             }
             foreach (var rtCompilationUnit in node.CompilationUnits)
@@ -288,7 +288,7 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtEnumValue node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Visit(node.Documentation);
             AppendTabs();
             Write(node.EnumValueName);
@@ -301,11 +301,11 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtEnum node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Visit(node.Documentation);
             var prev = Context;
             Context = WriterContext.Interface;
-            AppendTabs(); 
+            AppendTabs();
             if (prev == WriterContext.Module) Write("export ");
             Write("enum ");
             Visit(node.EnumName);
@@ -325,21 +325,21 @@ namespace Reinforced.Typings.Visitors
         {
             if (node == null) return;
             Write("(");
-            SequentialVisit(node.Arguments,", ");
+            SequentialVisit(node.Arguments, ", ");
             Write(") => ");
             Visit(node.Result);
         }
 
         protected void SequentialVisit<T>(IEnumerable<T> nodes, string separator)
-            where T: RtNode
+            where T : RtNode
         {
             var n = nodes.ToArray();
-           for (int index = 0; index < n.Length; index++)
+            for (int index = 0; index < n.Length; index++)
             {
                 var rtArgument = n[index];
                 Visit(rtArgument);
                 if (index < n.Length - 1) Write(separator);
-            } 
+            }
         }
 
         public override void Visit(RtSimpleTypeName node)
@@ -353,7 +353,7 @@ namespace Reinforced.Typings.Visitors
             if (node.GenericArguments.Length > 0)
             {
                 Write("<");
-                SequentialVisit(node.GenericArguments,", ");
+                SequentialVisit(node.GenericArguments, ", ");
                 Write(">");
             }
         }
@@ -373,22 +373,28 @@ namespace Reinforced.Typings.Visitors
 
         public override void Visit(RtConstructor node)
         {
-            if (node==null) return;
-            if (Context==WriterContext.Interface) return;
+            if (node == null) return;
+            if (Context == WriterContext.Interface) return;
 
             AppendTabs(); Write("constructor (");
-            SequentialVisit(node.Arguments,", ");
+            SequentialVisit(node.Arguments, ", ");
             Write(")");
-            if (node.NeedsSuperCall)
+            if (node.NeedsSuperCall && node.Body == null)
             {
                 string ncp = string.Empty;
                 if (node.SuperCallParameters != null) ncp = string.Join(", ", node.SuperCallParameters);
-                CodeBlock(String.Format("super({0});", ncp));
+                node.Body = new RtRaw(String.Format("super({0});", ncp));
+            }
+
+            if (node.Body != null && !string.IsNullOrEmpty(node.Body.RawContent))
+            {
+                CodeBlock(node.Body);
             }
             else
             {
                 EmptyBody(null);
             }
+
         }
     }
 

@@ -4,6 +4,52 @@
 
 
 module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
+	app.factory('Api.AngularController', ['$http', ($http: ng.IHttpService) => new AngularController($http)]);
+	export class AngularController
+	{
+		constructor ($http: ng.IHttpService) { } 
+		public SimpleIntMethod() : ng.IPromise<number>
+		{
+			
+			var params = {  };
+			return this.http.post('/Angular/SimpleIntMethod', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+			
+		}
+		public MethodWithParameters(num: number, s: string, boolValue: boolean) : ng.IPromise<string>
+		{
+			
+			var params = { 'num': num, 's': s, 'boolValue': boolValue };
+			return this.http.post('/Angular/MethodWithParameters', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+			
+		}
+		public ReturningObject() : ng.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
+		{
+			
+			var params = {  };
+			return this.http.post('/Angular/ReturningObject', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+			
+		}
+		public ReturningObjectWithParameters(echo: string) : ng.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
+		{
+			
+			var params = { 'echo': echo };
+			return this.http.post('/Angular/ReturningObjectWithParameters', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+			
+		}
+		public VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel) : ng.IPromise<any>
+		{
+			
+			var params = { 'model': model };
+			return this.http.post('/Angular/VoidMethodWithParameters', params)
+			    .then((response) => { response.data['requestParams'] = params; return response.data; });
+			
+		}
+		private http: ng.IHttpService;
+	}
 	export class JQueryController
 	{
 		/** Wrapper method for call SimpleIntMethod of JQueryController */
@@ -27,9 +73,9 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 			    );
 		}
 		/** Wrapper method for call ReturningObject of JQueryController */
-		public static ReturningObject(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>
+		public static ReturningObject(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
 		{
-			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>(
+			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>(
 			        '/JQuery/ReturningObject', 
 			        {  }, 
 			        loadingPlaceholderSelector,
@@ -37,9 +83,9 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 			    );
 		}
 		/** Wrapper method for call ReturningObjectWithParameters of JQueryController */
-		public static ReturningObjectWithParameters(echo: string, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>
+		public static ReturningObjectWithParameters(echo: string, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
 		{
-			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel>(
+			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>(
 			        '/JQuery/ReturningObjectWithParameters', 
 			        { 'echo': echo }, 
 			        loadingPlaceholderSelector,
@@ -47,7 +93,7 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 			    );
 		}
 		/** Wrapper method for call VoidMethodWithParameters of JQueryController */
-		public static VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.IJQuerySampleResponseModel, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<any>
+		public static VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<any>
 		{
 			return QueryController.query<any>(
 			        '/JQuery/VoidMethodWithParameters', 
@@ -59,7 +105,7 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 	}
 }
 module Reinforced.Typings.Samples.Difficult.CodeGenerators.Models {
-	export interface IJQuerySampleResponseModel
+	export interface ISampleResponseModel
 	{
 		Message: string;
 		Success: boolean;

@@ -32,7 +32,8 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
         {
             // Here we get default result of method export
             result =  base.GenerateNode(element, result, resolver);
-            
+            if (result == null) return null;
+
             // We make method static since we will call it like JQueryController.Method
             result.IsStatic = true;
 

@@ -13,6 +13,38 @@ var Reinforced;
                 (function (CodeGenerators) {
                     var Controllers;
                     (function (Controllers) {
+                        app.factory('Api.AngularController', ['$http', function ($http) { return new AngularController($http); }]);
+                        var AngularController = (function () {
+                            function AngularController($http) {
+                            }
+                            AngularController.prototype.SimpleIntMethod = function () {
+                                var params = {};
+                                return this.http.post('/Angular/SimpleIntMethod', params)
+                                    .then(function (response) { response.data['requestParams'] = params; return response.data; });
+                            };
+                            AngularController.prototype.MethodWithParameters = function (num, s, boolValue) {
+                                var params = { 'num': num, 's': s, 'boolValue': boolValue };
+                                return this.http.post('/Angular/MethodWithParameters', params)
+                                    .then(function (response) { response.data['requestParams'] = params; return response.data; });
+                            };
+                            AngularController.prototype.ReturningObject = function () {
+                                var params = {};
+                                return this.http.post('/Angular/ReturningObject', params)
+                                    .then(function (response) { response.data['requestParams'] = params; return response.data; });
+                            };
+                            AngularController.prototype.ReturningObjectWithParameters = function (echo) {
+                                var params = { 'echo': echo };
+                                return this.http.post('/Angular/ReturningObjectWithParameters', params)
+                                    .then(function (response) { response.data['requestParams'] = params; return response.data; });
+                            };
+                            AngularController.prototype.VoidMethodWithParameters = function (model) {
+                                var params = { 'model': model };
+                                return this.http.post('/Angular/VoidMethodWithParameters', params)
+                                    .then(function (response) { response.data['requestParams'] = params; return response.data; });
+                            };
+                            return AngularController;
+                        })();
+                        Controllers.AngularController = AngularController;
                         var JQueryController = (function () {
                             function JQueryController() {
                             }

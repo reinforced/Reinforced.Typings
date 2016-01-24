@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.WebSockets;
 using Reinforced.Typings.Samples.Difficult.CodeGenerators.Models;
 using Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings;
+using Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.jQuery;
 
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
 {
@@ -14,22 +15,22 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
     /// </summary>
     public class JQueryController : Controller
     {
-        [TsReturns(typeof(int))]
+        [JQueryMethod(typeof(int))]
         public ActionResult SimpleIntMethod()
         {
             return Json(new Random().Next(100));
         }
 
-        [TsReturns(typeof(string))]
+        [JQueryMethod(typeof(string))]
         public ActionResult MethodWithParameters(int num, string s, bool boolValue)
         {
             return Json(string.Format("{0}-{1}-{2}", num, s, boolValue));
         }
 
-        [TsReturns(typeof(JQuerySampleResponseModel))]
+        [JQueryMethod(typeof(SampleResponseModel))]
         public ActionResult ReturningObject()
         {
-            var result = new JQuerySampleResponseModel()
+            var result = new SampleResponseModel()
             {
                 CurrentTime = DateTime.Now.ToLongTimeString(),
                 Message = "Hello!",
@@ -38,10 +39,10 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
             return Json(result);
         }
 
-        [TsReturns(typeof(JQuerySampleResponseModel))]
+        [JQueryMethod(typeof(SampleResponseModel))]
         public ActionResult ReturningObjectWithParameters(string echo)
         {
-            var result = new JQuerySampleResponseModel()
+            var result = new SampleResponseModel()
             {
                 CurrentTime = DateTime.Now.ToLongTimeString(),
                 Message = echo,
@@ -50,8 +51,8 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
             return Json(result);
         }
 
-        [TsReturns(typeof(void))]
-        public ActionResult VoidMethodWithParameters(JQuerySampleResponseModel model)
+        [JQueryMethod(typeof(void))]
+        public ActionResult VoidMethodWithParameters(SampleResponseModel model)
         {
             return null;
         }
