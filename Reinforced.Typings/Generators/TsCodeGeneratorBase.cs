@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings.Generators
 {
@@ -12,7 +13,7 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     /// <typeparam name="T">Source reflection [Something]Info type. Possible: Type, MethodInfo, PropertyInfo, ConstructorInfo, FieldInfo</typeparam>
     /// <typeparam name="TNode">Resulting node type</typeparam>
-    public abstract class TsCodeGeneratorBase<T,TNode> : ITsCodeGenerator<T>
+    public abstract class TsCodeGeneratorBase<T, TNode> : ITsCodeGenerator<T>
         where TNode : RtNode, new()
     {
         /// <summary>
@@ -29,11 +30,20 @@ namespace Reinforced.Typings.Generators
         /// <returns>Generated node or null</returns>
         public RtNode Generate(T element, TypeResolver resolver)
         {
-            TNode currentNode = new TNode();
-            Context.Location.SetLocation(currentNode);
-            var result = GenerateNode(element, currentNode, resolver);
-            Context.Location.ResetLocation(currentNode);
-            return result;
+            try
+            {
+                TNode currentNode = new TNode();
+                Context.Location.SetLocation(currentNode);
+                var result = GenerateNode(element, currentNode, resolver);
+                Context.Location.ResetLocation(currentNode);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.RTE0004_GeneratorError.Throw(GetType().FullName, ex.Message);
+                return null; // unreacheable
+            }
+            
         }
 
         /// <summary>

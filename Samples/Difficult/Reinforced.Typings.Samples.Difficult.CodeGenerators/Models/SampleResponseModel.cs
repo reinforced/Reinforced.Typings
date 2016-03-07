@@ -11,4 +11,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Models
         public bool Success { get; set; }
         public string CurrentTime { get; set; }
     }
+
+
+    
 }

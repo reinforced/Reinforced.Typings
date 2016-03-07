@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
@@ -106,6 +107,7 @@ namespace Reinforced.Typings.Generators
                     ExportProperties(sw, element.BaseType, resolver, basExSwtch);
                     ExportMethods(sw, element.BaseType, resolver, basExSwtch);
                     Context.SpecialCase = false;
+                    Context.Warnings.Add(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element.BaseType.FullName,element.FullName));
                 }
             }
         }

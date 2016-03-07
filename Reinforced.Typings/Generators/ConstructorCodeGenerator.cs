@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
@@ -110,6 +111,7 @@ namespace Reinforced.Typings.Generators
             var mockedCtorParams = Enumerable.Repeat("null", maxParams);
             constructor.NeedsSuperCall = true;
             constructor.SuperCallParameters.AddRange(mockedCtorParams);
+            Context.Warnings.Add(ErrorMessages.RTW0004_DefaultSuperCall.Warn(element.DeclaringType.FullName));
         }
     }
 }

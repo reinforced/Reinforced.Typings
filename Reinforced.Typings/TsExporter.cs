@@ -43,7 +43,7 @@ namespace Reinforced.Typings
         {
             if (_isAnalyzed) return;
             _context.Documentation =
-                new DocumentationManager(_context.GenerateDocumentation ? _context.DocumentationFilePath : null);
+                new DocumentationManager(_context.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
             {
@@ -54,7 +54,7 @@ namespace Reinforced.Typings
 
                 foreach (var additionalDocumentationPath in _configurationRepository.AdditionalDocumentationPathes)
                 {
-                    _context.Documentation.CacheDocumentation(additionalDocumentationPath);
+                    _context.Documentation.CacheDocumentation(additionalDocumentationPath, _context.Warnings);
                 }
             }
 
@@ -72,8 +72,6 @@ namespace Reinforced.Typings
                     ConfigurationRepository.Instance.AddFileSeparationSettings(type);
                 }
             }
-
-            var grp = _allTypes.GroupBy(c => c.GetNamespace(true));
 
             _context.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())

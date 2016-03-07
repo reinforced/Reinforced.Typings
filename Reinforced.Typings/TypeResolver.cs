@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Generators;
 
 namespace Reinforced.Typings
@@ -139,7 +140,7 @@ namespace Reinforced.Typings
             return _defaultNsgenerator;
         }
 
-        private ITsCodeGenerator<T> GetFromAttribute<T>(TsAttributeBase attr, ExportContext context) 
+        private ITsCodeGenerator<T> GetFromAttribute<T>(TsAttributeBase attr, ExportContext context)
         {
             if (attr != null)
             {
@@ -149,15 +150,22 @@ namespace Reinforced.Typings
             return null;
         }
 
-        private ITsCodeGenerator<T> LazilyInstantiateGenerator<T>(Type generatorType, ExportContext context) 
+        private ITsCodeGenerator<T> LazilyInstantiateGenerator<T>(Type generatorType, ExportContext context)
         {
             lock (_generatorsCache)
             {
                 if (!_generatorsCache.ContainsKey(generatorType))
                 {
-                    _generatorsCache[generatorType] = Activator.CreateInstance(generatorType);
-                    var gen = (ITsCodeGenerator<T>)_generatorsCache[generatorType];
-                    gen.Context = context;
+                    try
+                    {
+                        _generatorsCache[generatorType] = Activator.CreateInstance(generatorType);
+                        var gen = (ITsCodeGenerator<T>)_generatorsCache[generatorType];
+                        gen.Context = context;
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessages.RTE0003_GeneratorInstantiate.Throw(generatorType.FullName, ex.Message);
+                    }
                 }
                 return (ITsCodeGenerator<T>)_generatorsCache[generatorType];
             }
@@ -186,6 +194,20 @@ namespace Reinforced.Typings
         /// <param name="t">Specified type</param>
         /// <returns>Typescript-friendly type name</returns>
         public RtTypeName ResolveTypeName(Type t)
+        {
+            try
+            {
+                return ResolveTypeNameInner(t);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.RTE0005_TypeResolvationError.Throw(t.FullName, ex.Message);
+                return null; // unreacheable
+            }
+        }
+
+
+        private RtTypeName ResolveTypeNameInner(Type t)
         {
             if (_resolveCache.ContainsKey(t)) return _resolveCache[t];
 
@@ -251,6 +273,7 @@ namespace Reinforced.Typings
                 var methodInfo = t.GetMethod("Invoke");
                 return Cache(t, ConstructFunctionType(methodInfo));
             }
+            _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
 
             return Cache(t, AnyType);
         }

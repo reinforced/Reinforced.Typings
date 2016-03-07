@@ -18,6 +18,11 @@ namespace Reinforced.Typings.Ast
         public RtTypeName Type { get; set; }
 
         /// <summary>
+        /// TypeScript expression to initialize field
+        /// </summary>
+        public string InitializationExpression { get; set; }
+
+        /// <summary>
         /// Child nodes
         /// </summary>
         public override IEnumerable<RtNode> Children

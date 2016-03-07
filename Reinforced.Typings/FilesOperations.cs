@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings
 {
@@ -21,31 +22,43 @@ namespace Reinforced.Typings
             {
                 var origFile = Path.GetFileNameWithoutExtension(tmpFile);
                 var origDir = Path.GetDirectoryName(tmpFile);
-
                 origFile = Path.Combine(origDir, origFile);
-
-                if (File.Exists(origFile)) File.Delete(origFile);
-                File.Move(tmpFile, origFile);
+                try
+                {
+                    if (File.Exists(origFile)) File.Delete(origFile);
+                    File.Move(tmpFile, origFile);
 #if DEBUG
                 Console.WriteLine("File replaced: {0} -> {1}", tmpFile, origFile);
 #endif
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessages.RTE0002_DeployingFilesError.Throw(origFile, ex.Message);
+                }
             }
         }
 
         public string GetTmpFile(string fileName)
         {
             fileName = fileName + ".tmp";
-            var dir = Path.GetDirectoryName(fileName);
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-
-            if (File.Exists(fileName))
+            try
             {
-                File.Delete(fileName);
-            }
+                var dir = Path.GetDirectoryName(fileName);
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
 #if DEBUG
             Console.WriteLine("Test file aquired: {0}", fileName);
 #endif
-            _tmpFiles.Add(fileName);
+                _tmpFiles.Add(fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.RTE0001_TempFileError.Throw(fileName, ex.Message);
+            }
             return fileName;
         }
 
@@ -82,7 +95,7 @@ namespace Reinforced.Typings
         {
             var currentFile = GetPathForType(currentlyExportingType);
             var desiredFile = GetPathForType(typeToReference);
-            if (currentFile==desiredFile) return String.Empty;
+            if (currentFile == desiredFile) return String.Empty;
 
             var desiredFileName = Path.GetFileName(desiredFile);
 

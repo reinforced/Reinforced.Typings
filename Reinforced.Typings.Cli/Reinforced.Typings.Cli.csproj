@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConsoleHelpAttribute.cs" />
+    <Compile Include="VisualStudioFriendlyMessageType.cs" />
     <Compile Include="ExporterConsoleParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisualStudioFriendlyErrorMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

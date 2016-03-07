@@ -77,6 +77,11 @@ namespace Reinforced.Typings.Visitors
             Visit(node.Identifier);
             Write(": ");
             Visit(node.Type);
+            if (!string.IsNullOrEmpty(node.InitializationExpression))
+            {
+                Write(" = ");
+                Write(node.InitializationExpression);
+            }
             Write(";");
             Br();
         }

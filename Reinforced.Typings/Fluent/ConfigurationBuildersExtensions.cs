@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent.Generic;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -22,7 +23,15 @@ namespace Reinforced.Typings.Fluent
                 var conf =
                     (PropertyExportConfiguration)
                         tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfiguration());
-                if (configuration != null) configuration(conf);
+                if (configuration == null) continue;
+                try
+                {
+                    configuration(conf);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessages.RTE0006_FluentSingleError.Throw(ex.Message, "property", string.Format("{0}.{1}", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
+                }
             }
             return tc;
         }
@@ -30,22 +39,30 @@ namespace Reinforced.Typings.Fluent
         private static T ApplyMethodsConfiguration<T>(T tc, IEnumerable<MethodInfo> methds,
             Action<MethodExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
         {
+
             foreach (var methodInfo in methds)
             {
                 var conf =
                     (MethodExportConfiguration)
                         tc.MembersConfiguration.GetOrCreate(methodInfo, () => new MethodExportConfiguration());
-                if (configuration != null) configuration(conf);
+                if (configuration == null) continue;
+                try
+                {
+                    configuration(conf);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessages.RTE0006_FluentSingleError.Throw(ex.Message, "method", string.Format("{0}.{1}(...)", methodInfo.DeclaringType.FullName, methodInfo.Name));
+                }
             }
             return tc;
+
         }
 
         private static void ExtractParameters(ITypeConfigurationBuilder conf, LambdaExpression methodLambda)
         {
             var mex = methodLambda.Body as MethodCallExpression;
-            if (mex == null)
-                throw new Exception(
-                    "MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
+            if (mex == null) ErrorMessages.RTE0008_FluentWithMethodError.Throw();
             var mi = mex.Method;
 
             var methodParameters = mi.GetParameters();
@@ -98,10 +115,7 @@ namespace Reinforced.Typings.Fluent
                                 }
                             }
                             if (!parsed)
-                                throw new Exception(
-                                    string.Format(
-                                        "Sorry, but {0} is not very good idea for parameter configuration. Try using simple lambda expression.",
-                                        call.Arguments[0]));
+                                ErrorMessages.RTE0009_FluentWithMethodCouldNotParse.Throw(call.Arguments[0]);
                         }
                     }
                 }
@@ -513,7 +527,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithPublicMethods<T>(this T tc, Action<MethodExportConfiguration> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Static |BindingFlags.Instance| BindingFlags.DeclaredOnly);
+            var prop = tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -559,7 +573,17 @@ namespace Reinforced.Typings.Fluent
                     t = typeof(GenericInterfaceConfigurationBuilder);
                     return (ITypeConfigurationBuilder)Activator.CreateInstance(t, tp);
                 });
-                if (configuration != null) configuration(conf);
+                if (configuration != null)
+                {
+                    try
+                    {
+                        configuration(conf);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessages.RTE0006_FluentSingleError.Throw(ex.Message, "type", type.FullName);
+                    }
+                }
             }
         }
 
@@ -603,9 +627,19 @@ namespace Reinforced.Typings.Fluent
                     }
                     t = typeof(GenericClassConfigurationBuilder);
                     return (ITypeConfigurationBuilder)Activator.CreateInstance(t, tp);
-                    
+
                 });
-                if (configuration != null) configuration(conf);
+                if (configuration != null)
+                {
+                    try
+                    {
+                        configuration(conf);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessages.RTE0006_FluentSingleError.Throw(ex.Message, "type", type.FullName);
+                    }
+                }
             }
         }
 
@@ -645,7 +679,17 @@ namespace Reinforced.Typings.Fluent
                     var t = typeof(EnumConfigurationBuilder<>).MakeGenericType(tp);
                     return (IEnumConfigurationBuidler)Activator.CreateInstance(t, true);
                 });
-                if (configuration != null) configuration(conf);
+                if (configuration != null)
+                {
+                    try
+                    {
+                        configuration(conf);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessages.RTE0006_FluentSingleError.Throw(ex.Message, "enum", type.FullName);
+                    }
+                }
             }
         }
 

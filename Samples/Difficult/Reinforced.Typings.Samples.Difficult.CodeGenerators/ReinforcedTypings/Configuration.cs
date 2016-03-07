@@ -25,8 +25,8 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings
             // Configuration for Angular.js-firndly controller
             // Setting code generator for methods also performed in attribute - see AngularMethodAttribute
             builder.ExportAsClass<AngularController>().WithCodeGenerator<AngularControllerGenerator>();
-            
-            
+
+            builder.ExportAsClass<MyCoolEnum>().WithCodeGenerator<ClassEnumCodeGenerator>();
 
         }
     }

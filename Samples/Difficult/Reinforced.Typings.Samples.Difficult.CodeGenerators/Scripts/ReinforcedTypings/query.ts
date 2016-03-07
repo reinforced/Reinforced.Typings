@@ -5,6 +5,7 @@
             data: JSON.stringify(data),
             type: 'post',
             dataType: 'json',
+            contentType:'application/json',
             timeout: 9000000,
             traditional: false,
             complete: () => {

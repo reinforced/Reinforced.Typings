@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings.Fluent
 {
@@ -19,9 +20,9 @@ namespace Reinforced.Typings.Fluent
         public static PropertyInfo ParsePropertyLambda<T1, T2>(Expression<Func<T1, T2>> lambda)
         {
             var mex = lambda.Body as MemberExpression;
-            if (mex == null) throw new Exception("Here should be property");
+            if (mex == null) ErrorMessages.RTE0010_PropertyLambdaExpected.Throw(lambda.ToString());
             var pi = mex.Member as PropertyInfo;
-            if (pi == null) throw new Exception("Here should be property");
+            if (pi == null) ErrorMessages.RTE0010_PropertyLambdaExpected.Throw(lambda.ToString());
             return pi;
         }
 
@@ -33,9 +34,9 @@ namespace Reinforced.Typings.Fluent
         public static PropertyInfo ParsePropertyLambda(LambdaExpression lambda)
         {
             var mex = lambda.Body as MemberExpression;
-            if (mex == null) throw new Exception("Here should be property");
+            if (mex == null) ErrorMessages.RTE0010_PropertyLambdaExpected.Throw(lambda.ToString());
             var pi = mex.Member as PropertyInfo;
-            if (pi == null) throw new Exception("Here should be property");
+            if (pi == null) ErrorMessages.RTE0010_PropertyLambdaExpected.Throw(lambda.ToString());
             return pi;
         }
 
@@ -49,9 +50,9 @@ namespace Reinforced.Typings.Fluent
         public static FieldInfo ParseFieldLambda<T1, T2>(Expression<Func<T1, T2>> lambda)
         {
             var mex = lambda.Body as MemberExpression;
-            if (mex == null) throw new Exception("Here should be field");
+            if (mex == null) ErrorMessages.RTE0011_FieldLambdaExpected.Throw(lambda.ToString());
             var pi = mex.Member as FieldInfo;
-            if (pi == null) throw new Exception("Here should be field");
+            if (pi == null) ErrorMessages.RTE0011_FieldLambdaExpected.Throw(lambda.ToString());
             return pi;
         }
 
@@ -63,9 +64,9 @@ namespace Reinforced.Typings.Fluent
         public static FieldInfo ParseFieldLambda(LambdaExpression lambda)
         {
             var mex = lambda.Body as MemberExpression;
-            if (mex == null) throw new Exception("Here should be field");
+            if (mex == null) ErrorMessages.RTE0011_FieldLambdaExpected.Throw(lambda.ToString());
             var pi = mex.Member as FieldInfo;
-            if (pi == null) throw new Exception("Here should be field");
+            if (pi == null) ErrorMessages.RTE0011_FieldLambdaExpected.Throw(lambda.ToString());
             return pi;
         }
 
@@ -77,9 +78,7 @@ namespace Reinforced.Typings.Fluent
         public static MethodInfo ParseMethodLambda(LambdaExpression lambda)
         {
             var mex = lambda.Body as MethodCallExpression;
-            if (mex == null)
-                throw new Exception(
-                    "MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.");
+            if (mex == null) ErrorMessages.RTE0008_FluentWithMethodError.Throw();
             return mex.Method;
         }
 
@@ -91,9 +90,7 @@ namespace Reinforced.Typings.Fluent
         public static ConstructorInfo ParseConstructorLambda(LambdaExpression lambda)
         {
             var nex = lambda.Body as NewExpression;
-            if (nex == null)
-                throw new Exception(
-                    "NewExpression should be provided for .WithConstructor call. Please use only lamba expressions in this place.");
+            if (nex == null) ErrorMessages.RTE0012_NewExpressionLambdaExpected.Throw();
             return nex.Constructor;
         }
     }

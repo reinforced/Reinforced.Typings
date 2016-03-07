@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent;
 
 namespace Reinforced.Typings.Cli
@@ -40,14 +41,25 @@ namespace Reinforced.Typings.Cli
                     Console.WriteLine("No valid parameters found. Exiting.");
                     Environment.Exit(0);
                 }
-                var settings = InstantiateExportSettings();
+                var settings = InstantiateExportContext();
                 ResolveFluentMethod(settings);
                 TsExporter exporter = new TsExporter(settings);
                 exporter.Export();
+                foreach (var rtWarning in settings.Warnings)
+                {
+                    var msg = VisualStudioFriendlyErrorMessage.Create(rtWarning);
+                    Console.WriteLine(msg.ToString());
+                }
+            }
+            catch (RtException rtException)
+            {
+                var error = VisualStudioFriendlyErrorMessage.Create(rtException);
+                Console.WriteLine(error.ToString());
+                Environment.Exit(1);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                BuildError(ex.Message);
                 Environment.Exit(1);
             }
 
@@ -84,7 +96,7 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-        public static ExportContext InstantiateExportSettings()
+        public static ExportContext InstantiateExportContext()
         {
             ExportContext context = new ExportContext
             {
@@ -114,7 +126,8 @@ namespace Reinforced.Typings.Cli
 
         public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
-            if (!assemblyNameOrFullPath.EndsWith(".dll")) assemblyNameOrFullPath = assemblyNameOrFullPath + ".dll";
+            if (!assemblyNameOrFullPath.EndsWith(".dll") && !assemblyNameOrFullPath.EndsWith(".exe"))
+                assemblyNameOrFullPath = assemblyNameOrFullPath + ".dll";
 #if DEBUG
             Console.WriteLine("Looking up for assembly {0}", assemblyNameOrFullPath);
 #endif
@@ -148,7 +161,8 @@ namespace Reinforced.Typings.Cli
                 return p;
             }
 
-            Console.WriteLine("Warning! Probably assembly {0} not found", assemblyNameOrFullPath, p);
+            BuildWarn("Assembly {0} may be resolved incorrectly", assemblyNameOrFullPath, p);
+
             return assemblyNameOrFullPath;
         }
 
@@ -224,6 +238,20 @@ namespace Reinforced.Typings.Cli
             }
         }
 
+        private static void BuildWarn(string message, params object[] args)
+        {
+            var warningMessage = string.Format(message, args);
+            VisualStudioFriendlyErrorMessage vsm = new VisualStudioFriendlyErrorMessage(99, warningMessage, VisualStudioFriendlyMessageType.Warning, "Build");
+            Console.WriteLine(vsm.ToString());
+        }
+
+        private static void BuildError(string message, params object[] args)
+        {
+            var errorMessage = string.Format(message, args);
+            VisualStudioFriendlyErrorMessage vsm = new VisualStudioFriendlyErrorMessage(999, errorMessage, VisualStudioFriendlyMessageType.Error, "Unexpected");
+            Console.WriteLine(vsm.ToString());
+        }
+
         public static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
         {
             var t = typeof(ExporterConsoleParameters);
@@ -234,7 +262,7 @@ namespace Reinforced.Typings.Cli
                 var kv = trimmed.Split('=');
                 if (kv.Length != 2)
                 {
-                    Console.WriteLine("Unrecognized parameter: {0}", s);
+                    BuildWarn("Unrecognized parameter: {0}", s);
                     continue;
                 }
 
@@ -244,7 +272,7 @@ namespace Reinforced.Typings.Cli
                 var prop = t.GetProperty(key);
                 if (prop == null)
                 {
-                    Console.WriteLine("Unrecognized parameter: {0}", key);
+                    BuildWarn("Unrecognized parameter: {0}", key);
                     continue;
                 }
 
@@ -268,7 +296,7 @@ namespace Reinforced.Typings.Cli
                     continue;
                 }
 
-                Console.WriteLine("Cannot parse parameter for source property {0}", key);
+                BuildWarn("Cannot parse parameter for source property {0}", key);
             }
 
             try
@@ -277,7 +305,7 @@ namespace Reinforced.Typings.Cli
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Parameters validation error: {0}", ex.Message);
+                BuildError("Parameters validation error: {0}", ex.Message);
                 PrintHelp();
                 return null;
             }

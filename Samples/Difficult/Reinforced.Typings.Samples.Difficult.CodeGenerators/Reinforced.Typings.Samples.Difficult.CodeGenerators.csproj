@@ -175,6 +175,7 @@
     <Compile Include="ReinforcedTypings\Angular\AngularControllerAttribute.cs" />
     <Compile Include="ReinforcedTypings\Angular\AngularControllerGenerator.cs" />
     <Compile Include="ReinforcedTypings\Angular\AngularMethodAttribute.cs" />
+    <Compile Include="ReinforcedTypings\ClassEnumCodeGenerator.cs" />
     <Compile Include="ReinforcedTypings\Configuration.cs" />
     <Compile Include="ReinforcedTypings\jQuery\JQueryActionCallGenerator.cs" />
     <Compile Include="ReinforcedTypings\jQuery\JQueryMethodAttribute.cs" />

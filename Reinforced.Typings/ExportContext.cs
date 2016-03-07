@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Xmldoc;
 
@@ -31,6 +33,7 @@ namespace Reinforced.Typings
         public ExportContext()
         {
             Location = new Location();
+            Warnings = new List<RtWarning>();
         }
 
         /// <summary>
@@ -228,5 +231,11 @@ namespace Reinforced.Typings
         {
             _isLocked = false;
         }
+
+        /// <summary>
+        /// Warnings that should be displayed after build. 
+        /// Feel free to add messages from generators here.
+        /// </summary>
+        public List<RtWarning> Warnings { get; private set; }
     }
 }

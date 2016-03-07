@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Xmldoc.Model;
 
 // ReSharper disable PossibleNullReferenceException
@@ -21,23 +22,30 @@ namespace Reinforced.Typings.Xmldoc
 
         private bool _isDocumentationExists;
 
-        internal DocumentationManager(string docFilePath)
+        internal DocumentationManager(string docFilePath, List<RtWarning> warnings)
         {
-            CacheDocumentation(docFilePath);
+            CacheDocumentation(docFilePath, warnings);
         }
 
-        internal DocumentationManager(string[] docFilePath)
+        internal DocumentationManager(string[] docFilePath,List<RtWarning> warnings)
         {
             foreach (var s in docFilePath)
             {
-                CacheDocumentation(s);
+                CacheDocumentation(s, warnings);
             }
         }
 
-        internal void CacheDocumentation(string docFilePath)
+        internal void CacheDocumentation(string docFilePath, List<RtWarning> warnings)
         {
-            if (string.IsNullOrEmpty(docFilePath)) return;
-            if (!File.Exists(docFilePath)) return;
+            if (string.IsNullOrEmpty(docFilePath))
+            {
+                return;
+            }
+            if (!File.Exists(docFilePath))
+            {
+                warnings.Add(ErrorMessages.RTW0002_DocumentationNotFound.Warn(docFilePath));
+                return;
+            }
             try
             {
                 var ser = new XmlSerializer(typeof(Documentation));
@@ -52,7 +60,7 @@ namespace Reinforced.Typings.Xmldoc
                 }
                 _isDocumentationExists = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _isDocumentationExists = false;
             }

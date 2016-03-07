@@ -89,4 +89,31 @@ var Reinforced;
         })(Samples = Typings.Samples || (Typings.Samples = {}));
     })(Typings = Reinforced.Typings || (Reinforced.Typings = {}));
 })(Reinforced || (Reinforced = {}));
+var Reinforced;
+(function (Reinforced) {
+    var Typings;
+    (function (Typings) {
+        var Samples;
+        (function (Samples) {
+            var Difficult;
+            (function (Difficult) {
+                var CodeGenerators;
+                (function (CodeGenerators) {
+                    var ReinforcedTypings;
+                    (function (ReinforcedTypings) {
+                        var MyCoolEnum = (function () {
+                            function MyCoolEnum() {
+                                this.One = "Value1";
+                                this.Two = "Value1";
+                                this.Three = "Value1";
+                            }
+                            return MyCoolEnum;
+                        })();
+                        ReinforcedTypings.MyCoolEnum = MyCoolEnum;
+                    })(ReinforcedTypings = CodeGenerators.ReinforcedTypings || (CodeGenerators.ReinforcedTypings = {}));
+                })(CodeGenerators = Difficult.CodeGenerators || (Difficult.CodeGenerators = {}));
+            })(Difficult = Samples.Difficult || (Samples.Difficult = {}));
+        })(Samples = Typings.Samples || (Typings.Samples = {}));
+    })(Typings = Reinforced.Typings || (Reinforced.Typings = {}));
+})(Reinforced || (Reinforced = {}));
 //# sourceMappingURL=GeneratedTypings.js.map

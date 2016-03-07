@@ -107,3 +107,11 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 		private http: ng.IHttpService;
 	}
 }
+module Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings {
+	export class MyCoolEnum
+	{
+		One = "Value1";
+		Two = "Value1";
+		Three = "Value1";
+	}
+}

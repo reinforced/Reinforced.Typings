@@ -203,3 +203,4 @@ FakesAssemblies/
 *.opt
 Playground/
 /Reinforced.Typings.Private.sln
+/Reinforced.Typings/Reinforced.Typings.pfx

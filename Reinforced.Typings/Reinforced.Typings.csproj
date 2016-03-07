@@ -38,6 +38,12 @@
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Reinforced.Typings.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -94,6 +100,10 @@
     <Compile Include="Attributes\TsValueAttribute.cs" />
     <Compile Include="ConfigurationRepository.cs" />
     <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="Exceptions\ErrorMessage.cs" />
+    <Compile Include="Exceptions\ErrorMessages.cs" />
+    <Compile Include="Exceptions\RtException.cs" />
+    <Compile Include="Exceptions\RtWarning.cs" />
     <Compile Include="Fluent\ClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\ConfigurationBuildersExtensions.cs" />
     <Compile Include="Fluent\EnumConfigurationBuilder.cs" />
@@ -149,7 +159,9 @@
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeResolver.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Reinforced.Typings.snk" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
