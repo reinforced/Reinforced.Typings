@@ -268,10 +268,23 @@ namespace Reinforced.Typings
                 }
                 return Cache(t, new RtSimpleTypeName(t.Name));
             }
+
             if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
                 var methodInfo = t.GetMethod("Invoke");
                 return Cache(t, ConstructFunctionType(methodInfo));
+            }
+
+            if (t.IsGenericType)
+            {
+                var def = t.GetGenericTypeDefinition();
+                var tsFriendly = ResolveTypeNameInner(def) as RtSimpleTypeName;
+                if (tsFriendly != null && tsFriendly != AnyType)
+                {
+                    var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
+                        def.GetGenericArguments().Select(ResolveTypeNameInner).ToArray());
+                    return Cache(t, parametrized);
+                }
             }
             _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
 
