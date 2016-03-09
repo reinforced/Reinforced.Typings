@@ -275,7 +275,8 @@ namespace Reinforced.Typings
                 return Cache(t, ConstructFunctionType(methodInfo));
             }
 
-            if (t.IsGenericType)
+
+            if (t.IsGenericType && !t.IsGenericTypeDefinition)
             {
                 var def = t.GetGenericTypeDefinition();
                 var tsFriendly = ResolveTypeNameInner(def) as RtSimpleTypeName;
@@ -288,7 +289,9 @@ namespace Reinforced.Typings
                     };
                     return Cache(t, parametrized);
                 }
+
             }
+
             _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
 
             return Cache(t, AnyType);
