@@ -101,7 +101,11 @@ namespace Reinforced.Typings.Exceptions
         /// Class {0} (base for {1}) is exported as interface. It is potentially unsafe facility.
         /// </summary>
         public static readonly ErrorMessage RTW0005_BaseClassExportingAsInterface = new ErrorMessage(0005, "Class {0} (base for {1}) is exported as interface. It is potentially unsafe facility.", "Class code generation");
-        
+
+        /// <summary>
+        /// Error parsering XMLDOC file {0}: {1}
+        /// </summary>
+        public static readonly ErrorMessage RTW0006_DocumentationParseringError = new ErrorMessage(0006, "Error parsering XMLDOC file {0}: {1}", "JSDOC");
         #endregion
     }
 }

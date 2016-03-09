@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.2.2</version>
+        <version>1.2.3</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,10 +16,7 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-- Visual Studio-friendly warning and error messages
-- Extracting types information from .exe assemblies
-- Initialization expression for fields AST
-- Assembly signing
+- Generic type resolvation improvement
 		</releaseNotes>
     </metadata>
 </package>

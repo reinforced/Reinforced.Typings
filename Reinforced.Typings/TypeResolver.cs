@@ -282,7 +282,10 @@ namespace Reinforced.Typings
                 if (tsFriendly != null && tsFriendly != AnyType)
                 {
                     var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
-                        def.GetGenericArguments().Select(ResolveTypeNameInner).ToArray());
+                        t.GetGenericArguments().Select(ResolveTypeNameInner).ToArray())
+                    {
+                        Namespace = tsFriendly.Namespace
+                    };
                     return Cache(t, parametrized);
                 }
             }
