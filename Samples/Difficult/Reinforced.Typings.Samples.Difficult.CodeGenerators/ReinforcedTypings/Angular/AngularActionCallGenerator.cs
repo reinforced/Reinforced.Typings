@@ -25,7 +25,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             // (or because I'm too lazy to manually construct "any" type)
             if (isVoid) retType = resolver.ResolveTypeName(typeof(object));
 
-            // Here we override TS method return type to make it JQueryPromise
+            // Here we override TS method return type to make it angular.IPromise
             // We are using RtSimpleType with generig parameter of existing method type
             result.ReturnType = new RtSimpleTypeName(new[] { retType }, "angular", "IPromise");
 

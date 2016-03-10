@@ -13,6 +13,7 @@ var Reinforced;
                 (function (CodeGenerators) {
                     var Controllers;
                     (function (Controllers) {
+                        /** Our sample controller for testing queries made through jQuery */
                         var JQueryController = (function () {
                             function JQueryController() {
                             }

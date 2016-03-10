@@ -85,7 +85,7 @@
 			to fix it, but TypeScript compilation fails and failing project build. This option will temporary 
 			disable typescripts build.
 		-->
-		<RtBypassTypeScriptCompilation>true</RtBypassTypeScriptCompilation>
+		<RtBypassTypeScriptCompilation>false</RtBypassTypeScriptCompilation>
 		
 		<!--
 			When true, forces Reinforced.Typings to generate METHODS names in "camelCase" instead of 
