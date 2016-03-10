@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.spin {
+    -webkit-animation: 2s infinite linear;
+    animation: 2s infinite linear;
+}

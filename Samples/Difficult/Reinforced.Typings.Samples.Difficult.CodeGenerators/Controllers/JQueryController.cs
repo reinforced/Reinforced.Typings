@@ -54,7 +54,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
         [JQueryMethod(typeof(void))]
         public ActionResult VoidMethodWithParameters(SampleResponseModel model)
         {
-            return null;
+            return Json(true);
         }
     }
 }

@@ -65,7 +65,7 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 			    );
 		}
 	}
-	app.factory('Api.AngularController', ['$http', ($http: ng.IHttpService) => new AngularController($http)]);
+	if (window['app']) window['app'].factory('Api.AngularController', ['$http', ($http: ng.IHttpService) => new AngularController($http)]);
 	/** Result of AngularControllerGenerator activity */
 	export class AngularController
 	{
@@ -105,13 +105,5 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 		}
 		/** Keeps $http instance received on construction */
 		private http: ng.IHttpService;
-	}
-}
-module Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings {
-	export class MyCoolEnum
-	{
-		One = "Value1";
-		Two = "Value1";
-		Three = "Value1";
 	}
 }

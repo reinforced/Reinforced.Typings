@@ -45,7 +45,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             // Also we will add controller registration to our app instance
             // To automatically get it registered in Angular's IoC
             const string initializerFormat =
-                "app.factory('Api.{0}', ['$http', ($http: ng.IHttpService) => new {1}($http)]);";
+                "if (window['app']) window['app'].factory('Api.{0}', ['$http', ($http: ng.IHttpService) => new {1}($http)]);";
 
             RtRaw registration = new RtRaw(String.Format(initializerFormat,element.Name,result.Name));
             

@@ -2,35 +2,60 @@
     ViewBag.Title = "Home Page";
 }
 
-<span id="loading"></span>
-Результат: <strong id="result"></strong>
-<button class="btn btn-primary" id="btnSimpleInt">Тынц</button>
-<button class="btn btn-default" id="btnMethodWithParameters">Клац</button>
-<button class="btn btn-default" id="btnReturningObject">Бумс</button>
-<button class="btn btn-default" id="btnReturningObjectWithParameters">Бдыщ</button>
-<button class="btn btn-default" id="btnVoidMethodWithParameters">Кря!</button>
-
+<div class="row">
+    <div class="col-md-6 col-lg-offset-3">
+        <h3>Result: <span id="loading" style="display: inline"></span></h3>  <br />
+        <div class="well" id="result"> Results will be displayed here </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-4">
-        <h2>SimpleIntMethod</h2>
+        <h2>Simple</h2>
         <p>
-            </p>
-    </div>
-    <div class="col-md-4">
-        <h2>MethodWithParameters</h2>
-        <p>
-            Simple method that is called with random parameters and returns them concatenated. <br/>
-            
+            Invoking of simple method returning random integer value
         </p>
-        <p>
-            
+        <p class="text-center">
+            <button class="btn btn-primary" id="btnSimpleInt">Do that!</button>
         </p>
     </div>
     <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <h2>Parametrized</h2>
         <p>
-            <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a>
+            Simple method that is called with random parameters and returns them concatenated. <br />
+
+        </p>
+        <p class="text-center">
+            <button class="btn btn-primary" id="btnMethodWithParameters">Go!</button>
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h2>Returning objects</h2>
+        <p>
+            Method that returns complex JSONed object. <br />
+
+        </p>
+        <p class="text-center">
+            <button class="btn btn-primary" id="btnReturningObject">Invoke!</button>
+        </p>
+    </div>
+</div><div class="row">
+    <div class="col-md-4">
+        <h2>Parametrized objects</h2>
+        <p>
+            Returns JSONed object, invoked with parameters. Done simple.
+        </p>
+        <p class="text-center">
+            <button class="btn btn-primary" id="btnReturningObjectWithParameters">Click!</button>
+        </p>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Void</h2>
+        <p>
+            Invoke void method that does not return anything
+        </p>
+        <p class="text-center">
+            <button class="btn btn-primary" id="btnVoidMethodWithParameters">Boom!</button>
         </p>
     </div>
 </div>

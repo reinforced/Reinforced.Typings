@@ -10,7 +10,7 @@
             traditional: false,
             complete: () => {
                 if (progressSelector && progressSelector.length > 0) {
-                    $(progressSelector).find('span[data-role="progressContainer"]').remove();
+                    $(progressSelector).find('i[data-role="progressContainer"]').remove();
                 }
                 if (disableSelector && disableSelector.length > 0) {
                     $(disableSelector).prop('disabled', false);
@@ -25,7 +25,7 @@
         };
 
         if (progressSelector && progressSelector.length > 0) {
-            $(progressSelector).append('<span data-role="progressContainer"> Loading ... </span>');
+            $(progressSelector).append('<i data-role="progressContainer"> <span class="glyphicon glyphicon-cd spin"></span> Loading ... </i>');
         }
 
         if (disableSelector && disableSelector.length > 0) {
