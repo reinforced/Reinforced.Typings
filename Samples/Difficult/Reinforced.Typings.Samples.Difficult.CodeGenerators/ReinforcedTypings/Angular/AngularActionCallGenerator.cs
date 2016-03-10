@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Generators;
 
@@ -29,7 +27,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
 
             // Here we override TS method return type to make it JQueryPromise
             // We are using RtSimpleType with generig parameter of existing method type
-            result.ReturnType = new RtSimpleTypeName(new[] { retType }, "ng", "IPromise");
+            result.ReturnType = new RtSimpleTypeName(new[] { retType }, "angular", "IPromise");
 
             // Here we retrieve method parameters
             // We are using .GetName() extension method to retrieve parameter name

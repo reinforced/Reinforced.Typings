@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             result.Documentation = new RtJsdocNode(){Description = "Result of AngularControllerGenerator activity"};
 
             // Here we just create ng.IHttpService type name because it is used several times
-            var httpServiceType = new RtSimpleTypeName("IHttpService"){Namespace = "ng"};
+            var httpServiceType = new RtSimpleTypeName("IHttpService") { Namespace = "angular" };
 
             // Here we are declaring constructor for our angular service using $http as parameter
             // It is quite simple so no more details
@@ -45,7 +45,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
             // Also we will add controller registration to our app instance
             // To automatically get it registered in Angular's IoC
             const string initializerFormat =
-                "if (window['app']) window['app'].factory('Api.{0}', ['$http', ($http: ng.IHttpService) => new {1}($http)]);";
+                "if (window['app']) window['app'].factory('Api.{0}', ['$http', ($http: angular.IHttpService) => new {1}($http)]);";
 
             RtRaw registration = new RtRaw(String.Format(initializerFormat,element.Name,result.Name));
             
