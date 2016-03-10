@@ -31,6 +31,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
                 Message = "Hello!",
                 Success = true
             };
+            
             return Json(result);
         }
 
