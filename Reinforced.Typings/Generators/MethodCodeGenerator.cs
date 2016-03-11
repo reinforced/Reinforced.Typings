@@ -33,10 +33,13 @@ namespace Reinforced.Typings.Generators
             if (doc != null)
             {
                 RtJsdocNode jsdoc = new RtJsdocNode { Description = doc.Summary.Text };
-                foreach (var documentationParameter in doc.Parameters)
+                if (doc.Parameters != null)
                 {
-                    jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Param,
-                        documentationParameter.Name + " " + documentationParameter.Description));
+                    foreach (var documentationParameter in doc.Parameters)
+                    {
+                        jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Param,
+                            documentationParameter.Name + " " + documentationParameter.Description));
+                    }
                 }
 
                 if (doc.HasReturns())
