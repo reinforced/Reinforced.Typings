@@ -33,6 +33,17 @@ namespace MyApp
         public string ClientName { get; set; }
         public string Address { get; set; }
     }
+    
+    [TsClass]
+    public class User
+    {
+        public string FirstName { get; set; }
+        public string Email { get; set; }
+        public UserType Type { get; set; }
+    }
+
+    [TsEnum]
+    public enum UserType { One, Two }
 }
 </pre>
 </td>
@@ -48,6 +59,16 @@ module MyApp {
 		IsPaid: boolean;
 		ClientName: string;
 		Address: string;
+	}
+	export class User
+	{
+		public FirstName: string;
+		public Email: string;
+		public Type: MyApp.UserType;
+	}
+	export enum UserType { 
+		One = 0, 
+		Two = 1, 
 	}
 }	
 	</pre>
