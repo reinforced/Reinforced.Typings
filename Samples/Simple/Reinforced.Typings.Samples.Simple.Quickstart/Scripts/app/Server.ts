@@ -13,14 +13,8 @@ module Reinforced.Typings.Samples.Simple.Quickstart.Models {
 		ClientName: string;
 		Address: string;
 	}
-	export class User
+	export interface IResults<T>
 	{
-		public FirstName: string;
-		public Email: string;
-		public Type: Reinforced.Typings.Samples.Simple.Quickstart.Models.UserType;
-	}
-	export enum UserType { 
-		One = 0, 
-		Two = 1, 
+		Values: any[];
 	}
 }

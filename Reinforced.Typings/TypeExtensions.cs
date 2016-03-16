@@ -262,7 +262,8 @@ namespace Reinforced.Typings
             if (!t.IsGenericTypeDefinition) return new RtTypeName[0];
             if (t.IsGenericTypeDefinition)
             {
-                var args = t.GetGenericArguments();
+                // arranged generic attribute means that generic type is replaced with real one
+                var args = t.GetGenericArguments().Where(g => g.GetCustomAttribute<TsGenericAttribute>() == null);
                 var argsStr = args.Select(c => new RtSimpleTypeName(c.Name)).Cast<RtTypeName>().ToArray();
                 return argsStr;
             }

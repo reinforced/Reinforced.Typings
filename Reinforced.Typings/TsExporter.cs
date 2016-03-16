@@ -94,7 +94,7 @@ namespace Reinforced.Typings
         /// <param name="sw">TextWriter</param>
         /// <param name="tr">TypeResolver object</param>
         /// <param name="types">Types to export</param>
-        public void ExportTypes(TextWriter sw, TypeResolver tr, IEnumerable<Type> types = null)
+        private void ExportTypes(TextWriter sw, TypeResolver tr, IEnumerable<Type> types = null)
         {
             ExportReferences(sw, types);
             if (types == null) types = _allTypes;
