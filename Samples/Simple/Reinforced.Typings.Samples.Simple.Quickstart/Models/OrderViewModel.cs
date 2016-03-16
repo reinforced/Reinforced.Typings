@@ -17,10 +17,4 @@ namespace Reinforced.Typings.Samples.Simple.Quickstart.Models
         public string ClientName { get; set; }
         public string Address { get; set; }
     }
-
-    [TsInterface]
-    public class Results<[TsGeneric(typeof(object))]T>
-    {
-        public IEnumerable<T> Values { get; set; }
-    }
 }

@@ -12,9 +12,5 @@ module Reinforced.Typings.Samples.Simple.Quickstart.Models {
 		IsPaid: boolean;
 		ClientName: string;
 		Address: string;
-	}
-	export interface IResults<T>
-	{
-		Values: any[];
-	}
+    }
 }
