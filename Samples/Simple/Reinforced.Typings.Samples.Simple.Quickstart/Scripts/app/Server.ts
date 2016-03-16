@@ -2,14 +2,25 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-module Reinforced.Typings.Samples.Simple.Quickstart.Models {
-	export interface IOrderViewModel {	
-		ItemName: string;		
-		Quantity: number;		
-		Subtotal: number;		
-		IsPaid: boolean;		
-		ClientName: string;		
-		Address: string;		
-	}
 
+module Reinforced.Typings.Samples.Simple.Quickstart.Models {
+	export interface IOrderViewModel
+	{
+		ItemName: string;
+		Quantity: number;
+		Subtotal: number;
+		IsPaid: boolean;
+		ClientName: string;
+		Address: string;
+	}
+	export class User
+	{
+		public FirstName: string;
+		public Email: string;
+		public Type: Reinforced.Typings.Samples.Simple.Quickstart.Models.UserType;
+	}
+	export enum UserType { 
+		One = 0, 
+		Two = 1, 
+	}
 }

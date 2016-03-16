@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- 
+  <!-- 
 		Hi! This is settings file for Reinforced.Typings.
 		Since Reinforced.Typings is not a framework itself but build process extension,
 		therefore settings file is basically piece of MSBuild script.
@@ -9,33 +9,33 @@
 		
 		Reinforced.Typings has completely few parameters. So, here we go.
 	-->
-	
-	<PropertyGroup>
-	
-		<!-- 
+
+  <PropertyGroup>
+
+    <!-- 
 			This property points target file where to put generated sources. 
 			It is not used if RtDivideTypesAmongFiles='true' specified.
 			Important! Do not forget to include generated file to solution.
 		-->
-		<RtTargetFile>$(ProjectDir)Scripts\app\Server.ts</RtTargetFile>
-		
-		<!--
+    <RtTargetFile>$(ProjectDir)Scripts\app\Server.ts</RtTargetFile>
+
+    <!--
 			Boolean parameter that controls writing of "auto-generated warning" comment to each generated file.
 			It meant the comment like "// This code was generated blah blah blah..."
 			'true' (default) to write warning comment about auto-generated to every file. 
 			'false' to do not. 
 		-->
-		<RtWriteWarningComment>true</RtWriteWarningComment>
-				
-		<!--
+    <RtWriteWarningComment>true</RtWriteWarningComment>
+
+    <!--
 			Since .d.ts has a slightly different syntax than a regular .ts file, we have that
 			boolean parameter that controls generation mode switch between .ts/.d.ts
 			If true, export will be performed in .d.ts manner (only typings, declare module etc).
 			Otherwise, export will be performed as regular .ts file
 		-->
-		<RtExportPureTypings>false</RtExportPureTypings>
-		
-		<!--
+    <RtExportPureTypings>false</RtExportPureTypings>
+
+    <!--
 			By default all of your typings will be located in single file specified by RtTargetFile.
 			It may be heavy for large projects because you will get single large file containing signinficant
 			part of TS sources. It could lead to various problems (e.g. monstrous SCM merges). 
@@ -44,27 +44,59 @@
 			
 			Important! In case of using this setting, do not forget to add generated files to solution manually.
 		-->
-		<RtDivideTypesAmongFiles>false</RtDivideTypesAmongFiles>
-		
-		<!--
+    <RtDivideTypesAmongFiles>false</RtDivideTypesAmongFiles>
+
+    <!--
 			... and if you use RtDivideTypesAmongFiles then please specify target directory
 			where to put all generated stuff. Reinforced.Typings will automatically create
 			directories structure according to used namespaces.
 			Note that in case of using RtDivideTypesAmongFiles, RtTargetFile parameter will 
 			NOT be used anymore.
 		-->
-		<RtTargetDirectory>$(ProjectDir)Scripts\MyApplication</RtTargetDirectory>
-		
-		<!--
+    <RtTargetDirectory>$(ProjectDir)Scripts\MyApplication</RtTargetDirectory>
+
+    <!--
 			Also you have to specify your app's namespace in case of using RtDivideTypesAmongFiles.
 			It is needed to make Reinforced.Typings do not create redundant directories under 
 			RtTargetDirectory since there is no way to determine root namespace programmatically.
 		-->
-		<RtRootNamespace>My.Application.Root.Namespace</RtRootNamespace>
-		
-	</PropertyGroup>
-	
-	<!--
+    <RtRootNamespace>My.Application.Root.Namespace</RtRootNamespace>
+
+    <!--
+			Disables typescript compilation in solution. 
+			Use it when your TypeScripts are broken and you need to rebuild project and then regenerate typings 
+			to fix it, but TypeScript compilation fails and failing project build. This option will temporary 
+			disable typescripts build.
+		-->
+    <RtBypassTypeScriptCompilation>false</RtBypassTypeScriptCompilation>
+
+    <!--
+			When true, forces Reinforced.Typings to generate METHODS names in "camelCase" instead of 
+			.NET-common "PascalCase"
+		-->
+    <RtCamelCaseForMethods>false</RtCamelCaseForMethods>
+
+    <!--
+			When true, forces Reinforced.Typings to generate PROPERTIES names in "camelCase" instead of 
+			.NET-common "PascalCase"
+		-->
+    <RtCamelCaseForProperties>false</RtCamelCaseForProperties>
+
+    <!--
+			This settings conditionally disables jsdoc generation from .NET XMLDOC.
+			To use jsdoc generation feature please enable XML documentation generation in your project settings			
+		-->
+    <RtGenerateDocumentation>true</RtGenerateDocumentation>
+
+    <!--
+			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
+			typings generation.
+		-->
+    <RtDisable>false</RtDisable>
+
+  </PropertyGroup>
+
+  <!--
 		If you want Reinforced.Typings to lookup for attributed classes not only current
 		project's assembly but also another assembly then you can specify it in RtAdditionalAssembly
 		item group. 
