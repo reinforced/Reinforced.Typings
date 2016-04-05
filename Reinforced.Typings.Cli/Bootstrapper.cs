@@ -55,11 +55,13 @@ namespace Reinforced.Typings.Cli
             {
                 var error = VisualStudioFriendlyErrorMessage.Create(rtException);
                 Console.WriteLine(error.ToString());
+                Console.WriteLine(rtException.StackTrace);
                 Environment.Exit(1);
             }
             catch (Exception ex)
             {
                 BuildError(ex.Message);
+                Console.WriteLine(ex.StackTrace);
                 Environment.Exit(1);
             }
 
