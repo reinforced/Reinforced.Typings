@@ -21,4 +21,12 @@
         /// </summary>
         bool ShouldBeCamelCased { get; set; }
     }
+
+    public interface IPascalCasableAttribute
+    {
+                /// <summary>
+        ///     PascalCase flag
+        /// </summary>
+        bool ShouldBePascalCased { get; set; }
+    }
 }

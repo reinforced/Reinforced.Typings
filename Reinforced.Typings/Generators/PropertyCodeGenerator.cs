@@ -62,6 +62,7 @@ namespace Reinforced.Typings.Generators
                 propName.IdentifierName = Context.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
             }
             propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
+            propName.IdentifierName = element.PascalCaseFromAttribute(propName.IdentifierName);
 
             result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
