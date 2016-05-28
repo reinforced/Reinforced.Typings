@@ -93,6 +93,7 @@ namespace Reinforced.Typings.Generators
 
             name = Context.ConditionallyConvertMethodNameToCamelCase(name);
             name = element.CamelCaseFromAttribute(name);
+            name = element.PascalCaseFromAttribute(name);
             if (element.IsGenericMethod)
             {
                 if (!(name.Contains("<") || name.Contains(">")))
