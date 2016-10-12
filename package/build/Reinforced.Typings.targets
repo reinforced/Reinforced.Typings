@@ -35,7 +35,14 @@
 	<Import Project="$(ProjectDir)\Reinforced.Typings.settings.xml" Condition="Exists('$(ProjectDir)\Reinforced.Typings.settings.xml')" />
 	
 	<Target Name="ConditionallyDisableTypeScriptCompilation" Condition="'$(RtBypassTypeScriptcompilation)' == 'true'">
-		<Warning File="Reinforced.Typings.settings.xml" Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"/>
+		<Warning 
+			File="Reinforced.Typings.settings.xml"
+			Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"
+			Condition="'$(TreatWarningsAsErrors)' != 'true'"/>
+		<Error 
+			File="Reinforced.Typings.settings.xml"
+			Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"
+			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
 		<RemoveTypeScriptStep Original="$(CompileDependsOn)">
 			<Output PropertyName="CompileDependsOn" TaskParameter="Fixed"/>
 		</RemoveTypeScriptStep>
@@ -47,7 +54,14 @@
 		</RemoveTypeScriptStep>		
 	</Target>
 	<Target Name="ConditionallyShowDisabledWarning" Condition="'$(RtDisable)' != 'false'">
-		<Warning File="Reinforced.Typings.settings.xml" Text="Reinforced.Typings will not run because it is disabled in its configuration"/>
+		<Warning
+			File="Reinforced.Typings.settings.xml"
+			Text="Reinforced.Typings will not run because it is disabled in its configuration"
+			Condition="'$(TreatWarningsAsErrors)' != 'true'"/>
+		<Error
+			File="Reinforced.Typings.settings.xml"
+			Text="Reinforced.Typings will not run because it is disabled in its configuration"
+			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
 	</Target>
 	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">			
 		<RtCli 
