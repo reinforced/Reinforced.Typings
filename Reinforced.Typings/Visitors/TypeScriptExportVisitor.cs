@@ -93,7 +93,7 @@ namespace Reinforced.Typings.Visitors
             var prev = Context;
             Context = WriterContext.Interface;
             AppendTabs();
-            if (prev == WriterContext.Module) Write("export ");
+            Write("export ");
             Write("interface ");
             Visit(node.Name);
             if (node.Implementees.Count > 0)
@@ -202,7 +202,7 @@ namespace Reinforced.Typings.Visitors
             var prev = Context;
             Context = WriterContext.Class;
             AppendTabs();
-            if (prev == WriterContext.Module) Write("export ");
+            Write("export ");
             Write("class ");
             Visit(node.Name);
             if (node.Extendee != null)
@@ -311,7 +311,7 @@ namespace Reinforced.Typings.Visitors
             var prev = Context;
             Context = WriterContext.Interface;
             AppendTabs();
-            if (prev == WriterContext.Module) Write("export ");
+            Write("export ");
             Write("enum ");
             Visit(node.EnumName);
             WriteLine(" { ");
