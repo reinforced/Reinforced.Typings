@@ -20,7 +20,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtEnum GenerateNode(Type element,RtEnum result, TypeResolver resolver)
         {
-            var values = Enum.GetValues(element);
+            var names = Enum.GetNames(element);
             result.EnumName = element.GetName();
             var fields = element.GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
             var doc = Context.Documentation.GetDocumentationMember(element);
@@ -31,10 +31,10 @@ namespace Reinforced.Typings.Generators
                 result.Documentation = docNode;
             }
             List<RtEnumValue> valuesResult = new List<RtEnumValue>();
-            for (var index = 0; index < values.Length; index++)
+            for (var index = 0; index < names.Length; index++)
             {
-                var v = values.GetValue(index);
-                var n = Enum.GetName(element, v);
+                var n = names.GetValue(index) as string;
+                var v = Enum.Parse(element, n);
 
                 if (fields.ContainsKey(n))
                 {
