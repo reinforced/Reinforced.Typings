@@ -37,7 +37,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (node == null) return;
 
-            if (!node.IsAbstractModule)
+            if (!node.IsAmbientModule)
             {
                 Context = WriterContext.Module;
                 AppendTabs();
@@ -48,7 +48,7 @@ namespace Reinforced.Typings.Visitors
             {
                 Visit(rtCompilationUnit);
             }
-            if (!node.IsAbstractModule)
+            if (!node.IsAmbientModule)
             {
                 Context = WriterContext.None;
                 UnTab();

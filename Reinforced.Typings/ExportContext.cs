@@ -25,15 +25,22 @@ namespace Reinforced.Typings
         private string _targetDirectory;
         private string _targetFile;
         private bool _writeWarningComment;
+        private IFilesOperations _fileOperations;
 
+        public IFilesOperations FileOperations
+        {
+            get { return _fileOperations; }
+        }
 
         /// <summary>
         /// Instantiates new ExportContext instance (only for testing/integration)
         /// </summary>
-        public ExportContext()
+        public ExportContext(IFilesOperations fileOperationsServiceOverride= null)
         {
             Location = new Location();
             Warnings = new List<RtWarning>();
+            _fileOperations = fileOperationsServiceOverride;
+            if (_fileOperations==null) _fileOperations = new FilesOperations(this);
         }
 
         /// <summary>

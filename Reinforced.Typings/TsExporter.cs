@@ -17,7 +17,6 @@ namespace Reinforced.Typings
     /// </summary>
     public class TsExporter : MarshalByRefObject
     {
-        private readonly FilesOperations _fileOps;
         private readonly StringBuilder _referenceBuilder = new StringBuilder();
         private readonly ExportContext _context;
         private List<Type> _allTypes;
@@ -34,7 +33,6 @@ namespace Reinforced.Typings
         public TsExporter(ExportContext context)
         {
             _context = context;
-            _fileOps = new FilesOperations(context);
         }
 
         #endregion
@@ -110,7 +108,7 @@ namespace Reinforced.Typings
                 HashSet<string> pathes = new HashSet<string>();
                 foreach (var type in types)
                 {
-                    var inspected = _fileOps.GenerateInspectedReferences(type, _allTypesHash);
+                    var inspected = _context.FileOperations.GenerateInspectedReferences(type, _allTypesHash);
                     if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected))
                     {
                         pathes.AddIfNotExists(inspected);
@@ -129,15 +127,14 @@ namespace Reinforced.Typings
         /// </summary>
         public void Export()
         {
-            _fileOps.ClearTempRegistry();
+            _context.FileOperations.ClearTempRegistry();
             ExtractReferences();
             var tr = new TypeResolver(_context);
             _context.Lock();
 
             if (!_context.Hierarchical)
             {
-                var file = _fileOps.GetTmpFile(_context.TargetFile);
-                using (var fs = File.OpenWrite(file))
+                using (var fs = _context.FileOperations.GetTmpFile(_context.TargetFile))
                 {
                     using (var tw = new StreamWriter(fs))
                     {
@@ -148,14 +145,13 @@ namespace Reinforced.Typings
             else
             {
                 var typeFilesMap = _allTypes
-                    .GroupBy(c => _fileOps.GetPathForType(c))
+                    .GroupBy(c => _context.FileOperations.GetPathForType(c))
                     .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
                 foreach (var kv in typeFilesMap)
                 {
                     var path = kv.Key;
-                    var tmpFile = _fileOps.GetTmpFile(path);
-                    using (var fs = File.OpenWrite(tmpFile))
+                    using (var fs = _context.FileOperations.GetTmpFile(path))
                     {
                         using (var tw = new StreamWriter(fs))
                         {
@@ -166,7 +162,7 @@ namespace Reinforced.Typings
             }
 
             _context.Unlock();
-            _fileOps.DeployTempFiles();
+            _context.FileOperations.DeployTempFiles();
             tr.PrintCacheInfo();
         }
 
@@ -204,19 +200,19 @@ namespace Reinforced.Typings
         ///     Exports TypeScript source to string
         /// </summary>
         /// <returns>String containig generated TypeScript source for specified assemblies</returns>
-        public string ExportAll()
-        {
-            _context.Lock();
-            ExtractReferences();
+        //public string ExportAll()
+        //{
+        //    _context.Lock();
+        //    ExtractReferences();
 
-            var sb = new StringBuilder();
-            var tr = new TypeResolver(_context);
-            using (var sw = new StringWriter(sb))
-            {
-                ExportTypes(sw, tr);
-            }
-            _context.Unlock();
-            return sb.ToString();
-        }
+        //    var sb = new StringBuilder();
+        //    var tr = new TypeResolver(_context);
+        //    using (var sw = new StringWriter(sb))
+        //    {
+        //        ExportTypes(sw, tr);
+        //    }
+        //    _context.Unlock();
+        //    return sb.ToString();
+        //}
     }
 }

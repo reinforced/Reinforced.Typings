@@ -271,7 +271,7 @@ namespace Reinforced.Typings.Visitors
         {
             if (node == null) return;
 
-            if (!node.IsAbstractModule)
+            if (!node.IsAmbientModule)
             {
                 Context = WriterContext.Module;
                 AppendTabs();
@@ -282,7 +282,7 @@ namespace Reinforced.Typings.Visitors
             {
                 Visit(rtCompilationUnit);
             }
-            if (!node.IsAbstractModule)
+            if (!node.IsAmbientModule)
             {
                 Context = WriterContext.None;
                 UnTab();
@@ -400,6 +400,16 @@ namespace Reinforced.Typings.Visitors
                 EmptyBody(null);
             }
 
+        }
+
+        public override void Visit(RtImport node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(RtDecorator node)
+        {
+            throw new NotImplementedException();
         }
     }
 

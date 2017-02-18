@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Reinforced.Typings
 {
-    internal static class ReferenceInspector
+    internal class ReferenceInspector
     {
-        internal static string GenerateInspectedReferences(this FilesOperations fileOps, Type element,
+        internal static string GenerateInspectedReferences(IFilesOperations fileOps, Type element,
             HashSet<Type> alltypes)
         {
             var inspectedTypes = InspectReferences(element, alltypes);
@@ -99,6 +99,11 @@ namespace Reinforced.Typings
             }
         }
 
+        
+    }
+
+    internal static class HashSetExtensions
+    {
         internal static void AddIfNotExists<T>(this HashSet<T> hashSet, T val)
         {
             if (hashSet.Contains(val)) return;

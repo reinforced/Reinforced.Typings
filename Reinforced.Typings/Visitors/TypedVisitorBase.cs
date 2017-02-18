@@ -27,6 +27,8 @@ namespace Reinforced.Typings.Visitors
             if (node is RtDictionaryType) return Visit((RtDictionaryType)node);
             if (node is RtArrayType) return Visit((RtArrayType)node);
             if (node is RtConstructor) return Visit((RtConstructor)node);
+            if (node is RtImport) return Visit((RtImport)node);
+            if (node is RtDecorator) return Visit((RtDecorator)node);
             throw new Exception("Unknown node passed");
         }
 
@@ -46,5 +48,7 @@ namespace Reinforced.Typings.Visitors
         public abstract T Visit(RtDictionaryType node);
         public abstract T Visit(RtArrayType node);
         public abstract T Visit(RtConstructor node);
+        public abstract T Visit(RtImport node);
+        public abstract T Visit(RtDecorator node);
     }
 }

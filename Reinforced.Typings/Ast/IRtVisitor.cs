@@ -24,6 +24,8 @@ namespace Reinforced.Typings.Ast
         T Visit(RtDictionaryType node);
         T Visit(RtArrayType node);
         T Visit(RtConstructor node);
+        T Visit(RtImport node);
+        T Visit(RtDecorator node);
     }
 
     /// <summary>
@@ -48,5 +50,9 @@ namespace Reinforced.Typings.Ast
         void Visit(RtDictionaryType node);
         void Visit(RtArrayType node);
         void Visit(RtConstructor node);
+        void Visit(RtImport node);
+        void Visit(RtDecorator node);
+
+
     }
 }

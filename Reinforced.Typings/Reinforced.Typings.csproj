@@ -64,6 +64,7 @@
     <Compile Include="Ast\RtClass.cs" />
     <Compile Include="Ast\RtCompilationUnit.cs" />
     <Compile Include="Ast\RtConstructor.cs" />
+    <Compile Include="Ast\RtDecorator.cs" />
     <Compile Include="Ast\RtDelegateType.cs" />
     <Compile Include="Ast\RtDictionaryType.cs" />
     <Compile Include="Ast\RtEnum.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Ast\RtField.cs" />
     <Compile Include="Ast\RtFuncion.cs" />
     <Compile Include="Ast\RtIdentifier.cs" />
+    <Compile Include="Ast\RtImport.cs" />
     <Compile Include="Ast\RtInterface.cs" />
     <Compile Include="Ast\RtJsdocNode.cs" />
     <Compile Include="Ast\RtMember.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Fluent\TypingsConfigurationExtensions.cs" />
     <Compile Include="Generators\ClassAndInterfaceGeneratorBase.cs" />
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />
+    <Compile Include="IFilesOperations.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />

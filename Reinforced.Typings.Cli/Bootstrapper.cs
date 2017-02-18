@@ -77,6 +77,7 @@ namespace Reinforced.Typings.Cli
             var path = new Stack<string>(methodPath.Split('.'));
             var method = path.Pop();
             var fullQualifiedType = string.Join(".", path.Reverse());
+            bool isFound = false;
 
             foreach (var sourceAssembly in context.SourceAssemblies)
             {
@@ -90,12 +91,14 @@ namespace Reinforced.Typings.Cli
                         var pars = constrMethod.GetParameters();
                         if (pars.Length == 1 && pars[0].ParameterType == typeof(ConfigurationBuilder))
                         {
+                            isFound = true;
                             context.ConfigurationMethod = builder => constrMethod.Invoke(null, new object[] { builder });
                             break;
                         }
                     }
                 }
             }
+            if (!isFound) BuildWarn("Cannot find configured fluent method '{0}'", methodPath);
         }
 
         public static ExportContext InstantiateExportContext()
@@ -141,7 +144,7 @@ namespace Reinforced.Typings.Cli
                     _lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
                 }
 #if DEBUG
-                  Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
+                Console.WriteLine("Already have full path to assembly {0}", assemblyNameOrFullPath);
 #endif
                 return assemblyNameOrFullPath;
             }

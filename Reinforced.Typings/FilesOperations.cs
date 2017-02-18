@@ -6,7 +6,7 @@ using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings
 {
-    internal class FilesOperations
+    internal class FilesOperations : IFilesOperations
     {
         private readonly ExportContext _context;
         private readonly List<string> _tmpFiles = new List<string>();
@@ -38,7 +38,7 @@ namespace Reinforced.Typings
             }
         }
 
-        public string GetTmpFile(string fileName)
+        public Stream GetTmpFile(string fileName)
         {
             fileName = fileName + ".tmp";
             try
@@ -51,7 +51,7 @@ namespace Reinforced.Typings
                     File.Delete(fileName);
                 }
 #if DEBUG
-            Console.WriteLine("Test file aquired: {0}", fileName);
+            Console.WriteLine("Temp file aquired: {0}", fileName);
 #endif
                 _tmpFiles.Add(fileName);
             }
@@ -59,7 +59,8 @@ namespace Reinforced.Typings
             {
                 ErrorMessages.RTE0001_TempFileError.Throw(fileName, ex.Message);
             }
-            return fileName;
+
+            return File.OpenWrite(fileName);
         }
 
         public string GetPathForType(Type t)

@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Ast
         /// <summary>
         /// Identifies nameless module that only wraps CompilationUnits without module name
         /// </summary>
-        public bool IsAbstractModule { get; set; }
+        public bool IsAmbientModule { get; set; }
 
         /// <summary>
         /// Module name

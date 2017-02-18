@@ -23,7 +23,7 @@ namespace Reinforced.Typings.Generators
         public virtual RtModule Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver)
         {
             RtModule module = new RtModule();
-            if (string.IsNullOrEmpty(namespaceName)) module.IsAbstractModule = true;
+            if (string.IsNullOrEmpty(namespaceName)) module.IsAmbientModule = true;
             module.ModuleName = namespaceName;
 
             Context.CurrentNamespace = namespaceName;
