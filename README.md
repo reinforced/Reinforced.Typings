@@ -7,6 +7,14 @@ PM> Install-Package Reinforced.Typings
 
 **Find out detailed information in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
 
+News
+=================
+Version **1.3.0** is under development. Features:
+* Modules export/import
+* Decorators
+* Enums bugfix
+* And others
+
 What is that?
 =================
 
