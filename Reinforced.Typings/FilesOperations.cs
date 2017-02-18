@@ -63,82 +63,8 @@ namespace Reinforced.Typings
             return File.OpenWrite(fileName);
         }
 
-        public string GetPathForType(Type t)
-        {
-            var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);
-            if (!string.IsNullOrEmpty(fromConfiguration))
-                return Path.Combine(_context.TargetDirectory, fromConfiguration).Replace("/", "\\");
-
-            var ns = t.GetNamespace();
-            var tn = t.GetName().ToString();
-
-            var idx = tn.IndexOf('<');
-            if (idx != -1) tn = tn.Substring(0, idx);
-            if (_context.ExportPureTypings) tn = tn + ".d.ts";
-            else tn = tn + ".ts";
-
-            if (string.IsNullOrEmpty(ns)) return Path.Combine(_context.TargetDirectory, tn);
-            if (!string.IsNullOrEmpty(_context.RootNamespace))
-            {
-                ns = ns.Replace(_context.RootNamespace, string.Empty);
-            }
-            ns = ns.Trim('.').Replace('.', '\\');
-
-            var pth =
-                Path.Combine(
-                    !string.IsNullOrEmpty(ns) ? Path.Combine(_context.TargetDirectory, ns) : _context.TargetDirectory,
-                    tn);
-
-            return pth;
-        }
-
-        public string GetRelativePathForType(Type typeToReference, Type currentlyExportingType)
-        {
-            var currentFile = GetPathForType(currentlyExportingType);
-            var desiredFile = GetPathForType(typeToReference);
-            if (currentFile == desiredFile) return String.Empty;
-
-            var desiredFileName = Path.GetFileName(desiredFile);
-
-            var relPath = GetRelativeNamespacePath(Path.GetDirectoryName(currentFile),
-                Path.GetDirectoryName(desiredFile));
-
-            relPath = Path.Combine(relPath, desiredFileName);
-            relPath = relPath.Replace('\\', '/');
-            return relPath;
-        }
-
-        private string GetRelativeNamespacePath(string currentNamespace, string desiredNamespace)
-        {
-            if (currentNamespace == desiredNamespace) return string.Empty;
-            if (string.IsNullOrEmpty(currentNamespace)) return desiredNamespace;
-
-
-            var current = currentNamespace.Split('\\');
-            var desired = desiredNamespace.Split('\\');
-
-            var result = new StringBuilder();
-            if (string.IsNullOrEmpty(desiredNamespace))
-            {
-                for (var i = 0; i < current.Length; i++) result.Append("..\\");
-            }
-            else
-            {
-                var level = current.Length - 1;
-                while (level >= 0 && (current.I(level) != desired.I(level)))
-                {
-                    result.Append("..\\");
-                    level--;
-                }
-                level++;
-                for (; level < desired.Length; level++)
-                {
-                    result.AppendFormat("{0}\\", desired[level]);
-                }
-            }
-            return result.ToString().Trim('\\');
-        }
-
+        
+        
         public void ClearTempRegistry()
         {
             _tmpFiles.Clear();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -43,7 +44,8 @@ namespace Reinforced.Typings
 
         private readonly HashSet<object> _ignored = new HashSet<object>();
         private static ConfigurationRepository _instance;
-        private readonly List<string> _references = new List<string>();
+        private readonly List<RtReference> _references = new List<RtReference>();
+        private readonly List<RtImport> _imports = new List<RtImport>();
         private readonly List<string> _additionalDocumentationPathes = new List<string>();
 
         #endregion
@@ -75,9 +77,14 @@ namespace Reinforced.Typings
             get { return _referenceAttributes; }
         }
 
-        public List<string> References
+        public List<RtReference> References
         {
             get { return _references; }
+        }
+
+        public List<RtImport> Imports
+        {
+            get { return _imports; }
         }
 
         public Dictionary<ParameterInfo, TsParameterAttribute> AttributesForParameters

@@ -1,4 +1,6 @@
-﻿#pragma warning disable 1591
+﻿using Reinforced.Typings.Ast.TypeNames;
+
+#pragma warning disable 1591
 namespace Reinforced.Typings.Ast
 {
     /// <summary>
@@ -26,6 +28,7 @@ namespace Reinforced.Typings.Ast
         T Visit(RtConstructor node);
         T Visit(RtImport node);
         T Visit(RtDecorator node);
+        T Visit(RtReference node);
     }
 
     /// <summary>
@@ -52,6 +55,7 @@ namespace Reinforced.Typings.Ast
         void Visit(RtConstructor node);
         void Visit(RtImport node);
         void Visit(RtDecorator node);
+        void Visit(RtReference node);
 
 
     }

@@ -384,11 +384,11 @@ namespace Reinforced.Typings.Fluent
         ///     Adds global reference to another typescript library
         /// </summary>
         /// <param name="conf">Table configurator</param>
-        /// <param name="reference">Full path to .d.ts or .ts file</param>
+        /// <param name="path">Full path to .d.ts or .ts file</param>
         /// <returns>Fluent</returns>
-        public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string reference)
+        public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string path)
         {
-            conf.References.Add(reference);
+            conf.References.Add(new RtReference() {Path = path});
             return conf;
         }
 

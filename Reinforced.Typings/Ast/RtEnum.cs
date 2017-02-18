@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
@@ -39,7 +40,20 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         public override IEnumerable<RtNode> Children
         {
-            get { yield break; }
+            get
+            {
+                foreach (var rtNode in base.Children)
+                {
+                    yield return rtNode;
+                }
+                if (Values != null)
+                {
+                    foreach (var rtEnumValue in Values)
+                    {
+                        yield return rtEnumValue;
+                    }
+                }
+            }
         }
 
         /// <summary>

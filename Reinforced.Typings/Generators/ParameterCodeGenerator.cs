@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators

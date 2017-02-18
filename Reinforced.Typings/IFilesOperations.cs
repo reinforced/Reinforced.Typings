@@ -22,21 +22,6 @@ namespace Reinforced.Typings
         Stream GetTmpFile(string fileName);
 
         /// <summary>
-        /// Retrieves physical path type must be placed to according to .ExportTo settings
-        /// </summary>
-        /// <param name="t">Type that path is needed for</param>
-        /// <returns>Absolute path for type to be placed to</returns>
-        string GetPathForType(Type t);
-
-        /// <summary>
-        /// Retrieves path for type to be exported to relatively to currently exported type
-        /// </summary>
-        /// <param name="typeToReference">Type that needs to be referenced</param>
-        /// <param name="currentlyExportingType">Currently esporting type</param>
-        /// <returns>String representing path to typeToReference related to currentlyExportingType</returns>
-        string GetRelativePathForType(Type typeToReference, Type currentlyExportingType);
-
-        /// <summary>
         /// Cleans up temporary files registry
         /// </summary>
         void ClearTempRegistry();

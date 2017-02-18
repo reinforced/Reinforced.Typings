@@ -1,25 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
+using Reinforced.Typings.Ast;
 
 namespace Reinforced.Typings
 {
     internal class ReferenceInspector
     {
-        internal static string GenerateInspectedReferences(IFilesOperations fileOps, Type element,
-            HashSet<Type> alltypes)
+        private readonly string _targetDirectory;
+        private readonly bool _exportPureTypings;
+        private readonly string _rootNamespace;
+
+        public ReferenceInspector(string targetDirectory, bool exportPureTypings, string rootNamespace)
+        {
+            _targetDirectory = targetDirectory;
+            _exportPureTypings = exportPureTypings;
+            _rootNamespace = rootNamespace;
+        }
+
+        internal InspectedReferences InspectGlobalReferences(Assembly[] assemblies)
+        {
+            
+        }
+
+        internal InspectedReferences GenerateInspectedReferences(Type element, HashSet<Type> alltypes)
         {
             var inspectedTypes = InspectReferences(element, alltypes);
             var references = new HashSet<string>();
             var types = ConfigurationRepository.Instance.ReferencesForType(element);
+
             if (types != null)
             {
                 foreach (var attr in types)
                 {
                     if (attr.Type != element)
                     {
-                        var path = attr.Type != null ? fileOps.GetRelativePathForType(attr.Type, element) : attr.RawPath;
+                        var path = attr.Type != null ? GetRelativePathForType(attr.Type, element) : attr.RawPath;
                         if (!string.IsNullOrEmpty(path)) references.AddIfNotExists(path);
                     }
                 }
@@ -28,19 +47,93 @@ namespace Reinforced.Typings
             {
                 if (inspectedType != element)
                 {
-                    var path = fileOps.GetRelativePathForType(inspectedType, element);
+                    var path = GetRelativePathForType(inspectedType, element);
                     if (!string.IsNullOrEmpty(path)) references.AddIfNotExists(path);
                 }
             }
-            var sb = new StringBuilder();
-            foreach (var reference in references)
-            {
-                if (!string.IsNullOrEmpty(reference))
-                    sb.AppendLine(string.Format("/// <reference path=\"{0}\"/>", reference));
-            }
 
-            return sb.ToString().Trim();
+            var referenceNodes = references.Select(c => new RtReference() { Path = c });
+
+            return new InspectedReferences(referenceNodes);
         }
+
+        public string GetPathForType(Type t)
+        {
+            var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);
+            if (!string.IsNullOrEmpty(fromConfiguration))
+                return Path.Combine(_targetDirectory, fromConfiguration).Replace("/", "\\");
+
+            var ns = t.GetNamespace();
+            var tn = t.GetName().ToString();
+
+            var idx = tn.IndexOf('<');
+            if (idx != -1) tn = tn.Substring(0, idx);
+            if (_exportPureTypings) tn = tn + ".d.ts";
+            else tn = tn + ".ts";
+
+            if (string.IsNullOrEmpty(ns)) return Path.Combine(_targetDirectory, tn);
+            if (!string.IsNullOrEmpty(_rootNamespace))
+            {
+                ns = ns.Replace(_rootNamespace, string.Empty);
+            }
+            ns = ns.Trim('.').Replace('.', '\\');
+
+            var pth =
+                Path.Combine(
+                    !string.IsNullOrEmpty(ns) ? Path.Combine(_targetDirectory, ns) : _targetDirectory,
+                    tn);
+
+            return pth;
+        }
+
+        public string GetRelativePathForType(Type typeToReference, Type currentlyExportingType)
+        {
+            var currentFile = GetPathForType(currentlyExportingType);
+            var desiredFile = GetPathForType(typeToReference);
+            if (currentFile == desiredFile) return String.Empty;
+
+            var desiredFileName = Path.GetFileName(desiredFile);
+
+            var relPath = GetRelativeNamespacePath(Path.GetDirectoryName(currentFile),
+                Path.GetDirectoryName(desiredFile));
+
+            relPath = Path.Combine(relPath, desiredFileName);
+            relPath = relPath.Replace('\\', '/');
+            return relPath;
+        }
+
+
+        private string GetRelativeNamespacePath(string currentNamespace, string desiredNamespace)
+        {
+            if (currentNamespace == desiredNamespace) return string.Empty;
+            if (string.IsNullOrEmpty(currentNamespace)) return desiredNamespace;
+
+
+            var current = currentNamespace.Split('\\');
+            var desired = desiredNamespace.Split('\\');
+
+            var result = new StringBuilder();
+            if (string.IsNullOrEmpty(desiredNamespace))
+            {
+                for (var i = 0; i < current.Length; i++) result.Append("..\\");
+            }
+            else
+            {
+                var level = current.Length - 1;
+                while (level >= 0 && (current.I(level) != desired.I(level)))
+                {
+                    result.Append("..\\");
+                    level--;
+                }
+                level++;
+                for (; level < desired.Length; level++)
+                {
+                    result.AppendFormat("{0}\\", desired[level]);
+                }
+            }
+            return result.ToString().Trim('\\');
+        }
+
 
         private static Type GetOverridenType(MemberInfo info)
         {
@@ -99,7 +192,20 @@ namespace Reinforced.Typings
             }
         }
 
-        
+
+    }
+
+    internal class InspectedReferences
+    {
+        public RtReference[] References { get; private set; }
+
+        public RtImport[] Imports { get; private set; }
+
+        public InspectedReferences(IEnumerable<RtReference> references = null, IEnumerable<RtImport> imports = null)
+        {
+            References = references == null ? new RtReference[0] : references.ToArray();
+            Imports = imports == null ? new RtImport[0] : imports.ToArray();
+        }
     }
 
     internal static class HashSetExtensions
@@ -109,5 +215,7 @@ namespace Reinforced.Typings
             if (hashSet.Contains(val)) return;
             hashSet.Add(val);
         }
+
+
     }
 }

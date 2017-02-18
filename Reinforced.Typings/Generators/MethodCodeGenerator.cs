@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Reinforced.Typings.Ast
+﻿namespace Reinforced.Typings.Ast.TypeNames
 {
     /// <summary>
     /// Abstract AST node for type name

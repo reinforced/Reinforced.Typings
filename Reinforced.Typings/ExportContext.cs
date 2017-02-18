@@ -35,12 +35,12 @@ namespace Reinforced.Typings
         /// <summary>
         /// Instantiates new ExportContext instance (only for testing/integration)
         /// </summary>
-        public ExportContext(IFilesOperations fileOperationsServiceOverride= null)
+        public ExportContext(IFilesOperations fileOperationsServiceOverride = null)
         {
             Location = new Location();
             Warnings = new List<RtWarning>();
             _fileOperations = fileOperationsServiceOverride;
-            if (_fileOperations==null) _fileOperations = new FilesOperations(this);
+            if (_fileOperations == null) _fileOperations = new FilesOperations(this);
         }
 
         /// <summary>
@@ -213,8 +213,6 @@ namespace Reinforced.Typings
                 _generateDocumentation = value;
             }
         }
-
-        internal string References { get; set; }
 
         /// <summary>
         ///     Documentation manager

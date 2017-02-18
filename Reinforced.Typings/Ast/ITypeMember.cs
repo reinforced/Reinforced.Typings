@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
@@ -11,6 +12,16 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public interface ITypeMember
     {
+        /// <summary>
+        /// Denotes current class to be exported
+        /// </summary>
+        bool Export { get; set; }
+
+        /// <summary>
+        /// Denotes that current class must be default export of module
+        /// </summary>
+        bool DefaultExport { get; set; }
+
         /// <summary>
         /// JSDOC
         /// </summary>

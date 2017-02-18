@@ -7,6 +7,8 @@ using System.Text;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Visitors;
+using Reinforced.Typings.Visitors.TypeScript;
+using Reinforced.Typings.Visitors.Typings;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -17,12 +19,13 @@ namespace Reinforced.Typings
     /// </summary>
     public class TsExporter : MarshalByRefObject
     {
-        private readonly StringBuilder _referenceBuilder = new StringBuilder();
+        private InspectedReferences _globalReferences;
         private readonly ExportContext _context;
         private List<Type> _allTypes;
         private HashSet<Type> _allTypesHash;
         private ConfigurationRepository _configurationRepository;
         private bool _isAnalyzed;
+        private ReferenceInspector _referenceInspector;
 
         #region Constructors
 
@@ -33,6 +36,7 @@ namespace Reinforced.Typings
         public TsExporter(ExportContext context)
         {
             _context = context;
+            _referenceInspector = new ReferenceInspector(context.TargetDirectory, context.ExportPureTypings, context.RootNamespace);
         }
 
         #endregion
@@ -71,6 +75,8 @@ namespace Reinforced.Typings
                 }
             }
 
+            _globalReferences = _referenceInspector.InspectGlobalReferences(_context.SourceAssemblies);
+
             _context.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
                 .Select(c => string.Format("/// <reference path=\"{0}\"/>", c.Path))
@@ -79,9 +85,6 @@ namespace Reinforced.Typings
                         c => string.Format("/// <reference path=\"{0}\"/>", c)))
                 .ToList()
                 .ForEach(a => _referenceBuilder.AppendLine(a));
-
-            _context.References = _referenceBuilder.ToString();
-
 
             _isAnalyzed = true;
         }
@@ -108,7 +111,7 @@ namespace Reinforced.Typings
                 HashSet<string> pathes = new HashSet<string>();
                 foreach (var type in types)
                 {
-                    var inspected = _context.FileOperations.GenerateInspectedReferences(type, _allTypesHash);
+                    var inspected = _referenceInspector.GenerateInspectedReferences(type, _allTypesHash);
                     if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected))
                     {
                         pathes.AddIfNotExists(inspected);
@@ -145,7 +148,7 @@ namespace Reinforced.Typings
             else
             {
                 var typeFilesMap = _allTypes
-                    .GroupBy(c => _context.FileOperations.GetPathForType(c))
+                    .GroupBy(c => _referenceInspector.GetPathForType(c))
                     .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
                 foreach (var kv in typeFilesMap)

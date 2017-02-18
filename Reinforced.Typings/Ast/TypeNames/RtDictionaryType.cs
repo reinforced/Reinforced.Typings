@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Reinforced.Typings.Ast
+namespace Reinforced.Typings.Ast.TypeNames
 {
     /// <summary>
     /// AST node for Dictionary type

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors
 {
@@ -29,6 +30,7 @@ namespace Reinforced.Typings.Visitors
             if (node is RtConstructor) return Visit((RtConstructor)node);
             if (node is RtImport) return Visit((RtImport)node);
             if (node is RtDecorator) return Visit((RtDecorator)node);
+            if (node is RtReference) return Visit((RtReference)node);
             throw new Exception("Unknown node passed");
         }
 
@@ -50,5 +52,6 @@ namespace Reinforced.Typings.Visitors
         public abstract T Visit(RtConstructor node);
         public abstract T Visit(RtImport node);
         public abstract T Visit(RtDecorator node);
+        public abstract T Visit(RtReference node);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Reinforced.Typings.Ast
+namespace Reinforced.Typings.Ast.TypeNames
 {
     /// <summary>
     /// AST node for simple type name

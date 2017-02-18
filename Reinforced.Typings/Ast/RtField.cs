@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {

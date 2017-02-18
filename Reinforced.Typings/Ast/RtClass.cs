@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
@@ -7,6 +8,8 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public class RtClass : RtCompilationUnit, ITypeMember
     {
+        
+
         /// <summary>
         /// JSDOC
         /// </summary>
@@ -49,6 +52,12 @@ namespace Reinforced.Typings.Ast
             get
             {
                 yield return Documentation;
+
+                foreach (var rtNode in base.Children)
+                {
+                    yield return rtNode;
+                }
+
                 yield return Name;
                 foreach (var implementee in Implementees)
                 {

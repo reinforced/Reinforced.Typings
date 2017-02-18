@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -16,7 +17,8 @@ namespace Reinforced.Typings.Fluent
         private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders =
             new Dictionary<Type, IEnumConfigurationBuidler>();
 
-        private readonly List<string> _references = new List<string>();
+        private readonly List<RtReference> _references = new List<RtReference>();
+        private readonly List<RtImport> _imports = new List<RtImport>();
 
         private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders =
             new Dictionary<Type, ITypeConfigurationBuilder>();
@@ -26,9 +28,14 @@ namespace Reinforced.Typings.Fluent
             get { return _additionalDocumentationPathes; }
         }
 
-        internal List<string> References
+        internal List<RtReference> References
         {
             get { return _references; }
+        }
+
+        internal List<RtImport> Imports
+        {
+            get { return _imports; }
         }
 
         internal Dictionary<Type, ITypeConfigurationBuilder> TypeConfigurationBuilders
