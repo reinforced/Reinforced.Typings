@@ -137,6 +137,7 @@
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.cs" />
+    <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtConstructor.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtEnum.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtEnumValue.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtFuncion.cs" />
@@ -148,10 +149,16 @@
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtArgument.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtInterface.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtField.cs" />
+    <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtArrayType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDelegateType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDictionaryType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtSimpleTypeNamecs.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.cs" />
+    <Compile Include="Visitors\Typings\TypingsExportVisitor.RtClass.cs" />
+    <Compile Include="Visitors\Typings\TypingsExportVisitor.RtConstructor.cs" />
+    <Compile Include="Visitors\Typings\TypingsExportVisitor.RtField.cs" />
+    <Compile Include="Visitors\Typings\TypingsExportVisitor.RtFuncion.cs" />
+    <Compile Include="Visitors\Typings\TypingsExportVisitor.RtModule.cs" />
     <Compile Include="Visitors\VisitorBase.cs" />
     <Compile Include="Xmldoc\DocumentationManager.cs" />
     <Compile Include="Xmldoc\Model\DocumentationMemberType.cs" />
