@@ -13,24 +13,35 @@ namespace Reinforced.Typings.Visitors
 
         private int _tabsCount;
         private string _tabsLine;
-
+        private readonly string _tabulation;
         protected TextWriter Writer { get { return _writer; } }
 
-        public TextExportingVisitor(TextWriter writer)
+        public TextExportingVisitor(TextWriter writer, string tabulation)
         {
             _writer = writer;
+            _tabulation = tabulation;
+        }
+
+        private string TabLine(int count)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < count; i++)
+            {
+                sb.Append(_tabulation);
+            }
+            return sb.ToString();
         }
 
         protected void Tab()
         {
             _tabsCount++;
-            _tabsLine = new string('\t', _tabsCount);
+            _tabsLine = TabLine(_tabsCount);
         }
 
         protected void UnTab()
         {
             if (_tabsCount > 0) _tabsCount--;
-            _tabsLine = new string('\t', _tabsCount);
+            _tabsLine = TabLine(_tabsCount);
         }
 
         protected void Indent()

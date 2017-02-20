@@ -134,6 +134,7 @@
     <Compile Include="Fluent\TypingsConfigurationExtensions.cs" />
     <Compile Include="Generators\ClassAndInterfaceGeneratorBase.cs" />
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />
+    <Compile Include="GlobalParameters.cs" />
     <Compile Include="IFilesOperations.cs" />
     <Compile Include="InspectedReferences.cs" />
     <Compile Include="Location.cs" />

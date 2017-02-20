@@ -39,7 +39,7 @@ namespace Reinforced.Typings
 
         #endregion
 
-        private void ExtractReferences()
+        private void Analyze()
         {
             if (_isAnalyzed) return;
             _context.Documentation =
@@ -123,7 +123,7 @@ namespace Reinforced.Typings
         public void Export()
         {
             _context.FileOperations.ClearTempRegistry();
-            ExtractReferences();
+            Analyze();
             var tr = new TypeResolver(_context);
             _context.Lock();
 

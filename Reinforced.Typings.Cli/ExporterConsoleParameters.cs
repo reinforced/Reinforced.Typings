@@ -63,60 +63,9 @@ False (default) to store generated typings in single file.
 Example:   rtcli.exe Hierarchy=""true"" ")]
         public bool Hierarchy { get; set; }
 
-        /// <summary>
-        /// True to write warning comment about auto-generated to every file.
-        /// False to do not
-        /// </summary>
-        [ConsoleHelp(@"
-Boolean parameter that controls writing of 
-auto-generated warning comment to each generated file.
-True (default) to write warning comment about auto-generated to every file. 
-False to do not. 
-Example:   rtcli.exe WriteWarningComment=""false"" ")]
-        public bool WriteWarningComment { get; set; }
-
-        /// <summary>
-        /// If true, export will be performed in .d.ts manner (only typings, declare module etc).
-        /// Otherwise, export will be performed to regulat .ts file
-        /// </summary>
-        [ConsoleHelp(@"
-Boolean parameter that controls generation mode switch 
-between .ts/.d.ts. If true, export will be performed in 
-.d.ts manner (only typings, declare module etc).
-Otherwise, export will be performed to regulat .ts file 
-Example:   rtcli.exe ExportPureTyings=""true"" ")]
-        public bool ExportPureTypings { get; set; }
-
-        /// <summary>
-        /// Specifies root namespace for hierarchical export.
-        /// Helps to avoid creating redundant directories when hierarchical export.
-        /// </summary>
-        [ConsoleHelp(@"
-Specifies root namespace for hierarchical export.
-Helps to avoid creating redundant directories when hierarchical export.
-Example:   rtcli.exe ExportPureTyings=""true"" ")]
-        public string RootNamespace { get; set; }
-
-        /// <summary>
-        /// Use camelCase for methods naming
-        /// </summary>
-        [ConsoleHelp(@"
-Specifies usage of camelCase for methods.
-True to use camelCase while generating methods names. 
-False to remain methods names unchanged.
-Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
-        public bool CamelCaseForMethods { get; set; }
-
-        /// <summary>
-        /// Use camelCase for properties naming
-        /// </summary>
-        [ConsoleHelp(@"
-Specifies usage of camelCase for properties.
-True to use camelCase while generating properties names. 
-False to remain properties names unchanged.
-Example:   rtcli.exe CamelCaseForMethods=""true"" ")]
-        public bool CamelCaseForProperties { get; set; }
-
+        
+       
+       
         /// <summary>
         /// Full path to assembly's XMLDOC file.
         /// If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
@@ -127,17 +76,6 @@ If this parameter is not specified or contains invalid path
 then documentation will not be generated without any exception
 Example:   rtcli.exe DocumentationFilePath=""C:\MyAssembly\Assembly.XML"" ")]
         public string DocumentationFilePath { get; set; }
-
-        /// <summary>
-        /// Disables or enables documentation generation regardless valid DocumentationFilePath file. True by default.
-        /// </summary>
-        [ConsoleHelp(@"
-Disables or enables documentation generation regardless 
-valid DocumentationFilePath file.
-False to disable documentation generation. True to enable.
-True by default.
-Example:   rtcli.exe GenerateDocumentation=""false"" ")]
-        public bool GenerateDocumentation { get; set; }
 
         /// <summary>
         /// Sets full-qualified name of configuration method to be applied to retrieve fluent configuration instead of attribute-based configuration.
@@ -170,7 +108,7 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
 
         public ExporterConsoleParameters()
         {
-            WriteWarningComment = true;
+            
         }
 
         /// <summary>

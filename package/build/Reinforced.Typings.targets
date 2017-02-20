@@ -71,16 +71,10 @@
 			AdditionalSourceAssemblies="@(RtAdditionalAssembly)" 
 			ProjectRoot="$(ProjectDir)"
 			
-			TargetFile="$(RtTargetFile)" 			
-			WriteWarningComment="$(RtWriteWarningComment)"
-			Hierarchical="$(RtDivideTypesAmongFiles)"
-			ExportPureTypings="$(RtExportPureTypings)"
+			TargetFile="$(RtTargetFile)" 	
+			Hierarchical="$(RtDivideTypesAmongFiles)"			
 			TargetDirectory="$(RtTargetDirectory)"
-			RootNamespace="$(RtRootNamespace)"
-			CamelCaseForMethods="$(RtCamelCaseForMethods)"
-			CamelCaseForProperties="$(RtCamelCaseForProperties)"
-			DocumentationFilePath="$(MSBuildProjectDirectory)\$(DocumentationFile)"
-			GenerateDocumentation="$(RtGenerateDocumentation)"
+			DocumentationFilePath="$(MSBuildProjectDirectory)\$(DocumentationFile)"			
 			ConfigurationMethod="$(RtConfigurationMethod)"
 		/>
 		

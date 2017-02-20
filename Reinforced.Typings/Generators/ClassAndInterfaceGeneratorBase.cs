@@ -42,6 +42,7 @@ namespace Reinforced.Typings.Generators
             var baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
             {
+                //todo if bs is generic...
                 if (ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs) != null)
                 {
                     if (bs.IsExportingAsInterface()) baseClassIsExportedAsInterface = true;

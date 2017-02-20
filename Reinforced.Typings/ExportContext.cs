@@ -12,20 +12,17 @@ namespace Reinforced.Typings
     /// </summary>
     public class ExportContext
     {
-        private bool _camelCaseForMethods;
-        private bool _camelCaseForProperties;
+        
         private Action<ConfigurationBuilder> _configurationMethod;
         private string _documentationFilePath;
-        private bool _exportPureTyings;
-        private bool _generateDocumentation;
         private bool _hierarchical;
         private bool _isLocked;
-        private string _rootNamespace;
+       
         private Assembly[] _sourceAssemblies;
         private string _targetDirectory;
         private string _targetFile;
-        private bool _writeWarningComment;
-        private IFilesOperations _fileOperations;
+        
+        private readonly IFilesOperations _fileOperations;
 
         public IFilesOperations FileOperations
         {
@@ -80,20 +77,6 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        ///     True to write warning comment about auto-generated to every file.
-        ///     False to do not
-        /// </summary>
-        public bool WriteWarningComment
-        {
-            get { return _writeWarningComment; }
-            set
-            {
-                if (_isLocked) return;
-                _writeWarningComment = value;
-            }
-        }
-
-        /// <summary>
         ///     Target directory where to store generated typing files.
         ///     This parameter is not used when Hierarcy is false
         /// </summary>
@@ -121,60 +104,7 @@ namespace Reinforced.Typings
             }
         }
 
-        /// <summary>
-        ///     If true, export will be performed in .d.ts manner (only typings, declare module etc).
-        ///     Otherwise, export will be performed to regulat .ts file
-        /// </summary>
-        public bool ExportPureTypings
-        {
-            get { return _exportPureTyings; }
-            set
-            {
-                if (_isLocked) return;
-                _exportPureTyings = value;
-            }
-        }
-
-        /// <summary>
-        ///     Specifies root namespace for hierarchical export.
-        ///     Helps to avoid creating redundant directories when hierarchical export.
-        /// </summary>
-        public string RootNamespace
-        {
-            get { return _rootNamespace; }
-            set
-            {
-                if (_isLocked) return;
-                _rootNamespace = value;
-            }
-        }
-
-        /// <summary>
-        ///     Use camelCase for methods naming
-        /// </summary>
-        public bool CamelCaseForMethods
-        {
-            get { return _camelCaseForMethods; }
-            set
-            {
-                if (_isLocked) return;
-                _camelCaseForMethods = value;
-            }
-        }
-
-        /// <summary>
-        ///     Use camelCase for properties naming
-        /// </summary>
-        public bool CamelCaseForProperties
-        {
-            get { return _camelCaseForProperties; }
-            set
-            {
-                if (_isLocked) return;
-                _camelCaseForProperties = value;
-            }
-        }
-
+       
         /// <summary>
         ///     Path to assembly's XMLDOC file
         /// </summary>
@@ -200,26 +130,19 @@ namespace Reinforced.Typings
                 _configurationMethod = value;
             }
         }
-
-        /// <summary>
-        ///     Enables or disables documentation generator
-        /// </summary>
-        public bool GenerateDocumentation
-        {
-            get { return _generateDocumentation; }
-            set
-            {
-                if (_isLocked) return;
-                _generateDocumentation = value;
-            }
-        }
-
+        
         /// <summary>
         ///     Documentation manager
         /// </summary>
         public DocumentationManager Documentation { get; internal set; }
 
-        internal string CurrentNamespace { get; set; }
+        /// <summary>
+        /// Warnings that should be displayed after build. 
+        /// Feel free to add messages from generators here.
+        /// </summary>
+        public List<RtWarning> Warnings { get; private set; }
+
+        #region Internals
 
         /// <summary>
         ///     There is a case when you are exporting base class as interface. It may lead to some unusual handling of generation,
@@ -237,10 +160,11 @@ namespace Reinforced.Typings
             _isLocked = false;
         }
 
-        /// <summary>
-        /// Warnings that should be displayed after build. 
-        /// Feel free to add messages from generators here.
-        /// </summary>
-        public List<RtWarning> Warnings { get; private set; }
+        internal string CurrentNamespace { get; set; }
+
+        #endregion
+
+
+
     }
 }

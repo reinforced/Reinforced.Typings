@@ -12,8 +12,8 @@ namespace Reinforced.Typings.Visitors.TypeScript
     {
         protected WriterContext Context { get; set; }
 
-        public TypeScriptExportVisitor(TextWriter writer)
-            : base(writer)
+        public TypeScriptExportVisitor(TextWriter writer, string tabulation)
+            : base(writer,tabulation)
         {
             Context = WriterContext.None;
         }

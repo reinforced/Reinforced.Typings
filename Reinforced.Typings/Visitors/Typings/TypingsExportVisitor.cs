@@ -8,8 +8,8 @@ namespace Reinforced.Typings.Visitors.Typings
 {
     partial class TypingsExportVisitor : TypeScriptExportVisitor
     {
-        public TypingsExportVisitor(TextWriter writer)
-            : base(writer)
+        public TypingsExportVisitor(TextWriter writer, string tabulation)
+            : base(writer,tabulation)
         {
         }
     }

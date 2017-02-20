@@ -1,5 +1,4 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace Reinforced.Typings.Cli
     public static class Bootstrapper
     {
         private static ExporterConsoleParameters _parameters;
-        private static Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
         private static string _lastAssemblyLocalDir;
         private static int _totalLoadedAssemblies;
 
@@ -105,17 +104,11 @@ namespace Reinforced.Typings.Cli
         {
             ExportContext context = new ExportContext
             {
-                ExportPureTypings = _parameters.ExportPureTypings,
                 Hierarchical = _parameters.Hierarchy,
                 TargetDirectory = _parameters.TargetDirectory,
                 TargetFile = _parameters.TargetFile,
-                WriteWarningComment = _parameters.WriteWarningComment,
                 SourceAssemblies = GetAssembliesFromArgs(),
-                RootNamespace = _parameters.RootNamespace,
-                CamelCaseForMethods = _parameters.CamelCaseForMethods,
-                CamelCaseForProperties = _parameters.CamelCaseForProperties,
-                DocumentationFilePath = _parameters.DocumentationFilePath,
-                GenerateDocumentation = _parameters.GenerateDocumentation
+                DocumentationFilePath = _parameters.DocumentationFilePath
             };
             return context;
         }
