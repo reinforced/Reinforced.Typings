@@ -317,9 +317,16 @@ namespace Reinforced.Typings
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
                 var ns = t.Namespace;
-                if (te != null && te.IncludeNamespace && !string.IsNullOrEmpty(te.Namespace))
+                if (te != null)
                 {
-                    ns = te.Namespace;
+                    if (!te.IncludeNamespace)
+                    {
+                        ns = distinguishAutoTypes ? "-" : string.Empty;
+                    }
+                    else if (!string.IsNullOrEmpty(te.Namespace))
+                    {
+                        ns = te.Namespace;
+                    }
                 }
                 return ns;
             }
