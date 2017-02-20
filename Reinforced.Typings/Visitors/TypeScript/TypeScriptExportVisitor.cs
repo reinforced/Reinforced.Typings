@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors.TypeScript
@@ -103,8 +104,6 @@ namespace Reinforced.Typings.Visitors.TypeScript
             WriteLine("}");
         }
 
-        #region Types
-
         protected void SequentialVisit<T>(IEnumerable<T> nodes, string separator)
             where T : RtNode
         {
@@ -116,8 +115,6 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 if (index < n.Length - 1) Write(separator);
             }
         }
-
-        #endregion
 
         public override void Visit(RtImport node)
         {

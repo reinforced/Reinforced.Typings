@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
 {
@@ -23,7 +25,12 @@ namespace Reinforced.Typings
 
         internal InspectedReferences InspectGlobalReferences(Assembly[] assemblies)
         {
-            
+            var references = assemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
+                .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
+                .Select(c => new RtReference() {Path = c.Path})
+                .Union(ConfigurationRepository.Instance.References);
+
+            return new InspectedReferences(references);
         }
 
         internal InspectedReferences GenerateInspectedReferences(Type element, HashSet<Type> alltypes)
@@ -193,19 +200,6 @@ namespace Reinforced.Typings
         }
 
 
-    }
-
-    internal class InspectedReferences
-    {
-        public RtReference[] References { get; private set; }
-
-        public RtImport[] Imports { get; private set; }
-
-        public InspectedReferences(IEnumerable<RtReference> references = null, IEnumerable<RtImport> imports = null)
-        {
-            References = references == null ? new RtReference[0] : references.ToArray();
-            Imports = imports == null ? new RtImport[0] : imports.ToArray();
-        }
     }
 
     internal static class HashSetExtensions

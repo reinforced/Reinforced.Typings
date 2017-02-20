@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 using Reinforced.Typings.Generators;

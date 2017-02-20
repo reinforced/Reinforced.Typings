@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessModifier.cs" />
+    <Compile Include="Ast\Dependency\RtImportTarget.cs" />
     <Compile Include="Ast\DocTag.cs" />
     <Compile Include="Ast\ITypeMember.cs" />
     <Compile Include="Ast\IRtVisitor.cs" />
@@ -72,14 +73,14 @@
     <Compile Include="Ast\RtField.cs" />
     <Compile Include="Ast\RtFuncion.cs" />
     <Compile Include="Ast\RtIdentifier.cs" />
-    <Compile Include="Ast\RtImport.cs" />
+    <Compile Include="Ast\Dependency\RtImport.cs" />
     <Compile Include="Ast\RtInterface.cs" />
     <Compile Include="Ast\RtJsdocNode.cs" />
     <Compile Include="Ast\RtMember.cs" />
-    <Compile Include="Ast\RtModule.cs" />
+    <Compile Include="Ast\RtNamespace.cs" />
     <Compile Include="Ast\RtNode.cs" />
     <Compile Include="Ast\RtRaw.cs" />
-    <Compile Include="Ast\RtReference.cs" />
+    <Compile Include="Ast\Dependency\RtReference.cs" />
     <Compile Include="Ast\TypeNames\RtSimpleTypeName.cs" />
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Exceptions\ErrorMessages.cs" />
     <Compile Include="Exceptions\RtException.cs" />
     <Compile Include="Exceptions\RtWarning.cs" />
+    <Compile Include="ExportedFile.cs" />
     <Compile Include="Fluent\ClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\ConfigurationBuildersExtensions.cs" />
     <Compile Include="Fluent\EnumConfigurationBuilder.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Generators\ClassAndInterfaceGeneratorBase.cs" />
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />
     <Compile Include="IFilesOperations.cs" />
+    <Compile Include="InspectedReferences.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />

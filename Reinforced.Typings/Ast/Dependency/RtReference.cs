@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Reinforced.Typings.Ast
+namespace Reinforced.Typings.Ast.Dependency
 {
     public class RtReference : RtNode
     {

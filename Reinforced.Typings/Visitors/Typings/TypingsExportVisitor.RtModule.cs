@@ -6,11 +6,11 @@ namespace Reinforced.Typings.Visitors.Typings
 {
     partial class TypingsExportVisitor
     {
-        public override void Visit(RtModule node)
+        public override void Visit(RtNamespace node)
         {
             if (node == null) return;
 
-            if (!node.IsAmbientModule)
+            if (!node.IsAmbientNamespace)
             {
                 Context = WriterContext.Module;
                 AppendTabs();
@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Visitors.Typings
             {
                 Visit(rtCompilationUnit);
             }
-            if (!node.IsAmbientModule)
+            if (!node.IsAmbientNamespace)
             {
                 Context = WriterContext.None;
                 UnTab();

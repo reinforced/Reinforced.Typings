@@ -25,5 +25,7 @@ namespace Reinforced.Typings
         /// Cleans up temporary files registry
         /// </summary>
         void ClearTempRegistry();
+
+        void Export(string fileName, ExportedFile file);
     }
 }

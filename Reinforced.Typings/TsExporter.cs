@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
-using Reinforced.Typings.Visitors;
-using Reinforced.Typings.Visitors.TypeScript;
-using Reinforced.Typings.Visitors.Typings;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -25,7 +22,8 @@ namespace Reinforced.Typings
         private HashSet<Type> _allTypesHash;
         private ConfigurationRepository _configurationRepository;
         private bool _isAnalyzed;
-        private ReferenceInspector _referenceInspector;
+        private readonly ReferenceInspector _referenceInspector;
+
 
         #region Constructors
 
@@ -77,15 +75,6 @@ namespace Reinforced.Typings
 
             _globalReferences = _referenceInspector.InspectGlobalReferences(_context.SourceAssemblies);
 
-            _context.SourceAssemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
-                .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
-                .Select(c => string.Format("/// <reference path=\"{0}\"/>", c.Path))
-                .Union(
-                    ConfigurationRepository.Instance.References.Select(
-                        c => string.Format("/// <reference path=\"{0}\"/>", c)))
-                .ToList()
-                .ForEach(a => _referenceBuilder.AppendLine(a));
-
             _isAnalyzed = true;
         }
 
@@ -95,34 +84,37 @@ namespace Reinforced.Typings
         /// <param name="sw">TextWriter</param>
         /// <param name="tr">TypeResolver object</param>
         /// <param name="types">Types to export</param>
-        private void ExportTypes(TextWriter sw, TypeResolver tr, IEnumerable<Type> types = null)
+        private ExportedFile ExportTypes(TypeResolver tr, IEnumerable<Type> types = null)
         {
-            ExportReferences(sw, types);
-            if (types == null) types = _allTypes;
-            ExportNamespaces(types, tr, sw);
+
+            ExportedFile ef = new ExportedFile
+            {
+                GlobalReferences = _globalReferences,
+                References = InspectReferences()
+            };
+            ef.Namespaces = ExportNamespaces(types ?? _allTypes, tr);
+            return ef;
         }
 
-        private void ExportReferences(TextWriter tw, IEnumerable<Type> types = null)
+        private InspectedReferences InspectReferences(IEnumerable<Type> types = null)
         {
-            WriteWarning(tw);
-            tw.WriteLine(_referenceBuilder.ToString());
             if (types != null)
             {
-                HashSet<string> pathes = new HashSet<string>();
+                List<RtReference> refs = new List<RtReference>();
+                List<RtImport> imports = new List<RtImport>();
                 foreach (var type in types)
                 {
                     var inspected = _referenceInspector.GenerateInspectedReferences(type, _allTypesHash);
-                    if (!string.IsNullOrEmpty(inspected) && !string.IsNullOrWhiteSpace(inspected))
-                    {
-                        pathes.AddIfNotExists(inspected);
-                    }
+                    refs.AddRange(inspected.References);
+                    imports.AddRange(inspected.Imports);
                 }
-                foreach (var path in pathes)
-                {
-                    tw.WriteLine(path);
-                }
-
+                return new InspectedReferences(refs, imports);
             }
+            else
+            {
+                return new InspectedReferences();
+            }
+
         }
 
         /// <summary>
@@ -137,13 +129,8 @@ namespace Reinforced.Typings
 
             if (!_context.Hierarchical)
             {
-                using (var fs = _context.FileOperations.GetTmpFile(_context.TargetFile))
-                {
-                    using (var tw = new StreamWriter(fs))
-                    {
-                        ExportTypes(tw, tr);
-                    }
-                }
+                var file = ExportTypes(tr);
+                _context.FileOperations.Export(_context.TargetFile, file);
             }
             else
             {
@@ -154,13 +141,8 @@ namespace Reinforced.Typings
                 foreach (var kv in typeFilesMap)
                 {
                     var path = kv.Key;
-                    using (var fs = _context.FileOperations.GetTmpFile(path))
-                    {
-                        using (var tw = new StreamWriter(fs))
-                        {
-                            ExportTypes(tw, tr, kv.Value);
-                        }
-                    }
+                    var file = ExportTypes(tr, kv.Value);
+                    _context.FileOperations.Export(path, file);
                 }
             }
 
@@ -169,53 +151,22 @@ namespace Reinforced.Typings
             tr.PrintCacheInfo();
         }
 
-        private void ExportNamespaces(IEnumerable<Type> types, TypeResolver tr, TextWriter tw)
+        private RtNamespace[] ExportNamespaces(IEnumerable<Type> types, TypeResolver tr)
         {
             var gen = tr.GeneratorForNamespace(_context);
             var grp = types.GroupBy(c => c.GetNamespace(true));
             var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
 
-            var visitor = _context.ExportPureTypings ? new TypingsExportVisitor(tw) : new TypeScriptExportVisitor(tw);
-
+            List<RtNamespace> result = new List<RtNamespace>(nsp.Count);
             foreach (var n in nsp)
             {
                 var ns = n.Key;
                 if (ns == "-") ns = string.Empty;
                 var module = gen.Generate(n.Value, ns, tr);
-                visitor.Visit(module);
+                result.Add(module);
             }
-            tw.Flush();
+            return result.ToArray();
         }
-
-        private void WriteWarning(TextWriter tw)
-        {
-            if (_context.WriteWarningComment)
-            {
-                tw.WriteLine("//     This code was generated by a Reinforced.Typings tool. ");
-                tw.WriteLine("//     Changes to this file may cause incorrect behavior and will be lost if");
-                tw.WriteLine("//     the code is regenerated.");
-                tw.WriteLine();
-            }
-        }
-
-        /// <summary>
-        ///     Exports TypeScript source to string
-        /// </summary>
-        /// <returns>String containig generated TypeScript source for specified assemblies</returns>
-        //public string ExportAll()
-        //{
-        //    _context.Lock();
-        //    ExtractReferences();
-
-        //    var sb = new StringBuilder();
-        //    var tr = new TypeResolver(_context);
-        //    using (var sw = new StringWriter(sb))
-        //    {
-        //        ExportTypes(sw, tr);
-        //    }
-        //    _context.Unlock();
-        //    return sb.ToString();
-        //}
     }
 }

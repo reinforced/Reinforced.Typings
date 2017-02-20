@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors
@@ -23,7 +24,7 @@ namespace Reinforced.Typings.Visitors
             if (node is RtSimpleTypeName) { Visit((RtSimpleTypeName)node); return; }
             if (node is RtRaw) { Visit((RtRaw)node); return; }
             if (node is RtJsdocNode) { Visit((RtJsdocNode)node); return; }
-            if (node is RtModule) { Visit((RtModule)node); return; }
+            if (node is RtNamespace) { Visit((RtNamespace)node); return; }
             if (node is RtEnumValue) { Visit((RtEnumValue)node); return; }
             if (node is RtEnum) { Visit((RtEnum)node); return; }
             if (node is RtDictionaryType) { Visit((RtDictionaryType)node); return; }
@@ -46,7 +47,7 @@ namespace Reinforced.Typings.Visitors
         public abstract void Visit(RtSimpleTypeName node);
         public abstract void Visit(RtRaw node);
         public abstract void Visit(RtJsdocNode node);
-        public abstract void Visit(RtModule node);
+        public abstract void Visit(RtNamespace node);
         public abstract void Visit(RtEnumValue node);
         public abstract void Visit(RtEnum node);
         public abstract void Visit(RtDictionaryType node);

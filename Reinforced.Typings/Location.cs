@@ -31,7 +31,7 @@ namespace Reinforced.Typings
         /// <summary>
         /// Current Module
         /// </summary>
-        public RtModule CurrentModule { get; set; }
+        public RtNamespace CurrentNamespace { get; set; }
 
         /// <summary>
         /// Sets current location
@@ -42,7 +42,7 @@ namespace Reinforced.Typings
             if (location is RtClass) CurrentClass = (RtClass) location;
             if (location is RtInterface) CurrentInterface = (RtInterface)location;
             if (location is RtEnum) CurrentEnum = (RtEnum)location;
-            if (location is RtModule) CurrentModule = (RtModule)location;
+            if (location is RtNamespace) CurrentNamespace = (RtNamespace)location;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Reinforced.Typings
             if (location is RtClass) CurrentClass = null;
             if (location is RtInterface) CurrentInterface = null;
             if (location is RtEnum) CurrentEnum = null;
-            if (location is RtModule) CurrentModule = null;
+            if (location is RtNamespace) CurrentNamespace = null;
         }
     }
 }

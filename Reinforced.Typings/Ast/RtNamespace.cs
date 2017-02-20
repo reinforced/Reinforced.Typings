@@ -5,12 +5,12 @@ namespace Reinforced.Typings.Ast
     /// <summary>
     /// AST node for TypeScript module
     /// </summary>
-    public class RtModule : RtNode
+    public class RtNamespace : RtNode
     {
         /// <summary>
         /// Constructs new instance of AST node
         /// </summary>
-        public RtModule()
+        public RtNamespace()
         {
             CompilationUnits = new List<RtNode>();
         }
@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Ast
         /// <summary>
         /// Identifies nameless module that only wraps CompilationUnits without module name
         /// </summary>
-        public bool IsAmbientModule { get; set; }
+        public bool IsAmbientNamespace { get; set; }
 
         /// <summary>
         /// Module name
