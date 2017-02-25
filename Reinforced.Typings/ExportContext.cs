@@ -22,11 +22,12 @@ namespace Reinforced.Typings
         private string _targetDirectory;
         private string _targetFile;
         
-        private readonly IFilesOperations _fileOperations;
+        private IFilesOperations _fileOperations;
 
         public IFilesOperations FileOperations
         {
             get { return _fileOperations; }
+            set { _fileOperations = value; }
         }
 
         /// <summary>
@@ -161,6 +162,8 @@ namespace Reinforced.Typings
         }
 
         internal string CurrentNamespace { get; set; }
+
+        
 
         #endregion
 

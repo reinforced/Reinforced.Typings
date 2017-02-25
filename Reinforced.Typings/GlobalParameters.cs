@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Reinforced.Typings
 {
+    /// <summary>
+    /// Collections of global TS generation parameters
+    /// </summary>
     public class GlobalParameters
     {
         private bool _isLocked;
@@ -15,6 +18,15 @@ namespace Reinforced.Typings
         private bool _camelCaseForProperties;
         private bool _generateDocumentation;
         private bool _exportPureTyings;
+        private string _tabSymbol;
+        private bool _useModules;
+        private bool _discardNamespacesWhenUsingModules;
+
+        public GlobalParameters()
+        {
+            _tabSymbol = "\t";
+            _writeWarningComment = true;
+        }
 
         /// <summary>
         ///     Boolean parameter that controls writing of "auto-generated warning" comment to each generated file.
@@ -94,6 +106,47 @@ namespace Reinforced.Typings
         {
             _isLocked = false;
         }
+
+        /// <summary>
+        /// Specifies symbol used for tabulation
+        /// </summary>
+        public string TabSymbol
+        {
+            get { return _tabSymbol; }
+            set
+            {
+                if (_isLocked) return;
+                _tabSymbol = value;
+            }
+        }
+
+        /// <summary>
+        /// Switches RT to using TS modules system (--module) parameter and import references
+        /// </summary>
+        public bool UseModules
+        {
+            get { return _useModules; }
+            set
+            {
+                if (_isLocked) return;
+                _useModules = value;
+            }
+        }
+
+        /// <summary>
+        /// When true, RT will ignore classes' namespaces when arraging classes and interfaces among files. 
+        /// This parameter only makes difference when using (--module)
+        /// </summary>
+        public bool DiscardNamespacesWhenUsingModules
+        {
+            get { return _discardNamespacesWhenUsingModules; }
+            set
+            {
+                if (_isLocked) return;
+                _discardNamespacesWhenUsingModules = value;
+            }
+        }
+
 
         /// <summary>
         ///     If true, export will be performed in .d.ts manner (only typings, declare module etc).

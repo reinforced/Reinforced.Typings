@@ -91,9 +91,10 @@
     <Compile Include="Attributes\TsBaseParamAttribute.cs" />
     <Compile Include="Attributes\TsDeclarationAttributeBase.cs" />
     <Compile Include="Attributes\TsEnumAttribute.cs" />
-    <Compile Include="Attributes\TsFile.cs" />
+    <Compile Include="Attributes\TsFileAttribute.cs" />
     <Compile Include="Attributes\TsFunctionAttribute.cs" />
     <Compile Include="Attributes\TsGenericAttribute.cs" />
+    <Compile Include="Attributes\TsGlobalAttribute.cs" />
     <Compile Include="Attributes\TsIgnoreAttribute.cs" />
     <Compile Include="Attributes\TsInterfaceAttribute.cs" />
     <Compile Include="Attributes\TsParameterAttribute.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Fluent\Generic\GenericClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\Generic\GenericConfigurationBuilderBase.cs" />
     <Compile Include="Fluent\Generic\GenericInterfaceConfigurationBuilder.cs" />
+    <Compile Include="Fluent\GlobalConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IEnumConfigurationBuidler.cs" />
     <Compile Include="Fluent\Interfaces\IExportConfiguration.cs" />

@@ -7,13 +7,13 @@ namespace Reinforced.Typings.Attributes
     ///     This attribute is being ignored when RtDivideTypesAmongFiles is false.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Enum)]
-    public class TsFile : Attribute
+    public class TsFileAttribute : Attribute
     {
         /// <summary>
         ///     Constructs new TsFile attribute
         /// </summary>
         /// <param name="fileName">File name (related to RtTargetDirectory) where to put generated code</param>
-        public TsFile(string fileName)
+        public TsFileAttribute(string fileName)
         {
             FileName = fileName;
         }

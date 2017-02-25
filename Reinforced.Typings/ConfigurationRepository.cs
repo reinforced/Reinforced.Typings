@@ -17,6 +17,11 @@ namespace Reinforced.Typings
             set { _instance = value; }
         }
 
+        public ConfigurationRepository()
+        {
+            Global = new GlobalParameters();
+        }
+
         #region private fields
 
         private readonly Dictionary<Type, TsDeclarationAttributeBase> _attributesForType =
@@ -331,5 +336,7 @@ namespace Reinforced.Typings
         }
 
         #endregion
+
+        internal GlobalParameters Global { get; private set; }
     }
 }

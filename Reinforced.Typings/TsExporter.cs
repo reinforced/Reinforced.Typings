@@ -22,7 +22,7 @@ namespace Reinforced.Typings
         private HashSet<Type> _allTypesHash;
         private ConfigurationRepository _configurationRepository;
         private bool _isAnalyzed;
-        private readonly ReferenceInspector _referenceInspector;
+        private ReferenceInspector _referenceInspector;
 
 
         #region Constructors
@@ -34,20 +34,39 @@ namespace Reinforced.Typings
         public TsExporter(ExportContext context)
         {
             _context = context;
-            _referenceInspector = new ReferenceInspector(context.TargetDirectory, context.ExportPureTypings, context.RootNamespace);
+            
         }
 
         #endregion
 
+        private void ApplyTsGlobal(TsGlobalAttribute tsGlobal, GlobalParameters gp)
+        {
+            if (tsGlobal == null) return;
+            gp.CamelCaseForMethods = tsGlobal.CamelCaseForMethods;
+            gp.CamelCaseForProperties = tsGlobal.CamelCaseForProperties;
+            gp.DiscardNamespacesWhenUsingModules = tsGlobal.DiscardNamespacesWhenUsingModules;
+            gp.ExportPureTypings = tsGlobal.ExportPureTypings;
+            gp.GenerateDocumentation = tsGlobal.GenerateDocumentation;
+            gp.RootNamespace = tsGlobal.RootNamespace;
+            gp.UseModules = tsGlobal.UseModules;
+            gp.TabSymbol = tsGlobal.TabSymbol;
+            gp.WriteWarningComment = tsGlobal.WriteWarningComment;
+        }
         private void Analyze()
         {
             if (_isAnalyzed) return;
-            _context.Documentation =
-                new DocumentationManager(_context.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
+
+            // 1st step - searching and processing [TsGlobal] attribute
+            var tsGlobal = _context.SourceAssemblies.Select(c => c.GetCustomAttribute<TsGlobalAttribute>())
+                .Where(c => c != null)
+                .OrderByDescending(c => c.Priority)
+                .FirstOrDefault();
+            // 2nd step - searching and processing fluent configuration
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
             {
                 var configurationBuilder = new ConfigurationBuilder();
+                ApplyTsGlobal(tsGlobal, configurationBuilder.GlobalParameters);
                 _context.ConfigurationMethod(configurationBuilder);
                 _configurationRepository = configurationBuilder.Build();
                 ConfigurationRepository.Instance = _configurationRepository;
@@ -57,6 +76,18 @@ namespace Reinforced.Typings
                     _context.Documentation.CacheDocumentation(additionalDocumentationPath, _context.Warnings);
                 }
             }
+            else
+            {
+                ApplyTsGlobal(tsGlobal,ConfigurationRepository.Instance.Global);
+            }
+
+            _referenceInspector = new ReferenceInspector(_context.TargetDirectory, 
+                ConfigurationRepository.Instance.Global.ExportPureTypings, 
+                ConfigurationRepository.Instance.Global.RootNamespace);
+
+            _context.Documentation =
+                new DocumentationManager(ConfigurationRepository.Instance.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
+
 
             _allTypes = _context.SourceAssemblies
                 .SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))

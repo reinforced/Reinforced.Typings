@@ -62,9 +62,6 @@ True to create project hierarchy in target folder.
 False (default) to store generated typings in single file. 
 Example:   rtcli.exe Hierarchy=""true"" ")]
         public bool Hierarchy { get; set; }
-
-        
-       
        
         /// <summary>
         /// Full path to assembly's XMLDOC file.
