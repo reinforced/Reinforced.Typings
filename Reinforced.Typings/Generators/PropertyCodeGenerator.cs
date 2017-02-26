@@ -48,8 +48,7 @@ namespace Reinforced.Typings.Generators
                 }
 
                 if (!string.IsNullOrEmpty(tp.Name)) propName.IdentifierName = tp.Name;
-                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Context.SpecialCase)
-                    propName.IsNullable = true;
+                if (tp.ForceNullable && !Context.SpecialCase) propName.IsNullable = true;
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);

@@ -1,0 +1,30 @@
+﻿using Reinforced.Typings.Fluent;
+using Xunit;
+
+namespace Reinforced.Typings.Tests.ExporterIntegrationTests
+{
+    public partial class IntegrationalExporterTests
+    {
+        [Fact]
+        public void DecoratorsTest()
+        {
+            const string result = @"
+module Reinforced.Typings.Tests.ExporterIntegrationTests {
+	@sealed export class ClassWithMethods
+	{
+		@bind public String: string;
+		@bind public Int: number;
+		@a() @b() public DoSomethinig() : void { } 
+	}	  
+}";
+            AssertConfiguration(s =>
+            {
+                s.Global(a => a.DontWriteWarningComment());
+                s.ExportAsClass<ClassWithMethods>().Decorator("sealed")
+                    .WithPublicProperties(a => a.Decorator("bind"))
+                    .WithMethod(c => c.DoSomethinig(), c => c.Decorator("a()", -1))
+                    ;
+            }, result);
+        }
+    }
+}

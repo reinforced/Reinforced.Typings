@@ -30,4 +30,10 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
             
         }
     }
+
+    public class PandaWoodForceNullableCase
+    {
+        [TsProperty(ForceNullable = true)]
+        public string PandaWoodProperty { get; set; }
+    }
 }
