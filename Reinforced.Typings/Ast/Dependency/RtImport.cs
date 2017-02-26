@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reinforced.Typings.Ast.Dependency
 {
@@ -7,10 +8,45 @@ namespace Reinforced.Typings.Ast.Dependency
     /// </summary>
     public class RtImport : RtNode
     {
+        private string _target;
+
         /// <summary>
         /// Targets list
         /// </summary>
-        public string Target { get; set; }
+        public string Target
+        {
+            get { return _target; }
+            set
+            {
+                _target = value == null ? null : value.Trim();
+                CheckWildcardImport();
+            }
+        }
+
+        public bool IsWildcard { get { return WildcardAlias == null; } }
+
+        public string WildcardAlias { get; private set; }
+
+        private void CheckWildcardImport()
+        {
+            if (_target.StartsWith("*"))
+            {
+                var arr = _target.Split(new[] { "as" }, StringSplitOptions.RemoveEmptyEntries);
+                if (arr.Length < 2)
+                {
+                    WildcardAlias = null;
+
+                }
+                else
+                {
+                    WildcardAlias = arr[1];
+                }
+            }
+            else
+            {
+                WildcardAlias = null;
+            }
+        }
 
         /// <summary>
         /// Import source
@@ -25,7 +61,7 @@ namespace Reinforced.Typings.Ast.Dependency
         /// <summary>
         /// Node children
         /// </summary>
-        public override IEnumerable<RtNode> Children { get {yield break;} }
+        public override IEnumerable<RtNode> Children { get { yield break; } }
 
         /// <summary>
         /// Visitor acceptance

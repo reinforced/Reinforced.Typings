@@ -171,7 +171,15 @@ namespace Reinforced.Typings
 
         internal string CurrentNamespace { get; set; }
 
+        /// <summary>
+        /// Global generation parameters
+        /// </summary>
         public GlobalParameters Global { get; private set; }
+
+        /// <summary>
+        /// Generators cache
+        /// </summary>
+        public GeneratorManager Generators { get; internal set; }
 
         #endregion
 

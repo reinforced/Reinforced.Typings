@@ -138,11 +138,12 @@
     <Compile Include="Fluent\Parameter.cs" />
     <Compile Include="Fluent\ConfigurationBuilder.cs" />
     <Compile Include="Fluent\TypingsConfigurationExtensions.cs" />
+    <Compile Include="GeneratorManager.cs" />
     <Compile Include="Generators\ClassAndInterfaceGeneratorBase.cs" />
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />
     <Compile Include="GlobalParameters.cs" />
     <Compile Include="IFilesOperations.cs" />
-    <Compile Include="InspectedReferences.cs" />
+    <Compile Include="ReferencesInspection\InspectedReferences.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />
@@ -190,7 +191,7 @@
     <Compile Include="Generators\PropertyCodeGenerator.cs" />
     <Compile Include="Generators\ContextExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceInspector.cs" />
+    <Compile Include="ReferencesInspection\ReferenceInspector.cs" />
     <Compile Include="TsExporter.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeResolver.cs" />

@@ -184,7 +184,7 @@ namespace Reinforced.Typings.Generators
         {
             foreach (var m in members)
             {
-                var generator = resolver.GeneratorFor<T>(m, Context);
+                var generator = Context.Generators.GeneratorFor<T>(m, Context);
                 var member = generator.Generate(m, resolver);
                 typeMember.Members.Add(member);
             }

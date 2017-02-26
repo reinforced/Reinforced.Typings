@@ -32,7 +32,7 @@ namespace Reinforced.Typings.Generators
             Context.Location.SetLocation(ns);
             foreach (var type in types)
             {
-                var converter = resolver.GeneratorFor(type, Context);
+                var converter = Context.Generators.GeneratorFor(type, Context);
                 var member = converter.Generate(type, resolver);
                 if (Context.Global.UseModules)
                 {

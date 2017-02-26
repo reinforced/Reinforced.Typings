@@ -6,6 +6,7 @@ using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
+using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -21,6 +22,7 @@ namespace Reinforced.Typings
         private HashSet<Type> _allTypesHash;
         private ConfigurationRepository _configurationRepository;
         private bool _isInitialized;
+        private Dictionary<string, IEnumerable<Type>> _typesToFilesMap;
 
         /// <summary>
         /// Global references extracted from current configuration
@@ -31,11 +33,6 @@ namespace Reinforced.Typings
         /// Reference inspector instance
         /// </summary>
         public ReferenceInspector ReferenceInspector { get; private set; }
-
-        /// <summary>
-        /// Type resolver instance being used during export
-        /// </summary>
-        public TypeResolver TypeResolver { get; private set; }
 
         #region Constructors
 
@@ -93,11 +90,7 @@ namespace Reinforced.Typings
                 }
             }
 
-            ReferenceInspector = new ReferenceInspector(_context.TargetDirectory,
-                _context.Global.ExportPureTypings,
-                _context.Global.RootNamespace,
-                _context.Global.UseModules,
-                _context.Global.DiscardNamespacesWhenUsingModules);
+            
 
             _context.Documentation =
                 new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
@@ -109,6 +102,7 @@ namespace Reinforced.Typings
                 .ToList();
 
             _allTypesHash = new HashSet<Type>(_allTypes);
+            ReferenceInspector = new ReferenceInspector(_context, _allTypesHash);
 
             if (_context.Hierarchical)
             {
@@ -119,46 +113,55 @@ namespace Reinforced.Typings
             }
 
             GlobalReferences = ReferenceInspector.InspectGlobalReferences(_context.SourceAssemblies);
-            TypeResolver = new TypeResolver(_context);
+            _context.Generators = new GeneratorManager(_context);
+            _typesToFilesMap = _allTypes.GroupBy(c => ReferenceInspector.GetPathForType(c))
+                .ToDictionary(c => c.Key, c => c.AsEnumerable());
+
             _isInitialized = true;
+        }
+
+        /// <summary>
+        /// Sets up exported file dummy
+        /// </summary>
+        /// <param name="fileName">File name</param>
+        /// <returns>Exported file dummy</returns>
+        public ExportedFile SetupExportedFile(string fileName = null)
+        {
+            if (fileName == _context.TargetFile) fileName = null;
+            var types = string.IsNullOrEmpty(fileName) ? null : _typesToFilesMap[fileName];
+            ExportedFile ef = new ExportedFile
+            {
+                References = GlobalReferences.Duplicate(),
+                FileName = fileName,
+                AllTypesIsSingleFile = !_context.Hierarchical,
+                TypesToExport = _context.Hierarchical ? new HashSet<Type>(types) : _allTypesHash
+            };
+            ef.TypeResolver = new TypeResolver(_context, ef);
+            return ef;
         }
 
         /// <summary>
         ///     Exports TypeScript source to specified TextWriter according to settings
         /// </summary>
-        /// <param name="types">Types to export</param>
-        private ExportedFile ExportTypes(IEnumerable<Type> types = null)
+        /// <param name="fileName">File name to export files to</param>
+        private ExportedFile ExportTypes(string fileName = null)
         {
+            var ef = SetupExportedFile(fileName);
+            var gen = _context.Generators.GeneratorForNamespace(_context);
+            var grp = ef.TypesToExport.GroupBy(c => c.GetNamespace(true));
+            var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
+                .ToDictionary(k => k.Key, v => v.ToList());
 
-            ExportedFile ef = new ExportedFile
+            List<RtNamespace> result = new List<RtNamespace>(nsp.Count);
+            foreach (var n in nsp)
             {
-                GlobalReferences = GlobalReferences,
-                References = InspectReferences()
-            };
-            TypeResolver.CurrentFile = ef;
-            ef.Namespaces = ExportNamespaces(types ?? _allTypes);
-            TypeResolver.CurrentFile = null;
+                var ns = n.Key;
+                if (ns == "-") ns = string.Empty;
+                var module = gen.Generate(n.Value, ns, ef.TypeResolver);
+                result.Add(module);
+            }
+            ef.Namespaces = result.ToArray();
             return ef;
-        }
-
-        private InspectedReferences InspectReferences(IEnumerable<Type> types = null)
-        {
-            if (types != null)
-            {
-                List<RtReference> refs = new List<RtReference>();
-                List<RtImport> imports = new List<RtImport>();
-                foreach (var type in types)
-                {
-                    var inspected = ReferenceInspector.GenerateInspectedReferences(type, _allTypesHash);
-                    refs.AddRange(inspected.References);
-                    imports.AddRange(inspected.Imports);
-                }
-                return new InspectedReferences(refs, imports);
-            }
-            else
-            {
-                return new InspectedReferences();
-            }
         }
 
         /// <summary>
@@ -178,39 +181,18 @@ namespace Reinforced.Typings
             }
             else
             {
-                var typeFilesMap = _allTypes
-                    .GroupBy(c => ReferenceInspector.GetPathForType(c))
-                    .ToDictionary(c => c.Key, c => c.AsEnumerable());
-
-                foreach (var kv in typeFilesMap)
+                foreach (var kv in _typesToFilesMap)
                 {
                     var path = kv.Key;
-                    var file = ExportTypes(kv.Value);
+                    var file = ExportTypes(kv.Key);
                     _context.FileOperations.Export(path, file);
                 }
             }
 
             _context.Unlock();
             _context.FileOperations.DeployTempFiles();
-            TypeResolver.PrintCacheInfo();
         }
 
-        private RtNamespace[] ExportNamespaces(IEnumerable<Type> types)
-        {
-            var gen = TypeResolver.GeneratorForNamespace(_context);
-            var grp = types.GroupBy(c => c.GetNamespace(true));
-            var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
-                .ToDictionary(k => k.Key, v => v.ToList());
-
-            List<RtNamespace> result = new List<RtNamespace>(nsp.Count);
-            foreach (var n in nsp)
-            {
-                var ns = n.Key;
-                if (ns == "-") ns = string.Empty;
-                var module = gen.Generate(n.Value, ns, TypeResolver);
-                result.Add(module);
-            }
-            return result.ToArray();
-        }
+        
     }
 }

@@ -44,7 +44,7 @@ namespace Reinforced.Typings
                 visitor.Visit(fileGlobalReference);
             }
 
-            foreach (var referencesReference in file.References.References)
+            foreach (var referencesReference in file.FileReferences.References)
             {
                 visitor.Visit(referencesReference);
             }
@@ -54,7 +54,7 @@ namespace Reinforced.Typings
                 visitor.Visit(globalReferencesImport);
             }
 
-            foreach (var referencesImport in file.References.Imports)
+            foreach (var referencesImport in file.FileReferences.Imports)
             {
                 visitor.Visit(referencesImport);
             }

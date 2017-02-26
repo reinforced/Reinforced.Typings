@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Reinforced.Typings.Ast.TypeNames;
 using Xunit;
 
@@ -31,7 +28,7 @@ namespace Reinforced.Typings.Tests
             };
             var exporter = new TsExporter(_context);
             exporter.Initialize();
-            _tr = exporter.TypeResolver;
+            _tr = exporter.SetupExportedFile().TypeResolver;
             _comparer = new TypeNameEqualityComparer();
         }
 

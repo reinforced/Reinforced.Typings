@@ -59,7 +59,7 @@ namespace Reinforced.Typings.Generators
             foreach (var param in p)
             {
                 if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param, Context);
+                var generator = Context.Generators.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }
