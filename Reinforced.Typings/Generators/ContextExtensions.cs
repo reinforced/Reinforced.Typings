@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Generators
         /// <returns>Method name in camelCase if camelCasing enabled, initial string otherwise</returns>
         public static string ConditionallyConvertMethodNameToCamelCase(this ExportContext context, string regularName)
         {
-            if (!context.CamelCaseForMethods) return regularName;
+            if (!context.Global.CamelCaseForMethods) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
@@ -31,7 +31,7 @@ namespace Reinforced.Typings.Generators
         /// <returns>Method name in camelCase if camelCasing enabled, initial string otherwise</returns>
         public static string ConditionallyConvertMethodNameToPascalCase(this ExportContext context, string regularName)
         {
-            if (!context.CamelCaseForMethods) return regularName;
+            if (!context.Global.CamelCaseForMethods) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Generators
         public static string ConditionallyConvertPropertyNameToCamelCase(this ExportContext context,
             string regularName)
         {
-            if (!context.CamelCaseForProperties) return regularName;
+            if (!context.Global.CamelCaseForProperties) return regularName;
             return ConvertToCamelCase(regularName);
         }
 

@@ -6,7 +6,7 @@ using Reinforced.Typings.Visitors.TypeScript;
 
 namespace Reinforced.Typings.Visitors.Typings
 {
-    partial class TypingsExportVisitor : TypeScriptExportVisitor
+    public partial class TypingsExportVisitor : TypeScriptExportVisitor
     {
         public TypingsExportVisitor(TextWriter writer, string tabulation)
             : base(writer,tabulation)

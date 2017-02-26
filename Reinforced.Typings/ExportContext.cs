@@ -27,7 +27,11 @@ namespace Reinforced.Typings
         public IFilesOperations FileOperations
         {
             get { return _fileOperations; }
-            set { _fileOperations = value; }
+            set
+            {
+                _fileOperations = value;
+                _fileOperations.Context = this;
+            }
         }
 
         /// <summary>
@@ -38,7 +42,9 @@ namespace Reinforced.Typings
             Location = new Location();
             Warnings = new List<RtWarning>();
             _fileOperations = fileOperationsServiceOverride;
-            if (_fileOperations == null) _fileOperations = new FilesOperations(this);
+            if (_fileOperations == null) _fileOperations = new FilesOperations();
+            _fileOperations.Context = this;
+            Global = new GlobalParameters();
         }
 
         /// <summary>
@@ -154,16 +160,18 @@ namespace Reinforced.Typings
         internal void Lock()
         {
             _isLocked = true;
+            Global.Lock();
         }
 
         internal void Unlock()
         {
             _isLocked = false;
+            Global.Unlock();
         }
 
         internal string CurrentNamespace { get; set; }
 
-        
+        public GlobalParameters Global { get; private set; }
 
         #endregion
 

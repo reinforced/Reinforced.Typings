@@ -9,7 +9,7 @@ using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors
 {
-    abstract class VisitorBase : IRtVisitor
+    public abstract class VisitorBase : IRtVisitor
     {
         public void Visit(RtNode node)
         {
@@ -33,6 +33,7 @@ namespace Reinforced.Typings.Visitors
             if (node is RtImport) { Visit((RtImport)node); return; }
             if (node is RtDecorator) { Visit((RtDecorator)node); return; }
             if (node is RtReference) { Visit((RtReference)node); return; }
+            if (node is RtImportTarget) { Visit((RtImportTarget)node); return; }
 
             throw new Exception("Unknown node passed");
         }
@@ -56,5 +57,6 @@ namespace Reinforced.Typings.Visitors
         public abstract void Visit(RtImport node);
         public abstract void Visit(RtDecorator node);
         public abstract void Visit(RtReference node);
+        public abstract void Visit(RtImportTarget node);
     }
 }

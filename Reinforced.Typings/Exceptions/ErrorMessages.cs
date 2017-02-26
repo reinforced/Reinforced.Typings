@@ -106,6 +106,12 @@ namespace Reinforced.Typings.Exceptions
         /// Error parsering XMLDOC file {0}: {1}
         /// </summary>
         public static readonly ErrorMessage RTW0006_DocumentationParseringError = new ErrorMessage(0006, "Error parsering XMLDOC file {0}: {1}", "JSDOC");
+
+        /// <summary>
+        /// Error parsering XMLDOC file {0}: {1}
+        /// </summary>
+        public static readonly ErrorMessage RTW0007_InvalidDictionaryKey = new ErrorMessage(0007, "{0} is not valid type for JS object key (original type {1})", "Type resolvation");
+
         #endregion
     }
 }

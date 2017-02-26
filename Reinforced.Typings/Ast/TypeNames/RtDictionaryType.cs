@@ -6,7 +6,7 @@ namespace Reinforced.Typings.Ast.TypeNames
     /// <summary>
     /// AST node for Dictionary type
     /// </summary>
-    public class RtDictionaryType : RtTypeName
+    public sealed class RtDictionaryType : RtTypeName
     {
         /// <summary>
         /// Constructs new instance of AST node

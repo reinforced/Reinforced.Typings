@@ -9,23 +9,23 @@ namespace Reinforced.Typings
     /// </summary>
     public interface IFilesOperations
     {
+        ExportContext Context { set; }
+
         /// <summary>
         /// Writes temporary files contents to disk
         /// </summary>
         void DeployTempFiles();
 
         /// <summary>
-        /// Retrieves stream for temporary file
-        /// </summary>
-        /// <param name="fileName">Temporary file name</param>
-        /// <returns></returns>
-        Stream GetTmpFile(string fileName);
-
-        /// <summary>
         /// Cleans up temporary files registry
         /// </summary>
         void ClearTempRegistry();
 
+        /// <summary>
+        /// Exports specified syntax nodes to specified file
+        /// </summary>
+        /// <param name="fileName">File name</param>
+        /// <param name="file">File to be exported</param>
         void Export(string fileName, ExportedFile file);
     }
 }

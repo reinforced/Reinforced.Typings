@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reinforced.Typings.Visitors
 {
-    abstract class TextExportingVisitor : VisitorBase
+    public abstract class TextExportingVisitor : VisitorBase
     {
         private readonly TextWriter _writer;
 

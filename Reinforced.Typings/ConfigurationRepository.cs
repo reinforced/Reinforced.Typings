@@ -17,11 +17,7 @@ namespace Reinforced.Typings
             set { _instance = value; }
         }
 
-        public ConfigurationRepository()
-        {
-            Global = new GlobalParameters();
-        }
-
+        
         #region private fields
 
         private readonly Dictionary<Type, TsDeclarationAttributeBase> _attributesForType =
@@ -137,7 +133,7 @@ namespace Reinforced.Typings
             var refsList = ReferenceAttributes.GetOrCreate(type);
             var attrs = type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
             if (attrs != null) refsList.AddRange(attrs);
-            var fileAttr = type.GetCustomAttribute<TsFile>();
+            var fileAttr = type.GetCustomAttribute<TsFileAttribute>();
             if (fileAttr != null)
             {
                 TrackTypeFile(type, fileAttr.FileName);
@@ -337,6 +333,6 @@ namespace Reinforced.Typings
 
         #endregion
 
-        internal GlobalParameters Global { get; private set; }
+        
     }
 }

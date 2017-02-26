@@ -8,7 +8,7 @@ using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors.TypeScript
 {
-    partial class TypeScriptExportVisitor : TextExportingVisitor
+    public partial class TypeScriptExportVisitor : TextExportingVisitor
     {
         protected WriterContext Context { get; set; }
 
@@ -116,23 +116,13 @@ namespace Reinforced.Typings.Visitors.TypeScript
             }
         }
 
-        public override void Visit(RtImport node)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Visit(RtDecorator node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Visit(RtReference node)
         {
             throw new NotImplementedException();
         }
     }
 
-    internal enum WriterContext
+    public enum WriterContext
     {
         None,
         Class,

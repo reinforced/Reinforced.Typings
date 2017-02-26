@@ -32,6 +32,7 @@ namespace Reinforced.Typings.Visitors
             if (node is RtImport) return Visit((RtImport)node);
             if (node is RtDecorator) return Visit((RtDecorator)node);
             if (node is RtReference) return Visit((RtReference)node);
+            if (node is RtImportTarget) return Visit((RtImportTarget)node);
             throw new Exception("Unknown node passed");
         }
 
@@ -54,5 +55,6 @@ namespace Reinforced.Typings.Visitors
         public abstract T Visit(RtImport node);
         public abstract T Visit(RtDecorator node);
         public abstract T Visit(RtReference node);
+        public abstract T Visit(RtImportTarget node);
     }
 }

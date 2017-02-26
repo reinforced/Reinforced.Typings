@@ -34,7 +34,6 @@ namespace Reinforced.Typings
         public TsExporter(ExportContext context)
         {
             _context = context;
-            
         }
 
         #endregion
@@ -61,12 +60,13 @@ namespace Reinforced.Typings
                 .Where(c => c != null)
                 .OrderByDescending(c => c.Priority)
                 .FirstOrDefault();
+            ApplyTsGlobal(tsGlobal, _context.Global);
+
             // 2nd step - searching and processing fluent configuration
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
             {
-                var configurationBuilder = new ConfigurationBuilder();
-                ApplyTsGlobal(tsGlobal, configurationBuilder.GlobalParameters);
+                var configurationBuilder = new ConfigurationBuilder(_context.Global);
                 _context.ConfigurationMethod(configurationBuilder);
                 _configurationRepository = configurationBuilder.Build();
                 ConfigurationRepository.Instance = _configurationRepository;
@@ -76,17 +76,13 @@ namespace Reinforced.Typings
                     _context.Documentation.CacheDocumentation(additionalDocumentationPath, _context.Warnings);
                 }
             }
-            else
-            {
-                ApplyTsGlobal(tsGlobal,ConfigurationRepository.Instance.Global);
-            }
 
-            _referenceInspector = new ReferenceInspector(_context.TargetDirectory, 
-                ConfigurationRepository.Instance.Global.ExportPureTypings, 
-                ConfigurationRepository.Instance.Global.RootNamespace);
+            _referenceInspector = new ReferenceInspector(_context.TargetDirectory,
+                _context.Global.ExportPureTypings,
+                _context.Global.RootNamespace);
 
             _context.Documentation =
-                new DocumentationManager(ConfigurationRepository.Instance.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
+                new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
 
 
             _allTypes = _context.SourceAssemblies
@@ -145,7 +141,6 @@ namespace Reinforced.Typings
             {
                 return new InspectedReferences();
             }
-
         }
 
         /// <summary>

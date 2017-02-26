@@ -6,7 +6,7 @@ namespace Reinforced.Typings.Ast.TypeNames
     /// <summary>
     /// AST node for array type
     /// </summary>
-    public class RtArrayType : RtTypeName
+    public sealed class RtArrayType : RtTypeName
     {
         /// <summary>
         /// Array element type

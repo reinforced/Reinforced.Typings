@@ -7,7 +7,7 @@ namespace Reinforced.Typings.Ast.TypeNames
     /// <summary>
     /// AST node for delegate type
     /// </summary>
-    public class RtDelegateType : RtTypeName
+    public sealed class RtDelegateType : RtTypeName
     {
         private readonly RtArgument[] _arguments;
 

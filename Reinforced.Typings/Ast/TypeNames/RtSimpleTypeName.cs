@@ -7,7 +7,7 @@ namespace Reinforced.Typings.Ast.TypeNames
     /// <summary>
     /// AST node for simple type name
     /// </summary>
-    public class RtSimpleTypeName : RtTypeName
+    public sealed class RtSimpleTypeName : RtTypeName
     {
         /// <summary>
         /// Constructs new instance of AST node

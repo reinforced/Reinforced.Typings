@@ -143,6 +143,7 @@
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.cs" />
+    <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.Dependencies.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtConstructor.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtEnum.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtEnumValue.cs" />

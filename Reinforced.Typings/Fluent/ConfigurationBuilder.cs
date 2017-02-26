@@ -46,13 +46,11 @@ namespace Reinforced.Typings.Fluent
             get { return _enumConfigurationBuilders; }
         }
 
-        internal GlobalParameters GlobalParameters { get; private set; }
         internal GlobalConfigurationBuilder GlobalBuilder { get; private set; }
 
-        public ConfigurationBuilder()
+        public ConfigurationBuilder(GlobalParameters global)
         {
-            GlobalParameters = new GlobalParameters();
-            GlobalBuilder = new GlobalConfigurationBuilder(GlobalParameters);
+            GlobalBuilder = new GlobalConfigurationBuilder(global);
         }
 
         internal ConfigurationRepository Build()
@@ -85,15 +83,15 @@ namespace Reinforced.Typings.Fluent
                     var method = kvm.Key as MethodInfo;
                     if (prop != null)
                     {
-                        repository.AttributesForProperties[prop] = (TsPropertyAttribute) kvm.Value.AttributePrototype;
+                        repository.AttributesForProperties[prop] = (TsPropertyAttribute)kvm.Value.AttributePrototype;
                     }
                     if (field != null)
                     {
-                        repository.AttributesForFields[field] = (TsPropertyAttribute) kvm.Value.AttributePrototype;
+                        repository.AttributesForFields[field] = (TsPropertyAttribute)kvm.Value.AttributePrototype;
                     }
                     if (method != null)
                     {
-                        repository.AttributesForMethods[method] = (TsFunctionAttribute) kvm.Value.AttributePrototype;
+                        repository.AttributesForMethods[method] = (TsFunctionAttribute)kvm.Value.AttributePrototype;
                     }
                 }
                 foreach (var kvp in kv.Value.ParametersConfiguration)

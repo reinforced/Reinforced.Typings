@@ -25,25 +25,27 @@ namespace Reinforced.Typings
         private readonly Dictionary<Type, object> _generatorsCache = new Dictionary<Type, object>();
 
         private static readonly RtSimpleTypeName AnyType = new RtSimpleTypeName("any");
+        private static readonly RtSimpleTypeName NumberType = new RtSimpleTypeName("number");
+        private static readonly RtSimpleTypeName StringType = new RtSimpleTypeName("string");
 
         private readonly Dictionary<Type, RtTypeName> _resolveCache = new Dictionary<Type, RtTypeName>
         {
             {typeof (object), AnyType},
             {typeof (void), new RtSimpleTypeName("void")},
-            {typeof (string), new RtSimpleTypeName("string")},
-            {typeof (char), new RtSimpleTypeName("string")},
+            {typeof (string), StringType},
+            {typeof (char),StringType},
             {typeof (bool), new RtSimpleTypeName("boolean")},
-            {typeof (byte), new RtSimpleTypeName("number")},
-            {typeof (sbyte), new RtSimpleTypeName("number")},
-            {typeof (short), new RtSimpleTypeName("number")},
-            {typeof (ushort), new RtSimpleTypeName("number")},
-            {typeof (int), new RtSimpleTypeName("number")},
-            {typeof (uint), new RtSimpleTypeName("number")},
-            {typeof (long), new RtSimpleTypeName("number")},
-            {typeof (ulong), new RtSimpleTypeName("number")},
-            {typeof (float), new RtSimpleTypeName("number")},
-            {typeof (double), new RtSimpleTypeName("number")},
-            {typeof (decimal), new RtSimpleTypeName("number")}
+            {typeof (byte), NumberType},
+            {typeof (sbyte), NumberType},
+            {typeof (short), NumberType},
+            {typeof (ushort), NumberType},
+            {typeof (int), NumberType},
+            {typeof (uint), NumberType},
+            {typeof (long), NumberType},
+            {typeof (ulong), NumberType},
+            {typeof (float), NumberType},
+            {typeof (double), NumberType},
+            {typeof (decimal), NumberType}
         };
 
         private readonly ExportContext _context;
@@ -231,10 +233,15 @@ namespace Reinforced.Typings
             {
                 if (!t.IsGenericType)
                 {
+                    _context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(AnyType, t));
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
                 var gargs = t.GetGenericArguments();
                 var key = ResolveTypeName(gargs[0]);
+                if (key != NumberType && key != StringType)
+                {
+                    _context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, t));
+                }
                 var value = ResolveTypeName(gargs[1]);
                 return Cache(t, new RtDictionaryType(key, value));
             }
