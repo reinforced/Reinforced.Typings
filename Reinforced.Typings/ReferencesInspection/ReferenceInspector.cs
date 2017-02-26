@@ -74,6 +74,8 @@ namespace Reinforced.Typings.ReferencesInspection
 
         public RtReference EnsureReference(Type t, ExportedFile file)
         {
+            if (file.TypesToExport.Contains(t)) return null;
+            if (file.AllTypesIsSingleFile) return null;
             var relPath = GetRelativePathForType(t, file.FileName);
             var result = new RtReference() { Path = relPath };
             file.References.AddReference(result);

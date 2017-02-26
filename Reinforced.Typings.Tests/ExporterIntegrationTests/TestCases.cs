@@ -36,4 +36,14 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         [TsProperty(ForceNullable = true)]
         public string PandaWoodProperty { get; set; }
     }
+
+    public class JonsaModel
+    {
+        public JonsaEnum Enum { get; set; }
+    }
+
+    public enum JonsaEnum
+    {
+        Foo, Bar
+    }
 }

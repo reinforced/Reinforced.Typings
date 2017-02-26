@@ -38,6 +38,19 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        /// Changes indentation symbol (by default is \t). 
+        /// This ability is made by @jonsa's request - boring perfectionist
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="symbol">New indentation symbol</param>
+        public static GlobalConfigurationBuilder TabSymbol(this GlobalConfigurationBuilder builder,
+           string symbol)
+        {
+            builder.Parameters.TabSymbol = symbol;
+            return builder;
+        }
+
+        /// <summary>
         ///     Specifies root namespace for hierarchical export.
         ///     Helps to avoid creating redundant directories when hierarchical export.
         /// </summary>

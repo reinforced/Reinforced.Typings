@@ -65,6 +65,7 @@
     <Compile Include="ExporterIntegrationTests\BasicExportTests.cs" />
     <Compile Include="Core\MockFileOperations.cs" />
     <Compile Include="Core\RtExporterTestBase.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.JonsaCustomIndentationTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.DecoratorsTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest1.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest2.cs" />

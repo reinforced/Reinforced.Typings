@@ -231,20 +231,20 @@ namespace Reinforced.Typings
             if (t.IsEnum)
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
-                var ns = t.Namespace;
-                if (te != null && te.IncludeNamespace && !string.IsNullOrEmpty(te.Namespace))
-                {
-                    ns = te.Namespace;
-                }
-                return ns;
+                if (te == null) return t.Namespace;
+                var ns = te.Namespace;
+                if (!te.IncludeNamespace) return distinguishAutoTypes ? "-" : string.Empty;
+                if (!string.IsNullOrEmpty(ns)) return ns;
+                return t.Namespace;
             }
             var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
             var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
             if (tc == null && ti == null) return t.Namespace;
-            var nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
-            var includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
+            var nsFromAttr = tc != null ? tc.Namespace : ti != null ? ti.Namespace : t.Namespace;
+            var includeNamespace = tc != null ? tc.IncludeNamespace : ti != null ? ti.IncludeNamespace : true;
+
             if (!includeNamespace) return distinguishAutoTypes ? "-" : string.Empty;
-            if (!string.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
+            if (!string.IsNullOrEmpty(nsFromAttr)) return nsFromAttr;
             return t.Namespace;
         }
 
