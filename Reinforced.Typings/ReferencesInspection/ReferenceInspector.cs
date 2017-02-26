@@ -59,7 +59,7 @@ namespace Reinforced.Typings.ReferencesInspection
             if (_context.Global.DiscardNamespacesWhenUsingModules)
             {
                 var target = string.Format("{{ {0} }}", typeName);
-                result = new RtImport() {From = relPath, Target = target};
+                result = new RtImport() { From = relPath, Target = target };
                 file.References.AddImport(result);
             }
             else
@@ -75,16 +75,25 @@ namespace Reinforced.Typings.ReferencesInspection
         public RtReference EnsureReference(Type t, ExportedFile file)
         {
             var relPath = GetRelativePathForType(t, file.FileName);
-            var result = new RtReference() {Path = relPath};
+            var result = new RtReference() { Path = relPath };
             file.References.AddReference(result);
             return result;
         }
 
-        public string GetPathForType(Type t)
+        public string GetPathForType(Type t, bool stripExtension = true)
         {
             var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);
             if (!string.IsNullOrEmpty(fromConfiguration))
+            {
+                if (_context.Global.UseModules && stripExtension)
+                {
+                    if (fromConfiguration.EndsWith(".d.ts"))
+                        fromConfiguration = fromConfiguration.Substring(0, fromConfiguration.Length - 5);
+                    if (fromConfiguration.EndsWith(".ts"))
+                        fromConfiguration = fromConfiguration.Substring(0, fromConfiguration.Length - 3);
+                }
                 return Path.Combine(_context.TargetDirectory, fromConfiguration).Replace("/", "\\");
+            }
 
             var ns = t.GetNamespace();
             var tn = t.GetName().ToString();
@@ -130,7 +139,7 @@ namespace Reinforced.Typings.ReferencesInspection
             relPath = relPath.Replace('\\', '/');
             if (_context.Global.UseModules)
             {
-                if (relPath.IndexOf("/") < 0) relPath = "./" + relPath;
+                if (!relPath.StartsWith(".")) relPath = "./" + relPath;
             }
             return relPath;
         }
@@ -142,8 +151,8 @@ namespace Reinforced.Typings.ReferencesInspection
             if (string.IsNullOrEmpty(currentNamespace)) return desiredNamespace;
 
 
-            var current = currentNamespace.Split('\\');
-            var desired = desiredNamespace.Split('\\');
+            var current = currentNamespace.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+            var desired = desiredNamespace.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
             var result = new StringBuilder();
             if (string.IsNullOrEmpty(desiredNamespace))

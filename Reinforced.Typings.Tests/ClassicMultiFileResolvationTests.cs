@@ -13,69 +13,86 @@ namespace Reinforced.Typings.Tests
     public class ClassicMultiFileResolvationTests : RtExporterTestBase
     {
         private readonly TypeNameEqualityComparer _comparer = new TypeNameEqualityComparer();
-        
 
-        [Fact]
-        public void SimpleReferenceResolvationTest()
+        protected ExportedFile Setup2Files(string filePath1, string filePath2, Action<ConfigurationBuilder> builder)
         {
             var setup = base.InitializeMultipleFiles(a =>
             {
-                a.Global(x => x.UseModules(false));
-                a.ExportAsInterface<TestFluentAssembly.IInterface1>().ExportTo("File1.ts");
-                a.ExportAsInterface<TestFluentAssembly.IInterface2>().ExportTo("File2.ts");
+                builder(a);
+                a.ExportAsInterface<TestFluentAssembly.TwoInterfaces.IInterface1>().ExportTo(filePath1);
+                a.ExportAsInterface<TestFluentAssembly.TwoInterfaces.IInterface2>().ExportTo(filePath2);
             });
 
-            var file = setup.Exporter.SetupExportedFile("D:\\File1.ts");
-            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.IInterface2));
-
-            Assert.Equal(new RtSimpleTypeName("IInterface2") { Prefix = "TestFluentAssembly" }, typeName, _comparer);
-            Assert.Single(file.References.References);
-            var rf = file.References.References.First();
-            Assert.Equal(rf.Path,"File2.ts");
+            return setup.Exporter.SetupExportedFile("D:\\" + filePath1);
         }
 
         [Fact]
-        public void SimpleModuleResolvationTest()
+        public void SimpleReferenceResolvationTestSingleDir()
         {
-            var setup = base.InitializeMultipleFiles(a =>
-            {
-                a.Global(x => x.UseModules());
-                a.ExportAsInterface<TestFluentAssembly.IInterface1>().ExportTo("File1.ts");
-                a.ExportAsInterface<TestFluentAssembly.IInterface2>().ExportTo("File2.ts");
-            });
+            var file = Setup2Files("File1.ts", "File2.ts", x => x.Global(a => a.UseModules(false)));
+            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
-            var file = setup.Exporter.SetupExportedFile("D:\\File1.ts");
-            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.IInterface2));
+            Assert.Equal(new RtSimpleTypeName("IInterface2") { Prefix = "TestFluentAssembly.TwoInterfaces" }, typeName, _comparer);
+            Assert.Single(file.References.References);
+            var rf = file.References.References.First();
+            Assert.Equal("File2.ts", rf.Path);
+        }
+
+        [Fact]
+        public void SimpleModuleResolvationTestSingleDir()
+        {
+            var file = Setup2Files("File1.ts", "File2.ts", x => x.Global(a => a.UseModules()));
+
+            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
             Assert.Equal(new RtSimpleTypeName("IInterface2"), typeName, _comparer);
             Assert.Single(file.References.Imports);
             var rf = file.References.Imports.First();
-            Assert.Equal(rf.From, "./File2.ts");
-            Assert.Equal(rf.Target, "{ IInterface2 }");
+            Assert.Equal("./File2", rf.From);
+            Assert.Equal("{ IInterface2 }", rf.Target);
         }
 
         [Fact]
-        public void SimpleModuleWithNamespaceResolvationTest()
+        public void SimpleModuleWithNamespaceResolvationTestSingleDir()
         {
-            var setup = base.InitializeMultipleFiles(a =>
-            {
-                a.Global(x => x.UseModules(discardNamespaces:false));
-                a.ExportAsInterface<TestFluentAssembly.IInterface1>().ExportTo("File1.ts");
-                a.ExportAsInterface<TestFluentAssembly.IInterface2>().ExportTo("File2.ts");
-            });
+            var file = Setup2Files("File1.ts", "File2.ts", x => x.Global(a => a.UseModules(discardNamespaces: false)));
 
-            var file = setup.Exporter.SetupExportedFile("D:\\File1.ts");
-            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.IInterface2));
+            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
-            Assert.Equal(new RtSimpleTypeName("IInterface2") {Prefix = "File2.TestFluentAssembly" }, typeName, _comparer);
+            Assert.Equal(new RtSimpleTypeName("IInterface2") { Prefix = "File2.TestFluentAssembly.TwoInterfaces" }, typeName, _comparer);
             Assert.Single(file.References.Imports);
             var rf = file.References.Imports.First();
             Assert.True(rf.IsWildcard);
-            Assert.Equal(rf.WildcardAlias,"File2");
+            Assert.Equal("File2", rf.WildcardAlias);
 
-            Assert.Equal(rf.From, "./File2.ts");
-            Assert.Equal(rf.Target, "* as File2");
+            Assert.Equal("./File2", rf.From);
+            Assert.Equal("* as File2", rf.Target);
         }
 
+        [Fact]
+        public void SimpleReferenceResolvationTestDifferentDirs()
+        {
+            var file = Setup2Files("File1.ts", "Another/File2.ts", x => x.Global(a => a.UseModules(false)));
+            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
+
+            Assert.Equal(new RtSimpleTypeName("IInterface2") { Prefix = "TestFluentAssembly.TwoInterfaces" }, typeName, _comparer);
+            Assert.Single(file.References.References);
+            var rf = file.References.References.First();
+            Assert.Equal("Another/File2.ts", rf.Path);
+        }
+
+        [Fact]
+        public void SimpleModuleResolvationTestDifferentDirs()
+        {
+            var file = Setup2Files("File1.ts", "Another/File2.ts", x => x.Global(a => a.UseModules()));
+
+            var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
+
+            Assert.Equal(new RtSimpleTypeName("IInterface2"), typeName, _comparer);
+            Assert.Single(file.References.Imports);
+            var rf = file.References.Imports.First();
+            Assert.Equal("./Another/File2", rf.From);
+            Assert.Equal("{ IInterface2 }", rf.Target);
+        }
     }
 }
