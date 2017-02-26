@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationBuilderTestBase.cs" />
     <Compile Include="ExporterIntegrationTests\BasicExportTests.cs" />
     <Compile Include="Core\MockFileOperations.cs" />
     <Compile Include="Core\RtExporterTestBase.cs" />

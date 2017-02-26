@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings
@@ -19,6 +20,17 @@ namespace Reinforced.Typings
                 return or();
             }
             return dictionary[key];
+        }
+
+        public static TV GetUnion<T, TV, TV2>(this Dictionary<T, TV> dictionary, T key, Func<TV> union)
+            where TV : IEnumerable<TV2>
+        {
+            var u = union();
+            if (dictionary.ContainsKey(key))
+            {
+                u = (TV) u.Union(dictionary[key]);
+            }
+            return u;
         }
 
         public static TV GetOrCreate<T, TV>(this Dictionary<T, TV> dictionary, T key) where TV : new()

@@ -16,6 +16,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             var prev = Context;
             Context = WriterContext.Class;
             AppendTabs();
+            Decorators(node);
             if (prev == WriterContext.Module) Write("export ");
             Write("class ");
             Visit(node.Name);

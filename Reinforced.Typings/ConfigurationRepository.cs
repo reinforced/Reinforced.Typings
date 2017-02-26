@@ -23,6 +23,17 @@ namespace Reinforced.Typings
         private readonly Dictionary<Type, TsDeclarationAttributeBase> _attributesForType =
             new Dictionary<Type, TsDeclarationAttributeBase>();
 
+        #region Decorators
+        private readonly Dictionary<Type, List<TsDecoratorAttribute>> _decoratorsForType =
+            new Dictionary<Type, List<TsDecoratorAttribute>>();
+
+        private readonly Dictionary<MemberInfo, List<TsDecoratorAttribute>> _decoratorsForMember =
+            new Dictionary<MemberInfo, List<TsDecoratorAttribute>>();
+
+        private readonly Dictionary<ParameterInfo, List<TsDecoratorAttribute>> _decoratorsForParameter =
+            new Dictionary<ParameterInfo, List<TsDecoratorAttribute>>();
+        #endregion
+
         private readonly Dictionary<MethodInfo, TsFunctionAttribute> _attributesForMethods =
             new Dictionary<MethodInfo, TsFunctionAttribute>();
 
@@ -41,6 +52,9 @@ namespace Reinforced.Typings
         private readonly Dictionary<Type, List<TsAddTypeReferenceAttribute>> _referenceAttributes =
             new Dictionary<Type, List<TsAddTypeReferenceAttribute>>();
 
+        private readonly Dictionary<Type, List<TsAddTypeImportAttribute>> _importAttributes =
+            new Dictionary<Type, List<TsAddTypeImportAttribute>>();
+
         private readonly Dictionary<Type, string> _pathesToFiles = new Dictionary<Type, string>();
         private readonly Dictionary<string, List<Type>> _typesInFiles = new Dictionary<string, List<Type>>();
 
@@ -53,6 +67,23 @@ namespace Reinforced.Typings
         #endregion
 
         #region Fileds frontend
+
+        #region Decorators
+        public Dictionary<Type, List<TsDecoratorAttribute>> DecoratorsForType
+        {
+            get { return _decoratorsForType; }
+        }
+
+        public Dictionary<MemberInfo, List<TsDecoratorAttribute>> DecoratorsForMember
+        {
+            get { return _decoratorsForMember; }
+        }
+        public Dictionary<ParameterInfo, List<TsDecoratorAttribute>> DecoratorsForParameter
+        {
+            get { return _decoratorsForParameter; }
+        }
+
+        #endregion
 
         public Dictionary<Type, string> PathesToFiles
         {
@@ -77,6 +108,11 @@ namespace Reinforced.Typings
         public Dictionary<Type, List<TsAddTypeReferenceAttribute>> ReferenceAttributes
         {
             get { return _referenceAttributes; }
+        }
+
+        public Dictionary<Type, List<TsAddTypeImportAttribute>> ImportAttributes
+        {
+            get { return _importAttributes; }
         }
 
         public List<RtReference> References
@@ -163,6 +199,25 @@ namespace Reinforced.Typings
         #endregion
 
         #region Attribute retrieve methods
+
+        #region Decorator
+
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(Type t)
+        {
+            return _decoratorsForType.GetUnion<Type,List<TsDecoratorAttribute>, TsDecoratorAttribute>(t, () => t.GetCustomAttributes<TsDecoratorAttribute>(false).ToList());
+        }
+
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(MemberInfo t)
+        {
+            return _decoratorsForMember.GetUnion<MemberInfo, List<TsDecoratorAttribute>, TsDecoratorAttribute>(t, () => t.GetCustomAttributes<TsDecoratorAttribute>(false).ToList());
+        }
+
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(ParameterInfo t)
+        {
+            return _decoratorsForParameter.GetUnion<ParameterInfo, List<TsDecoratorAttribute>, TsDecoratorAttribute>(t, () => t.GetCustomAttributes<TsDecoratorAttribute>(false).ToList());
+        }
+
+        #endregion
 
         public TAttr ForType<TAttr>(Type t)
             where TAttr : TsDeclarationAttributeBase

@@ -31,6 +31,14 @@ namespace Reinforced.Typings.Visitors.TypeScript
             }
         }
 
+        protected void Decorators(IDecoratable member)
+        {
+            foreach (var memberDecorator in member.Decorators)
+            {
+                Visit(memberDecorator);
+            }
+        }
+
         #region Documentation
         protected void DocTag(DocTag tag, string value)
         {
@@ -118,7 +126,10 @@ namespace Reinforced.Typings.Visitors.TypeScript
 
         public override void Visit(RtDecorator node)
         {
-            throw new NotImplementedException();
+            if (node==null) return;
+            Write("@");
+            Write(node.Decorator);
+            Write(" ");
         }
     }
 

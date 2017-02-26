@@ -15,7 +15,9 @@ namespace Reinforced.Typings.Tests
     {
         private readonly TypeResolver _tr;
         private readonly TypeNameEqualityComparer _comparer;
+
         private readonly ExportContext _context;
+
         private static readonly RtSimpleTypeName AnyType = new RtSimpleTypeName("any");
         private static readonly RtSimpleTypeName NumberType = new RtSimpleTypeName("number");
         private static readonly RtSimpleTypeName StringType = new RtSimpleTypeName("string");
@@ -27,7 +29,9 @@ namespace Reinforced.Typings.Tests
             {
                 SourceAssemblies = new[] { Assembly.GetExecutingAssembly() }
             };
-            _tr = new TypeResolver(_context);
+            var exporter = new TsExporter(_context);
+            exporter.Initialize();
+            _tr = exporter.TypeResolver;
             _comparer = new TypeNameEqualityComparer();
         }
 

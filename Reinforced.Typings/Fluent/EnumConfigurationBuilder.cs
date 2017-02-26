@@ -21,6 +21,7 @@ namespace Reinforced.Typings.Fluent
         internal EnumConfigurationBuilder()
         {
             AttributePrototype = new TsEnumAttribute();
+            Decorators = new List<TsDecoratorAttribute>();
         }
 
         private TsEnumAttribute AttributePrototype { get; set; }
@@ -46,5 +47,6 @@ namespace Reinforced.Typings.Fluent
         }
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }
+        public List<TsDecoratorAttribute> Decorators { get; }
     }
 }

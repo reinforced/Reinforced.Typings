@@ -7,7 +7,7 @@ namespace Reinforced.Typings.Ast
     /// <summary>
     /// AST node for method parameter
     /// </summary>
-    public class RtArgument : RtNode
+    public class RtArgument : RtNode, IDecoratable
     {
         /// <summary>
         /// Parameter identifier
@@ -36,6 +36,10 @@ namespace Reinforced.Typings.Ast
         {
             get
             {
+                foreach (var rtDecorator in Decorators)
+                {
+                    yield return rtDecorator;
+                }
                 yield return Identifier;
                 yield return Type;
             }
@@ -73,5 +77,7 @@ namespace Reinforced.Typings.Ast
             }
             return sb.ToString();
         }
+
+        public List<RtDecorator> Decorators { get; }
     }
 }

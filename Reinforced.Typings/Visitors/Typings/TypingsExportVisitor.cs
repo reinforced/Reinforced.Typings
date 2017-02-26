@@ -12,5 +12,10 @@ namespace Reinforced.Typings.Visitors.Typings
             : base(writer,tabulation)
         {
         }
+
+        public override void Visit(RtDecorator node)
+        {
+            //no decorators allowed in the .d.ts
+        }
     }
 }

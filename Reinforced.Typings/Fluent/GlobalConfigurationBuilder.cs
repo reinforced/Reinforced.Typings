@@ -85,5 +85,19 @@ namespace Reinforced.Typings.Fluent
             builder.Parameters.GenerateDocumentation = generate;
             return builder;
         }
+
+        /// <summary>
+        /// Enables adaptation for TS modules system (--modules tsc.exe option)
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="useModules">True will enable usage of modules system and exports/imports</param>
+        /// <param name="discardNamespaces">True will automatically ignore namespaces while exporting types</param>
+        public static GlobalConfigurationBuilder UseModules(this GlobalConfigurationBuilder builder,
+            bool useModules = true, bool discardNamespaces = true)
+        {
+            builder.Parameters.UseModules = useModules;
+            builder.Parameters.DiscardNamespacesWhenUsingModules = discardNamespaces;
+            return builder;
+        }
     }
 }

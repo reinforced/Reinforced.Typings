@@ -16,14 +16,26 @@ namespace Reinforced.Typings
     /// </summary>
     public class TsExporter : MarshalByRefObject
     {
-        private InspectedReferences _globalReferences;
         private readonly ExportContext _context;
         private List<Type> _allTypes;
         private HashSet<Type> _allTypesHash;
         private ConfigurationRepository _configurationRepository;
-        private bool _isAnalyzed;
-        private ReferenceInspector _referenceInspector;
+        private bool _isInitialized;
 
+        /// <summary>
+        /// Global references extracted from current configuration
+        /// </summary>
+        public InspectedReferences GlobalReferences { get; private set; }
+
+        /// <summary>
+        /// Reference inspector instance
+        /// </summary>
+        public ReferenceInspector ReferenceInspector { get; private set; }
+
+        /// <summary>
+        /// Type resolver instance being used during export
+        /// </summary>
+        public TypeResolver TypeResolver { get; private set; }
 
         #region Constructors
 
@@ -51,9 +63,13 @@ namespace Reinforced.Typings
             gp.TabSymbol = tsGlobal.TabSymbol;
             gp.WriteWarningComment = tsGlobal.WriteWarningComment;
         }
-        private void Analyze()
+
+        /// <summary>
+        /// Initializes TS exporter. Reads all types configuration, applies fluent configuration, resolves references
+        /// </summary>
+        public void Initialize()
         {
-            if (_isAnalyzed) return;
+            if (_isInitialized) return;
 
             // 1st step - searching and processing [TsGlobal] attribute
             var tsGlobal = _context.SourceAssemblies.Select(c => c.GetCustomAttribute<TsGlobalAttribute>())
@@ -77,7 +93,7 @@ namespace Reinforced.Typings
                 }
             }
 
-            _referenceInspector = new ReferenceInspector(_context.TargetDirectory,
+            ReferenceInspector = new ReferenceInspector(_context.TargetDirectory,
                 _context.Global.ExportPureTypings,
                 _context.Global.RootNamespace);
 
@@ -100,26 +116,24 @@ namespace Reinforced.Typings
                 }
             }
 
-            _globalReferences = _referenceInspector.InspectGlobalReferences(_context.SourceAssemblies);
-
-            _isAnalyzed = true;
+            GlobalReferences = ReferenceInspector.InspectGlobalReferences(_context.SourceAssemblies);
+            TypeResolver = new TypeResolver(_context);
+            _isInitialized = true;
         }
 
         /// <summary>
         ///     Exports TypeScript source to specified TextWriter according to settings
         /// </summary>
-        /// <param name="sw">TextWriter</param>
-        /// <param name="tr">TypeResolver object</param>
         /// <param name="types">Types to export</param>
-        private ExportedFile ExportTypes(TypeResolver tr, IEnumerable<Type> types = null)
+        private ExportedFile ExportTypes(IEnumerable<Type> types = null)
         {
 
             ExportedFile ef = new ExportedFile
             {
-                GlobalReferences = _globalReferences,
+                GlobalReferences = GlobalReferences,
                 References = InspectReferences()
             };
-            ef.Namespaces = ExportNamespaces(types ?? _allTypes, tr);
+            ef.Namespaces = ExportNamespaces(types ?? _allTypes);
             return ef;
         }
 
@@ -131,7 +145,7 @@ namespace Reinforced.Typings
                 List<RtImport> imports = new List<RtImport>();
                 foreach (var type in types)
                 {
-                    var inspected = _referenceInspector.GenerateInspectedReferences(type, _allTypesHash);
+                    var inspected = ReferenceInspector.GenerateInspectedReferences(type, _allTypesHash);
                     refs.AddRange(inspected.References);
                     imports.AddRange(inspected.Imports);
                 }
@@ -149,37 +163,37 @@ namespace Reinforced.Typings
         public void Export()
         {
             _context.FileOperations.ClearTempRegistry();
-            Analyze();
-            var tr = new TypeResolver(_context);
+            Initialize();
+
             _context.Lock();
 
             if (!_context.Hierarchical)
             {
-                var file = ExportTypes(tr);
+                var file = ExportTypes();
                 _context.FileOperations.Export(_context.TargetFile, file);
             }
             else
             {
                 var typeFilesMap = _allTypes
-                    .GroupBy(c => _referenceInspector.GetPathForType(c))
+                    .GroupBy(c => ReferenceInspector.GetPathForType(c))
                     .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
                 foreach (var kv in typeFilesMap)
                 {
                     var path = kv.Key;
-                    var file = ExportTypes(tr, kv.Value);
+                    var file = ExportTypes(kv.Value);
                     _context.FileOperations.Export(path, file);
                 }
             }
 
             _context.Unlock();
             _context.FileOperations.DeployTempFiles();
-            tr.PrintCacheInfo();
+            TypeResolver.PrintCacheInfo();
         }
 
-        private RtNamespace[] ExportNamespaces(IEnumerable<Type> types, TypeResolver tr)
+        private RtNamespace[] ExportNamespaces(IEnumerable<Type> types)
         {
-            var gen = tr.GeneratorForNamespace(_context);
+            var gen = TypeResolver.GeneratorForNamespace(_context);
             var grp = types.GroupBy(c => c.GetNamespace(true));
             var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
@@ -189,7 +203,7 @@ namespace Reinforced.Typings
             {
                 var ns = n.Key;
                 if (ns == "-") ns = string.Empty;
-                var module = gen.Generate(n.Value, ns, tr);
+                var module = gen.Generate(n.Value, ns, TypeResolver);
                 result.Add(module);
             }
             return result.ToArray();

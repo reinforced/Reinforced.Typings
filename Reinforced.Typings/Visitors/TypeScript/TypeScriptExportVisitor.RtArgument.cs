@@ -12,6 +12,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
         public override void Visit(RtArgument node)
         {
             if (node == null) return;
+            Decorators(node);
             if (node.IsVariableParameters) Write("...");
             Visit(node.Identifier);
             Write(": ");

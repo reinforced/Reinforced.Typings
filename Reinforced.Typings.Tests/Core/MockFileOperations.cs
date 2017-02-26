@@ -9,7 +9,7 @@ using Reinforced.Typings.Visitors.Typings;
 
 namespace Reinforced.Typings.Tests.Core
 {
-    class MockFileOperations : IFilesOperations
+    public class MockFileOperations : IFilesOperations
     {
         public bool DeployCalled { get; private set; }
         public bool TempRegistryCleared { get; private set; }

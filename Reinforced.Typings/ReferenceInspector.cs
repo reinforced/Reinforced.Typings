@@ -10,20 +10,23 @@ using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
 {
-    internal class ReferenceInspector
+    /// <summary>
+    /// Class responsible for extracting direct dependencies from types
+    /// </summary>
+    public class ReferenceInspector
     {
         private readonly string _targetDirectory;
         private readonly bool _exportPureTypings;
         private readonly string _rootNamespace;
 
-        public ReferenceInspector(string targetDirectory, bool exportPureTypings, string rootNamespace)
+        internal ReferenceInspector(string targetDirectory, bool exportPureTypings, string rootNamespace)
         {
             _targetDirectory = targetDirectory;
             _exportPureTypings = exportPureTypings;
             _rootNamespace = rootNamespace;
         }
 
-        internal InspectedReferences InspectGlobalReferences(Assembly[] assemblies)
+        public InspectedReferences InspectGlobalReferences(Assembly[] assemblies)
         {
             var references = assemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
@@ -33,7 +36,7 @@ namespace Reinforced.Typings
             return new InspectedReferences(references);
         }
 
-        internal InspectedReferences GenerateInspectedReferences(Type element, HashSet<Type> alltypes)
+        public InspectedReferences GenerateInspectedReferences(Type element, HashSet<Type> alltypes)
         {
             var inspectedTypes = InspectReferences(element, alltypes);
             var references = new HashSet<string>();
@@ -93,7 +96,7 @@ namespace Reinforced.Typings
             return pth;
         }
 
-        public string GetRelativePathForType(Type typeToReference, Type currentlyExportingType)
+        private string GetRelativePathForType(Type typeToReference, Type currentlyExportingType)
         {
             var currentFile = GetPathForType(currentlyExportingType);
             var desiredFile = GetPathForType(typeToReference);
@@ -142,7 +145,7 @@ namespace Reinforced.Typings
         }
 
 
-        private static Type GetOverridenType(MemberInfo info)
+        private static Type ClarifyType(MemberInfo info)
         {
             var attr = ConfigurationRepository.Instance.ForMember(info);
             if (attr != null && attr.StrongType != null) return attr.StrongType;
@@ -152,18 +155,17 @@ namespace Reinforced.Typings
             return null;
         }
 
-        internal static HashSet<Type> InspectReferences(Type element, HashSet<Type> alltypes)
+        private static HashSet<Type> InspectReferences(Type element, HashSet<Type> alltypes)
         {
             var references = new HashSet<Type>();
             if (element.IsEnum) return references;
 
-            foreach (var fi in element.GetExportedFields())
-                InspectTypeReferences(GetOverridenType(fi), alltypes, references);
-            foreach (var pi in element.GetExportedProperties())
-                InspectTypeReferences(GetOverridenType(pi), alltypes, references);
+            foreach (var fi in element.GetExportedFields()) InspectTypeReferences(ClarifyType(fi), alltypes, references);
+            foreach (var pi in element.GetExportedProperties()) InspectTypeReferences(ClarifyType(pi), alltypes, references);
+
             foreach (var mi in element.GetExportedMethods())
             {
-                InspectTypeReferences(GetOverridenType(mi), alltypes, references);
+                InspectTypeReferences(ClarifyType(mi), alltypes, references);
 
                 foreach (var parameterInfo in mi.GetParameters())
                 {
@@ -181,12 +183,11 @@ namespace Reinforced.Typings
             {
                 InspectTypeReferences(iface, alltypes, references);
             }
-
+            
             return references;
         }
 
-        private static void InspectTypeReferences(Type argument, HashSet<Type> alltypes,
-            HashSet<Type> referenceContainer)
+        private static void InspectTypeReferences(Type argument, HashSet<Type> alltypes, HashSet<Type> referenceContainer)
         {
             if (alltypes.Contains(argument)) referenceContainer.AddIfNotExists(argument);
             if (argument.IsGenericType)

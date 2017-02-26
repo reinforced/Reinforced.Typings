@@ -2,7 +2,7 @@
 using Reinforced.Typings.Tests.Core;
 using Xunit;
 
-namespace Reinforced.Typings.Tests.Integration
+namespace Reinforced.Typings.Tests.ExporterIntegrationTests
 {
 
     public interface ITestInterface

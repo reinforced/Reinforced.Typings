@@ -1,4 +1,5 @@
-﻿using Reinforced.Typings.Attributes;
+﻿using System.Collections.Generic;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
@@ -6,11 +7,12 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Fluent configuration builder for exported properties
     /// </summary>
-    public class PropertyExportConfiguration : IExportConfiguration<TsPropertyAttribute>, IIgnorable
+    public class PropertyExportConfiguration : IExportConfiguration<TsPropertyAttribute>, IIgnorable, IDecoratorsAggregator
     {
         internal PropertyExportConfiguration()
         {
             AttributePrototype = new TsPropertyAttribute();
+            Decorators = new List<TsDecoratorAttribute>();
         }
 
         private TsPropertyAttribute AttributePrototype { get; set; }
@@ -21,5 +23,6 @@ namespace Reinforced.Typings.Fluent
         }
 
         bool IIgnorable.Ignore { get; set; }
+        public List<TsDecoratorAttribute> Decorators { get; }
     }
 }

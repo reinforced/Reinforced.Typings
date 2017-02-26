@@ -9,7 +9,11 @@ namespace Reinforced.Typings.Visitors.TypeScript
             if (node == null) return;
             Visit(node.Documentation);
             AppendTabs();
-            if (Context != WriterContext.Interface) Modifiers(node);
+            if (Context != WriterContext.Interface)
+            {
+                Decorators(node);
+                Modifiers(node);
+            }
             Visit(node.Identifier);
             Write("(");
             SequentialVisit(node.Arguments, ", ");

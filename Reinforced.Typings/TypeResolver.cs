@@ -14,7 +14,7 @@ namespace Reinforced.Typings
     /// <summary>
     ///     Type resolver. It is helper class to convert source types, members and parameter names to typescript ones
     /// </summary>
-    public class TypeResolver
+    public sealed class TypeResolver
     {
         private readonly ITsCodeGenerator<Type> _defaultClassGenerator;
         private readonly ITsCodeGenerator<Type> _defaultEnumGenerator;
@@ -53,7 +53,7 @@ namespace Reinforced.Typings
         /// <summary>
         ///     Constructs new type resolver
         /// </summary>
-        public TypeResolver(ExportContext context)
+        internal TypeResolver(ExportContext context)
         {
             _defaultGenerators[MemberTypes.Property] = new PropertyCodeGenerator { Context = context };
             _defaultGenerators[MemberTypes.Field] = new FieldCodeGenerator { Context = context };

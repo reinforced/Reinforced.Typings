@@ -64,6 +64,7 @@ namespace Reinforced.Typings.Fluent
                 if (cls != null)
                 {
                     repository.AttributesForType[kv.Key] = cls.AttributePrototype;
+                    repository.DecoratorsForType[kv.Key] = new List<TsDecoratorAttribute>(cls.Decorators);
                 }
 
                 if (intrf != null)
@@ -93,6 +94,16 @@ namespace Reinforced.Typings.Fluent
                     {
                         repository.AttributesForMethods[method] = (TsFunctionAttribute)kvm.Value.AttributePrototype;
                     }
+                    var dec = kvm.Value as IDecoratorsAggregator;
+                    if (dec != null)
+                    {
+                        if (!repository.DecoratorsForMember.ContainsKey(kvm.Key))
+                        {
+                            repository.DecoratorsForMember[kvm.Key] = new List<TsDecoratorAttribute>();
+                        }
+                        repository.DecoratorsForMember[kvm.Key].AddRange(dec.Decorators);
+                    }
+
                 }
                 foreach (var kvp in kv.Value.ParametersConfiguration)
                 {
@@ -114,8 +125,11 @@ namespace Reinforced.Typings.Fluent
                         enumValueExportConfiguration.Value.AttributePrototype;
                 }
                 repository.AddFileSeparationSettings(kv.Key, kv.Value);
+                repository.DecoratorsForType[kv.Key] = new List<TsDecoratorAttribute>(kv.Value.Decorators);
             }
             repository.References.AddRange(_references);
+            repository.Imports.AddRange(_imports);
+
             repository.AdditionalDocumentationPathes.AddRange(_additionalDocumentationPathes);
             return repository;
         }
