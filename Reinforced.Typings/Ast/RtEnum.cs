@@ -10,7 +10,7 @@ namespace Reinforced.Typings.Ast
     /// <summary>
     /// AST node for TypeScript enumeration
     /// </summary>
-    public class RtEnum : RtCompilationUnit
+    public class RtEnum : RtCompilationUnit, IDecoratable
     {
         /// <summary>
         /// JSDOC
@@ -33,6 +33,7 @@ namespace Reinforced.Typings.Ast
         public RtEnum()
         {
             Values = new List<RtEnumValue>();
+            Decorators = new List<RtDecorator>();
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Reinforced.Typings.Ast
         {
             get
             {
-                foreach (var rtNode in base.Children)
+                foreach (var rtNode in Decorators)
                 {
                     yield return rtNode;
                 }
@@ -73,5 +74,8 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+
+        
+        public List<RtDecorator> Decorators { get; private set; }
     }
 }

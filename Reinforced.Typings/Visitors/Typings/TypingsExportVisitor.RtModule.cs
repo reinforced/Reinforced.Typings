@@ -14,7 +14,7 @@ namespace Reinforced.Typings.Visitors.Typings
             {
                 Context = WriterContext.Module;
                 AppendTabs();
-                WriteLine(String.Format("declare module {0} {{", node.ModuleName));
+                WriteLine(String.Format("declare module {0} {{", node.Name));
                 Tab();
             }
             foreach (var rtCompilationUnit in node.CompilationUnits)

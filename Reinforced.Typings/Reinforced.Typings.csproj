@@ -57,6 +57,7 @@
     <Compile Include="AccessModifier.cs" />
     <Compile Include="Ast\Dependency\RtImportTarget.cs" />
     <Compile Include="Ast\DocTag.cs" />
+    <Compile Include="Ast\IDecoratable.cs" />
     <Compile Include="Ast\ITypeMember.cs" />
     <Compile Include="Ast\IRtVisitor.cs" />
     <Compile Include="Ast\JsdocTagAttribute.cs" />
@@ -85,17 +86,20 @@
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\INameOverrideAttribute.cs" />
+    <Compile Include="Attributes\TsAddTypeImportAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeReference.cs" />
     <Compile Include="Attributes\TsAttributeBase.cs" />
     <Compile Include="Attributes\TsClassAttribute.cs" />
     <Compile Include="Attributes\TsBaseParamAttribute.cs" />
     <Compile Include="Attributes\TsDeclarationAttributeBase.cs" />
+    <Compile Include="Attributes\TsDecoratorAttribute.cs" />
     <Compile Include="Attributes\TsEnumAttribute.cs" />
     <Compile Include="Attributes\TsFileAttribute.cs" />
     <Compile Include="Attributes\TsFunctionAttribute.cs" />
     <Compile Include="Attributes\TsGenericAttribute.cs" />
     <Compile Include="Attributes\TsGlobalAttribute.cs" />
     <Compile Include="Attributes\TsIgnoreAttribute.cs" />
+    <Compile Include="Attributes\TsImportAttribute.cs" />
     <Compile Include="Attributes\TsInterfaceAttribute.cs" />
     <Compile Include="Attributes\TsParameterAttribute.cs" />
     <Compile Include="Attributes\TsPropertyAttribute.cs" />
@@ -119,6 +123,7 @@
     <Compile Include="Fluent\Generic\GenericInterfaceConfigurationBuilder.cs" />
     <Compile Include="Fluent\GlobalConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IClassConfigurationBuilder.cs" />
+    <Compile Include="Fluent\Interfaces\IDecoratorsAggregator.cs" />
     <Compile Include="Fluent\Interfaces\IEnumConfigurationBuidler.cs" />
     <Compile Include="Fluent\Interfaces\IExportConfiguration.cs" />
     <Compile Include="Fluent\Interfaces\IIgnorable.cs" />
@@ -127,7 +132,7 @@
     <Compile Include="Fluent\Interfaces\ITypeConfigurationBuilder.cs" />
     <Compile Include="Fluent\ParameterConfigurationBuilder.cs" />
     <Compile Include="Fluent\InterfaceConfigurationBuilder.cs" />
-    <Compile Include="Fluent\MethodExportConfiguration.cs" />
+    <Compile Include="Fluent\MethodConfigurationBuilder.cs" />
     <Compile Include="Fluent\PropertyExportConfiguration.cs" />
     <Compile Include="Fluent\TypeConfigurationBuilder.cs" />
     <Compile Include="Fluent\LambdaHelpers.cs" />
@@ -150,7 +155,7 @@
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtFuncion.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtJsdocNode.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtIdentifier.cs" />
-    <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtModule.cs" />
+    <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtNamespace.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtRaw.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtClass.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtArgument.cs" />

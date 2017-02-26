@@ -23,8 +23,10 @@ namespace Reinforced.Typings.Generators
         public virtual RtNamespace Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver)
         {
             RtNamespace ns = new RtNamespace();
-            if (string.IsNullOrEmpty(namespaceName)) ns.IsAmbientNamespace = true;
-            ns.ModuleName = namespaceName;
+            var needToDiscard = Context.Global.UseModules && Context.Global.DiscardNamespacesWhenUsingModules;
+
+            if (string.IsNullOrEmpty(namespaceName) || needToDiscard) ns.IsAmbientNamespace = true;
+            ns.Name = namespaceName;
 
             Context.CurrentNamespace = namespaceName;
             Context.Location.SetLocation(ns);
@@ -32,6 +34,14 @@ namespace Reinforced.Typings.Generators
             {
                 var converter = resolver.GeneratorFor(type, Context);
                 var member = converter.Generate(type, resolver);
+                if (Context.Global.UseModules)
+                {
+                    var m = member as RtCompilationUnit;
+                    if (m != null)
+                    {
+                        m.Export = true;
+                    }
+                }
                 ns.CompilationUnits.Add(member);
                 Console.WriteLine("Exported {0}", type);
             }

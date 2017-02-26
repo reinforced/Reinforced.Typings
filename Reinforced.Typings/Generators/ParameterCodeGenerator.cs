@@ -52,7 +52,7 @@ namespace Reinforced.Typings.Generators
             result.Type = type;
             if (isNullable && defaultValue == null) result.Identifier.IsNullable = true;
             if (defaultValue != null) result.DefaultValue = defaultValue;
-
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
 

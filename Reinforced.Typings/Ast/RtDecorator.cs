@@ -14,7 +14,7 @@ namespace Reinforced.Typings.Ast
         /// <summary>
         /// Decorator name (everything that must follow after "@")
         /// </summary>
-        public string Decorator { get; set; }
+        public string Decorator { get; private set; }
 
         /// <summary>
         /// Child nodes
@@ -37,6 +37,11 @@ namespace Reinforced.Typings.Ast
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
+        }
+
+        public RtDecorator(string decorator)
+        {
+            Decorator = decorator;
         }
     }
 }

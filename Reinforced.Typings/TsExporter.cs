@@ -95,7 +95,9 @@ namespace Reinforced.Typings
 
             ReferenceInspector = new ReferenceInspector(_context.TargetDirectory,
                 _context.Global.ExportPureTypings,
-                _context.Global.RootNamespace);
+                _context.Global.RootNamespace,
+                _context.Global.UseModules,
+                _context.Global.DiscardNamespacesWhenUsingModules);
 
             _context.Documentation =
                 new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
@@ -133,7 +135,9 @@ namespace Reinforced.Typings
                 GlobalReferences = GlobalReferences,
                 References = InspectReferences()
             };
+            TypeResolver.CurrentFile = ef;
             ef.Namespaces = ExportNamespaces(types ?? _allTypes);
+            TypeResolver.CurrentFile = null;
             return ef;
         }
 

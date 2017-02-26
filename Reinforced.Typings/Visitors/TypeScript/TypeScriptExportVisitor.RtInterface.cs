@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             var prev = Context;
             Context = WriterContext.Interface;
             AppendTabs();
-            if (prev == WriterContext.Module) Write("export ");
+            if (node.Export) Write("export ");
             Write("interface ");
             Visit(node.Name);
             if (node.Implementees.Count > 0)

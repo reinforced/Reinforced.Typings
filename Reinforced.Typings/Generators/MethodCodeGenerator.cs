@@ -63,7 +63,7 @@ namespace Reinforced.Typings.Generators
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }
-
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
 

@@ -105,6 +105,8 @@ namespace Reinforced.Typings
             return _referenceAttributes.GetOr(t, () => new List<TsAddTypeReferenceAttribute>());
         }
 
+        #region References and imports
+
         public Dictionary<Type, List<TsAddTypeReferenceAttribute>> ReferenceAttributes
         {
             get { return _referenceAttributes; }
@@ -115,6 +117,10 @@ namespace Reinforced.Typings
             get { return _importAttributes; }
         }
 
+        #endregion
+
+        #region Global references and imports
+
         public List<RtReference> References
         {
             get { return _references; }
@@ -124,6 +130,10 @@ namespace Reinforced.Typings
         {
             get { return _imports; }
         }
+
+        #endregion
+
+
 
         public Dictionary<ParameterInfo, TsParameterAttribute> AttributesForParameters
         {

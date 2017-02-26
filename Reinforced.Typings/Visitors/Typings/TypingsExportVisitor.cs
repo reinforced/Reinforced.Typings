@@ -8,14 +8,11 @@ namespace Reinforced.Typings.Visitors.Typings
 {
     public partial class TypingsExportVisitor : TypeScriptExportVisitor
     {
-        public TypingsExportVisitor(TextWriter writer, string tabulation)
-            : base(writer,tabulation)
-        {
-        }
-
         public override void Visit(RtDecorator node)
         {
             //no decorators allowed in the .d.ts
         }
+
+        
     }
 }

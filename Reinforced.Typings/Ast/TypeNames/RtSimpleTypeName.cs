@@ -15,7 +15,7 @@ namespace Reinforced.Typings.Ast.TypeNames
         public RtSimpleTypeName(RtTypeName[] genericArguments, string ns, string typeName)
         {
             _genericArguments = genericArguments;
-            Namespace = ns;
+            Prefix = ns;
             TypeName = typeName;
         }
 
@@ -48,7 +48,7 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <summary>
         /// Type namespace
         /// </summary>
-        public string Namespace { get; set; }
+        public string Prefix { get; set; }
 
         /// <summary>
         /// Type name
@@ -97,9 +97,9 @@ namespace Reinforced.Typings.Ast.TypeNames
         {
             string generics = _genericArguments.Length > 0 ? "<" + String.Join(",", _genericArguments.AsEnumerable()) + ">" : null;
             var result = String.Concat(TypeName, generics);
-            if (!string.IsNullOrEmpty(Namespace))
+            if (!string.IsNullOrEmpty(Prefix))
             {
-                result =  Namespace + "." + result;
+                result =  Prefix + "." + result;
             }
             return result;
         }

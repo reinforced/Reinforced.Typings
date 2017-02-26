@@ -19,9 +19,11 @@ namespace Reinforced.Typings.Fluent.Generic
                 AutoExportProperties = false,
                 AutoExportMethods = false
             };
+            Decorators = new List<TsDecoratorAttribute>();
         }
 
 
         public TsClassAttribute AttributePrototype { get; private set; }
+        public List<TsDecoratorAttribute> Decorators { get; }
     }
 }

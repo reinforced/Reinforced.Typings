@@ -18,12 +18,16 @@ namespace Reinforced.Typings
         private readonly string _targetDirectory;
         private readonly bool _exportPureTypings;
         private readonly string _rootNamespace;
+        private readonly bool _useModules;
+        private readonly bool _discardNamespaces;
 
-        internal ReferenceInspector(string targetDirectory, bool exportPureTypings, string rootNamespace)
+        internal ReferenceInspector(string targetDirectory, bool exportPureTypings, string rootNamespace, bool discardNamespaces, bool useModules)
         {
             _targetDirectory = targetDirectory;
             _exportPureTypings = exportPureTypings;
             _rootNamespace = rootNamespace;
+            _discardNamespaces = discardNamespaces;
+            _useModules = useModules;
         }
 
         public InspectedReferences InspectGlobalReferences(Assembly[] assemblies)
@@ -33,6 +37,7 @@ namespace Reinforced.Typings
                 .Select(c => new RtReference() {Path = c.Path})
                 .Union(ConfigurationRepository.Instance.References);
 
+            //var imports = 
             return new InspectedReferences(references);
         }
 
@@ -62,9 +67,16 @@ namespace Reinforced.Typings
                 }
             }
 
-            var referenceNodes = references.Select(c => new RtReference() { Path = c });
+            if (!_useModules)
+            {
+                var referenceNodes = references.Select(c => new RtReference() {Path = c});
 
-            return new InspectedReferences(referenceNodes);
+                return new InspectedReferences(referenceNodes);
+            }
+            else
+            {
+                
+            }
         }
 
         public string GetPathForType(Type t)

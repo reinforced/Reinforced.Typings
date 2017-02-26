@@ -52,8 +52,7 @@ namespace Reinforced.Typings.Generators
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);
-            if (!propName.IsNullable && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
-                !Context.SpecialCase)
+            if (!propName.IsNullable && t.IsNullable() && !Context.SpecialCase)
             {
                 propName.IsNullable = true;
             }
@@ -68,7 +67,7 @@ namespace Reinforced.Typings.Generators
             result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;
-
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
 

@@ -13,7 +13,15 @@ namespace Reinforced.Typings.Visitors.TypeScript
             {
                 Context = WriterContext.Module;
                 AppendTabs();
-                WriteLine(String.Format("module {0} {{", node.ModuleName));
+                if (node.GenerationMode == NamespaceGenerationMode.Module)
+                {
+                    WriteLine(String.Format("module {0} {{", node.Name));
+                }
+                else
+                {
+                    if (node.Export) Write("export ");
+                    WriteLine(String.Format("namespace {0} {{", node.Name));
+                }
                 Tab();
             }
             foreach (var rtCompilationUnit in node.CompilationUnits)

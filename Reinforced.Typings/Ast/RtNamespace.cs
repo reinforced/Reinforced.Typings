@@ -13,17 +13,28 @@ namespace Reinforced.Typings.Ast
         public RtNamespace()
         {
             CompilationUnits = new List<RtNode>();
+            Export = true;
         }
 
         /// <summary>
-        /// Identifies nameless module that only wraps CompilationUnits without module name
+        /// Identifies nameless namespace that only wraps CompilationUnits without module name
         /// </summary>
         public bool IsAmbientNamespace { get; set; }
 
         /// <summary>
         /// Module name
         /// </summary>
-        public string ModuleName { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Denotes whether namespace must be exported or not
+        /// </summary>
+        public bool Export { get; set; }
+
+        /// <summary>
+        /// Denotes namespace generation mode
+        /// </summary>
+        public NamespaceGenerationMode GenerationMode { get; internal set; }
 
         /// <summary>
         /// Members of module - compilation units. Classes/enums/interfaces
@@ -55,5 +66,24 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+    }
+
+    /// <summary>
+    /// Switches mode for generating namespace.
+    /// If UseModules set to true then namespace must be 
+    /// exported as Namespaces.
+    /// If modules are not used then namespaces must represent modules
+    /// </summary>
+    public enum NamespaceGenerationMode
+    {
+        /// <summary>
+        /// Export namespace as module
+        /// </summary>
+        Module,
+
+        /// <summary>
+        /// Export namespace as namespace
+        /// </summary>
+        Namespace
     }
 }

@@ -50,6 +50,8 @@ namespace Reinforced.Typings
 
         private readonly ExportContext _context;
 
+        public ExportedFile CurrentFile { get; internal set; }
+
         /// <summary>
         ///     Constructs new type resolver
         /// </summary>
@@ -222,7 +224,11 @@ namespace Reinforced.Typings
                 if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
 
                 var result = t.GetName(GetConcreteGenericArguments(t));
-                result.Namespace = ns;
+                result.Prefix = ns;
+                if (_context.Global.UseModules)
+                {
+                    return result; // do not cache type names when 
+                }
                 return Cache(t, result);
             }
             if (t.IsNullable())
@@ -293,7 +299,7 @@ namespace Reinforced.Typings
                     var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
                         t.GetGenericArguments().Select(ResolveTypeNameInner).ToArray())
                     {
-                        Namespace = tsFriendly.Namespace
+                        Prefix = tsFriendly.Prefix
                     };
                     return Cache(t, parametrized);
                 }

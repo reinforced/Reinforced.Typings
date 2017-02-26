@@ -60,6 +60,7 @@ namespace Reinforced.Typings.Generators
                 }
             }
             result.Values.AddRange(valuesResult);
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
     }

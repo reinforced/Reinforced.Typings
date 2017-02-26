@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings.Generators
@@ -54,5 +55,17 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         /// <returns>Resulting node or null</returns>
         public abstract TNode GenerateNode(T element, TNode node, TypeResolver resolver);
+
+
+        /// <summary>
+        /// Appends decorators to decoratable node
+        /// </summary>
+        /// <param name="node">Decoratable syntax node</param>
+        /// <param name="decorators">Set of decorator attributes</param>
+        protected void AddDecorators(IDecoratable node, IEnumerable<TsDecoratorAttribute> decorators)
+        {
+            var decs = decorators.Select(c => new RtDecorator(c.Decorator));
+            node.Decorators.AddRange(decs);
+        }
     }
 }
