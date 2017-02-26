@@ -108,6 +108,7 @@
     <Compile Include="Attributes\TsTypedMemberAttributeBase.cs" />
     <Compile Include="Attributes\TsValueAttribute.cs" />
     <Compile Include="ConfigurationRepository.cs" />
+    <Compile Include="ConfiguredTypesExtensions.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Exceptions\ErrorMessage.cs" />
     <Compile Include="Exceptions\ErrorMessages.cs" />

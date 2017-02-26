@@ -15,7 +15,7 @@ namespace Reinforced.Typings
     ///     Facade for final TypeScript export. This class supplies assemblies names or assemblies itself as parameter and
     ///     exports resulting TypeScript file to file or to string
     /// </summary>
-    public class TsExporter : MarshalByRefObject
+    public sealed class TsExporter : MarshalByRefObject
     {
         private readonly ExportContext _context;
         private List<Type> _allTypes;
@@ -74,7 +74,7 @@ namespace Reinforced.Typings
                 .OrderByDescending(c => c.Priority)
                 .FirstOrDefault();
             ApplyTsGlobal(tsGlobal, _context.Global);
-
+            
             // 2nd step - searching and processing fluent configuration
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
@@ -131,7 +131,12 @@ namespace Reinforced.Typings
             IEnumerable<Type> types = null;
             if (!string.IsNullOrEmpty(fileName))
             {
-                if (!_typesToFilesMap.ContainsKey(fileName)) throw new Exception("Current configuration does not contain file " + fileName);
+                if (!_typesToFilesMap.ContainsKey(fileName))
+                {
+                    var allFiles = string.Join(", ", _typesToFilesMap.Keys);
+                    throw new Exception("Current configuration does not contain file " + fileName + ", only " + allFiles);
+                }
+                    
                 types = _typesToFilesMap[fileName];
             }
             ExportedFile ef = new ExportedFile

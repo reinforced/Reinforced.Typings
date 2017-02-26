@@ -165,7 +165,7 @@ namespace Reinforced.Typings.Generators
                 {
                     var constructors =
                         element.GetConstructors(TypeExtensions.MembersFlags)
-                            .Where(c => TypeExtensions.TypeScriptMemberSearchPredicate(c));
+                            .Where(c => ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate(c));
                     GenerateMembers(element, resolver, typeMember, constructors);
                 }
             }

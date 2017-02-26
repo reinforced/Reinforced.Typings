@@ -34,14 +34,20 @@ namespace Reinforced.Typings.Generators
             {
                 var converter = Context.Generators.GeneratorFor(type, Context);
                 var member = converter.Generate(type, resolver);
-                if (Context.Global.UseModules)
+                var m = member as RtCompilationUnit;
+                if (m != null)
                 {
-                    var m = member as RtCompilationUnit;
-                    if (m != null)
+                    if (Context.Global.UseModules)
                     {
                         m.Export = true;
                     }
+                    else
+                    {
+                        m.Export = !ns.IsAmbientNamespace;
+                    }
                 }
+
+
                 ns.CompilationUnits.Add(member);
                 Console.WriteLine("Exported {0}", type);
             }

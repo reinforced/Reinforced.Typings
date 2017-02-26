@@ -182,8 +182,7 @@ namespace Reinforced.Typings
         public GeneratorManager Generators { get; internal set; }
 
         #endregion
-
-
+        
 
     }
 }

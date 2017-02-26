@@ -24,7 +24,7 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         public void InterfaceAsInterface()
         {
             const string result = @"
-module Reinforced.Typings.Tests.BasicTests {
+module Reinforced.Typings.Tests.ExporterIntegrationTests {
 	export interface ITestInterface
 	{
 		String: string;

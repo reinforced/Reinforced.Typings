@@ -12,10 +12,10 @@ namespace Reinforced.Typings.ReferencesInspection
     /// <summary>
     /// Class responsible for extracting direct dependencies from types
     /// </summary>
-    public class ReferenceInspector
+    public sealed class ReferenceInspector
     {
-        private ExportContext _context;
-        private HashSet<Type> _allExportedTypes;
+        private readonly ExportContext _context;
+        private readonly HashSet<Type> _allExportedTypes;
 
         public ReferenceInspector(ExportContext context, HashSet<Type> allExportedTypes)
         {
@@ -100,7 +100,7 @@ namespace Reinforced.Typings.ReferencesInspection
 
             var idx = tn.IndexOf('<');
             if (idx != -1) tn = tn.Substring(0, idx);
-            if (!_context.Global.UseModules)
+            if (!_context.Global.UseModules || !stripExtension)
             {
                 if (_context.Global.ExportPureTypings) tn = tn + ".d.ts";
                 else tn = tn + ".ts";

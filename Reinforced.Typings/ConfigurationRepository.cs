@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
@@ -11,13 +10,14 @@ namespace Reinforced.Typings
 {
     internal class ConfigurationRepository
     {
+        
         public static ConfigurationRepository Instance
         {
             get { return _instance ?? (_instance = new ConfigurationRepository()); }
             set { _instance = value; }
         }
 
-        
+
         #region private fields
 
         private readonly Dictionary<Type, TsDeclarationAttributeBase> _attributesForType =
@@ -59,7 +59,12 @@ namespace Reinforced.Typings
         private readonly Dictionary<string, List<Type>> _typesInFiles = new Dictionary<string, List<Type>>();
 
         private readonly HashSet<object> _ignored = new HashSet<object>();
+
+#if DEBUG
+        [ThreadStatic] //need this for unit tests runner
+#endif
         private static ConfigurationRepository _instance;
+
         private readonly List<RtReference> _references = new List<RtReference>();
         private readonly List<RtImport> _imports = new List<RtImport>();
         private readonly List<string> _additionalDocumentationPathes = new List<string>();
@@ -214,17 +219,29 @@ namespace Reinforced.Typings
 
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(Type t)
         {
-            return _decoratorsForType.GetUnion<Type,List<TsDecoratorAttribute>, TsDecoratorAttribute>(t, () => t.GetCustomAttributes<TsDecoratorAttribute>(false).ToList());
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = _decoratorsForType.ContainsKey(t) ? null : _decoratorsForType[t];
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
         }
 
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(MemberInfo t)
         {
-            return _decoratorsForMember.GetUnion<MemberInfo, List<TsDecoratorAttribute>, TsDecoratorAttribute>(t, () => t.GetCustomAttributes<TsDecoratorAttribute>(false).ToList());
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = _decoratorsForMember.ContainsKey(t) ? null : _decoratorsForMember[t];
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
         }
 
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(ParameterInfo t)
         {
-            return _decoratorsForParameter.GetUnion<ParameterInfo, List<TsDecoratorAttribute>, TsDecoratorAttribute>(t, () => t.GetCustomAttributes<TsDecoratorAttribute>(false).ToList());
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = _decoratorsForParameter.ContainsKey(t) ? null : _decoratorsForParameter[t];
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
         }
 
         #endregion
@@ -344,7 +361,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetFields(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate);
+                    t.GetFields(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportFields)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -365,7 +382,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetProperties(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate);
+                    t.GetProperties(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportProperties)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -386,7 +403,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetMethods(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate);
+                    t.GetMethods(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportMethods)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
