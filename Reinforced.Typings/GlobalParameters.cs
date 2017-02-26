@@ -21,6 +21,7 @@ namespace Reinforced.Typings
         private string _tabSymbol;
         private bool _useModules;
         private bool _discardNamespacesWhenUsingModules;
+        private bool _strictNullChecks;
 
         public GlobalParameters()
         {
@@ -94,6 +95,19 @@ namespace Reinforced.Typings
             {
                 if (_isLocked) return;
                 _generateDocumentation = value;
+            }
+        }
+
+        /// <summary>
+        ///     Enables or disables documentation generator
+        /// </summary>
+        public bool StrictNullChecks
+        {
+            get { return _strictNullChecks; }
+            set
+            {
+                if (_isLocked) return;
+                _strictNullChecks = value;
             }
         }
 

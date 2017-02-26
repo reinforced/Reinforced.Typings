@@ -14,10 +14,5 @@ namespace Reinforced.Typings.Visitors.TypeScript
         {
             throw new NotImplementedException();
         }
-
-        public override void Visit(RtImportTarget node)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

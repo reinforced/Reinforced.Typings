@@ -82,6 +82,7 @@
     <Compile Include="Ast\RtRaw.cs" />
     <Compile Include="Ast\Dependency\RtReference.cs" />
     <Compile Include="Ast\TypeNames\RtSimpleTypeName.cs" />
+    <Compile Include="Ast\TypeNames\RtTuple.cs" />
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\INameOverrideAttribute.cs" />
@@ -143,8 +144,10 @@
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />
     <Compile Include="GlobalParameters.cs" />
     <Compile Include="IFilesOperations.cs" />
+    <Compile Include="ReferencesInspection\ImportComparer.cs" />
     <Compile Include="ReferencesInspection\InspectedReferences.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="ReferencesInspection\ReferenceComparer.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtArgument.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtInterface.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtField.cs" />
+    <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtTuple.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtArrayType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDelegateType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDictionaryType.cs" />

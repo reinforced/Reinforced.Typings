@@ -29,5 +29,10 @@ namespace Reinforced.Typings.Ast.Dependency
         {
             visitor.Visit(this);
         }
+
+        public override string ToString()
+        {
+            return string.Format("///<reference path='{0}' />", Path);
+        }
     }
 }

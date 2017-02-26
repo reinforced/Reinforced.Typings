@@ -99,5 +99,17 @@ namespace Reinforced.Typings.Fluent
             builder.Parameters.DiscardNamespacesWhenUsingModules = discardNamespaces;
             return builder;
         }
+
+        /// <summary>
+        /// Enables strict null checks. Particularry, makes all exported nullable value-types of type "type | null"
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="strict">Pass 'true' reveal all nullable types to "type | null" </param>
+        public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,
+            bool strict = true)
+        {
+            builder.Parameters.StrictNullChecks = strict;
+            return builder;
+        }
     }
 }

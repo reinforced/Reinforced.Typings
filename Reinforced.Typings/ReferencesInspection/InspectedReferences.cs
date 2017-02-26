@@ -11,7 +11,7 @@ namespace Reinforced.Typings.ReferencesInspection
     {
         private readonly HashSet<RtReference> _references = new HashSet<RtReference>(ReferenceComparer.Instance);
         private readonly HashSet<RtImport> _imports = new HashSet<RtImport>(ImportComparer.Instance);
-        private readonly Dictionary<string, string> _starImportsAs = new Dictionary<string, string>();
+        private readonly Dictionary<string, RtImport> _starImportsAs = new Dictionary<string, RtImport>();
 
         /// <summary>
         /// References exposed via &lt;reference path="..."&gt; tag
@@ -26,7 +26,7 @@ namespace Reinforced.Typings.ReferencesInspection
         /// <summary>
         /// Cache of starred imports. Key is "from", value is star import alias
         /// </summary>
-        public IReadOnlyDictionary<string, string> StarImports { get { return _starImportsAs; } }
+        public IReadOnlyDictionary<string, RtImport> StarImports { get { return _starImportsAs; } }
 
         public InspectedReferences(IEnumerable<RtReference> references, IEnumerable<RtImport> imports = null)
         {
@@ -40,7 +40,7 @@ namespace Reinforced.Typings.ReferencesInspection
                 foreach (var rtImport in imports.Where(c => c.IsWildcard))
                 {
                     _imports.AddIfNotExists(rtImport);
-                    _starImportsAs[rtImport.From] = rtImport.WildcardAlias;
+                    _starImportsAs[rtImport.From] = rtImport;
                 }
 
                 foreach (var rtImport in imports.Where(c => !c.IsWildcard))
@@ -79,7 +79,7 @@ namespace Reinforced.Typings.ReferencesInspection
                 if (_starImportsAs.ContainsKey(import.From)) return;
                 _imports.RemoveWhere(c => c.From == import.From);
                 _imports.Add(import);
-                _starImportsAs[import.From] = import.WildcardAlias;
+                _starImportsAs[import.From] = import;
             }
             else
             {

@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassicMultiFileResolvationTests.cs" />
     <Compile Include="ConfigurationBuilderTestBase.cs" />
     <Compile Include="ExporterIntegrationTests\BasicExportTests.cs" />
     <Compile Include="Core\MockFileOperations.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Tokenizing\TokenizingComparer.cs" />
     <Compile Include="TokenizingComparerTests.cs" />
     <Compile Include="TypeNameEqualityComparer.cs" />
-    <Compile Include="TypeResolverTests.cs" />
+    <Compile Include="BasicTypesResolvationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -79,6 +80,10 @@
     <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.csproj">
       <Project>{2A5CCD5C-E660-4088-8937-9632ABBBCDBB}</Project>
       <Name>Reinforced.Typings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestFluentAssembly\TestFluentAssembly.csproj">
+      <Project>{e7e010d2-1ce5-4877-aba7-36ea8ec62118}</Project>
+      <Name>TestFluentAssembly</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

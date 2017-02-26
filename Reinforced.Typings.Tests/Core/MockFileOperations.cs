@@ -47,26 +47,15 @@ namespace Reinforced.Typings.Tests.Core
         {
             var visitor = Context.Global.ExportPureTypings ? new TypingsExportVisitor(tw, Context.Global.TabSymbol) : new TypeScriptExportVisitor(tw, Context.Global.TabSymbol);
             WriteWarning(tw);
-            foreach (var fileGlobalReference in file.GlobalReferences.References)
+            foreach (var rtReference in file.References.References)
             {
-                visitor.Visit(fileGlobalReference);
+                visitor.Visit(rtReference);
             }
 
-            foreach (var referencesReference in file.FileReferences.References)
+            foreach (var rtImport in file.References.Imports)
             {
-                visitor.Visit(referencesReference);
+                visitor.Visit(rtImport);
             }
-
-            foreach (var globalReferencesImport in file.GlobalReferences.Imports)
-            {
-                visitor.Visit(globalReferencesImport);
-            }
-
-            foreach (var referencesImport in file.FileReferences.Imports)
-            {
-                visitor.Visit(referencesImport);
-            }
-
             foreach (var fileNamespace in file.Namespaces)
             {
                 visitor.Visit(fileNamespace);

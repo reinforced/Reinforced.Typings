@@ -13,6 +13,7 @@ namespace Reinforced.Typings.Tests
             if (x is RtArrayType) return CompareArray((RtArrayType)x, (RtArrayType)y);
             if (x is RtDelegateType) return CompareDelegate((RtDelegateType)x, (RtDelegateType)y);
             if (x is RtDictionaryType) return CompareDictionary((RtDictionaryType)x, (RtDictionaryType)y);
+            if (x is RtTuple) return CompareTuple((RtTuple)x, (RtTuple)y);
             throw new Exception(x.GetType().FullName + " is not valid type for comparison");
         }
 
@@ -32,6 +33,17 @@ namespace Reinforced.Typings.Tests
         private bool CompareArray(RtArrayType x, RtArrayType y)
         {
             return Equals(x.ElementType, y.ElementType);
+        }
+
+        private bool CompareTuple(RtTuple x, RtTuple y)
+        {
+            if (x.TupleTypes.Count != y.TupleTypes.Count) return false;
+
+            for (int i = 0; i < x.TupleTypes.Count; i++)
+            {
+                if (!Equals(x.TupleTypes[i], y.TupleTypes[i])) return false;
+            }
+            return true;
         }
 
         private bool CompareDelegate(RtDelegateType x, RtDelegateType y)

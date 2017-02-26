@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,7 +9,7 @@ using Xunit;
 
 namespace Reinforced.Typings.Tests
 {
-    public class TypeResolverTests
+    public class BasicTypesResolvationTests
     {
         private readonly TypeResolver _tr;
         private readonly TypeNameEqualityComparer _comparer;
@@ -20,7 +21,7 @@ namespace Reinforced.Typings.Tests
         private static readonly RtSimpleTypeName StringType = new RtSimpleTypeName("string");
         private static readonly RtArrayType AnyArrayType = new RtArrayType(AnyType);
 
-        public TypeResolverTests()
+        public BasicTypesResolvationTests()
         {
             _context = new ExportContext()
             {
@@ -143,6 +144,26 @@ namespace Reinforced.Typings.Tests
             GenericCollectionsOfType<decimal>(numArray);
             GenericCollectionsOfType<string>(new RtArrayType(StringType));
             GenericCollectionsOfType<bool>(new RtArrayType(new RtSimpleTypeName("boolean")));
+        }
+
+        [Fact]
+        public void SystemTuplesToTsTuples()
+        {
+            for (int i = 1; i < 8; i++)
+            {
+                var expected = new RtTuple();
+                List<Type> args = new List<Type>();
+                for (int j = 0; j < i; j++)
+                {
+                    expected.TupleTypes.Add(AnyType);
+                    args.Add(typeof(object));
+                }
+
+                var correspondingTuple = Type.GetType("System.Tuple`" + i);
+                var arrange = correspondingTuple.MakeGenericType(args.ToArray());
+
+                Assert.Equal(expected, _tr.ResolveTypeName(arrange), _comparer);
+            }
         }
 
     }

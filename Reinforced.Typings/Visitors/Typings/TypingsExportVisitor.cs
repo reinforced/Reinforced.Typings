@@ -13,6 +13,9 @@ namespace Reinforced.Typings.Visitors.Typings
             //no decorators allowed in the .d.ts
         }
 
-        
+
+        public TypingsExportVisitor(TextWriter writer, string tabulation) : base(writer, tabulation)
+        {
+        }
     }
 }

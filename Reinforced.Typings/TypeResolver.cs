@@ -8,6 +8,7 @@ using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Generators;
+using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings
 {
@@ -42,15 +43,16 @@ namespace Reinforced.Typings
 
         private readonly ExportContext _context;
         private readonly ExportedFile _file;
-        
+        private readonly ReferenceInspector _refInspector;
 
         /// <summary>
         ///     Constructs new type resolver
         /// </summary>
-        internal TypeResolver(ExportContext context,ExportedFile file)
+        internal TypeResolver(ExportContext context, ExportedFile file, ReferenceInspector refInspector)
         {
             _context = context;
             _file = file;
+            _refInspector = refInspector;
         }
 
         private RtTypeName[] GetConcreteGenericArguments(Type t)
@@ -98,19 +100,37 @@ namespace Reinforced.Typings
             {
                 var ns = t.Namespace;
                 if (!td.IncludeNamespace) ns = string.Empty;
-                if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
 
-                var result = t.GetName(GetConcreteGenericArguments(t));
-                result.Prefix = ns;
                 if (_context.Global.UseModules)
                 {
-                    return result; // do not cache type names when 
+                    var result = t.GetName(GetConcreteGenericArguments(t));
+                    var import = _refInspector.EnsureImport(t, result.TypeName, _file);
+                    if (_context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
+                    if (import.IsWildcard)
+                    {
+                        return Cache(t, result);
+                    }
+
+                    result.Prefix = string.Format("{0}.{1}", import.WildcardAlias, ns);
+                    return Cache(t, result);
                 }
-                return Cache(t, result);
+                else
+                {
+                    _refInspector.EnsureReference(t, _file);
+                    if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
+                    var result = t.GetName(GetConcreteGenericArguments(t));
+                    result.Prefix = ns;
+                    return Cache(t, result);
+                }
             }
             if (t.IsNullable())
             {
                 return ResolveTypeName(t.GetArg());
+            }
+            if (t.IsTuple())
+            {
+                var args = t.GetGenericArguments().Select(ResolveTypeName);
+                return Cache(t, new RtTuple(args));
             }
             if (t.IsDictionary())
             {

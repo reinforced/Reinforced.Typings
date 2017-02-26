@@ -36,10 +36,6 @@ namespace Reinforced.Typings.Ast
             get
             {
                 yield return Documentation;
-                foreach (var rtNode in base.Children)
-                {
-                    yield return rtNode;
-                }
                 yield return Name;
                 foreach (var rtSimpleTypeName in Implementees)
                 {

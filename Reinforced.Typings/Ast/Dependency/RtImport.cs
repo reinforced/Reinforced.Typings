@@ -81,5 +81,11 @@ namespace Reinforced.Typings.Ast.Dependency
         {
             visitor.Visit(this);
         }
+
+        public override string ToString()
+        {
+            if (IsRequire) return string.Format("import {0} = require('{1}');", Target, From);
+            return string.Format("import {0} from '{1}';", Target, From);
+        }
     }
 }

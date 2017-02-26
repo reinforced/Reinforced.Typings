@@ -90,7 +90,7 @@ namespace Reinforced.Typings
                 }
             }
 
-            
+
 
             _context.Documentation =
                 new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
@@ -128,7 +128,12 @@ namespace Reinforced.Typings
         public ExportedFile SetupExportedFile(string fileName = null)
         {
             if (fileName == _context.TargetFile) fileName = null;
-            var types = string.IsNullOrEmpty(fileName) ? null : _typesToFilesMap[fileName];
+            IEnumerable<Type> types = null;
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                if (!_typesToFilesMap.ContainsKey(fileName)) throw new Exception("Current configuration does not contain file " + fileName);
+                types = _typesToFilesMap[fileName];
+            }
             ExportedFile ef = new ExportedFile
             {
                 References = GlobalReferences.Duplicate(),
@@ -136,7 +141,7 @@ namespace Reinforced.Typings
                 AllTypesIsSingleFile = !_context.Hierarchical,
                 TypesToExport = _context.Hierarchical ? new HashSet<Type>(types) : _allTypesHash
             };
-            ef.TypeResolver = new TypeResolver(_context, ef);
+            ef.TypeResolver = new TypeResolver(_context, ef, ReferenceInspector);
             return ef;
         }
 
@@ -193,6 +198,6 @@ namespace Reinforced.Typings
             _context.FileOperations.DeployTempFiles();
         }
 
-        
+
     }
 }

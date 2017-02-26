@@ -51,6 +51,11 @@ namespace Reinforced.Typings.ReferencesInspection
 
             RtImport result = null;
 
+            if (file.References.StarImports.ContainsKey(relPath))
+            {
+                return file.References.StarImports[relPath];
+            }
+
             if (_context.Global.DiscardNamespacesWhenUsingModules)
             {
                 var target = string.Format("{{ {0} }}", typeName);

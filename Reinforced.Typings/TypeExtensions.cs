@@ -71,6 +71,27 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
+        /// Determines if type is one of System.Tuple types set
+        /// </summary>
+        /// <param name="t">Type to check</param>
+        /// <returns>True when type is tuple, false otherwise</returns>
+        public static bool IsTuple(this Type t)
+        {
+            if (!t.IsGenericType) return false;
+            var gen = t.GetGenericTypeDefinition();
+            if (gen == typeof(System.Tuple<>)) return true;
+            if (gen == typeof(System.Tuple<,>)) return true;
+            if (gen == typeof(System.Tuple<,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
+            return false;
+        }
+
+        /// <summary>
         ///     Determines is type is static
         /// </summary>
         /// <param name="t">Type</param>

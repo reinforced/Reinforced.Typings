@@ -30,7 +30,7 @@ namespace Reinforced.Typings.Ast
         T Visit(RtImport node);
         T Visit(RtDecorator node);
         T Visit(RtReference node);
-        T Visit(RtImportTarget node);
+        T Visit(RtTuple node);
     }
 
     /// <summary>
@@ -58,8 +58,6 @@ namespace Reinforced.Typings.Ast
         void Visit(RtImport node);
         void Visit(RtDecorator node);
         void Visit(RtReference node);
-        void Visit(RtImportTarget node);
-
-
+        void Visit(RtTuple node);
     }
 }
