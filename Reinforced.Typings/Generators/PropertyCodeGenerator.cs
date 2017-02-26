@@ -22,7 +22,8 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return null;
             result.IsStatic = element.IsStatic();
-            
+            result.Order = element.GetOrder();
+
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {

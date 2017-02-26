@@ -18,12 +18,19 @@ namespace Reinforced.Typings.Attributes
         public string Decorator { get; set; }
 
         /// <summary>
+        /// Decorator order
+        /// </summary>
+        public double Order { get; set; }
+
+        /// <summary>
         /// Creates decorator attribute
         /// </summary>
         /// <param name="decorator">Decorator text - everything that follows after @</param>
-        public TsDecoratorAttribute(string decorator)
+        /// <param name="order">Decorator order of appearence</param>
+        public TsDecoratorAttribute(string decorator,double order = 0)
         {
             Decorator = decorator;
+            Order = order;
         }
     }
 }

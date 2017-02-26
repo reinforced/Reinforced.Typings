@@ -16,6 +16,8 @@ namespace Reinforced.Typings
                 (!ConfigurationRepository.Instance.IsIgnored(c)) &&
                 (c.GetCustomAttribute<CompilerGeneratedAttribute>() == null);
 
+        #region Retrieval of exported members
+
         /// <summary>
         ///     Returns all properties that should be exported to TypeScript for specified type
         /// </summary>
@@ -46,6 +48,81 @@ namespace Reinforced.Typings
             return ConfigurationRepository.Instance.GetExportedMethods(t);
         }
 
+
+        #endregion
+
+        #region Orders
+
+        /// <summary>
+        ///     Retrieves member order
+        /// </summary>
+        /// <param name="element">Method info</param>
+        /// <returns>Method order</returns>
+        public static double GetOrder(this MemberInfo element)
+        {
+            if (element is MethodInfo) return GetOrder((MethodInfo)element);
+            if (element is PropertyInfo) return GetOrder((PropertyInfo)element);
+            if (element is FieldInfo) return GetOrder((FieldInfo)element);
+            return 0;
+        }
+
+        /// <summary>
+        ///     Retrieves member order
+        /// </summary>
+        /// <param name="element">Method info</param>
+        /// <returns>Method order</returns>
+        public static double GetOrder(this MethodInfo element)
+        {
+            var fa = ConfigurationRepository.Instance.ForMember(element);
+            if (fa != null) return fa.Order;
+            return 0;
+        }
+
+        /// <summary>
+        ///     Retrieves member order
+        /// </summary>
+        /// <param name="element">Method info</param>
+        /// <returns>Method order</returns>
+        public static double GetOrder(this PropertyInfo element)
+        {
+            var fa = ConfigurationRepository.Instance.ForMember(element);
+            if (fa != null) return fa.Order;
+            return 0;
+        }
+
+        /// <summary>
+        ///     Retrieves member order
+        /// </summary>
+        /// <param name="element">Method info</param>
+        /// <returns>Method order</returns>
+        public static double GetOrder(this FieldInfo element)
+        {
+            var fa = ConfigurationRepository.Instance.ForMember(element);
+            if (fa != null) return fa.Order;
+            return 0;
+        }
+
+        /// <summary>
+        ///     Retrieves type order to appear in results file
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>Type name</returns>
+        public static double GetOrder(this Type t)
+        {
+            if (t.IsEnum)
+            {
+                var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
+                return te.Order;
+            }
+
+            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
+            var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
+            var order = tc != null ? tc.Order : ti != null ? ti.Order : 0;
+            return order;
+        }
+        #endregion
+
+        #region Names
 
         /// <summary>
         ///     Retrieves parameter name from corresponding attribute. If attribute not present then takes parameter name via
@@ -92,36 +169,11 @@ namespace Reinforced.Typings
             return new RtSimpleTypeName(name, genericArguments);
         }
 
-        /// <summary>
-        ///     Retrieves type namespace from type itself or from corresponding Typings attribute
-        /// </summary>
-        /// <param name="t">Type</param>
-        /// <param name="distinguishAutoTypes">
-        ///     Forces GetNamespace to return "-" for interfaces with IncludeInterface = false and
-        ///     null for anonymous types
-        /// </param>
-        /// <returns>Full-qualified namespace name</returns>
-        public static string GetNamespace(this Type t, bool distinguishAutoTypes = false)
-        {
-            if (t.IsEnum)
-            {
-                var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
-                var ns = t.Namespace;
-                if (te != null && te.IncludeNamespace && !string.IsNullOrEmpty(te.Namespace))
-                {
-                    ns = te.Namespace;
-                }
-                return ns;
-            }
-            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
-            var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
-            if (tc == null && ti == null) return t.Namespace;
-            var nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
-            var includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
-            if (!includeNamespace) return distinguishAutoTypes ? "-" : string.Empty;
-            if (!string.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
-            return t.Namespace;
-        }
+
+
+        #endregion
+
+        #region Is exported (as)
 
         /// <summary>
         ///     Determines should type be exported as interface or not
@@ -162,5 +214,39 @@ namespace Reinforced.Typings
         {
             return ConfigurationRepository.Instance.IsIgnored(t);
         }
+
+        #endregion
+
+        /// <summary>
+        ///     Retrieves type namespace from type itself or from corresponding Typings attribute
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <param name="distinguishAutoTypes">
+        ///     Forces GetNamespace to return "-" for interfaces with IncludeInterface = false and
+        ///     null for anonymous types
+        /// </param>
+        /// <returns>Full-qualified namespace name</returns>
+        public static string GetNamespace(this Type t, bool distinguishAutoTypes = false)
+        {
+            if (t.IsEnum)
+            {
+                var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
+                var ns = t.Namespace;
+                if (te != null && te.IncludeNamespace && !string.IsNullOrEmpty(te.Namespace))
+                {
+                    ns = te.Namespace;
+                }
+                return ns;
+            }
+            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
+            var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
+            if (tc == null && ti == null) return t.Namespace;
+            var nameFromAttr = tc != null ? tc.Namespace : ti.Namespace;
+            var includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
+            if (!includeNamespace) return distinguishAutoTypes ? "-" : string.Empty;
+            if (!string.IsNullOrEmpty(nameFromAttr)) return nameFromAttr;
+            return t.Namespace;
+        }
+
     }
 }

@@ -16,7 +16,8 @@ namespace Reinforced.Typings.Tests.Core
             te.Export();
             Assert.True(mfo.DeployCalled);
             Assert.True(mfo.TempRegistryCleared);
-            Assert.True(mfo.ExportedFiles[Sample].TokenizeCompare(result));
+            var actual = mfo.ExportedFiles[Sample];
+            Assert.True(actual.TokenizeCompare(result));
         }
 
         protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, Dictionary<string,string> results)

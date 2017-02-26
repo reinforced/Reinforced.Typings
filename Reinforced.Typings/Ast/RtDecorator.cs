@@ -17,6 +17,11 @@ namespace Reinforced.Typings.Ast
         public string Decorator { get; private set; }
 
         /// <summary>
+        /// Order of appearence
+        /// </summary>
+        public double Order { get; set; }
+
+        /// <summary>
         /// Child nodes
         /// </summary>
         public override IEnumerable<RtNode> Children { get {yield break;} }
@@ -39,9 +44,10 @@ namespace Reinforced.Typings.Ast
             visitor.Visit(this);
         }
 
-        public RtDecorator(string decorator)
+        public RtDecorator(string decorator, double order = 0)
         {
             Decorator = decorator;
+            Order = order;
         }
     }
 }

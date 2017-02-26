@@ -28,6 +28,7 @@ namespace Reinforced.Typings.Generators
         protected virtual void Export(ITypeMember result, Type type, TypeResolver resolver, IAutoexportSwitchAttribute swtch)
         {
             result.Name = type.GetName();
+            result.Order = type.GetOrder();
 
             var doc = Context.Documentation.GetDocumentationMember(type);
             if (doc != null)

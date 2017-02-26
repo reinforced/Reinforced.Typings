@@ -45,5 +45,6 @@ namespace Reinforced.Typings.Fluent.Generic
         }
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }
+        public abstract double MemberOrder { get; set; }
     }
 }

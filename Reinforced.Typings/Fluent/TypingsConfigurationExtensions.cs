@@ -415,6 +415,19 @@ namespace Reinforced.Typings.Fluent
             return conf;
         }
 
+        /// <summary>
+        /// Sets order this membter will be written to output file in
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conf">Configurator</param>
+        /// <param name="order">Order of member</param>
+        /// <returns>Fluent</returns>
+        public static T Order<T>(this T conf, double order) where T : IOrderableMember
+        {
+            conf.MemberOrder = order;
+            return conf;
+        }
+
         #endregion
     }
 }

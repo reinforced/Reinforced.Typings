@@ -7,7 +7,7 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Fluent configuration builder for exported methods
     /// </summary>
-    public class MethodConfigurationBuilder : IExportConfiguration<TsFunctionAttribute>, IIgnorable, IDecoratorsAggregator
+    public class MethodConfigurationBuilder : IExportConfiguration<TsFunctionAttribute>, IIgnorable, IDecoratorsAggregator, IOrderableMember
     {
         internal MethodConfigurationBuilder()
         {
@@ -24,5 +24,6 @@ namespace Reinforced.Typings.Fluent
 
         bool IIgnorable.Ignore { get; set; }
         public List<TsDecoratorAttribute> Decorators { get; }
+        public double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
     }
 }

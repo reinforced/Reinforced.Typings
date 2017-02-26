@@ -25,5 +25,7 @@ namespace Reinforced.Typings.Fluent.Generic
 
         public TsClassAttribute AttributePrototype { get; private set; }
         public List<TsDecoratorAttribute> Decorators { get; }
+
+        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Reinforced.Typings.Ast;
 
 namespace Reinforced.Typings.Visitors.TypeScript
@@ -24,7 +25,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 }
                 Tab();
             }
-            foreach (var rtCompilationUnit in node.CompilationUnits)
+            foreach (var rtCompilationUnit in node.CompilationUnits.OrderBy(c => (c as RtCompilationUnit)?.Order ?? 0))
             {
                 Visit(rtCompilationUnit);
             }

@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Fluent.Interfaces
     /// <summary>
     ///     Technical interface for type (class/interface) configuration builder
     /// </summary>
-    public interface ITypeConfigurationBuilder : IReferenceConfigurationBuilder
+    public interface ITypeConfigurationBuilder : IReferenceConfigurationBuilder, IOrderableMember
     {
         /// <summary>
         ///     Configurations for method parameters

@@ -10,7 +10,7 @@ namespace Reinforced.Typings
 {
     internal class ConfigurationRepository
     {
-        
+
         public static ConfigurationRepository Instance
         {
             get { return _instance ?? (_instance = new ConfigurationRepository()); }
@@ -220,7 +220,7 @@ namespace Reinforced.Typings
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(Type t)
         {
             var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
-            var fluentDecorators = _decoratorsForType.ContainsKey(t) ? null : _decoratorsForType[t];
+            var fluentDecorators = _decoratorsForType.ContainsKey(t) ? _decoratorsForType[t] : null;
 
             if (fluentDecorators == null) return inlineDecorators;
             return inlineDecorators.Union(fluentDecorators);
@@ -229,7 +229,7 @@ namespace Reinforced.Typings
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(MemberInfo t)
         {
             var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
-            var fluentDecorators = _decoratorsForMember.ContainsKey(t) ? null : _decoratorsForMember[t];
+            var fluentDecorators = _decoratorsForMember.ContainsKey(t) ? _decoratorsForMember[t] : null;
 
             if (fluentDecorators == null) return inlineDecorators;
             return inlineDecorators.Union(fluentDecorators);
@@ -238,7 +238,7 @@ namespace Reinforced.Typings
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(ParameterInfo t)
         {
             var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
-            var fluentDecorators = _decoratorsForParameter.ContainsKey(t) ? null : _decoratorsForParameter[t];
+            var fluentDecorators = _decoratorsForParameter.ContainsKey(t) ? _decoratorsForParameter[t] : null;
 
             if (fluentDecorators == null) return inlineDecorators;
             return inlineDecorators.Union(fluentDecorators);
@@ -264,17 +264,17 @@ namespace Reinforced.Typings
 
         public TsTypedMemberAttributeBase ForMember(MemberInfo member)
         {
-            if (member is PropertyInfo) return ForMember((PropertyInfo) member);
-            if (member is MethodInfo) return ForMember((MethodInfo) member);
-            if (member is FieldInfo) return ForMember((FieldInfo) member);
+            if (member is PropertyInfo) return ForMember((PropertyInfo)member);
+            if (member is MethodInfo) return ForMember((MethodInfo)member);
+            if (member is FieldInfo) return ForMember((FieldInfo)member);
             return null;
         }
 
         public T ForMember<T>(MemberInfo member) where T : TsTypedMemberAttributeBase
         {
-            if (member is PropertyInfo) return (T) (object) ForMember((PropertyInfo) member);
-            if (member is MethodInfo) return (T) (object) ForMember((MethodInfo) member);
-            if (member is FieldInfo) return (T) (object) ForMember((FieldInfo) member);
+            if (member is PropertyInfo) return (T)(object)ForMember((PropertyInfo)member);
+            if (member is MethodInfo) return (T)(object)ForMember((MethodInfo)member);
+            if (member is FieldInfo) return (T)(object)ForMember((FieldInfo)member);
             return null;
         }
 
@@ -334,10 +334,10 @@ namespace Reinforced.Typings
 
         public bool IsIgnored(MemberInfo member)
         {
-            if (member is Type) return IsIgnored((Type) member);
-            if (member is PropertyInfo) return IsIgnored((PropertyInfo) member);
-            if (member is MethodInfo) return IsIgnored((MethodInfo) member);
-            if (member is FieldInfo) return IsIgnored((FieldInfo) member);
+            if (member is Type) return IsIgnored((Type)member);
+            if (member is PropertyInfo) return IsIgnored((PropertyInfo)member);
+            if (member is MethodInfo) return IsIgnored((MethodInfo)member);
+            if (member is FieldInfo) return IsIgnored((FieldInfo)member);
             return false;
         }
 
@@ -415,6 +415,6 @@ namespace Reinforced.Typings
 
         #endregion
 
-        
+
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\INameOverrideAttribute.cs" />
+    <Compile Include="Attributes\IOrderableAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeImportAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeReference.cs" />
     <Compile Include="Attributes\TsAttributeBase.cs" />
@@ -129,12 +130,13 @@
     <Compile Include="Fluent\Interfaces\IExportConfiguration.cs" />
     <Compile Include="Fluent\Interfaces\IIgnorable.cs" />
     <Compile Include="Fluent\Interfaces\IInterfaceConfigurationBuilder.cs" />
+    <Compile Include="Fluent\Interfaces\IOrderableMember.cs" />
     <Compile Include="Fluent\Interfaces\IReferenceConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\ITypeConfigurationBuilder.cs" />
     <Compile Include="Fluent\ParameterConfigurationBuilder.cs" />
     <Compile Include="Fluent\InterfaceConfigurationBuilder.cs" />
     <Compile Include="Fluent\MethodConfigurationBuilder.cs" />
-    <Compile Include="Fluent\PropertyExportConfiguration.cs" />
+    <Compile Include="Fluent\PropertyExportConfigurationBuilder.cs" />
     <Compile Include="Fluent\TypeConfigurationBuilder.cs" />
     <Compile Include="Fluent\LambdaHelpers.cs" />
     <Compile Include="Fluent\Parameter.cs" />

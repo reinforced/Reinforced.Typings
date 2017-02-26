@@ -75,5 +75,6 @@ namespace Reinforced.Typings.Ast
             Members = new List<RtNode>();
             Implementees = new List<RtSimpleTypeName>();
         }
+     
     }
 }

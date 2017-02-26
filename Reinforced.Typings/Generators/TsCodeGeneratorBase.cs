@@ -62,7 +62,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="decorators">Set of decorator attributes</param>
         protected void AddDecorators(IDecoratable node, IEnumerable<TsDecoratorAttribute> decorators)
         {
-            var decs = decorators.Select(c => new RtDecorator(c.Decorator));
+            var decs = decorators.Select(c => new RtDecorator(c.Decorator, c.Order));
             node.Decorators.AddRange(decs);
         }
     }

@@ -49,6 +49,7 @@ namespace Reinforced.Typings.Generators
                 }
                 result.Documentation = jsdoc;
             }
+            result.Order = element.GetOrder();
 
             result.AccessModifier = element.GetModifier();
             if (Context.SpecialCase) result.AccessModifier = AccessModifier.Public;

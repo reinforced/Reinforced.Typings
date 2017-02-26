@@ -16,14 +16,14 @@ namespace Reinforced.Typings.Fluent
     public static class ConfigurationBuildersExtensions
     {
         private static T ApplyMembersConfiguration<T>(T tc, IEnumerable<MemberInfo> prop,
-            Action<PropertyExportConfiguration> configuration = null)
+            Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
             foreach (var propertyInfo in prop)
             {
                 var conf =
-                    (PropertyExportConfiguration)
-                        tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfiguration());
+                    (PropertyExportConfigurationBuilder)
+                        tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfigurationBuilder());
                 if (configuration == null) continue;
                 try
                 {
@@ -131,14 +131,14 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="property">Property to include</param>
         /// <returns>Fluent</returns>
-        public static PropertyExportConfiguration WithProperty<T, TData>(this TypeConfigurationBuilder<T> tc,
+        public static PropertyExportConfigurationBuilder WithProperty<T, TData>(this TypeConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> property)
         {
             var prop = LambdaHelpers.ParsePropertyLambda(property);
             ITypeConfigurationBuilder tcb = tc;
             return
-                (PropertyExportConfiguration)
-                    tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
+                (PropertyExportConfigurationBuilder)
+                    tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder());
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to selected property</param>
         /// <returns>Fluent</returns>
         public static InterfaceConfigurationBuilder<T> WithProperty<T, TData>(this InterfaceConfigurationBuilder<T> tc,
-            Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
+            Expression<Func<T, TData>> property, Action<PropertyExportConfigurationBuilder> configuration)
         {
             return tc.WithProperties(new[] { LambdaHelpers.ParsePropertyLambda(property) }, configuration);
         }
@@ -162,7 +162,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to selected property</param>
         /// <returns>Fluent</returns>
         public static ClassConfigurationBuilder<T> WithProperty<T, TData>(this ClassConfigurationBuilder<T> tc,
-            Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
+            Expression<Func<T, TData>> property, Action<PropertyExportConfigurationBuilder> configuration)
         {
             return tc.WithProperties(new[] { LambdaHelpers.ParsePropertyLambda(property) }, configuration);
         }
@@ -175,7 +175,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each property</param>
         /// <returns>Fluent</returns>
         public static T WithProperties<T>(this T tc, IEnumerable<PropertyInfo> properties,
-            Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
+            Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
             return ApplyMembersConfiguration(tc, properties, configuration);
         }
@@ -188,7 +188,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each property</param>
         /// <returns>Fluent</returns>
         public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate,
-            Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
+            Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags).Where(predicate);
             return tc.WithProperties(prop, configuration);
@@ -202,7 +202,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each property</param>
         /// <returns>Fluent</returns>
         public static T WithProperties<T>(this T tc, BindingFlags bindingFlags,
-            Action<PropertyExportConfiguration> configuration = null)
+            Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetProperties(bindingFlags);
@@ -215,7 +215,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="configuration">Configuration to be applied to each property</param>
         /// <returns>Fluent</returns>
-        public static T WithAllProperties<T>(this T tc, Action<PropertyExportConfiguration> configuration = null)
+        public static T WithAllProperties<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags);
@@ -228,7 +228,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="configuration">Configuration to be applied to each property</param>
         /// <returns>Fluent</returns>
-        public static T WithPublicProperties<T>(this T tc, Action<PropertyExportConfiguration> configuration = null)
+        public static T WithPublicProperties<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
@@ -245,14 +245,14 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="field">Field to include</param>
         /// <returns>Fluent</returns>
-        public static PropertyExportConfiguration WithField<T, TData>(this TypeConfigurationBuilder<T> tc,
+        public static PropertyExportConfigurationBuilder WithField<T, TData>(this TypeConfigurationBuilder<T> tc,
             Expression<Func<T, TData>> field)
         {
             var prop = LambdaHelpers.ParseFieldLambda(field);
             ITypeConfigurationBuilder tcb = tc;
             return
-                (PropertyExportConfiguration)
-                    tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfiguration());
+                (PropertyExportConfigurationBuilder)
+                    tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder());
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to selected property</param>
         /// <returns>Fluent</returns>
         public static InterfaceConfigurationBuilder<T> WithField<T, TData>(this InterfaceConfigurationBuilder<T> tc,
-            Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
+            Expression<Func<T, TData>> property, Action<PropertyExportConfigurationBuilder> configuration)
         {
             ApplyMembersConfiguration(tc, new[] { LambdaHelpers.ParseFieldLambda(property) }, configuration);
             return tc;
@@ -277,7 +277,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to selected property</param>
         /// <returns>Fluent</returns>
         public static ClassConfigurationBuilder<T> WithField<T, TData>(this ClassConfigurationBuilder<T> tc,
-            Expression<Func<T, TData>> property, Action<PropertyExportConfiguration> configuration)
+            Expression<Func<T, TData>> property, Action<PropertyExportConfigurationBuilder> configuration)
         {
             return tc.WithFields(new[] { LambdaHelpers.ParseFieldLambda(property) }, configuration);
         }
@@ -290,7 +290,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, IEnumerable<FieldInfo> fields,
-            Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
+            Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
             return ApplyMembersConfiguration(tc, fields, configuration);
         }
@@ -303,7 +303,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate,
-            Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
+            Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return tc.WithFields(prop, configuration);
@@ -315,7 +315,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
-        public static T WithAllFields<T>(this T tc, Action<PropertyExportConfiguration> configuration = null)
+        public static T WithAllFields<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetFields(TypeExtensions.MembersFlags);
@@ -328,7 +328,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
-        public static T WithPublicFields<T>(this T tc, Action<PropertyExportConfiguration> configuration = null)
+        public static T WithPublicFields<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
@@ -343,7 +343,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags,
-            Action<PropertyExportConfiguration> configuration = null) where T : ITypeConfigurationBuilder
+            Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type.GetFields(bindingFlags);
             return tc.WithFields(prop, configuration);
@@ -735,10 +735,11 @@ namespace Reinforced.Typings.Fluent
         /// <typeparam name="T"></typeparam>
         /// <param name="conf">Member configurator</param>
         /// <param name="decorator">Decorator to add (everything that must follow after "@")</param>
+        /// <param name="order">Order of appearence</param>
         /// <returns>Fluent</returns>
-        public static T Decorator<T>(this T conf, string decorator) where T : IDecoratorsAggregator
+        public static T Decorator<T>(this T conf, string decorator, double order = 0) where T : IDecoratorsAggregator
         {
-            conf.Decorators.Add(new TsDecoratorAttribute(decorator));
+            conf.Decorators.Add(new TsDecoratorAttribute(decorator, order));
             return conf;
         }
 

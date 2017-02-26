@@ -19,5 +19,10 @@
         /// Is member static
         /// </summary>
         public bool IsStatic { get; set; }
+
+        /// <summary>
+        /// Member order
+        /// </summary>
+        public double Order { get; set; }
     }
 }

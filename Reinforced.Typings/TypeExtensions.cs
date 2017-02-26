@@ -19,38 +19,9 @@ namespace Reinforced.Typings
         public const BindingFlags MembersFlags =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly;
-
         
-        /// <summary>
-        ///     Determines is type derived from Nullable or not
-        /// </summary>
-        /// <param name="t">Type</param>
-        /// <returns>True if type is nullable value type. False otherwise</returns>
-        public static bool IsNullable(this Type t)
-        {
-            return (t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(Nullable<>)));
-        }
 
-        /// <summary>
-        /// Determines if type is one of System.Tuple types set
-        /// </summary>
-        /// <param name="t">Type to check</param>
-        /// <returns>True when type is tuple, false otherwise</returns>
-        public static bool IsTuple(this Type t)
-        {
-            if (!t.IsGenericType) return false;
-            var gen = t.GetGenericTypeDefinition();
-            if (gen == typeof(System.Tuple<>)) return true;
-            if (gen == typeof(System.Tuple<,>)) return true;
-            if (gen == typeof(System.Tuple<,,>)) return true;
-            if (gen == typeof(System.Tuple<,,,>)) return true;
-            if (gen == typeof(System.Tuple<,,,,>)) return true;
-            if (gen == typeof(System.Tuple<,,,,,>)) return true;
-            if (gen == typeof(System.Tuple<,,,,,,>)) return true;
-            if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
-            if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
-            return false;
-        }
+        #region IsStatic
 
         /// <summary>
         ///     Determines is type is static
@@ -94,14 +65,39 @@ namespace Reinforced.Typings
             return false;
         }
 
+        #endregion
+
+        #region Type distinguishing
+
         /// <summary>
-        ///     Retrieves first type argument of type
+        ///     Determines is type derived from Nullable or not
         /// </summary>
         /// <param name="t">Type</param>
-        /// <returns>First type argument</returns>
-        public static Type GetArg(this Type t)
+        /// <returns>True if type is nullable value type. False otherwise</returns>
+        public static bool IsNullable(this Type t)
         {
-            return t.GetGenericArguments()[0];
+            return (t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(Nullable<>)));
+        }
+
+        /// <summary>
+        /// Determines if type is one of System.Tuple types set
+        /// </summary>
+        /// <param name="t">Type to check</param>
+        /// <returns>True when type is tuple, false otherwise</returns>
+        public static bool IsTuple(this Type t)
+        {
+            if (!t.IsGenericType) return false;
+            var gen = t.GetGenericTypeDefinition();
+            if (gen == typeof(System.Tuple<>)) return true;
+            if (gen == typeof(System.Tuple<,>)) return true;
+            if (gen == typeof(System.Tuple<,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
+            if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
+            return false;
         }
 
         /// <summary>
@@ -160,24 +156,6 @@ namespace Reinforced.Typings
             return containsEnumerable && !containsGenericEnumerable;
         }
 
-        
-
-        /// <summary>
-        ///     Removes generics postfix (all text after '`') from typename
-        /// </summary>
-        /// <param name="t">Type</param>
-        /// <returns>Clean, genericless name</returns>
-        internal static string CleanGenericName(this Type t)
-        {
-            if (t.IsGenericType)
-            {
-                var name = t.Name;
-                var qidx = name.IndexOf('`');
-                return name.Substring(0, qidx);
-            }
-            return t.Name;
-        }
-        
         /// <summary>
         ///     Determines if supplied type is delegate type
         /// </summary>
@@ -189,18 +167,9 @@ namespace Reinforced.Typings
             return typeof(MulticastDelegate).IsAssignableFrom(t.BaseType);
         }
 
-        internal static RtTypeName[] SerializeGenericArguments(this Type t)
-        {
-            if (!t.IsGenericTypeDefinition) return new RtTypeName[0];
-            if (t.IsGenericTypeDefinition)
-            {
-                // arranged generic attribute means that generic type is replaced with real one
-                var args = t.GetGenericArguments().Where(g => g.GetCustomAttribute<TsGenericAttribute>() == null);
-                var argsStr = args.Select(c => new RtSimpleTypeName(c.Name)).Cast<RtTypeName>().ToArray();
-                return argsStr;
-            }
-            return new RtTypeName[0];
-        }
+        #endregion
+
+        #region Modifiers
 
         /// <summary>
         ///     Returns access modifier for specified field
@@ -274,6 +243,83 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
+        ///     Converts AccessModifier to corresponding TypeScript source text
+        /// </summary>
+        /// <param name="modifier">Access modifier</param>
+        /// <returns>Access modifier text</returns>
+        public static string ToModifierText(this AccessModifier modifier)
+        {
+            switch (modifier)
+            {
+                case AccessModifier.Private:
+                    return "private";
+                case AccessModifier.Protected:
+                    return "protected";
+            }
+            return "public";
+        }
+
+        /// <summary>
+        ///     Converts AccessModifier to corresponding TypeScript source text
+        /// </summary>
+        /// <param name="modifier">Access modifier</param>
+        /// <returns>Access modifier text</returns>
+        public static string ToModifierOmitPublic(this AccessModifier modifier)
+        {
+            switch (modifier)
+            {
+                case AccessModifier.Private:
+                    return "private";
+                case AccessModifier.Protected:
+                    return "protected";
+            }
+            return string.Empty;
+        }
+
+        #endregion
+
+        #region Utility methods
+
+        /// <summary>
+        ///     Retrieves first type argument of type
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>First type argument</returns>
+        public static Type GetArg(this Type t)
+        {
+            return t.GetGenericArguments()[0];
+        }
+
+        /// <summary>
+        ///     Removes generics postfix (all text after '`') from typename
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>Clean, genericless name</returns>
+        internal static string CleanGenericName(this Type t)
+        {
+            if (t.IsGenericType)
+            {
+                var name = t.Name;
+                var qidx = name.IndexOf('`');
+                return name.Substring(0, qidx);
+            }
+            return t.Name;
+        }
+
+        internal static RtTypeName[] SerializeGenericArguments(this Type t)
+        {
+            if (!t.IsGenericTypeDefinition) return new RtTypeName[0];
+            if (t.IsGenericTypeDefinition)
+            {
+                // arranged generic attribute means that generic type is replaced with real one
+                var args = t.GetGenericArguments().Where(g => g.GetCustomAttribute<TsGenericAttribute>() == null);
+                var argsStr = args.Select(c => new RtSimpleTypeName(c.Name)).Cast<RtTypeName>().ToArray();
+                return argsStr;
+            }
+            return new RtTypeName[0];
+        }
+
+        /// <summary>
         ///     Determines if propercy is "bounced".
         ///     It means property with different accesor's access level
         /// </summary>
@@ -316,38 +362,9 @@ namespace Reinforced.Typings
             return result;
         }
 
-        /// <summary>
-        ///     Converts AccessModifier to corresponding TypeScript source text
-        /// </summary>
-        /// <param name="modifier">Access modifier</param>
-        /// <returns>Access modifier text</returns>
-        public static string ToModifierText(this AccessModifier modifier)
-        {
-            switch (modifier)
-            {
-                case AccessModifier.Private:
-                    return "private";
-                case AccessModifier.Protected:
-                    return "protected";
-            }
-            return "public";
-        }
+        #endregion
 
-        /// <summary>
-        ///     Converts AccessModifier to corresponding TypeScript source text
-        /// </summary>
-        /// <param name="modifier">Access modifier</param>
-        /// <returns>Access modifier text</returns>
-        public static string ToModifierOmitPublic(this AccessModifier modifier)
-        {
-            switch (modifier)
-            {
-                case AccessModifier.Private:
-                    return "private";
-                case AccessModifier.Protected:
-                    return "protected";
-            }
-            return string.Empty;
-        }
+
+
     }
 }

@@ -30,5 +30,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         public List<TsDecoratorAttribute> Decorators { get; }
+
+        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
     }
 }

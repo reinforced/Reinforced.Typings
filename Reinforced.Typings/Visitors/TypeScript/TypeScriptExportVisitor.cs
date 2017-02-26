@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
 
         protected void Decorators(IDecoratable member)
         {
-            foreach (var memberDecorator in member.Decorators)
+            foreach (var memberDecorator in member.Decorators.OrderBy(c=>c.Order))
             {
                 Visit(memberDecorator);
             }

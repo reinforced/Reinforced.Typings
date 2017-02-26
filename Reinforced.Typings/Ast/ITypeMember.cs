@@ -41,5 +41,10 @@ namespace Reinforced.Typings.Ast
         /// Implementing types names
         /// </summary>
         List<RtSimpleTypeName> Implementees { get; }
+
+        /// <summary>
+        /// Order of writing
+        /// </summary>
+        double Order { get; set; }
     }
 }
