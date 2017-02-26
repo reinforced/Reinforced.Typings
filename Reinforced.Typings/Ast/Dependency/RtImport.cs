@@ -7,20 +7,20 @@ namespace Reinforced.Typings.Ast.Dependency
     /// </summary>
     public class RtImport : RtNode
     {
-        public RtImport()
-        {
-            Targets = new List<RtImportTarget>();
-        }
-
         /// <summary>
         /// Targets list
         /// </summary>
-        public List<RtImportTarget> Targets { get; private set; }
+        public string Target { get; set; }
 
         /// <summary>
         /// Import source
         /// </summary>
         public string From { get; set; }
+
+        /// <summary>
+        /// When true, "from" part will be replaced with "= require('From')"
+        /// </summary>
+        public bool IsRequire { get; set; }
 
         /// <summary>
         /// Node children

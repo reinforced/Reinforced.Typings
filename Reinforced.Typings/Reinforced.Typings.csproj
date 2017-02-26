@@ -55,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessModifier.cs" />
-    <Compile Include="Ast\Dependency\RtImportTarget.cs" />
     <Compile Include="Ast\DocTag.cs" />
     <Compile Include="Ast\IDecoratable.cs" />
     <Compile Include="Ast\ITypeMember.cs" />

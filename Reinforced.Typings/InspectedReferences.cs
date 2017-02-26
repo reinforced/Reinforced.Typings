@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
@@ -22,6 +23,8 @@ namespace Reinforced.Typings
         /// References exposed via imports
         /// </summary>
         public IReadOnlyCollection<RtImport> Imports { get { return _imports; } }
+
+        internal Dictionary<Type, string> TypePrefixes { get; private set; }
 
         internal InspectedReferences(IEnumerable<RtReference> references = null, IEnumerable<RtImport> imports = null)
         {

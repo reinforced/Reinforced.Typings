@@ -34,22 +34,43 @@ namespace Reinforced.Typings
         {
             var references = assemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
-                .Select(c => new RtReference() {Path = c.Path})
+                .Select(c => new RtReference() { Path = c.Path })
                 .Union(ConfigurationRepository.Instance.References);
 
-            //var imports = 
+            if (_useModules)
+            {
+                var imports = assemblies.Where(c => c.GetCustomAttributes<TsImportAttribute>().Any())
+                    .SelectMany(c => c.GetCustomAttributes<TsImportAttribute>())
+                    .Select(c => new RtImport() { Target = c.ImportTarget, From = c.ImportSource, IsRequire = c.ImportRequire })
+                    .Union(ConfigurationRepository.Instance.Imports);
+                return new InspectedReferences(references,imports);
+            }
             return new InspectedReferences(references);
         }
 
         public InspectedReferences GenerateInspectedReferences(Type element, HashSet<Type> alltypes)
         {
             var inspectedTypes = InspectReferences(element, alltypes);
-            var references = new HashSet<string>();
-            var types = ConfigurationRepository.Instance.ReferencesForType(element);
-
-            if (types != null)
+            
+            if (!_useModules)
             {
-                foreach (var attr in types)
+                var references = ExtractReferences(element, inspectedTypes);
+                var referenceNodes = references.Select(c => new RtReference() { Path = c });
+                return new InspectedReferences(referenceNodes);
+            }
+            else
+            {
+
+            }
+        }
+
+        private HashSet<string> ExtractReferences(Type element, IEnumerable<Type> inspectedTypes)
+        {
+            var existingRefs = ConfigurationRepository.Instance.ReferencesForType(element);
+            var references = new HashSet<string>();
+            if (existingRefs != null)
+            {
+                foreach (var attr in existingRefs)
                 {
                     if (attr.Type != element)
                     {
@@ -66,17 +87,7 @@ namespace Reinforced.Typings
                     if (!string.IsNullOrEmpty(path)) references.AddIfNotExists(path);
                 }
             }
-
-            if (!_useModules)
-            {
-                var referenceNodes = references.Select(c => new RtReference() {Path = c});
-
-                return new InspectedReferences(referenceNodes);
-            }
-            else
-            {
-                
-            }
+            return references;
         }
 
         public string GetPathForType(Type t)
@@ -90,8 +101,11 @@ namespace Reinforced.Typings
 
             var idx = tn.IndexOf('<');
             if (idx != -1) tn = tn.Substring(0, idx);
-            if (_exportPureTypings) tn = tn + ".d.ts";
-            else tn = tn + ".ts";
+            if (!_useModules)
+            {
+                if (_exportPureTypings) tn = tn + ".d.ts";
+                else tn = tn + ".ts";
+            }
 
             if (string.IsNullOrEmpty(ns)) return Path.Combine(_targetDirectory, tn);
             if (!string.IsNullOrEmpty(_rootNamespace))
@@ -195,7 +209,7 @@ namespace Reinforced.Typings
             {
                 InspectTypeReferences(iface, alltypes, references);
             }
-            
+
             return references;
         }
 
