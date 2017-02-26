@@ -106,7 +106,7 @@ namespace Reinforced.Typings
                     var result = t.GetName(GetConcreteGenericArguments(t));
                     var import = _refInspector.EnsureImport(t, result.TypeName, _file);
                     if (_context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
-                    if (import.IsWildcard)
+                    if (!import.IsWildcard)
                     {
                         return Cache(t, result);
                     }

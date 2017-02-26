@@ -23,15 +23,21 @@ namespace Reinforced.Typings.Ast.Dependency
             }
         }
 
-        public bool IsWildcard { get { return WildcardAlias == null; } }
+        /// <summary>
+        /// Gets flag whether RtImport is wildcard import
+        /// </summary>
+        public bool IsWildcard { get { return WildcardAlias != null; } }
 
+        /// <summary>
+        /// Gets wildcard alias of import
+        /// </summary>
         public string WildcardAlias { get; private set; }
 
         private void CheckWildcardImport()
         {
             if (_target.StartsWith("*"))
             {
-                var arr = _target.Split(new[] { "as" }, StringSplitOptions.RemoveEmptyEntries);
+                var arr = _target.Split(new[] { " as " }, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length < 2)
                 {
                     WildcardAlias = null;
