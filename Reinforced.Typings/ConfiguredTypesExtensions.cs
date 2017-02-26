@@ -248,5 +248,19 @@ namespace Reinforced.Typings
             return t.Namespace;
         }
 
+        public static RtTypeName Substitute(this Type t, Type currentlyExportingType)
+        {
+            if (currentlyExportingType != null)
+            {
+                if (ConfigurationRepository.Instance.TypeSubstitutions.ContainsKey(currentlyExportingType))
+                {
+                    var ts = ConfigurationRepository.Instance.TypeSubstitutions[currentlyExportingType];
+                    if (ts.ContainsKey(t)) return ts[t];
+                }
+            }
+            if (ConfigurationRepository.Instance.GlobalSubstitutions.ContainsKey(t)) return ConfigurationRepository.Instance.GlobalSubstitutions[t];
+            return null;
+        }
+
     }
 }

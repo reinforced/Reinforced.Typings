@@ -70,6 +70,7 @@
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest1.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest2.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.InterfaceAsInterface.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.PandaWoodForceNullableTest.cs" />
     <Compile Include="ExporterIntegrationTests\TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

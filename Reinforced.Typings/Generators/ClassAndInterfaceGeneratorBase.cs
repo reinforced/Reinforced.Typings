@@ -27,6 +27,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
         protected virtual void Export(ITypeMember result, Type type, TypeResolver resolver, IAutoexportSwitchAttribute swtch)
         {
+            Context.Location.SetCurrentType(type);
             result.Name = type.GetName();
             result.Order = type.GetOrder();
 
@@ -62,6 +63,7 @@ namespace Reinforced.Typings.Generators
             }
             result.Implementees.AddRange(implementees.OfType<RtSimpleTypeName>());
             ExportMembers(type, resolver, result, swtch);
+            Context.Location.ResetCurrentType();
         }
 
         /// <summary>

@@ -93,6 +93,9 @@ namespace Reinforced.Typings
 
         private RtTypeName ResolveTypeNameInner(Type t)
         {
+            var substitution = t.Substitute(_context.Location.CurrentType);
+            if (substitution != null) return substitution; // order important!
+
             if (_resolveCache.ContainsKey(t)) return _resolveCache[t];
 
             var td = ConfigurationRepository.Instance.ForType(t);

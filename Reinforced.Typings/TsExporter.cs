@@ -91,8 +91,6 @@ namespace Reinforced.Typings
                 }
             }
 
-
-
             _context.Documentation =
                 new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
 

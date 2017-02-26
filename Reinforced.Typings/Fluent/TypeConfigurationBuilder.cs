@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -19,11 +20,14 @@ namespace Reinforced.Typings.Fluent
             = new Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>>();
 
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
+        private readonly Dictionary<Type, RtTypeName> _substitutions = new Dictionary<Type, RtTypeName>();
 
         Type ITypeConfigurationBuilder.Type
         {
             get { return typeof (TType); }
         }
+
+        public Dictionary<Type, RtTypeName> Substitutions { get { return _substitutions; } }
 
         Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> ITypeConfigurationBuilder.
             ParametersConfiguration

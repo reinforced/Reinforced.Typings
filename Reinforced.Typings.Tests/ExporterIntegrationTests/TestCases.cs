@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Tests.ExporterIntegrationTests
@@ -45,5 +46,20 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
     public enum JonsaEnum
     {
         Foo, Bar
+    }
+
+
+    public class CrozinSubstitutionTest
+    {
+        public Guid GuidProperty { get; set; }
+
+        public DateTime TimeProperty { get; set; }
+    }
+
+    public class CrozinLocalSubstitutionTest
+    {
+        public Guid OneMoreGuidProperty { get; set; }
+
+        public DateTime OneMoreTimeProperty { get; set; }
     }
 }

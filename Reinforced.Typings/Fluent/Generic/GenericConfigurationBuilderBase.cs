@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -21,12 +22,15 @@ namespace Reinforced.Typings.Fluent.Generic
         protected GenericConfigurationBuilderBase(Type t)
         {
             _type = t;
+            Substitutions = new Dictionary<Type, RtTypeName>();
         }
 
         Type ITypeConfigurationBuilder.Type
         {
             get { return _type; }
         }
+
+        public Dictionary<Type, RtTypeName> Substitutions { get; private set; }
 
         Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> ITypeConfigurationBuilder.
             ParametersConfiguration

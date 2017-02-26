@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -11,6 +12,11 @@ namespace Reinforced.Typings
     internal class ConfigurationRepository
     {
 
+#if DEBUG
+        [ThreadStatic] //need this for unit tests runner
+#endif
+        private static ConfigurationRepository _instance;
+
         public static ConfigurationRepository Instance
         {
             get { return _instance ?? (_instance = new ConfigurationRepository()); }
@@ -18,21 +24,12 @@ namespace Reinforced.Typings
         }
 
 
-        #region private fields
+        #region Private fields
+
+        #region Attribute collections
 
         private readonly Dictionary<Type, TsDeclarationAttributeBase> _attributesForType =
             new Dictionary<Type, TsDeclarationAttributeBase>();
-
-        #region Decorators
-        private readonly Dictionary<Type, List<TsDecoratorAttribute>> _decoratorsForType =
-            new Dictionary<Type, List<TsDecoratorAttribute>>();
-
-        private readonly Dictionary<MemberInfo, List<TsDecoratorAttribute>> _decoratorsForMember =
-            new Dictionary<MemberInfo, List<TsDecoratorAttribute>>();
-
-        private readonly Dictionary<ParameterInfo, List<TsDecoratorAttribute>> _decoratorsForParameter =
-            new Dictionary<ParameterInfo, List<TsDecoratorAttribute>>();
-        #endregion
 
         private readonly Dictionary<MethodInfo, TsFunctionAttribute> _attributesForMethods =
             new Dictionary<MethodInfo, TsFunctionAttribute>();
@@ -49,25 +46,48 @@ namespace Reinforced.Typings
         private readonly Dictionary<ParameterInfo, TsParameterAttribute> _attributesForParameters =
             new Dictionary<ParameterInfo, TsParameterAttribute>();
 
+        #endregion
+
+        #region Decorators
+        private readonly Dictionary<Type, List<TsDecoratorAttribute>> _decoratorsForType =
+            new Dictionary<Type, List<TsDecoratorAttribute>>();
+
+        private readonly Dictionary<MemberInfo, List<TsDecoratorAttribute>> _decoratorsForMember =
+            new Dictionary<MemberInfo, List<TsDecoratorAttribute>>();
+
+        private readonly Dictionary<ParameterInfo, List<TsDecoratorAttribute>> _decoratorsForParameter =
+            new Dictionary<ParameterInfo, List<TsDecoratorAttribute>>();
+        #endregion
+
+        #region References and imports
+
         private readonly Dictionary<Type, List<TsAddTypeReferenceAttribute>> _referenceAttributes =
-            new Dictionary<Type, List<TsAddTypeReferenceAttribute>>();
+           new Dictionary<Type, List<TsAddTypeReferenceAttribute>>();
 
         private readonly Dictionary<Type, List<TsAddTypeImportAttribute>> _importAttributes =
             new Dictionary<Type, List<TsAddTypeImportAttribute>>();
 
+        private readonly List<RtReference> _references = new List<RtReference>();
+        private readonly List<RtImport> _imports = new List<RtImport>();
+        #endregion
+
+        #region Pathes and files
+
         private readonly Dictionary<Type, string> _pathesToFiles = new Dictionary<Type, string>();
         private readonly Dictionary<string, List<Type>> _typesInFiles = new Dictionary<string, List<Type>>();
 
+        #endregion
+
+
         private readonly HashSet<object> _ignored = new HashSet<object>();
-
-#if DEBUG
-        [ThreadStatic] //need this for unit tests runner
-#endif
-        private static ConfigurationRepository _instance;
-
-        private readonly List<RtReference> _references = new List<RtReference>();
-        private readonly List<RtImport> _imports = new List<RtImport>();
         private readonly List<string> _additionalDocumentationPathes = new List<string>();
+
+        #region Substitutions
+
+        private readonly Dictionary<Type, RtTypeName> _globalSubstitutions = new Dictionary<Type, RtTypeName>();
+        private readonly Dictionary<Type, Dictionary<Type, RtTypeName>> _typeSubstitutions = new Dictionary<Type, Dictionary<Type, RtTypeName>>();
+
+        #endregion
 
         #endregion
 
@@ -90,6 +110,8 @@ namespace Reinforced.Typings
 
         #endregion
 
+        #region Pathes and files
+
         public Dictionary<Type, string> PathesToFiles
         {
             get { return _pathesToFiles; }
@@ -100,17 +122,15 @@ namespace Reinforced.Typings
             get { return _typesInFiles; }
         }
 
+        #endregion
+
+
         public List<string> AdditionalDocumentationPathes
         {
             get { return _additionalDocumentationPathes; }
         }
 
-        public List<TsAddTypeReferenceAttribute> ReferencesForType(Type t)
-        {
-            return _referenceAttributes.GetOr(t, () => new List<TsAddTypeReferenceAttribute>());
-        }
-
-        #region References and imports
+        #region References
 
         public Dictionary<Type, List<TsAddTypeReferenceAttribute>> ReferenceAttributes
         {
@@ -121,8 +141,6 @@ namespace Reinforced.Typings
         {
             get { return _importAttributes; }
         }
-
-        #endregion
 
         #region Global references and imports
 
@@ -138,16 +156,13 @@ namespace Reinforced.Typings
 
         #endregion
 
+        #endregion
 
+        #region Core attributes
 
         public Dictionary<ParameterInfo, TsParameterAttribute> AttributesForParameters
         {
             get { return _attributesForParameters; }
-        }
-
-        public HashSet<object> Ignored
-        {
-            get { return _ignored; }
         }
 
         public Dictionary<Type, TsDeclarationAttributeBase> AttributesForType
@@ -176,6 +191,29 @@ namespace Reinforced.Typings
         }
 
         #endregion
+
+        #region Substitutions
+
+        public Dictionary<Type, RtTypeName> GlobalSubstitutions
+        {
+            get { return _globalSubstitutions; }
+        }
+
+        public Dictionary<Type, Dictionary<Type, RtTypeName>> TypeSubstitutions
+        {
+            get { return _typeSubstitutions; }
+        }
+
+        #endregion
+
+        public HashSet<object> Ignored
+        {
+            get { return _ignored; }
+        }
+
+        #endregion
+
+        #region API
 
         #region Division among files
 
@@ -415,6 +453,7 @@ namespace Reinforced.Typings
 
         #endregion
 
-
+        
+        #endregion
     }
 }
