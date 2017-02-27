@@ -14,6 +14,7 @@ namespace Reinforced.Typings.Fluent
         where TEnum : struct
     {
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
+        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
 
         private readonly Dictionary<FieldInfo, EnumValueExportConfiguration> _valueExportConfigurations =
             new Dictionary<FieldInfo, EnumValueExportConfiguration>();
@@ -21,6 +22,7 @@ namespace Reinforced.Typings.Fluent
         internal EnumConfigurationBuilder()
         {
             AttributePrototype = new TsEnumAttribute();
+            Decorators = new List<TsDecoratorAttribute>();
         }
 
         private TsEnumAttribute AttributePrototype { get; set; }
@@ -45,6 +47,9 @@ namespace Reinforced.Typings.Fluent
             get { return _references; }
         }
 
+        ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports { get { return _imports; } }
+
         string IReferenceConfigurationBuilder.PathToFile { get; set; }
+        public List<TsDecoratorAttribute> Decorators { get; }
     }
 }

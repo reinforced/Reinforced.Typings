@@ -20,25 +20,43 @@ namespace Reinforced.Typings.Generators
         /// <param name="types">Types list</param>
         /// <param name="namespaceName">Namespace name</param>
         /// <param name="resolver">Type resolver</param>
-        public virtual RtModule Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver)
+        public virtual RtNamespace Generate(IEnumerable<Type> types, string namespaceName, TypeResolver resolver)
         {
-            RtModule module = new RtModule();
-            if (string.IsNullOrEmpty(namespaceName)) module.IsAbstractModule = true;
-            module.ModuleName = namespaceName;
+            RtNamespace ns = new RtNamespace();
+            var needToDiscard = Context.Global.UseModules && Context.Global.DiscardNamespacesWhenUsingModules;
+
+            if (string.IsNullOrEmpty(namespaceName) || needToDiscard) ns.IsAmbientNamespace = true;
+            ns.Name = namespaceName;
 
             Context.CurrentNamespace = namespaceName;
-            Context.Location.SetLocation(module);
+            Context.Location.SetLocation(ns);
             foreach (var type in types)
             {
-                var converter = resolver.GeneratorFor(type, Context);
+                var converter = Context.Generators.GeneratorFor(type, Context);
                 var member = converter.Generate(type, resolver);
-                module.CompilationUnits.Add(member);
+                var m = member as RtCompilationUnit;
+                if (m != null)
+                {
+                    if (Context.Global.UseModules)
+                    {
+                        m.Export = true;
+                    }
+                    else
+                    {
+                        m.Export = !ns.IsAmbientNamespace;
+                    }
+                }
+
+
+                ns.CompilationUnits.Add(member);
                 Console.WriteLine("Exported {0}", type);
             }
 
+            if (Context.Global.UseModules) ns.GenerationMode = NamespaceGenerationMode.Namespace;
+
             Context.CurrentNamespace = null;
-            Context.Location.ResetLocation(module);
-            return module;
+            Context.Location.ResetLocation(ns);
+            return ns;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Reinforced.Typings.Attributes;
+﻿using System.Collections.Generic;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
@@ -18,6 +19,7 @@ namespace Reinforced.Typings.Fluent
                 AutoExportProperties = false,
                 AutoExportMethods = false
             };
+            Decorators = new List<TsDecoratorAttribute>();
         }
 
         private TsClassAttribute AttributePrototype { get; set; }
@@ -26,5 +28,9 @@ namespace Reinforced.Typings.Fluent
         {
             get { return AttributePrototype; }
         }
+
+        public List<TsDecoratorAttribute> Decorators { get; }
+
+        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
     }
 }

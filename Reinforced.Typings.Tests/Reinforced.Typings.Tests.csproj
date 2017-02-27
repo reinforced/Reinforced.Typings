@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5D126898-7E5D-4967-8732-3FC8722F532E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Reinforced.Typings.Tests</RootNamespace>
+    <AssemblyName>Reinforced.Typings.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClassicMultiFileResolvationTests.cs" />
+    <Compile Include="ConfigurationBuilderTestBase.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.All.cs" />
+    <Compile Include="Core\MockFileOperations.cs" />
+    <Compile Include="Core\RtExporterTestBase.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.CrozinSubstitutions.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DaggmanoAutoIBug.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.InlineFunctionImplementation.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.JonsaCustomIndentationTest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DecoratorsTest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest1.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest2.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.InterfaceAsInterface.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.PandaWoodForceNullableTest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart1.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart2.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart3.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart4.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart5.cs" />
+    <Compile Include="SpecificCases\TestCases.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tokenizing\SimpleTokenizer.cs" />
+    <Compile Include="Tokenizing\TokenizingComparer.cs" />
+    <Compile Include="TokenizingComparerTests.cs" />
+    <Compile Include="TypeNameEqualityComparer.cs" />
+    <Compile Include="BasicTypesResolvationTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.csproj">
+      <Project>{2A5CCD5C-E660-4088-8937-9632ABBBCDBB}</Project>
+      <Name>Reinforced.Typings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestFluentAssembly\TestFluentAssembly.csproj">
+      <Project>{e7e010d2-1ce5-4877-aba7-36ea8ec62118}</Project>
+      <Name>TestFluentAssembly</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

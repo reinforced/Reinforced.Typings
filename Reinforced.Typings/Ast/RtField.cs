@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
     /// <summary>
     /// AST node for TypeScript field
     /// </summary>
-    public class RtField : RtMember
+    public class RtField : RtMember, IDecoratable
     {
         /// <summary>
         /// Field name
@@ -30,6 +31,10 @@ namespace Reinforced.Typings.Ast
             get
             {
                 yield return Documentation;
+                foreach (var rtDecorator in Decorators)
+                {
+                    yield return rtDecorator;
+                }
                 yield return Identifier;
                 yield return Type;
             }
@@ -52,5 +57,12 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+
+        public RtField()
+        {
+            Decorators = new List<RtDecorator>();
+        }
+
+        public List<RtDecorator> Decorators { get; private set; }
     }
 }

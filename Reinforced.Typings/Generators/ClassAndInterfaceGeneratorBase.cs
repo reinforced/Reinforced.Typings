@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Xmldoc.Model;
@@ -26,7 +27,9 @@ namespace Reinforced.Typings.Generators
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
         protected virtual void Export(ITypeMember result, Type type, TypeResolver resolver, IAutoexportSwitchAttribute swtch)
         {
+            Context.Location.SetCurrentType(type);
             result.Name = type.GetName();
+            result.Order = type.GetOrder();
 
             var doc = Context.Documentation.GetDocumentationMember(type);
             if (doc != null)
@@ -41,9 +44,23 @@ namespace Reinforced.Typings.Generators
             var baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
             {
-                if (ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs) != null)
+                TsDeclarationAttributeBase attr = null;
+                bool baseAsInterface = false;
+                if (bs.IsGenericType)
                 {
-                    if (bs.IsExportingAsInterface()) baseClassIsExportedAsInterface = true;
+                    var genericBase = bs.GetGenericTypeDefinition();
+                    attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(genericBase);
+                    baseAsInterface = genericBase.IsExportingAsInterface();
+                }
+                else
+                {
+                    attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs);
+                    baseAsInterface = bs.IsExportingAsInterface();
+                }
+                
+                if (attr != null)
+                {
+                    if (baseAsInterface) baseClassIsExportedAsInterface = true;
                     else
                     {
                         ((RtClass)result).Extendee = resolver.ResolveTypeName(bs);
@@ -59,6 +76,7 @@ namespace Reinforced.Typings.Generators
             }
             result.Implementees.AddRange(implementees.OfType<RtSimpleTypeName>());
             ExportMembers(type, resolver, result, swtch);
+            Context.Location.ResetCurrentType();
         }
 
         /// <summary>
@@ -163,7 +181,7 @@ namespace Reinforced.Typings.Generators
                 {
                     var constructors =
                         element.GetConstructors(TypeExtensions.MembersFlags)
-                            .Where(c => TypeExtensions.TypeScriptMemberSearchPredicate(c));
+                            .Where(c => ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate(c));
                     GenerateMembers(element, resolver, typeMember, constructors);
                 }
             }
@@ -182,7 +200,7 @@ namespace Reinforced.Typings.Generators
         {
             foreach (var m in members)
             {
-                var generator = resolver.GeneratorFor<T>(m, Context);
+                var generator = Context.Generators.GeneratorFor<T>(m, Context);
                 var member = generator.Generate(m, resolver);
                 typeMember.Members.Add(member);
             }

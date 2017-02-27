@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
     /// <summary>
     /// AST node for TypeScript enumeration
     /// </summary>
-    public class RtEnum : RtCompilationUnit
+    public class RtEnum : RtCompilationUnit, IDecoratable
     {
         /// <summary>
         /// JSDOC
@@ -32,6 +33,7 @@ namespace Reinforced.Typings.Ast
         public RtEnum()
         {
             Values = new List<RtEnumValue>();
+            Decorators = new List<RtDecorator>();
         }
 
         /// <summary>
@@ -39,7 +41,20 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         public override IEnumerable<RtNode> Children
         {
-            get { yield break; }
+            get
+            {
+                foreach (var rtNode in Decorators)
+                {
+                    yield return rtNode;
+                }
+                if (Values != null)
+                {
+                    foreach (var rtEnumValue in Values)
+                    {
+                        yield return rtEnumValue;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -59,5 +74,8 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+
+        
+        public List<RtDecorator> Decorators { get; private set; }
     }
 }

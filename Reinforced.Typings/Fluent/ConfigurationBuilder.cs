@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -12,23 +15,27 @@ namespace Reinforced.Typings.Fluent
     public class ConfigurationBuilder
     {
         private readonly List<string> _additionalDocumentationPathes = new List<string>();
-
         private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders =
             new Dictionary<Type, IEnumConfigurationBuidler>();
-
-        private readonly List<string> _references = new List<string>();
-
+        private readonly List<RtReference> _references = new List<RtReference>();
+        private readonly List<RtImport> _imports = new List<RtImport>();
         private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders =
             new Dictionary<Type, ITypeConfigurationBuilder>();
-
+        private readonly Dictionary<Type, RtTypeName> _globalSubstitutions = new Dictionary<Type, RtTypeName>();
+        
         internal List<string> AdditionalDocumentationPathes
         {
             get { return _additionalDocumentationPathes; }
         }
 
-        internal List<string> References
+        internal List<RtReference> References
         {
             get { return _references; }
+        }
+
+        internal List<RtImport> Imports
+        {
+            get { return _imports; }
         }
 
         internal Dictionary<Type, ITypeConfigurationBuilder> TypeConfigurationBuilders
@@ -41,9 +48,25 @@ namespace Reinforced.Typings.Fluent
             get { return _enumConfigurationBuilders; }
         }
 
+        internal Dictionary<Type, RtTypeName> GlobalSubstitutions
+        {
+            get { return _globalSubstitutions; }
+        }
+        
+        internal GlobalConfigurationBuilder GlobalBuilder { get; private set; }
+
+        public ConfigurationBuilder(GlobalParameters global)
+        {
+            GlobalBuilder = new GlobalConfigurationBuilder(global);
+        }
+
         internal ConfigurationRepository Build()
         {
             var repository = new ConfigurationRepository();
+            foreach (var globalSubstitution in GlobalSubstitutions)
+            {
+                repository.GlobalSubstitutions[globalSubstitution.Key] = globalSubstitution.Value;
+            }
             foreach (var kv in _typeConfigurationBuilders)
             {
                 var cls = kv.Value as IClassConfigurationBuilder;
@@ -51,11 +74,14 @@ namespace Reinforced.Typings.Fluent
                 if (cls != null)
                 {
                     repository.AttributesForType[kv.Key] = cls.AttributePrototype;
+                    repository.DecoratorsForType[kv.Key] = new List<TsDecoratorAttribute>(cls.Decorators);
+                    if (cls.Substitutions.Count>0) repository.TypeSubstitutions[kv.Key] = cls.Substitutions;
                 }
 
                 if (intrf != null)
                 {
                     repository.AttributesForType[kv.Key] = intrf.AttributePrototype;
+                    if (intrf.Substitutions.Count > 0) repository.TypeSubstitutions[kv.Key] = intrf.Substitutions;
                 }
 
                 foreach (var kvm in kv.Value.MembersConfiguration)
@@ -70,16 +96,26 @@ namespace Reinforced.Typings.Fluent
                     var method = kvm.Key as MethodInfo;
                     if (prop != null)
                     {
-                        repository.AttributesForProperties[prop] = (TsPropertyAttribute) kvm.Value.AttributePrototype;
+                        repository.AttributesForProperties[prop] = (TsPropertyAttribute)kvm.Value.AttributePrototype;
                     }
                     if (field != null)
                     {
-                        repository.AttributesForFields[field] = (TsPropertyAttribute) kvm.Value.AttributePrototype;
+                        repository.AttributesForFields[field] = (TsPropertyAttribute)kvm.Value.AttributePrototype;
                     }
                     if (method != null)
                     {
-                        repository.AttributesForMethods[method] = (TsFunctionAttribute) kvm.Value.AttributePrototype;
+                        repository.AttributesForMethods[method] = (TsFunctionAttribute)kvm.Value.AttributePrototype;
                     }
+                    var dec = kvm.Value as IDecoratorsAggregator;
+                    if (dec != null)
+                    {
+                        if (!repository.DecoratorsForMember.ContainsKey(kvm.Key))
+                        {
+                            repository.DecoratorsForMember[kvm.Key] = new List<TsDecoratorAttribute>();
+                        }
+                        repository.DecoratorsForMember[kvm.Key].AddRange(dec.Decorators);
+                    }
+
                 }
                 foreach (var kvp in kv.Value.ParametersConfiguration)
                 {
@@ -101,8 +137,11 @@ namespace Reinforced.Typings.Fluent
                         enumValueExportConfiguration.Value.AttributePrototype;
                 }
                 repository.AddFileSeparationSettings(kv.Key, kv.Value);
+                repository.DecoratorsForType[kv.Key] = new List<TsDecoratorAttribute>(kv.Value.Decorators);
             }
             repository.References.AddRange(_references);
+            repository.Imports.AddRange(_imports);
+
             repository.AdditionalDocumentationPathes.AddRange(_additionalDocumentationPathes);
             return repository;
         }

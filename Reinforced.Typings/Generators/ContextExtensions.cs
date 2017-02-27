@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
@@ -10,7 +11,7 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public static class ContextExtensions
     {
-        
+
         /// <summary>
         ///     Conditionally (based on settings) turns method name to camelCase
         /// </summary>
@@ -19,7 +20,7 @@ namespace Reinforced.Typings.Generators
         /// <returns>Method name in camelCase if camelCasing enabled, initial string otherwise</returns>
         public static string ConditionallyConvertMethodNameToCamelCase(this ExportContext context, string regularName)
         {
-            if (!context.CamelCaseForMethods) return regularName;
+            if (!context.Global.CamelCaseForMethods) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
@@ -31,7 +32,7 @@ namespace Reinforced.Typings.Generators
         /// <returns>Method name in camelCase if camelCasing enabled, initial string otherwise</returns>
         public static string ConditionallyConvertMethodNameToPascalCase(this ExportContext context, string regularName)
         {
-            if (!context.CamelCaseForMethods) return regularName;
+            if (!context.Global.CamelCaseForMethods) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
@@ -44,7 +45,7 @@ namespace Reinforced.Typings.Generators
         public static string ConditionallyConvertPropertyNameToCamelCase(this ExportContext context,
             string regularName)
         {
-            if (!context.CamelCaseForProperties) return regularName;
+            if (!context.Global.CamelCaseForProperties) return regularName;
             return ConvertToCamelCase(regularName);
         }
 
@@ -79,11 +80,15 @@ namespace Reinforced.Typings.Generators
         private static string ConvertToCamelCase(string s)
         {
             if (!char.IsLetter(s[0])) return s;
-            if (char.IsUpper(s[0]))
+            StringBuilder result = new StringBuilder();
+            int i;
+            for (i = 0; i < s.Length; i++)
             {
-                return char.ToLower(s[0]) + s.Substring(1);
+                if (i < s.Length - 1 && char.IsLower(s[i + 1])) break;
+                if (char.IsUpper(s[i])) result.Append(char.ToLowerInvariant(s[i]));
             }
-            return s;
+            if (i < s.Length - 1) result.Append(s.Substring(i));
+            return result.ToString();
         }
 
         private static string ConvertToPascalCase(string s)

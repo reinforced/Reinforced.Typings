@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
@@ -21,7 +22,8 @@ namespace Reinforced.Typings.Generators
         {
             if (element.IsIgnored()) return null;
             result.IsStatic = element.IsStatic();
-            
+            result.Order = element.GetOrder();
+
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
@@ -46,13 +48,11 @@ namespace Reinforced.Typings.Generators
                 }
 
                 if (!string.IsNullOrEmpty(tp.Name)) propName.IdentifierName = tp.Name;
-                if (tp.ForceNullable && element.DeclaringType.IsExportingAsInterface() && !Context.SpecialCase)
-                    propName.IsNullable = true;
+                if (tp.ForceNullable && !Context.SpecialCase) propName.IsNullable = true;
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);
-            if (!propName.IsNullable && t.IsNullable() && element.DeclaringType.IsExportingAsInterface() &&
-                !Context.SpecialCase)
+            if (!propName.IsNullable && t.IsNullable() && !Context.SpecialCase)
             {
                 propName.IsNullable = true;
             }
@@ -67,7 +67,7 @@ namespace Reinforced.Typings.Generators
             result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;
-
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
 

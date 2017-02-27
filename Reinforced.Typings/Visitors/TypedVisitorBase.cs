@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors
 {
@@ -21,12 +23,16 @@ namespace Reinforced.Typings.Visitors
             if (node is RtSimpleTypeName) return Visit((RtSimpleTypeName)node);
             if (node is RtRaw) return Visit((RtRaw)node);
             if (node is RtJsdocNode) return Visit((RtJsdocNode)node);
-            if (node is RtModule) return Visit((RtModule)node);
+            if (node is RtNamespace) return Visit((RtNamespace)node);
             if (node is RtEnumValue) return Visit((RtEnumValue)node);
             if (node is RtEnum) return Visit((RtEnum)node);
             if (node is RtDictionaryType) return Visit((RtDictionaryType)node);
             if (node is RtArrayType) return Visit((RtArrayType)node);
             if (node is RtConstructor) return Visit((RtConstructor)node);
+            if (node is RtImport) return Visit((RtImport)node);
+            if (node is RtDecorator) return Visit((RtDecorator)node);
+            if (node is RtReference) return Visit((RtReference)node);
+            if (node is RtTuple) return Visit((RtTuple)node);
             throw new Exception("Unknown node passed");
         }
 
@@ -40,11 +46,16 @@ namespace Reinforced.Typings.Visitors
         public abstract T Visit(RtSimpleTypeName node);
         public abstract T Visit(RtRaw node);
         public abstract T Visit(RtJsdocNode node);
-        public abstract T Visit(RtModule node);
+        public abstract T Visit(RtNamespace node);
         public abstract T Visit(RtEnumValue node);
         public abstract T Visit(RtEnum node);
         public abstract T Visit(RtDictionaryType node);
         public abstract T Visit(RtArrayType node);
         public abstract T Visit(RtConstructor node);
+        public abstract T Visit(RtImport node);
+        public abstract T Visit(RtDecorator node);
+        public abstract T Visit(RtReference node);
+        
+        public abstract T Visit(RtTuple node);
     }
 }

@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default code generator for enums
     /// </summary>
-    public class EnumGenerator : TsCodeGeneratorBase<Type,RtEnum>
+    public class EnumGenerator : TsCodeGeneratorBase<Type, RtEnum>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -18,10 +18,12 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtEnum GenerateNode(Type element,RtEnum result, TypeResolver resolver)
+        public override RtEnum GenerateNode(Type element, RtEnum result, TypeResolver resolver)
         {
             var names = Enum.GetNames(element);
             result.EnumName = element.GetName();
+            result.Order = element.GetOrder();
+
             var fields = element.GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
@@ -39,7 +41,7 @@ namespace Reinforced.Typings.Generators
                 if (fields.ContainsKey(n))
                 {
                     var fieldItself = fields[n];
-                    
+
                     var attr = ConfigurationRepository.Instance.ForEnumValue(fieldItself);
                     if (attr != null) n = attr.Name;
                     RtEnumValue value = new RtEnumValue
@@ -60,6 +62,7 @@ namespace Reinforced.Typings.Generators
                 }
             }
             result.Values.AddRange(valuesResult);
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
     }

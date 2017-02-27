@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors
 {
-    abstract class VisitorBase : IRtVisitor
+    public abstract class VisitorBase : IRtVisitor
     {
         public void Visit(RtNode node)
         {
@@ -22,12 +24,16 @@ namespace Reinforced.Typings.Visitors
             if (node is RtSimpleTypeName) { Visit((RtSimpleTypeName)node); return; }
             if (node is RtRaw) { Visit((RtRaw)node); return; }
             if (node is RtJsdocNode) { Visit((RtJsdocNode)node); return; }
-            if (node is RtModule) { Visit((RtModule)node); return; }
+            if (node is RtNamespace) { Visit((RtNamespace)node); return; }
             if (node is RtEnumValue) { Visit((RtEnumValue)node); return; }
             if (node is RtEnum) { Visit((RtEnum)node); return; }
             if (node is RtDictionaryType) { Visit((RtDictionaryType)node); return; }
             if (node is RtArrayType) { Visit((RtArrayType)node); return; }
             if (node is RtConstructor) { Visit((RtConstructor)node); return; }
+            if (node is RtImport) { Visit((RtImport)node); return; }
+            if (node is RtDecorator) { Visit((RtDecorator)node); return; }
+            if (node is RtReference) { Visit((RtReference)node); return; }
+            if (node is RtTuple) { Visit((RtTuple)node); return; }
 
             throw new Exception("Unknown node passed");
         }
@@ -42,11 +48,15 @@ namespace Reinforced.Typings.Visitors
         public abstract void Visit(RtSimpleTypeName node);
         public abstract void Visit(RtRaw node);
         public abstract void Visit(RtJsdocNode node);
-        public abstract void Visit(RtModule node);
+        public abstract void Visit(RtNamespace node);
         public abstract void Visit(RtEnumValue node);
         public abstract void Visit(RtEnum node);
         public abstract void Visit(RtDictionaryType node);
         public abstract void Visit(RtArrayType node);
         public abstract void Visit(RtConstructor node);
+        public abstract void Visit(RtImport node);
+        public abstract void Visit(RtDecorator node);
+        public abstract void Visit(RtReference node);
+        public abstract void Visit(RtTuple node);
     }
 }

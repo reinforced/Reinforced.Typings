@@ -2,6 +2,8 @@
 using System.IO;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 using Reinforced.Typings.Generators;
@@ -84,7 +86,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public static IExportConfiguration<TsParameterAttribute> WithCodeGenerator<T>(
             this IExportConfiguration<TsParameterAttribute> conf)
-            where T : TsCodeGeneratorBase<ParameterInfo,RtArgument>
+            where T : TsCodeGeneratorBase<ParameterInfo, RtArgument>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
             return conf;
@@ -95,7 +97,7 @@ namespace Reinforced.Typings.Fluent
         #region Reference extensions
 
         /// <summary>
-        ///     Adds reference directive to file containing single TS class typing.
+        ///     Adds reference directive to file containing typing for current type
         ///     This method is only used while splitting generated types to different files
         /// </summary>
         /// <param name="configuration">Configurator</param>
@@ -108,7 +110,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        ///     Adds reference directive to file containing single TS class typing.
+        ///     Adds reference directive to file containing typing for current type
         ///     This method is only used while splitting generated types to different files
         /// </summary>
         /// <param name="configuration">Configurator</param>
@@ -117,6 +119,31 @@ namespace Reinforced.Typings.Fluent
             where T : IReferenceConfigurationBuilder
         {
             configuration.References.Add(new TsAddTypeReferenceAttribute(referencedType));
+            return configuration;
+        }
+
+        /// <summary>
+        ///     Adds import directive to file containing typing for current type
+        ///     This method is only used while splitting generated types to different files
+        /// </summary>
+        /// <param name="configuration">Configurator</param>
+        /// <param name="target">
+        /// What we are importing from module.
+        /// Everything that is placed after "import" keyword and before "from" or "= require(..)"
+        /// Examples: 
+        /// - "import * as shape from './Shapes'" -> "* as shape" is target <br/>
+        /// - "import { Foo } from 'Bar'" -> "{ Foo }" is target <br/>
+        /// - "import { Bar2 as bar } from 'Baz'" -> "{ Bar2 as bar }" is target <br/>
+        /// If ImportTarget is null then side-effect import will be generated. 
+        /// </param>
+        /// <param name="from">
+        /// Import source is everything that follows after "from" keyword. 
+        /// Please not the you do not have to specify quotes here! Quotes will be added automatically
+        /// </param>
+        /// <param name="isRequire">When true, import will be generated as "import ImportTarget = require('ImportSource')"</param>
+        public static T AddImport<T>(this T configuration, string target, string from, bool isRequire = false) where T : IReferenceConfigurationBuilder
+        {
+            configuration.Imports.Add(new TsAddTypeImportAttribute(target, from, isRequire));
             return configuration;
         }
 
@@ -223,7 +250,7 @@ namespace Reinforced.Typings.Fluent
         ///     Forces member name to be PascalCase
         /// </summary>
         /// <param name="conf">Configuration</param>
-        public static T PascalCase<T>(this T conf) where T: IExportConfiguration<IPascalCasableAttribute>
+        public static T PascalCase<T>(this T conf) where T : IExportConfiguration<IPascalCasableAttribute>
         {
             conf.AttributePrototype.ShouldBePascalCased = true;
             return conf;
@@ -351,7 +378,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="force">Force nullable or not</param>
-        public static T ForceNullable<T>(this T conf, bool force = false)
+        public static T ForceNullable<T>(this T conf, bool force = true)
             where T : IExportConfiguration<TsPropertyAttribute>
         {
             conf.AttributePrototype.ForceNullable = force;
@@ -384,11 +411,11 @@ namespace Reinforced.Typings.Fluent
         ///     Adds global reference to another typescript library
         /// </summary>
         /// <param name="conf">Table configurator</param>
-        /// <param name="reference">Full path to .d.ts or .ts file</param>
+        /// <param name="path">Full path to .d.ts or .ts file</param>
         /// <returns>Fluent</returns>
-        public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string reference)
+        public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string path)
         {
-            conf.References.Add(reference);
+            conf.References.Add(new RtReference() { Path = path });
             return conf;
         }
 
@@ -412,6 +439,60 @@ namespace Reinforced.Typings.Fluent
                 conf.AdditionalDocumentationPathes.Add(filePath);
             }
             return conf;
+        }
+
+        /// <summary>
+        /// Sets order this membter will be written to output file in
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conf">Configurator</param>
+        /// <param name="order">Order of member</param>
+        /// <returns>Fluent</returns>
+        public static T Order<T>(this T conf, double order) where T : IOrderableMember
+        {
+            conf.MemberOrder = order;
+            return conf;
+        }
+
+        /// <summary>
+        /// Defines global type substitution. Substituted type will be strictly replaced with substitution during export
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="substitute">Type to substitute</param>
+        /// <param name="substitution">Substitution for type</param>
+        /// <returns>Fluent</returns>
+        public static ConfigurationBuilder Substitute(this ConfigurationBuilder builder, Type substitute, RtTypeName substitution)
+        {
+            builder.GlobalSubstitutions[substitute] = substitution;
+            return builder;
+        }
+
+
+        /// <summary>
+        /// Defines local type substitution that will work only when exporting current class. 
+        /// Substituted type will be strictly replaced with substitution during export but this option will take effect only when 
+        /// exporting currently configurable type
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="substitute">Type to substitute</param>
+        /// <param name="substitution">Substitution for type</param>
+        /// <returns>Fluent</returns>
+        public static T Substitute<T>(this T builder, Type substitute, RtTypeName substitution) where T : ITypeConfigurationBuilder
+        {
+            builder.Substitutions[substitute] = substitution;
+            return builder;
+        }
+
+        /// <summary>
+        /// Sets function body (works in case of class export) that will be converted to RtRaw and inserted as code block
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="functionCode">Function code</param>
+        /// <returns></returns>
+        public static T Implement<T>(this T builder, string functionCode) where T: IExportConfiguration<TsFunctionAttribute>
+        {
+            builder.AttributePrototype.Implementation = functionCode;
+            return builder;
         }
 
         #endregion

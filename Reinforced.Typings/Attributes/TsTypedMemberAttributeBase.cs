@@ -20,5 +20,7 @@
         ///     Overrides member name
         /// </summary>
         public virtual string Name { get; set; }
+
+        
     }
 }

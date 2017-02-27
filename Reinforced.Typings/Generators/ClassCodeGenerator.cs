@@ -25,6 +25,7 @@ namespace Reinforced.Typings.Generators
             var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(element);
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
             Export(result, element, resolver, tc);
+            AddDecorators(result,ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
     }

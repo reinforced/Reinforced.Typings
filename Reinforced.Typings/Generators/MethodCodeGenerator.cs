@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
@@ -48,6 +49,7 @@ namespace Reinforced.Typings.Generators
                 }
                 result.Documentation = jsdoc;
             }
+            result.Order = element.GetOrder();
 
             result.AccessModifier = element.GetModifier();
             if (Context.SpecialCase) result.AccessModifier = AccessModifier.Public;
@@ -58,11 +60,16 @@ namespace Reinforced.Typings.Generators
             foreach (var param in p)
             {
                 if (param.IsIgnored()) continue;
-                var generator = resolver.GeneratorFor(param, Context);
+                var generator = Context.Generators.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }
-
+            var fa = ConfigurationRepository.Instance.ForMember(element);
+            if (fa != null && !string.IsNullOrEmpty(fa.Implementation))
+            {
+                result.Body = new RtRaw(fa.Implementation);
+            }
+            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
 

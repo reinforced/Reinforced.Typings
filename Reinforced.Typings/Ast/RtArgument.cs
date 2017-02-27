@@ -1,13 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
     /// <summary>
     /// AST node for method parameter
     /// </summary>
-    public class RtArgument : RtNode
+    public class RtArgument : RtNode, IDecoratable
     {
+        public RtArgument()
+        {
+            Decorators = new List<RtDecorator>();
+        }
+
         /// <summary>
         /// Parameter identifier
         /// </summary>
@@ -35,6 +41,10 @@ namespace Reinforced.Typings.Ast
         {
             get
             {
+                foreach (var rtDecorator in Decorators)
+                {
+                    yield return rtDecorator;
+                }
                 yield return Identifier;
                 yield return Type;
             }
@@ -72,5 +82,7 @@ namespace Reinforced.Typings.Ast
             }
             return sb.ToString();
         }
+
+        public List<RtDecorator> Decorators { get; }
     }
 }

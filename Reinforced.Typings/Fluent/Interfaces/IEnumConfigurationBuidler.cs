@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Fluent.Interfaces
     /// <summary>
     ///     Technical interface for enumeration configuration builder
     /// </summary>
-    public interface IEnumConfigurationBuidler : IExportConfiguration<TsEnumAttribute>, IReferenceConfigurationBuilder
+    public interface IEnumConfigurationBuidler : IExportConfiguration<TsEnumAttribute>, IReferenceConfigurationBuilder, IDecoratorsAggregator
     {
         /// <summary>
         ///     Type of enumeration

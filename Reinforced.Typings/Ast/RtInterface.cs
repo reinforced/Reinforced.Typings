@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
@@ -74,5 +75,6 @@ namespace Reinforced.Typings.Ast
             Members = new List<RtNode>();
             Implementees = new List<RtSimpleTypeName>();
         }
+     
     }
 }

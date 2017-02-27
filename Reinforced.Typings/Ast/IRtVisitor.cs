@@ -1,4 +1,7 @@
-﻿#pragma warning disable 1591
+﻿using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
+
+#pragma warning disable 1591
 namespace Reinforced.Typings.Ast
 {
     /// <summary>
@@ -18,12 +21,16 @@ namespace Reinforced.Typings.Ast
         T Visit(RtSimpleTypeName node);
         T Visit(RtRaw node);
         T Visit(RtJsdocNode node);
-        T Visit(RtModule node);
+        T Visit(RtNamespace node);
         T Visit(RtEnumValue node);
         T Visit(RtEnum node);
         T Visit(RtDictionaryType node);
         T Visit(RtArrayType node);
         T Visit(RtConstructor node);
+        T Visit(RtImport node);
+        T Visit(RtDecorator node);
+        T Visit(RtReference node);
+        T Visit(RtTuple node);
     }
 
     /// <summary>
@@ -42,11 +49,15 @@ namespace Reinforced.Typings.Ast
         void Visit(RtSimpleTypeName node);
         void Visit(RtRaw node);
         void Visit(RtJsdocNode node);
-        void Visit(RtModule node);
+        void Visit(RtNamespace node);
         void Visit(RtEnumValue node);
         void Visit(RtEnum node);
         void Visit(RtDictionaryType node);
         void Visit(RtArrayType node);
         void Visit(RtConstructor node);
+        void Visit(RtImport node);
+        void Visit(RtDecorator node);
+        void Visit(RtReference node);
+        void Visit(RtTuple node);
     }
 }

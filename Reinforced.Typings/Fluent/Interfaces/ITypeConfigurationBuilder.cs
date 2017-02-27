@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Fluent.Interfaces
@@ -8,7 +9,7 @@ namespace Reinforced.Typings.Fluent.Interfaces
     /// <summary>
     ///     Technical interface for type (class/interface) configuration builder
     /// </summary>
-    public interface ITypeConfigurationBuilder : IReferenceConfigurationBuilder
+    public interface ITypeConfigurationBuilder : IReferenceConfigurationBuilder, IOrderableMember
     {
         /// <summary>
         ///     Configurations for method parameters
@@ -24,5 +25,10 @@ namespace Reinforced.Typings.Fluent.Interfaces
         ///     Type is being configured
         /// </summary>
         Type Type { get; }
+
+        /// <summary>
+        /// Substitutions to be used only when in this type
+        /// </summary>
+        Dictionary<Type, RtTypeName> Substitutions { get; }
     }
 }

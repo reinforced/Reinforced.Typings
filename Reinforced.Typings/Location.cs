@@ -16,22 +16,34 @@ namespace Reinforced.Typings
         /// <summary>
         /// Current Class 
         /// </summary>
-        public RtClass CurrentClass { get; set; }
+        public RtClass CurrentClass { get; private set; }
 
         /// <summary>
         /// Current Interface
         /// </summary>
-        public RtInterface CurrentInterface { get; set; }
+        public RtInterface CurrentInterface { get; private set; }
 
         /// <summary>
         /// Current Enum
         /// </summary>
-        public RtEnum CurrentEnum { get; set; }
+        public RtEnum CurrentEnum { get; private set; }
 
         /// <summary>
         /// Current Module
         /// </summary>
-        public RtModule CurrentModule { get; set; }
+        public RtNamespace CurrentNamespace { get; private set; }
+
+        /// <summary>
+        /// References currently exported type
+        /// </summary>
+        public Type CurrentType
+        {
+            get
+            {
+                if (_typesStack.Count == 0) return null;
+                return _typesStack.Peek();
+            }
+        }
 
         /// <summary>
         /// Sets current location
@@ -39,10 +51,10 @@ namespace Reinforced.Typings
         /// <param name="location"></param>
         public void SetLocation(RtNode location)
         {
-            if (location is RtClass) CurrentClass = (RtClass) location;
+            if (location is RtClass) CurrentClass = (RtClass)location;
             if (location is RtInterface) CurrentInterface = (RtInterface)location;
             if (location is RtEnum) CurrentEnum = (RtEnum)location;
-            if (location is RtModule) CurrentModule = (RtModule)location;
+            if (location is RtNamespace) CurrentNamespace = (RtNamespace)location;
         }
 
         /// <summary>
@@ -54,7 +66,19 @@ namespace Reinforced.Typings
             if (location is RtClass) CurrentClass = null;
             if (location is RtInterface) CurrentInterface = null;
             if (location is RtEnum) CurrentEnum = null;
-            if (location is RtModule) CurrentModule = null;
+            if (location is RtNamespace) CurrentNamespace = null;
+        }
+
+        private readonly Stack<Type> _typesStack = new Stack<Type>();
+
+        public void SetCurrentType(Type t)
+        {
+            _typesStack.Push(t);
+        }
+
+        public void ResetCurrentType()
+        {
+            if (_typesStack.Count > 0) _typesStack.Pop();
         }
     }
 }

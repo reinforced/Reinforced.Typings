@@ -3,7 +3,7 @@
     /// <summary>
     ///     Base attribute for so-called compilation unit (class, enum, interface etc)
     /// </summary>
-    public abstract class TsDeclarationAttributeBase : TsAttributeBase, INameOverrideAttribute
+    public abstract class TsDeclarationAttributeBase : TsAttributeBase, INameOverrideAttribute, IOrderableAttribute
     {
         /// <summary>
         ///     Constructs new instance of TsDeclarationAttributeBase
@@ -27,5 +27,7 @@
         ///     Overrides name
         /// </summary>
         public virtual string Name { get; set; }
+
+        public double Order { get; set; }
     }
 }

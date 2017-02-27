@@ -20,5 +20,6 @@ namespace Reinforced.Typings.Fluent.Generic
         }
 
         public TsInterfaceAttribute AttributePrototype { get; private set; }
+        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
     }
 }

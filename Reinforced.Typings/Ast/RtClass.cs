@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
+using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
 {
     /// <summary>
     /// AST node for TypeScript class
     /// </summary>
-    public class RtClass : RtCompilationUnit, ITypeMember
+    public class RtClass : RtCompilationUnit, ITypeMember, IDecoratable
     {
+        /// <summary>
+        /// Decorators for type
+        /// </summary>
+        public List<RtDecorator> Decorators { get; private set; }
+
         /// <summary>
         /// JSDOC
         /// </summary>
@@ -39,6 +45,7 @@ namespace Reinforced.Typings.Ast
         {
             Members = new List<RtNode>();
             Implementees = new List<RtSimpleTypeName>();
+            Decorators = new List<RtDecorator>();
         }
 
         /// <summary>
@@ -49,6 +56,12 @@ namespace Reinforced.Typings.Ast
             get
             {
                 yield return Documentation;
+
+                foreach (var rtDecorator in Decorators)
+                {
+                    yield return rtDecorator;
+                }
+                
                 yield return Name;
                 foreach (var implementee in Implementees)
                 {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -9,13 +11,22 @@ namespace Reinforced.Typings
 {
     internal class ConfigurationRepository
     {
+
+#if DEBUG
+        [ThreadStatic] //need this for unit tests runner
+#endif
+        private static ConfigurationRepository _instance;
+
         public static ConfigurationRepository Instance
         {
             get { return _instance ?? (_instance = new ConfigurationRepository()); }
             set { _instance = value; }
         }
 
-        #region private fields
+
+        #region Private fields
+
+        #region Attribute collections
 
         private readonly Dictionary<Type, TsDeclarationAttributeBase> _attributesForType =
             new Dictionary<Type, TsDeclarationAttributeBase>();
@@ -35,20 +46,71 @@ namespace Reinforced.Typings
         private readonly Dictionary<ParameterInfo, TsParameterAttribute> _attributesForParameters =
             new Dictionary<ParameterInfo, TsParameterAttribute>();
 
+        #endregion
+
+        #region Decorators
+        private readonly Dictionary<Type, List<TsDecoratorAttribute>> _decoratorsForType =
+            new Dictionary<Type, List<TsDecoratorAttribute>>();
+
+        private readonly Dictionary<MemberInfo, List<TsDecoratorAttribute>> _decoratorsForMember =
+            new Dictionary<MemberInfo, List<TsDecoratorAttribute>>();
+
+        private readonly Dictionary<ParameterInfo, List<TsDecoratorAttribute>> _decoratorsForParameter =
+            new Dictionary<ParameterInfo, List<TsDecoratorAttribute>>();
+        #endregion
+
+        #region References and imports
+
         private readonly Dictionary<Type, List<TsAddTypeReferenceAttribute>> _referenceAttributes =
-            new Dictionary<Type, List<TsAddTypeReferenceAttribute>>();
+           new Dictionary<Type, List<TsAddTypeReferenceAttribute>>();
+
+        private readonly Dictionary<Type, List<TsAddTypeImportAttribute>> _importAttributes =
+            new Dictionary<Type, List<TsAddTypeImportAttribute>>();
+
+        private readonly List<RtReference> _references = new List<RtReference>();
+        private readonly List<RtImport> _imports = new List<RtImport>();
+        #endregion
+
+        #region Pathes and files
 
         private readonly Dictionary<Type, string> _pathesToFiles = new Dictionary<Type, string>();
         private readonly Dictionary<string, List<Type>> _typesInFiles = new Dictionary<string, List<Type>>();
 
+        #endregion
+
+
         private readonly HashSet<object> _ignored = new HashSet<object>();
-        private static ConfigurationRepository _instance;
-        private readonly List<string> _references = new List<string>();
         private readonly List<string> _additionalDocumentationPathes = new List<string>();
+
+        #region Substitutions
+
+        private readonly Dictionary<Type, RtTypeName> _globalSubstitutions = new Dictionary<Type, RtTypeName>();
+        private readonly Dictionary<Type, Dictionary<Type, RtTypeName>> _typeSubstitutions = new Dictionary<Type, Dictionary<Type, RtTypeName>>();
+
+        #endregion
 
         #endregion
 
         #region Fileds frontend
+
+        #region Decorators
+        public Dictionary<Type, List<TsDecoratorAttribute>> DecoratorsForType
+        {
+            get { return _decoratorsForType; }
+        }
+
+        public Dictionary<MemberInfo, List<TsDecoratorAttribute>> DecoratorsForMember
+        {
+            get { return _decoratorsForMember; }
+        }
+        public Dictionary<ParameterInfo, List<TsDecoratorAttribute>> DecoratorsForParameter
+        {
+            get { return _decoratorsForParameter; }
+        }
+
+        #endregion
+
+        #region Pathes and files
 
         public Dictionary<Type, string> PathesToFiles
         {
@@ -60,34 +122,47 @@ namespace Reinforced.Typings
             get { return _typesInFiles; }
         }
 
+        #endregion
+
+
         public List<string> AdditionalDocumentationPathes
         {
             get { return _additionalDocumentationPathes; }
         }
 
-        public List<TsAddTypeReferenceAttribute> ReferencesForType(Type t)
-        {
-            return _referenceAttributes.GetOr(t, () => new List<TsAddTypeReferenceAttribute>());
-        }
+        #region References
 
         public Dictionary<Type, List<TsAddTypeReferenceAttribute>> ReferenceAttributes
         {
             get { return _referenceAttributes; }
         }
 
-        public List<string> References
+        public Dictionary<Type, List<TsAddTypeImportAttribute>> ImportAttributes
+        {
+            get { return _importAttributes; }
+        }
+
+        #region Global references and imports
+
+        public List<RtReference> References
         {
             get { return _references; }
         }
 
+        public List<RtImport> Imports
+        {
+            get { return _imports; }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Core attributes
+
         public Dictionary<ParameterInfo, TsParameterAttribute> AttributesForParameters
         {
             get { return _attributesForParameters; }
-        }
-
-        public HashSet<object> Ignored
-        {
-            get { return _ignored; }
         }
 
         public Dictionary<Type, TsDeclarationAttributeBase> AttributesForType
@@ -117,14 +192,37 @@ namespace Reinforced.Typings
 
         #endregion
 
+        #region Substitutions
+
+        public Dictionary<Type, RtTypeName> GlobalSubstitutions
+        {
+            get { return _globalSubstitutions; }
+        }
+
+        public Dictionary<Type, Dictionary<Type, RtTypeName>> TypeSubstitutions
+        {
+            get { return _typeSubstitutions; }
+        }
+
+        #endregion
+
+        public HashSet<object> Ignored
+        {
+            get { return _ignored; }
+        }
+
+        #endregion
+
+        #region API
+
         #region Division among files
 
         public void AddFileSeparationSettings(Type type, IReferenceConfigurationBuilder refs = null)
         {
             var refsList = ReferenceAttributes.GetOrCreate(type);
-            var attrs = type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
-            if (attrs != null) refsList.AddRange(attrs);
-            var fileAttr = type.GetCustomAttribute<TsFile>();
+            var importsList = ImportAttributes.GetOrCreate(type);
+
+            var fileAttr = type.GetCustomAttribute<TsFileAttribute>();
             if (fileAttr != null)
             {
                 TrackTypeFile(type, fileAttr.FileName);
@@ -133,6 +231,7 @@ namespace Reinforced.Typings
             if (refs != null)
             {
                 refsList.AddRange(refs.References);
+                importsList.AddRange(refs.Imports);
                 TrackTypeFile(type, refs.PathToFile);
             }
         }
@@ -155,6 +254,37 @@ namespace Reinforced.Typings
 
         #region Attribute retrieve methods
 
+        #region Decorator
+
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(Type t)
+        {
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = _decoratorsForType.ContainsKey(t) ? _decoratorsForType[t] : null;
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
+        }
+
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(MemberInfo t)
+        {
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = _decoratorsForMember.ContainsKey(t) ? _decoratorsForMember[t] : null;
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
+        }
+
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(ParameterInfo t)
+        {
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = _decoratorsForParameter.ContainsKey(t) ? _decoratorsForParameter[t] : null;
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
+        }
+
+        #endregion
+
         public TAttr ForType<TAttr>(Type t)
             where TAttr : TsDeclarationAttributeBase
         {
@@ -173,17 +303,17 @@ namespace Reinforced.Typings
 
         public TsTypedMemberAttributeBase ForMember(MemberInfo member)
         {
-            if (member is PropertyInfo) return ForMember((PropertyInfo) member);
-            if (member is MethodInfo) return ForMember((MethodInfo) member);
-            if (member is FieldInfo) return ForMember((FieldInfo) member);
+            if (member is PropertyInfo) return ForMember((PropertyInfo)member);
+            if (member is MethodInfo) return ForMember((MethodInfo)member);
+            if (member is FieldInfo) return ForMember((FieldInfo)member);
             return null;
         }
 
         public T ForMember<T>(MemberInfo member) where T : TsTypedMemberAttributeBase
         {
-            if (member is PropertyInfo) return (T) (object) ForMember((PropertyInfo) member);
-            if (member is MethodInfo) return (T) (object) ForMember((MethodInfo) member);
-            if (member is FieldInfo) return (T) (object) ForMember((FieldInfo) member);
+            if (member is PropertyInfo) return (T)(object)ForMember((PropertyInfo)member);
+            if (member is MethodInfo) return (T)(object)ForMember((MethodInfo)member);
+            if (member is FieldInfo) return (T)(object)ForMember((FieldInfo)member);
             return null;
         }
 
@@ -243,10 +373,10 @@ namespace Reinforced.Typings
 
         public bool IsIgnored(MemberInfo member)
         {
-            if (member is Type) return IsIgnored((Type) member);
-            if (member is PropertyInfo) return IsIgnored((PropertyInfo) member);
-            if (member is MethodInfo) return IsIgnored((MethodInfo) member);
-            if (member is FieldInfo) return IsIgnored((FieldInfo) member);
+            if (member is Type) return IsIgnored((Type)member);
+            if (member is PropertyInfo) return IsIgnored((PropertyInfo)member);
+            if (member is MethodInfo) return IsIgnored((MethodInfo)member);
+            if (member is FieldInfo) return IsIgnored((FieldInfo)member);
             return false;
         }
 
@@ -270,7 +400,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetFields(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate);
+                    t.GetFields(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportFields)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -291,7 +421,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetProperties(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate);
+                    t.GetProperties(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportProperties)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -312,7 +442,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetMethods(TypeExtensions.MembersFlags).Where(TypeExtensions.TypeScriptMemberSearchPredicate);
+                    t.GetMethods(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportMethods)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -321,6 +451,8 @@ namespace Reinforced.Typings
             }
             return new MethodInfo[0];
         }
+
+        #endregion
 
         #endregion
     }

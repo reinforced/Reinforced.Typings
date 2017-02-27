@@ -1,5 +1,4 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace Reinforced.Typings.Cli
     public static class Bootstrapper
     {
         private static ExporterConsoleParameters _parameters;
-        private static Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
         private static string _lastAssemblyLocalDir;
         private static int _totalLoadedAssemblies;
 
@@ -77,6 +76,7 @@ namespace Reinforced.Typings.Cli
             var path = new Stack<string>(methodPath.Split('.'));
             var method = path.Pop();
             var fullQualifiedType = string.Join(".", path.Reverse());
+            bool isFound = false;
 
             foreach (var sourceAssembly in context.SourceAssemblies)
             {
@@ -90,29 +90,25 @@ namespace Reinforced.Typings.Cli
                         var pars = constrMethod.GetParameters();
                         if (pars.Length == 1 && pars[0].ParameterType == typeof(ConfigurationBuilder))
                         {
+                            isFound = true;
                             context.ConfigurationMethod = builder => constrMethod.Invoke(null, new object[] { builder });
                             break;
                         }
                     }
                 }
             }
+            if (!isFound) BuildWarn("Cannot find configured fluent method '{0}'", methodPath);
         }
 
         public static ExportContext InstantiateExportContext()
         {
             ExportContext context = new ExportContext
             {
-                ExportPureTypings = _parameters.ExportPureTypings,
                 Hierarchical = _parameters.Hierarchy,
                 TargetDirectory = _parameters.TargetDirectory,
                 TargetFile = _parameters.TargetFile,
-                WriteWarningComment = _parameters.WriteWarningComment,
                 SourceAssemblies = GetAssembliesFromArgs(),
-                RootNamespace = _parameters.RootNamespace,
-                CamelCaseForMethods = _parameters.CamelCaseForMethods,
-                CamelCaseForProperties = _parameters.CamelCaseForProperties,
-                DocumentationFilePath = _parameters.DocumentationFilePath,
-                GenerateDocumentation = _parameters.GenerateDocumentation
+                DocumentationFilePath = _parameters.DocumentationFilePath
             };
             return context;
         }
@@ -141,7 +137,7 @@ namespace Reinforced.Typings.Cli
                     _lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
                 }
 #if DEBUG
-                  Console.WriteLine("Already have full path to assembly {0}",assemblyNameOrFullPath);
+                Console.WriteLine("Already have full path to assembly {0}", assemblyNameOrFullPath);
 #endif
                 return assemblyNameOrFullPath;
             }
