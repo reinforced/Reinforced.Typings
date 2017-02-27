@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="ClassicMultiFileResolvationTests.cs" />
     <Compile Include="ConfigurationBuilderTestBase.cs" />
-    <Compile Include="SpecificCases\BasicExportTests.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.All.cs" />
     <Compile Include="Core\MockFileOperations.cs" />
     <Compile Include="Core\RtExporterTestBase.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.CrozinSubstitutions.cs" />
