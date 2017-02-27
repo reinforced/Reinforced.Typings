@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Generators
     /// Base code generator both for TypeScript class and interface
     /// </summary>
     /// <typeparam name="TNode">Resulting node type (RtClass or RtInterface)</typeparam>
-    public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type,TNode> where TNode : RtNode, new()
+    public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type, TNode> where TNode : RtNode, new()
     {
         /// <summary>
         ///     Exports entire class to specified writer
@@ -38,8 +38,13 @@ namespace Reinforced.Typings.Generators
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
             }
-            
-            var ifaces = type.GetInterfaces();
+
+            var materializedGenericParameters = type.GetGenericArguments()
+                .Where(c => c.GetCustomAttribute<TsGenericAttribute>() != null)
+                .ToDictionary(c => c.Name, resolver.ResolveTypeName);
+
+            if (materializedGenericParameters.Count == 0) materializedGenericParameters = null;
+
             var bs = type.BaseType;
             var baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
@@ -57,26 +62,77 @@ namespace Reinforced.Typings.Generators
                     attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs);
                     baseAsInterface = bs.IsExportingAsInterface();
                 }
-                
+
                 if (attr != null)
                 {
                     if (baseAsInterface) baseClassIsExportedAsInterface = true;
                     else
                     {
-                        ((RtClass)result).Extendee = resolver.ResolveTypeName(bs);
+                        ((RtClass)result).Extendee = resolver.ResolveTypeName(bs, MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
                     }
                 }
             }
-            var implementees =
-                ifaces.Where(c => ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(c) != null)
-                    .Select(resolver.ResolveTypeName).ToList();
+            var implementees = ExtractImplementees(type, resolver, materializedGenericParameters).ToList();
+
             if (baseClassIsExportedAsInterface)
             {
-                implementees.Add(resolver.ResolveTypeName(bs));
+                implementees.Add(resolver.ResolveTypeName(bs, materializedGenericParameters));
             }
             result.Implementees.AddRange(implementees.OfType<RtSimpleTypeName>());
             ExportMembers(type, resolver, result, swtch);
             Context.Location.ResetCurrentType();
+        }
+
+        private Dictionary<string, RtTypeName> MergeMaterializedGenerics(Type t, TypeResolver resovler, Dictionary<string, RtTypeName> existing)
+        {
+            if (!t.IsGenericType) return existing;
+            var args = t.GetGenericArguments();
+            if (args.All(c => c.IsGenericParameter)) return existing;
+            var genDef = t.GetGenericTypeDefinition().GetGenericArguments();
+            Dictionary<string, RtTypeName> result = new Dictionary<string, RtTypeName>();
+            if (existing != null)
+            {
+                foreach (var rtTypeName in existing)
+                {
+                    result[rtTypeName.Key] = rtTypeName.Value;
+                }
+            }
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (!args[i].IsGenericParameter)
+                {
+                    result[genDef[i].Name] = resovler.ResolveTypeName(args[i],
+                        MergeMaterializedGenerics(args[i], resovler, existing));
+                }
+                else
+                {
+                    if (args[i].Name != genDef[i].Name)
+                    {
+                        result[genDef[i].Name] = new RtSimpleTypeName(args[i].Name);
+                    }
+                }
+
+            }
+            if (result.Count == 0) return null;
+            return result;
+
+        }
+
+        private IEnumerable<RtTypeName> ExtractImplementees(Type type, TypeResolver resovler, Dictionary<string, RtTypeName> materializedGenericParameters)
+        {
+            var ifaces = type.GetInterfaces();
+            foreach (var iface in ifaces)
+            {
+                var attr = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(iface);
+                if (attr != null) yield return resovler.ResolveTypeName(iface);
+                else if (iface.IsGenericType)
+                {
+                    var gt = iface.GetGenericTypeDefinition();
+                    attr = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(gt);
+                    if (attr != null) yield return resovler.ResolveTypeName(gt,
+                        MergeMaterializedGenerics(iface, resovler, materializedGenericParameters));
+                }
+            }
         }
 
         /// <summary>
@@ -125,7 +181,7 @@ namespace Reinforced.Typings.Generators
                     ExportProperties(sw, element.BaseType, resolver, basExSwtch);
                     ExportMethods(sw, element.BaseType, resolver, basExSwtch);
                     Context.SpecialCase = false;
-                    Context.Warnings.Add(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element.BaseType.FullName,element.FullName));
+                    Context.Warnings.Add(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element.BaseType.FullName, element.FullName));
                 }
             }
         }

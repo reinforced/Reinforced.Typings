@@ -68,6 +68,8 @@
     <Compile Include="SpecificCases\SpecificTestCases.CrozinSubstitutions.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DaggmanoAutoIBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InlineFunctionImplementation.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaCustomIndentationTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DecoratorsTest.cs" />

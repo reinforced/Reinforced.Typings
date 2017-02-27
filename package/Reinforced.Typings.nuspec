@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.2.4</version>
+        <version>1.3.0</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,7 +16,14 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-- Critical stack overflow fix when trying to resolve complex generic type
+- Modules support
+- Inline implementations
+- Substitutions
+- TS tuples
+- Types and members reordering
+- Global parameters
+- Improved generics support
+- Bugfixes
 		</releaseNotes>
     </metadata>
 </package>

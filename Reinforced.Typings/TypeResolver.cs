@@ -55,17 +55,42 @@ namespace Reinforced.Typings
             _refInspector = refInspector;
         }
 
-        private RtTypeName[] GetConcreteGenericArguments(Type t)
+        private RtTypeName[] GetConcreteGenericArguments(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
             if (!t.IsGenericType) return new RtTypeName[0];
             var args = t.GetGenericArguments();
-            return args.Select(ResolveTypeName).ToArray();
+            if (materializedGenerics == null) return args.Select(ResolveTypeName).ToArray();
+            else
+            {
+                List<RtTypeName> result = new List<RtTypeName>();
+                foreach (var type in args)
+                {
+                    if (materializedGenerics.ContainsKey(type.Name)) result.Add(materializedGenerics[type.Name]);
+                    else result.Add(ResolveTypeName(type));
+                }
+                return result.ToArray();
+            }
         }
 
         private RtTypeName Cache(Type t, RtTypeName name)
         {
             _resolveCache[t] = name;
             return name;
+        }
+
+        internal RtTypeName ResolveTypeName(Type t, Dictionary<string, RtTypeName> materializedGenerics)
+        {
+            if (materializedGenerics == null) return ResolveTypeName(t);
+
+            try
+            {
+                return ResolveTypeNameInner(t, materializedGenerics);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.RTE0005_TypeResolvationError.Throw(t.FullName, ex.Message);
+                return null; // unreacheable
+            }
         }
 
         /// <summary>
@@ -91,25 +116,36 @@ namespace Reinforced.Typings
         }
 
 
-        private RtTypeName ResolveTypeNameInner(Type t)
+        internal RtTypeName ResolveTypeNameInner(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
             var substitution = t.Substitute(_context.Location.CurrentType);
             if (substitution != null) return substitution; // order important!
 
-            if (_resolveCache.ContainsKey(t)) return _resolveCache[t];
+            if (t.IsGenericParameter)
+            {
+                var genAt = t.GetCustomAttribute<TsGenericAttribute>(false);
+                if (genAt != null)
+                {
+                    if (genAt.StrongType != null) return ResolveTypeName(genAt.StrongType);
+                    if (genAt.Type != null) return new RtSimpleTypeName(genAt.Type);
+                }
+                return new RtSimpleTypeName(t.Name);
+            }
+
+            if (materializedGenerics == null && _resolveCache.ContainsKey(t)) return _resolveCache[t];
 
             var td = ConfigurationRepository.Instance.ForType(t);
             if (td != null)
             {
                 var ns = t.Namespace;
                 if (!td.IncludeNamespace) ns = string.Empty;
+                var result = t.GetName(GetConcreteGenericArguments(t, materializedGenerics));
 
                 if (_context.Global.UseModules)
                 {
-                    var result = t.GetName(GetConcreteGenericArguments(t));
                     var import = _refInspector.EnsureImport(t, result.TypeName, _file);
                     if (_context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
-                    if (!import.IsWildcard)
+                    if (import == null || !import.IsWildcard)
                     {
                         return Cache(t, result);
                     }
@@ -121,7 +157,6 @@ namespace Reinforced.Typings
                 {
                     _refInspector.EnsureReference(t, _file);
                     if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
-                    var result = t.GetName(GetConcreteGenericArguments(t));
                     result.Prefix = ns;
                     return Cache(t, result);
                 }
@@ -172,16 +207,7 @@ namespace Reinforced.Typings
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
             }
 
-            if (t.IsGenericParameter)
-            {
-                var genAt = t.GetCustomAttribute<TsGenericAttribute>(false);
-                if (genAt != null)
-                {
-                    if (genAt.StrongType != null) return Cache(t, ResolveTypeName(genAt.StrongType));
-                    if (genAt.Type != null) return Cache(t, new RtSimpleTypeName(genAt.Type));
-                }
-                return Cache(t, new RtSimpleTypeName(t.Name));
-            }
+
 
             if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
@@ -197,7 +223,7 @@ namespace Reinforced.Typings
                 if (tsFriendly != null && tsFriendly != AnyType)
                 {
                     var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
-                        t.GetGenericArguments().Select(ResolveTypeNameInner).ToArray())
+                        t.GetGenericArguments().Select(c => ResolveTypeNameInner(c, null)).ToArray())
                     {
                         Prefix = tsFriendly.Prefix
                     };

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Tests.SpecificCases
@@ -34,7 +35,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
         }
     }
 
-    
+
 
     #endregion
 
@@ -174,7 +175,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     public class SomeFluentReferencedType { }
 
-    public class SomeFluentlyReferencedNotExported{ }
+    public class SomeFluentlyReferencedNotExported { }
 
     [TsAddTypeImport("* as '$'", "JQuery")]
     [TsAddTypeReference(typeof(SomeOtherReferencedType))]
@@ -205,7 +206,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     public enum SomeIndirectEnum
     {
-        One,Two,Three
+        One, Two, Three
     }
     #endregion
 
@@ -221,6 +222,86 @@ namespace Reinforced.Typings.Tests.SpecificCases
         public void DoSomethingElse() { }
 
         public string DoSomethingElseWithResult() { return null; }
+    }
+
+    #endregion
+
+    #region Generics
+
+    public interface ISimpleGenericsInterface<T>
+    {
+        T Property { get; }
+
+        T Method(T param);
+    }
+
+    public interface IParametrizedGenericsInterface<T, T2>
+    {
+        Dictionary<T, T2> Bag { get; }
+
+        IEnumerable<Dictionary<T2, T>> Bag2 { get; }
+
+        IEnumerable<List<Dictionary<T, T>>> Bag3 { get; }
+
+        Dictionary<T, Dictionary<T2, List<IEnumerable<T>>>> Bag4 { get; }
+    }
+
+    public interface IAttributeParametrization<[TsGeneric("any")]T> : ISimpleGenericsInterface<T>
+    {
+
+    }
+
+    public interface IChildParametrized<T> : IParametrizedGenericsInterface<T, int>
+    {
+
+    }
+
+    public interface ITriforce<T1, T2, T3>
+    {
+
+    }
+
+    public interface ITrimplementor1<TMaster> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
+    {
+        
+    }
+
+    public interface ITrimplementor2<TMaster,TChild> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
+    {
+        TChild Property { get; }
+    }
+
+    public interface ITrimplementor3<TMaster, TChild> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TChild>>>
+    {
+        Tuple<TMaster,TChild> Property { get; }
+    }
+
+    #endregion
+
+    #region DGoncharovGenericsTestCase
+
+    public class SelectListItem
+    {
+        public string Text { get; set; }
+
+        public string Value { get; set; }
+    }
+
+    public class TypedBasicResult<T>
+    {
+        public int Status { get; set; }
+
+        public string Message { get; set; }
+
+        public T Data { get; set; }
+    }
+
+    public class RequestHandler
+    {
+        public TypedBasicResult<IEnumerable<SelectListItem>> DoRequest()
+        {
+            return null;
+        }
     }
 
     #endregion
