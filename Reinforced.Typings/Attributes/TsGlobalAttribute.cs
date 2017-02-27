@@ -77,5 +77,13 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public double Priority { get; set; }
 
+        /// <summary>
+        /// Default constructor for TsGlobal attribute
+        /// </summary>
+        public TsGlobalAttribute()
+        {
+            WriteWarningComment = true;
+            TabSymbol = "\t";
+        }
     }
 }
