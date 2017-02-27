@@ -19,6 +19,12 @@ namespace Reinforced.Typings.Tests.SpecificCases
         public int Int { get; set; }
     }
 
+    public class TestClass2
+    {
+        public string String { get; set; }
+        public int Int { get; set; }
+    }
+
     #endregion
 
     #region Decorators

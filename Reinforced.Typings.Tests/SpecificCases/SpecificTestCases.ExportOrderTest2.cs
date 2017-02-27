@@ -10,22 +10,28 @@ namespace Reinforced.Typings.Tests.SpecificCases
         {
             const string result2 = @"
 module Reinforced.Typings.Tests.SpecificCases {
-    export interface ITestInterface
+	export interface ITestInterface
+	{
+		Int: number;
+		String: string;
+	}
+	export interface ITestClass
 	{
 		String: string;
 		Int: number;
-	}  
-    export interface ITestClass
+	}
+	export class TestClass2
 	{
-		String: string;
-		Int: number;
-	}	  
+		public Int: number;
+		public String: string;
+	}
 }";
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-                s.ExportAsInterface<ITestInterface>().WithPublicProperties();
+                s.ExportAsInterface<ITestInterface>().WithPublicProperties().WithProperty(c=>c.String).Order(1);
                 s.ExportAsInterface<TestClass>().WithPublicProperties();
+                s.ExportAsClass<TestClass2>().WithPublicProperties().WithProperty(c => c.Int).Order(-1);
             }, result2);
         }
     }

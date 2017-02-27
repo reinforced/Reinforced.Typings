@@ -27,7 +27,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Br(); AppendTabs();
             Write("{"); Br();
             Tab();
-            foreach (var rtMember in node.Members)
+            foreach (var rtMember in node.Members.OrderBy(c=> (c as RtMember)?.Order))
             {
                 Visit(rtMember);
             }

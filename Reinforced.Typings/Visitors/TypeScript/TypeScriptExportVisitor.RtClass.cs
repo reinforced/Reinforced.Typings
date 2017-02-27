@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Br(); AppendTabs();
             Write("{"); Br();
             Tab();
-            var members = node.Members.OrderBy(c => c is RtConstructor ? 0 : 1);
+            var members = node.Members.OrderBy(c => c is RtConstructor ? int.MinValue : (c as RtMember)?.Order);
             foreach (var rtMember in members)
             {
                 Visit(rtMember);
