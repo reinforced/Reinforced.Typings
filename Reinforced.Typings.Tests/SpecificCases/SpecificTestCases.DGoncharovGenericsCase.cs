@@ -9,11 +9,22 @@ namespace Reinforced.Typings.Tests.SpecificCases
         public void DGoncharovGenericsCase()
         {
             const string result = @"
-module Reinforced.Typings.Tests.SpecificCases {
-	export interface ITestInterface
+export interface ITypedBasicResult<T>
+{
+	Status: number;
+	Message: string;
+	Data: T;
+}
+export interface ISelectListItem
+{
+	Text: string;
+	Value: string;
+}
+export class RequestHandler
+{
+	public DoRequest() : ITypedBasicResult<ISelectListItem[]>
 	{
-		String: string;
-		Int: number;
+		return null;
 	}
 }";
             AssertConfiguration(s =>
