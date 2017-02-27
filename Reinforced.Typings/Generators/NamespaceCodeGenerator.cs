@@ -52,6 +52,8 @@ namespace Reinforced.Typings.Generators
                 Console.WriteLine("Exported {0}", type);
             }
 
+            if (Context.Global.UseModules) ns.GenerationMode = NamespaceGenerationMode.Namespace;
+
             Context.CurrentNamespace = null;
             Context.Location.ResetLocation(ns);
             return ns;

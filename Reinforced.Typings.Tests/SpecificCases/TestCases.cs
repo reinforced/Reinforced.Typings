@@ -185,5 +185,25 @@ namespace Reinforced.Typings.Tests.SpecificCases
         }
     }
 
+    [TsAddTypeImport("* as '$'", "JQuery")]
+    [TsAddTypeReference(typeof(SomeOtherReferencedType))]
+    [TsAddTypeReference("../../jquery.d.ts")]
+    public class AnothreReferencingType
+    {
+        public SomeIndirectlyReferencedClass Indirect()
+        {
+            return null;
+        }
+
+        public SomeFluentReferencedType Property { get; set; }
+
+        public SomeIndirectEnum Enum { get; set; }
+    }
+
+
+    public enum SomeIndirectEnum
+    {
+        One,Two,Three
+    }
     #endregion
 }

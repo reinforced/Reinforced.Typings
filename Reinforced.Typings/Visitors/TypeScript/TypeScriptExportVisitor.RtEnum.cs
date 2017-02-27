@@ -9,9 +9,9 @@ namespace Reinforced.Typings.Visitors.TypeScript
             if (node == null) return;
             Visit(node.Documentation);
             var prev = Context;
-            Context = WriterContext.Interface;
+            Context = WriterContext.Enum;
             AppendTabs();
-            if (prev == WriterContext.Module) Write("export ");
+            if (node.Export) Write("export ");
             Write("enum ");
             Visit(node.EnumName);
             WriteLine(" { ");
