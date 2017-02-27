@@ -28,7 +28,7 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         [TsDecorator("b()")]
         public void DoSomethinig()
         {
-            
+
         }
     }
 
@@ -69,12 +69,42 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
 
         public void ETA()
         {
-            
+
         }
 
         public void ISODate(DateTime date)
         {
-            
+
         }
     }
+
+    #region Daggmano AutoI bug
+    public class ExternalUserDaggmano
+    {
+        public string Name { get; set; }
+    }
+
+    public class InternalUserDaggmano
+    {
+        public string Name { get; set; }
+    }
+
+    public interface IAlreadyContainsI
+    {
+        string Name { get; }
+    }
+
+    public interface DoesntContainI
+    {
+        string Name { get; }
+    }
+    public class DoNotNeedIAtAll
+    {
+        public string Name { get; set; }
+    }
+    public interface ICannotBeRemovedHere
+    {
+        string Name { get; }
+    }
+    #endregion
 }
