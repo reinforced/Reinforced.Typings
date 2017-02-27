@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Generators
@@ -10,7 +11,7 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public static class ContextExtensions
     {
-        
+
         /// <summary>
         ///     Conditionally (based on settings) turns method name to camelCase
         /// </summary>
@@ -79,11 +80,15 @@ namespace Reinforced.Typings.Generators
         private static string ConvertToCamelCase(string s)
         {
             if (!char.IsLetter(s[0])) return s;
-            if (char.IsUpper(s[0]))
+            StringBuilder result = new StringBuilder();
+            int i;
+            for (i = 0; i < s.Length; i++)
             {
-                return char.ToLower(s[0]) + s.Substring(1);
+                if (i < s.Length - 1 && char.IsLower(s[i + 1])) break;
+                if (char.IsUpper(s[i])) result.Append(char.ToLowerInvariant(s[i]));
             }
-            return s;
+            if (i < s.Length - 1) result.Append(s.Substring(i));
+            return result.ToString();
         }
 
         private static string ConvertToPascalCase(string s)

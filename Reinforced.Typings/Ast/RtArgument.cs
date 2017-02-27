@@ -9,6 +9,11 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public class RtArgument : RtNode, IDecoratable
     {
+        public RtArgument()
+        {
+            Decorators = new List<RtDecorator>();
+        }
+
         /// <summary>
         /// Parameter identifier
         /// </summary>

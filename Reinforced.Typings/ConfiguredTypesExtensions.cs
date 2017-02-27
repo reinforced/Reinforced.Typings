@@ -164,7 +164,11 @@ namespace Reinforced.Typings
 
             if (ti != null)
             {
-                if (ti.AutoI && !name.StartsWith("I")) name = "I" + name;
+                if (ti.AutoI)
+                {
+                    if (t.IsClass) name = "I" + name;
+                    else if (!name.StartsWith("I")) name = "I" + name;
+                }
             }
             return new RtSimpleTypeName(name, genericArguments);
         }

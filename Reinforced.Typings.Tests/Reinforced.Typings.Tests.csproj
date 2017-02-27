@@ -65,12 +65,14 @@
     <Compile Include="ExporterIntegrationTests\BasicExportTests.cs" />
     <Compile Include="Core\MockFileOperations.cs" />
     <Compile Include="Core\RtExporterTestBase.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.CrozinSubstitutions.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.JonsaCustomIndentationTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.DecoratorsTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest1.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest2.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.InterfaceAsInterface.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.JonsaEnumWithouNamespaceTest.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.PandaWoodCamelCase.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.PandaWoodForceNullableTest.cs" />
     <Compile Include="ExporterIntegrationTests\TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

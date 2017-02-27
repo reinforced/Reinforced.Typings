@@ -62,4 +62,19 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
 
         public DateTime OneMoreTimeProperty { get; set; }
     }
+
+    public class PandaWoodCamelCaseTest
+    {
+        public int ID { get; set; }
+
+        public void ETA()
+        {
+            
+        }
+
+        public void ISODate(DateTime date)
+        {
+            
+        }
+    }
 }
