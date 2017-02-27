@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Tests.Core;
 using Xunit;

@@ -34,6 +34,18 @@ namespace Reinforced.Typings.Tests.SpecificCases
         }
     }
 
+    public class ClassWithManyMethods
+    {
+        public string String { get; set; }
+        public int Int { get; set; }
+
+        public void DoSomethinig() { }
+
+        public void DoSomethingElse() { }
+
+        public string DoSomethingElseWithResult() { return null; }
+    }
+
     #endregion
 
     #region ForceNullable property

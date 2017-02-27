@@ -483,6 +483,18 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+        /// <summary>
+        /// Sets function body (works in case of class export) that will be converted to RtRaw and inserted as code block
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="functionCode">Function code</param>
+        /// <returns></returns>
+        public static T Implement<T>(this T builder, string functionCode) where T: IExportConfiguration<TsFunctionAttribute>
+        {
+            builder.AttributePrototype.Implementation = functionCode;
+            return builder;
+        }
+
         #endregion
     }
 }

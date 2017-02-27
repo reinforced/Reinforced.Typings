@@ -64,6 +64,11 @@ namespace Reinforced.Typings.Generators
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }
+            var fa = ConfigurationRepository.Instance.ForMember(element);
+            if (fa != null && !string.IsNullOrEmpty(fa.Implementation))
+            {
+                result.Body = new RtRaw(fa.Implementation);
+            }
             AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
         }
