@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings.Tests.ExporterIntegrationTests
 {
+
+    #region Basic test
+
     public interface ITestInterface
     {
         string String { get; }
@@ -19,6 +17,10 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         public string String { get; set; }
         public int Int { get; set; }
     }
+
+    #endregion
+
+    #region Decorators
 
     public class ClassWithMethods
     {
@@ -32,11 +34,19 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         }
     }
 
+    #endregion
+
+    #region ForceNullable property
+
     public class PandaWoodForceNullableCase
     {
         [TsProperty(ForceNullable = true)]
         public string PandaWoodProperty { get; set; }
     }
+
+    #endregion
+
+    #region Enums in namespaces
 
     public class JonsaModel
     {
@@ -48,6 +58,9 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         Foo, Bar
     }
 
+    #endregion
+
+    #region Substitutions
 
     public class CrozinSubstitutionTest
     {
@@ -63,6 +76,10 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         public DateTime OneMoreTimeProperty { get; set; }
     }
 
+    #endregion
+
+    #region Camelcase
+
     public class PandaWoodCamelCaseTest
     {
         public int ID { get; set; }
@@ -77,6 +94,8 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
 
         }
     }
+
+    #endregion
 
     #region Daggmano AutoI bug
     public class ExternalUserDaggmano
@@ -140,6 +159,41 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
 
         public ContactData()
         {
+        }
+    }
+
+    #endregion
+
+    #region Type references
+
+    public class SomeIndirectlyReferencedClass
+    {
+        
+    }
+
+    public class SomeOtherReferencedType
+    {
+        
+    }
+
+    public class SomeFluentReferencedType
+    {
+
+    }
+
+    public class SomeFluentlyReferencedNotExported
+    {
+        
+    }
+
+    [TsAddTypeImport("* as '$'", "JQuery")]
+    [TsAddTypeReference(typeof(SomeOtherReferencedType))]
+    [TsAddTypeReference("../../jquery.d.ts")]
+    public class SomeReferencingType
+    {
+        public SomeIndirectlyReferencedClass Indirect()
+        {
+            return null;
         }
     }
 

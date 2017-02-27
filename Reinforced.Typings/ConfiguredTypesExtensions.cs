@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
@@ -264,6 +266,68 @@ namespace Reinforced.Typings
             }
             if (ConfigurationRepository.Instance.GlobalSubstitutions.ContainsKey(t)) return ConfigurationRepository.Instance.GlobalSubstitutions[t];
             return null;
+        }
+
+        public static void AddReferencesFromTypes(this ExportedFile file, bool useImports)
+        {
+            foreach (var type in file.TypesToExport)
+            {
+                file.AddTypeSpecificReferences(type);
+                if (useImports) file.AddTypeSpecificImports(type);
+            }
+        }
+
+        private static void AddTypeSpecificReferences(this ExportedFile file, Type t)
+        {
+            var frefs = ConfigurationRepository.Instance.ReferenceAttributes;
+
+            var fluentRefs = frefs.ContainsKey(t) ? frefs[t] : null;
+            var typeRefs = t.GetCustomAttributes<TsAddTypeReferenceAttribute>();
+
+            foreach (var tsAddTypeReferenceAttribute in typeRefs)
+            {
+                if (tsAddTypeReferenceAttribute.Type != null)
+                {
+                    file.TypeResolver.ResolveTypeName(tsAddTypeReferenceAttribute.Type);
+                }
+                else
+                {
+                    file.References.AddReference(new RtReference() { Path = tsAddTypeReferenceAttribute.RawPath });
+                }
+            }
+
+            if (fluentRefs != null)
+            {
+                foreach (var tsAddTypeReferenceAttribute in fluentRefs)
+                {
+                    if (tsAddTypeReferenceAttribute.Type != null)
+                    {
+                        file.TypeResolver.ResolveTypeName(tsAddTypeReferenceAttribute.Type);
+                    }
+                    else
+                    {
+                        file.References.AddReference(new RtReference() { Path = tsAddTypeReferenceAttribute.RawPath });
+                    }
+                }
+            }
+        }
+
+        private static void AddTypeSpecificImports(this ExportedFile file, Type t)
+        {
+            var fimps = ConfigurationRepository.Instance.ImportAttributes;
+            var fluentImports = fimps.ContainsKey(t) ? fimps[t] : null;
+            var typeImports = t.GetCustomAttributes<TsAddTypeImportAttribute>();
+            foreach (var tsAddTypeImportAttribute in typeImports)
+            {
+                file.References.AddImport(new RtImport() {From = tsAddTypeImportAttribute.ImportSource,Target = tsAddTypeImportAttribute.ImportTarget,IsRequire = tsAddTypeImportAttribute.ImportRequire});
+            }
+            if (fluentImports != null)
+            {
+                foreach (var tsAddTypeImportAttribute in fluentImports)
+                {
+                    file.References.AddImport(new RtImport() { From = tsAddTypeImportAttribute.ImportSource, Target = tsAddTypeImportAttribute.ImportTarget, IsRequire = tsAddTypeImportAttribute.ImportRequire });
+                }
+            }
         }
 
     }

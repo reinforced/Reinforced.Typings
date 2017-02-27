@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Tests.Core
 {
     public abstract class RtExporterTestBase : ConfigurationBuilderTestBase
     {
-        protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, string result)
+        protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, string result, bool compareComments = false)
         {
             var data = InitializeSingleFile(configuration);
             var te = data.Exporter;
@@ -17,12 +17,12 @@ namespace Reinforced.Typings.Tests.Core
             Assert.True(mfo.DeployCalled);
             Assert.True(mfo.TempRegistryCleared);
             var actual = mfo.ExportedFiles[Sample];
-            Assert.True(actual.TokenizeCompare(result));
+            Assert.True(actual.TokenizeCompare(result, compareComments));
         }
 
-        protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, Dictionary<string,string> results)
+        protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, Dictionary<string,string> results, bool compareComments = false)
         {
-            var data = InitializeSingleFile(configuration);
+            var data = InitializeMultipleFiles(configuration);
             var te = data.Exporter;
             var mfo = data.Files;
             te.Export();
@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Tests.Core
                 var generated = mfoExportedFile.Value;
                 Assert.True(results.ContainsKey(mfoExportedFile.Key));
                 var expected = results[mfoExportedFile.Key];
-                Assert.True(generated.TokenizeCompare(expected));
+                Assert.True(generated.TokenizeCompare(expected,compareComments));
             }
         }
     }

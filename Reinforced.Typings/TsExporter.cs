@@ -146,6 +146,7 @@ namespace Reinforced.Typings
                 TypesToExport = _context.Hierarchical ? new HashSet<Type>(types) : _allTypesHash
             };
             ef.TypeResolver = new TypeResolver(_context, ef, ReferenceInspector);
+            ef.AddReferencesFromTypes(_context.Global.UseModules);
             return ef;
         }
 

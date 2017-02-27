@@ -220,8 +220,8 @@ namespace Reinforced.Typings
         public void AddFileSeparationSettings(Type type, IReferenceConfigurationBuilder refs = null)
         {
             var refsList = ReferenceAttributes.GetOrCreate(type);
-            var attrs = type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
-            if (attrs != null) refsList.AddRange(attrs);
+            var importsList = ImportAttributes.GetOrCreate(type);
+
             var fileAttr = type.GetCustomAttribute<TsFileAttribute>();
             if (fileAttr != null)
             {
@@ -231,6 +231,7 @@ namespace Reinforced.Typings
             if (refs != null)
             {
                 refsList.AddRange(refs.References);
+                importsList.AddRange(refs.Imports);
                 TrackTypeFile(type, refs.PathToFile);
             }
         }
@@ -453,7 +454,6 @@ namespace Reinforced.Typings
 
         #endregion
 
-        
         #endregion
     }
 }

@@ -14,6 +14,11 @@ namespace Reinforced.Typings.Fluent.Interfaces
         ICollection<TsAddTypeReferenceAttribute> References { get; }
 
         /// <summary>
+        ///     Imports list
+        /// </summary>
+        ICollection<TsAddTypeImportAttribute> Imports { get; }
+
+        /// <summary>
         ///     Path to file where to put generated code
         /// </summary>
         string PathToFile { get; set; }

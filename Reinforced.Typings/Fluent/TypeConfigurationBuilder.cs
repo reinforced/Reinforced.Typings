@@ -21,6 +21,7 @@ namespace Reinforced.Typings.Fluent
 
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
         private readonly Dictionary<Type, RtTypeName> _substitutions = new Dictionary<Type, RtTypeName>();
+        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
 
         Type ITypeConfigurationBuilder.Type
         {
@@ -43,6 +44,11 @@ namespace Reinforced.Typings.Fluent
         ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
         {
             get { return _references; }
+        }
+
+        ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports
+        {
+            get { return _imports; }
         }
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }

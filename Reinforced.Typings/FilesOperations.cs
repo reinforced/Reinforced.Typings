@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Visitors.TypeScript;
 using Reinforced.Typings.Visitors.Typings;
@@ -48,7 +49,7 @@ namespace Reinforced.Typings
             {
                 visitor.Visit(rtImport);
             }
-
+            if (file.References.References.Any() || file.References.Imports.Any()) tw.WriteLine();
             foreach (var fileNamespace in file.Namespaces)
             {
                 visitor.Visit(fileNamespace);

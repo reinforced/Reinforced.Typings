@@ -76,6 +76,9 @@
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.PandaWoodCamelCase.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.PandaWoodForceNullableTest.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ReferencesPart1.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ReferencesPart2.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ReferencesPart3.cs" />
     <Compile Include="ExporterIntegrationTests\TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenizing\SimpleTokenizer.cs" />

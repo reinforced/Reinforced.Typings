@@ -56,6 +56,7 @@ namespace Reinforced.Typings.Tests.Core
             {
                 visitor.Visit(rtImport);
             }
+            if (file.References.References.Any() || file.References.Imports.Any()) tw.WriteLine();
             foreach (var fileNamespace in file.Namespaces)
             {
                 visitor.Visit(fileNamespace);
