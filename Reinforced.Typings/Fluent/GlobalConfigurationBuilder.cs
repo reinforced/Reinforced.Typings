@@ -2,16 +2,22 @@
 
 namespace Reinforced.Typings.Fluent
 {
+    /// <summary>
+    /// Global configuration builder
+    /// </summary>
     public class GlobalConfigurationBuilder
     {
-        internal GlobalParameters Parameters { get; private set; }
-
-        public GlobalConfigurationBuilder(GlobalParameters parameters)
+        internal GlobalConfigurationBuilder(GlobalParameters parameters)
         {
             Parameters = parameters;
         }
+
+        internal GlobalParameters Parameters { get; private set; }
     }
 
+    /// <summary>
+    /// Set of extensions for global configuration
+    /// </summary>
     public static class GlobalConfigurationExtensions
     {
         /// <summary>
@@ -44,7 +50,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="builder">Conf builder</param>
         /// <param name="symbol">New indentation symbol</param>
         public static GlobalConfigurationBuilder TabSymbol(this GlobalConfigurationBuilder builder,
-           string symbol)
+            string symbol)
         {
             builder.Parameters.TabSymbol = symbol;
             return builder;
@@ -57,7 +63,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="builder">Conf builder</param>
         /// <param name="rootNamespace">Application root namespace</param>
         public static GlobalConfigurationBuilder RootNamespace(this GlobalConfigurationBuilder builder,
-           string rootNamespace)
+            string rootNamespace)
         {
             builder.Parameters.RootNamespace = rootNamespace;
             return builder;
@@ -113,14 +119,15 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
-        ///// <summary>
-        ///// Enables strict null checks. Particularry, makes all exported nullable value-types of type "type | null"
-        ///// </summary>
-        ///// <param name="builder">Conf builder</param>
-        ///// <param name="strict">Pass 'true' reveal all nullable types to "type | null" </param>
-        //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,
-        //    bool strict = true)
         //{
+        //    bool strict = true)
+        //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,
+        ///// <param name="strict">Pass 'true' reveal all nullable types to "type | null" </param>
+        ///// <param name="builder">Conf builder</param>
+        ///// </summary>
+        ///// Enables strict null checks. Particularry, makes all exported nullable value-types of type "type | null"
+
+        ///// <summary>
         //    builder.Parameters.StrictNullChecks = strict;
         //    return builder;
         //}

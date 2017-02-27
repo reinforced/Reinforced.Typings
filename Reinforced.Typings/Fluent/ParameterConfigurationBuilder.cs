@@ -7,7 +7,8 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Parameter configuration builder
     /// </summary>
-    public class ParameterConfigurationBuilder : IExportConfiguration<TsParameterAttribute>, IIgnorable, IDecoratorsAggregator
+    public class ParameterConfigurationBuilder : IExportConfiguration<TsParameterAttribute>, IIgnorable,
+        IDecoratorsAggregator
     {
         internal ParameterConfigurationBuilder()
         {
@@ -16,6 +17,12 @@ namespace Reinforced.Typings.Fluent
         }
 
         private TsParameterAttribute AttributePrototype { get; set; }
+        private List<TsDecoratorAttribute> Decorators { get; set; }
+
+        List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
+        {
+            get { return Decorators; }
+        }
 
         TsParameterAttribute IExportConfiguration<TsParameterAttribute>.AttributePrototype
         {
@@ -23,6 +30,5 @@ namespace Reinforced.Typings.Fluent
         }
 
         bool IIgnorable.Ignore { get; set; }
-        public List<TsDecoratorAttribute> Decorators { get; }
     }
 }

@@ -24,13 +24,23 @@ namespace Reinforced.Typings.Fluent
 
         private TsClassAttribute AttributePrototype { get; set; }
 
+        private List<TsDecoratorAttribute> Decorators { get; set; }
+
         TsClassAttribute IExportConfiguration<TsClassAttribute>.AttributePrototype
         {
             get { return AttributePrototype; }
         }
 
-        public List<TsDecoratorAttribute> Decorators { get; }
+        List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
+        {
+            get { return Decorators; }
+        }
 
-        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
+        /// <inheritdoc />
+        public override double MemberOrder
+        {
+            get { return AttributePrototype.Order; }
+            set { AttributePrototype.Order = value; }
+        }
     }
 }

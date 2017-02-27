@@ -40,9 +40,7 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         public RtRaw Body { get; set; }
 
-        /// <summary>
-        /// Child nodes
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get
@@ -55,19 +53,13 @@ namespace Reinforced.Typings.Ast
             }
         }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);

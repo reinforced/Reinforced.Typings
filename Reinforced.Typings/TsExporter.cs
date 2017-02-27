@@ -111,7 +111,7 @@ namespace Reinforced.Typings
                 }
             }
 
-            GlobalReferences = ReferenceInspector.InspectGlobalReferences(_context.SourceAssemblies);
+            GlobalReferences = ReferenceInspector.InspectGlobalReferences();
             _context.Generators = new GeneratorManager(_context);
             _typesToFilesMap = _allTypes.GroupBy(c => ReferenceInspector.GetPathForType(c, stripExtension: false))
                 .ToDictionary(c => c.Key, c => c.AsEnumerable());

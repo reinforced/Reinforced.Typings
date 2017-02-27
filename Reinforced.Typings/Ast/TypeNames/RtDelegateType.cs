@@ -35,9 +35,7 @@ namespace Reinforced.Typings.Ast.TypeNames
             Result = result;
         }
 
-        /// <summary>
-        /// Child nodes
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get
@@ -50,27 +48,19 @@ namespace Reinforced.Typings.Ast.TypeNames
             }
         }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// ToString override
-        /// </summary>
+        /// <inheritdoc />
         public override string ToString()
         {
             return String.Format("({0}) => {1}", String.Join(", ", Arguments.AsEnumerable()), Result);

@@ -9,6 +9,9 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public class RtArgument : RtNode, IDecoratable
     {
+        /// <summary>
+        /// Constructs new RtArgument
+        /// </summary>
         public RtArgument()
         {
             Decorators = new List<RtDecorator>();
@@ -34,9 +37,7 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         public RtTypeName Type { get; set; }
 
-        /// <summary>
-        /// Child nodes
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get
@@ -50,27 +51,19 @@ namespace Reinforced.Typings.Ast
             }
         }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// ToString override
-        /// </summary>
+        /// <inheritdoc />
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -83,6 +76,7 @@ namespace Reinforced.Typings.Ast
             return sb.ToString();
         }
 
-        public List<RtDecorator> Decorators { get; }
+        /// <inheritdoc />
+        public List<RtDecorator> Decorators { get; private set; }
     }
 }

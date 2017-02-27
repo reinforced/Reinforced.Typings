@@ -64,30 +64,22 @@ namespace Reinforced.Typings.Ast.Dependency
         /// </summary>
         public bool IsRequire { get; set; }
 
-        /// <summary>
-        /// Node children
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children { get { yield break; } }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <typeparam name="T">Visitor type</typeparam>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             if (IsRequire) return string.Format("import {0} = require('{1}');", Target, From);

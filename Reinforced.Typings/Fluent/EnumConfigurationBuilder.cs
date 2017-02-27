@@ -13,8 +13,8 @@ namespace Reinforced.Typings.Fluent
     public class EnumConfigurationBuilder<TEnum> : IEnumConfigurationBuidler
         where TEnum : struct
     {
-        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
         private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
+        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
 
         private readonly Dictionary<FieldInfo, EnumValueExportConfiguration> _valueExportConfigurations =
             new Dictionary<FieldInfo, EnumValueExportConfiguration>();
@@ -39,7 +39,7 @@ namespace Reinforced.Typings.Fluent
 
         Type IEnumConfigurationBuidler.EnumType
         {
-            get { return typeof (TEnum); }
+            get { return typeof(TEnum); }
         }
 
         ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
@@ -47,9 +47,18 @@ namespace Reinforced.Typings.Fluent
             get { return _references; }
         }
 
-        ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports { get { return _imports; } }
+        ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports
+        {
+            get { return _imports; }
+        }
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }
-        public List<TsDecoratorAttribute> Decorators { get; }
+
+        private List<TsDecoratorAttribute> Decorators { get; set; }
+
+        List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
+        {
+            get { return this.Decorators; }
+        }
     }
 }

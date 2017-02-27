@@ -17,14 +17,19 @@ namespace Reinforced.Typings.ReferencesInspection
         private readonly ExportContext _context;
         private readonly HashSet<Type> _allExportedTypes;
 
-        public ReferenceInspector(ExportContext context, HashSet<Type> allExportedTypes)
+        internal ReferenceInspector(ExportContext context, HashSet<Type> allExportedTypes)
         {
             _context = context;
             _allExportedTypes = allExportedTypes;
         }
 
-        public InspectedReferences InspectGlobalReferences(Assembly[] assemblies)
+        /// <summary>
+        /// Inspects global assemblies defined with assembly attributes or fluent methods
+        /// </summary>
+        /// <returns>Set of inspected references</returns>
+        public InspectedReferences InspectGlobalReferences()
         {
+            var assemblies = _context.SourceAssemblies;
             var references = assemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
                 .Select(c => new RtReference() { Path = c.Path })
@@ -41,6 +46,13 @@ namespace Reinforced.Typings.ReferencesInspection
             return new InspectedReferences(references);
         }
 
+        /// <summary>
+        /// Ensures that imports for specified type presents in specified file
+        /// </summary>
+        /// <param name="t">Type to import</param>
+        /// <param name="typeName">Type name (probably overriden)</param>
+        /// <param name="file">Exported file</param>
+        /// <returns>Import AST node or null if no import needed. Returns existing import in case if type is already imported</returns>
         public RtImport EnsureImport(Type t, string typeName, ExportedFile file)
         {
             if (file.TypesToExport.Contains(t)) return null;
@@ -72,6 +84,12 @@ namespace Reinforced.Typings.ReferencesInspection
             return result;
         }
 
+        /// <summary>
+        /// Ensures that reference for specified type presents in specified file
+        /// </summary>
+        /// <param name="t">Type to reference</param>
+        /// <param name="file">Exported file</param>
+        /// <returns>Reference AST node or null if no reference needed. Returns existing reference in case if type is already referenced</returns>
         public RtReference EnsureReference(Type t, ExportedFile file)
         {
             if (file.TypesToExport.Contains(t)) return null;
@@ -82,6 +100,12 @@ namespace Reinforced.Typings.ReferencesInspection
             return result;
         }
 
+        /// <summary>
+        /// Retrieves full path to file where specified type will be exported to
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <param name="stripExtension">Remove file extension. Set to false if you still want to get path with extension in case of module export</param>
+        /// <returns>Full path to file containing exporting type</returns>
         public string GetPathForType(Type t, bool stripExtension = true)
         {
             var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);

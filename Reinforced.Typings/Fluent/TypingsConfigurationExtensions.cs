@@ -141,7 +141,8 @@ namespace Reinforced.Typings.Fluent
         /// Please not the you do not have to specify quotes here! Quotes will be added automatically
         /// </param>
         /// <param name="isRequire">When true, import will be generated as "import ImportTarget = require('ImportSource')"</param>
-        public static T AddImport<T>(this T configuration, string target, string from, bool isRequire = false) where T : IReferenceConfigurationBuilder
+        public static T AddImport<T>(this T configuration, string target, string from, bool isRequire = false)
+            where T : IReferenceConfigurationBuilder
         {
             configuration.Imports.Add(new TsAddTypeImportAttribute(target, from, isRequire));
             return configuration;
@@ -415,7 +416,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string path)
         {
-            conf.References.Add(new RtReference() { Path = path });
+            conf.References.Add(new RtReference {Path = path});
             return conf;
         }
 
@@ -461,7 +462,8 @@ namespace Reinforced.Typings.Fluent
         /// <param name="substitute">Type to substitute</param>
         /// <param name="substitution">Substitution for type</param>
         /// <returns>Fluent</returns>
-        public static ConfigurationBuilder Substitute(this ConfigurationBuilder builder, Type substitute, RtTypeName substitution)
+        public static ConfigurationBuilder Substitute(this ConfigurationBuilder builder, Type substitute,
+            RtTypeName substitution)
         {
             builder.GlobalSubstitutions[substitute] = substitution;
             return builder;
@@ -477,7 +479,8 @@ namespace Reinforced.Typings.Fluent
         /// <param name="substitute">Type to substitute</param>
         /// <param name="substitution">Substitution for type</param>
         /// <returns>Fluent</returns>
-        public static T Substitute<T>(this T builder, Type substitute, RtTypeName substitution) where T : ITypeConfigurationBuilder
+        public static T Substitute<T>(this T builder, Type substitute, RtTypeName substitution)
+            where T : ITypeConfigurationBuilder
         {
             builder.Substitutions[substitute] = substitution;
             return builder;
@@ -489,7 +492,8 @@ namespace Reinforced.Typings.Fluent
         /// <param name="builder"></param>
         /// <param name="functionCode">Function code</param>
         /// <returns></returns>
-        public static T Implement<T>(this T builder, string functionCode) where T: IExportConfiguration<TsFunctionAttribute>
+        public static T Implement<T>(this T builder, string functionCode)
+            where T : IExportConfiguration<TsFunctionAttribute>
         {
             builder.AttributePrototype.Implementation = functionCode;
             return builder;

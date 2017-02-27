@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -23,9 +20,24 @@ namespace Reinforced.Typings.Fluent.Generic
         }
 
 
-        public TsClassAttribute AttributePrototype { get; private set; }
-        public List<TsDecoratorAttribute> Decorators { get; }
+        private TsClassAttribute AttributePrototype { get; set; }
 
-        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
+        private List<TsDecoratorAttribute> Decorators { get; set; }
+
+        TsClassAttribute IExportConfiguration<TsClassAttribute>.AttributePrototype
+        {
+            get { return AttributePrototype; }
+        }
+
+        List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
+        {
+            get { return Decorators; }
+        }
+
+        public override double MemberOrder
+        {
+            get { return AttributePrototype.Order; }
+            set { AttributePrototype.Order = value; }
+        }
     }
 }

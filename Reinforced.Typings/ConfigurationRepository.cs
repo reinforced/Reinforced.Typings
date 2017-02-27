@@ -12,9 +12,8 @@ namespace Reinforced.Typings
     internal class ConfigurationRepository
     {
 
-#if DEBUG
+
         [ThreadStatic] //need this for unit tests runner
-#endif
         private static ConfigurationRepository _instance;
 
         public static ConfigurationRepository Instance

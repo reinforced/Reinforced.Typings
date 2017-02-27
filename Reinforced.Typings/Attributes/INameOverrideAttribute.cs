@@ -22,9 +22,12 @@
         bool ShouldBeCamelCased { get; set; }
     }
 
+    /// <summary>
+    ///     Configuration interface for members supporting PascalCasing from attribute
+    /// </summary>
     public interface IPascalCasableAttribute
     {
-                /// <summary>
+        /// <summary>
         ///     PascalCase flag
         /// </summary>
         bool ShouldBePascalCased { get; set; }

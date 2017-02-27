@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Reinforced.Typings.Fluent.Interfaces
+﻿namespace Reinforced.Typings.Fluent.Interfaces
 {
+    /// <summary>
+    /// Configuration interface for members supporting reordering from attribute
+    /// </summary>
     public interface IOrderableMember
     {
         /// <summary>

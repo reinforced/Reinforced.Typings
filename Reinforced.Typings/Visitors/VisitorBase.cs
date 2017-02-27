@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
-
+#pragma warning disable 1591
 namespace Reinforced.Typings.Visitors
 {
     public abstract class VisitorBase : IRtVisitor

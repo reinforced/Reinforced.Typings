@@ -8,29 +8,19 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public class RtInterface : RtCompilationUnit, ITypeMember
     {
-        /// <summary>
-        /// Interface name
-        /// </summary>
+        /// <inheritdoc />
         public RtSimpleTypeName Name { get; set; }
 
-        /// <summary>
-        /// Implemented interfaces
-        /// </summary>
+        /// <inheritdoc />
         public List<RtSimpleTypeName> Implementees { get; private set; }
 
-        /// <summary>
-        /// JSDOC
-        /// </summary>
+        /// <inheritdoc />
         public RtJsdocNode Documentation { get; set; }
 
-        /// <summary>
-        /// Interface members
-        /// </summary>
+        /// <inheritdoc />
         public List<RtNode> Members { get; private set; }
 
-        /// <summary>
-        /// Child nodes
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get
@@ -49,19 +39,13 @@ namespace Reinforced.Typings.Ast
             }
         }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);

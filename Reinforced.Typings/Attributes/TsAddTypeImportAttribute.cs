@@ -35,6 +35,12 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public bool ImportRequire { get; set; }
 
+        /// <summary>
+        /// Cosntructs new Rtimport
+        /// </summary>
+        /// <param name="importTarget">Target</param>
+        /// <param name="importSource">Source</param>
+        /// <param name="importRequire">Is import "=require(...)"</param>
         public TsAddTypeImportAttribute(string importTarget, string importSource, bool importRequire = false)
         {
             ImportTarget = importTarget;

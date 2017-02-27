@@ -14,6 +14,7 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public virtual bool ForceNullable { get; set; }
 
+        /// <inheritdoc />
         public double Order { get; set; }
     }
 }

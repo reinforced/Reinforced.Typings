@@ -8,7 +8,7 @@ using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
 {
-    public static class ConfiguredTypesExtensions
+    internal static class ConfiguredTypesExtensions
     {
         /// <summary>
         ///     Search predicate to exclude ignored and compiler-generated items

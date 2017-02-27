@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Reinforced.Typings.Attributes
 {
+    /// <summary>
+    /// Configuration interface for attribute for supporting reordering from attribute
+    /// </summary>
     public interface IOrderableAttribute
     {
         /// <summary>

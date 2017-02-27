@@ -11,16 +11,27 @@ namespace Reinforced.Typings.Ast.TypeNames
     /// </summary>
     public class RtTuple : RtTypeName
     {
+        /// <summary>
+        /// Constructs new RtTuple
+        /// </summary>
         public RtTuple()
         {
             TupleTypes = new List<RtTypeName>();
         }
 
+        /// <summary>
+        /// Constructs new RtTuple with specified type paranmeters
+        /// </summary>
+        /// <param name="tupleTypes">Types for tuple</param>
         public RtTuple(IEnumerable<RtTypeName> tupleTypes)
         {
             TupleTypes = new List<RtTypeName>(tupleTypes);
         }
 
+        /// <summary>
+        /// Constructs new RtTuple with specified type paranmeters
+        /// </summary>
+        /// <param name="tupleTypes">Types for tuple</param>
         public RtTuple(params RtTypeName[] tupleTypes)
         {
             TupleTypes = new List<RtTypeName>(tupleTypes);
@@ -31,9 +42,7 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// </summary>
         public List<RtTypeName> TupleTypes { get; private set; }
 
-        /// <summary>
-        /// Children
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get
@@ -45,11 +54,13 @@ namespace Reinforced.Typings.Ast.TypeNames
             }
         }
 
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);

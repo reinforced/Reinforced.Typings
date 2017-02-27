@@ -71,11 +71,18 @@ namespace Reinforced.Typings
 
         private readonly Stack<Type> _typesStack = new Stack<Type>();
 
+        /// <summary>
+        /// Sets currently exported type
+        /// </summary>
+        /// <param name="t"></param>
         public void SetCurrentType(Type t)
         {
             _typesStack.Push(t);
         }
 
+        /// <summary>
+        /// Resets currently exported type
+        /// </summary>
         public void ResetCurrentType()
         {
             if (_typesStack.Count > 0) _typesStack.Pop();

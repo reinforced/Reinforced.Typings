@@ -26,6 +26,11 @@ namespace Reinforced.Typings.Fluent
             get { return AttributePrototype; }
         }
 
-        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
+        /// <inheritdoc />
+        public override double MemberOrder
+        {
+            get { return AttributePrototype.Order; }
+            set { AttributePrototype.Order = value; }
+        }
     }
 }

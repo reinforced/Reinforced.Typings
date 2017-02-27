@@ -7,7 +7,8 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Fluent configuration builder for exported properties
     /// </summary>
-    public class PropertyExportConfigurationBuilder : IExportConfiguration<TsPropertyAttribute>, IIgnorable, IDecoratorsAggregator, IOrderableMember
+    public class PropertyExportConfigurationBuilder : IExportConfiguration<TsPropertyAttribute>, IIgnorable,
+        IDecoratorsAggregator, IOrderableMember
     {
         internal PropertyExportConfigurationBuilder()
         {
@@ -16,6 +17,12 @@ namespace Reinforced.Typings.Fluent
         }
 
         private TsPropertyAttribute AttributePrototype { get; set; }
+        private List<TsDecoratorAttribute> Decorators { get; set; }
+
+        List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
+        {
+            get { return Decorators; }
+        }
 
         TsPropertyAttribute IExportConfiguration<TsPropertyAttribute>.AttributePrototype
         {
@@ -23,7 +30,11 @@ namespace Reinforced.Typings.Fluent
         }
 
         bool IIgnorable.Ignore { get; set; }
-        public List<TsDecoratorAttribute> Decorators { get; }
-        public double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
+
+        double IOrderableMember.MemberOrder
+        {
+            get { return AttributePrototype.Order; }
+            set { AttributePrototype.Order = value; }
+        }
     }
 }

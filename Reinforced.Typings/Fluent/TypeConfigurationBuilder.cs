@@ -13,6 +13,8 @@ namespace Reinforced.Typings.Fluent
     /// <typeparam name="TType"></typeparam>
     public abstract class TypeConfigurationBuilder<TType> : ITypeConfigurationBuilder
     {
+        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
+
         private readonly Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>> _membersConfiguration =
             new Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>>();
 
@@ -21,14 +23,17 @@ namespace Reinforced.Typings.Fluent
 
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
         private readonly Dictionary<Type, RtTypeName> _substitutions = new Dictionary<Type, RtTypeName>();
-        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
 
         Type ITypeConfigurationBuilder.Type
         {
-            get { return typeof (TType); }
+            get { return typeof(TType); }
         }
 
-        public Dictionary<Type, RtTypeName> Substitutions { get { return _substitutions; } }
+
+        Dictionary<Type, RtTypeName> ITypeConfigurationBuilder.Substitutions
+        {
+            get { return _substitutions; }
+        }
 
         Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> ITypeConfigurationBuilder.
             ParametersConfiguration
@@ -53,6 +58,7 @@ namespace Reinforced.Typings.Fluent
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }
 
+        /// <inheritdoc />
         public abstract double MemberOrder { get; set; }
     }
 }

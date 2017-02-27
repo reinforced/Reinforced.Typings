@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -20,6 +16,11 @@ namespace Reinforced.Typings.Fluent.Generic
         }
 
         public TsInterfaceAttribute AttributePrototype { get; private set; }
-        public override double MemberOrder { get { return AttributePrototype.Order; } set { AttributePrototype.Order = value; } }
+
+        public override double MemberOrder
+        {
+            get { return AttributePrototype.Order; }
+            set { AttributePrototype.Order = value; }
+        }
     }
 }

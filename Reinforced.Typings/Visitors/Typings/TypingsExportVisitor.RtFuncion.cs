@@ -1,6 +1,6 @@
 ﻿using Reinforced.Typings.Ast;
 using Reinforced.Typings.Visitors.TypeScript;
-
+#pragma warning disable 1591
 namespace Reinforced.Typings.Visitors.Typings
 {
     partial class TypingsExportVisitor

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Reinforced.Typings.Ast;
-
+#pragma warning disable 1591
 namespace Reinforced.Typings.Visitors.TypeScript
 {
     partial class TypeScriptExportVisitor
@@ -25,7 +25,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 }
                 Tab();
             }
-            foreach (var rtCompilationUnit in node.CompilationUnits.OrderBy(c => (c as RtCompilationUnit)?.Order ?? 0))
+            foreach (var rtCompilationUnit in node.CompilationUnits.OrderBy(c => c is RtCompilationUnit ? ((RtCompilationUnit) c).Order : 0))
             {
                 Visit(rtCompilationUnit);
             }

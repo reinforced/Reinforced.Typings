@@ -63,36 +63,25 @@ namespace Reinforced.Typings.Ast.TypeNames
             _genericArguments = new RtTypeName[0];
         }
 
-        /// <summary>
-        /// Child nodes
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get { yield break; }
         }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// ToString override
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public override string ToString()
         {
             string generics = _genericArguments.Length > 0 ? "<" + String.Join(",", _genericArguments.AsEnumerable()) + ">" : null;

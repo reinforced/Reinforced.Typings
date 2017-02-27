@@ -8,34 +8,22 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public class RtClass : RtCompilationUnit, ITypeMember, IDecoratable
     {
-        /// <summary>
-        /// Decorators for type
-        /// </summary>
+        /// <inheritdoc />
         public List<RtDecorator> Decorators { get; private set; }
 
-        /// <summary>
-        /// JSDOC
-        /// </summary>
+        /// <inheritdoc />
         public RtJsdocNode Documentation { get; set; }
 
-        /// <summary>
-        /// Class name
-        /// </summary>
+        /// <inheritdoc />
         public RtSimpleTypeName Name { get; set; }
 
-        /// <summary>
-        /// Implemented interfaces list
-        /// </summary>
+        /// <inheritdoc />
         public List<RtSimpleTypeName> Implementees { get; private set; }
 
-        /// <summary>
-        /// Extended class
-        /// </summary>
+        /// <inheritdoc />
         public RtTypeName Extendee { get; set; }
 
-        /// <summary>
-        /// Class members
-        /// </summary>
+        /// <inheritdoc />
         public List<RtNode> Members { get; private set; }
 
         /// <summary>
@@ -48,9 +36,7 @@ namespace Reinforced.Typings.Ast
             Decorators = new List<RtDecorator>();
         }
 
-        /// <summary>
-        /// Child nodes
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {
             get
@@ -75,19 +61,13 @@ namespace Reinforced.Typings.Ast
             }
         }
 
-        /// <summary>
-        /// Visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
         {
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// Typed visitor acceptance
-        /// </summary>
-        /// <param name="visitor">Visitor</param>
+        /// <inheritdoc />
         public override void Accept<T>(IRtVisitor<T> visitor)
         {
             visitor.Visit(this);

@@ -28,6 +28,7 @@
         /// </summary>
         public virtual string Name { get; set; }
 
+        /// <inheritdoc />
         public double Order { get; set; }
     }
 }

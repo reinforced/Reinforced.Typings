@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
-
+#pragma warning disable 1591
 namespace Reinforced.Typings.Visitors.TypeScript
 {
     partial class TypeScriptExportVisitor
@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Br(); AppendTabs();
             Write("{"); Br();
             Tab();
-            var members = node.Members.OrderBy(c => c is RtConstructor ? int.MinValue : (c as RtMember)?.Order);
+            var members = node.Members.OrderBy(c => c is RtConstructor ? int.MinValue : (c is RtMember ? ((RtMember) c).Order : (double?) null));
             foreach (var rtMember in members)
             {
                 Visit(rtMember);

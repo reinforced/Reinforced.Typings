@@ -8,6 +8,7 @@ namespace Reinforced.Typings.Attributes
     [AttributeUsage(AttributeTargets.Method)]
     public class TsFunctionAttribute : TsTypedMemberAttributeBase, IOrderableAttribute
     {
+        /// <inheritdoc />
         public double Order { get; set; }
 
         /// <summary>

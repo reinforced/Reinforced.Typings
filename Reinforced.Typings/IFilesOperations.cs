@@ -9,6 +9,9 @@ namespace Reinforced.Typings
     /// </summary>
     public interface IFilesOperations
     {
+        /// <summary>
+        /// Export context
+        /// </summary>
         ExportContext Context { set; }
 
         /// <summary>

@@ -21,9 +21,9 @@ namespace Reinforced.Typings
         private string _tabSymbol;
         private bool _useModules;
         private bool _discardNamespacesWhenUsingModules;
-        private bool _strictNullChecks;
+        //private bool _strictNullChecks;
 
-        public GlobalParameters()
+        internal GlobalParameters()
         {
             _tabSymbol = "\t";
             _writeWarningComment = true;

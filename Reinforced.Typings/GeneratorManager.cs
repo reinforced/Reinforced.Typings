@@ -7,6 +7,9 @@ using Reinforced.Typings.Generators;
 
 namespace Reinforced.Typings
 {
+    /// <summary>
+    /// Class for managing and instantiating code generators
+    /// </summary>
     public class GeneratorManager
     {
         private readonly ITsCodeGenerator<Type> _defaultClassGenerator;

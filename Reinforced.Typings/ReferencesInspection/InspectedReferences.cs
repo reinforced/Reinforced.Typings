@@ -28,6 +28,11 @@ namespace Reinforced.Typings.ReferencesInspection
         /// </summary>
         public IReadOnlyDictionary<string, RtImport> StarImports { get { return _starImportsAs; } }
 
+        /// <summary>
+        /// Constructs new inspected references set
+        /// </summary>
+        /// <param name="references">References</param>
+        /// <param name="imports">Imports</param>
         public InspectedReferences(IEnumerable<RtReference> references, IEnumerable<RtImport> imports = null)
         {
             foreach (var rtReference in references)

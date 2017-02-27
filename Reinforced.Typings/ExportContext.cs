@@ -24,6 +24,9 @@ namespace Reinforced.Typings
         
         private IFilesOperations _fileOperations;
 
+        /// <summary>
+        /// File I/O operations frontend
+        /// </summary>
         public IFilesOperations FileOperations
         {
             get { return _fileOperations; }
