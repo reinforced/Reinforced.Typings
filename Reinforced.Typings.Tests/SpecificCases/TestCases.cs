@@ -1,7 +1,7 @@
 ﻿using System;
 using Reinforced.Typings.Attributes;
 
-namespace Reinforced.Typings.Tests.ExporterIntegrationTests
+namespace Reinforced.Typings.Tests.SpecificCases
 {
 
     #region Basic test

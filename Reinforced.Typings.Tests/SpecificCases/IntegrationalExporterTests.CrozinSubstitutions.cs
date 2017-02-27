@@ -3,15 +3,15 @@ using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Fluent;
 using Xunit;
 
-namespace Reinforced.Typings.Tests.ExporterIntegrationTests
+namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public partial class IntegrationalExporterTests
+    public partial class SpecificTestCases
     {
         [Fact]
         public void CrozinSubstitutions()
         {
             const string result = @"
-module Reinforced.Typings.Tests.ExporterIntegrationTests {
+module Reinforced.Typings.Tests.SpecificCases {
 	export interface ICrozinSubstitutionTest
 	{
 		GuidProperty: string;

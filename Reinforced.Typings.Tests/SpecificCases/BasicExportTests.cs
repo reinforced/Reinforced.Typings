@@ -3,9 +3,9 @@ using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Tests.Core;
 using Xunit;
 
-namespace Reinforced.Typings.Tests.ExporterIntegrationTests
+namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public partial class IntegrationalExporterTests : RtExporterTestBase
+    public partial class SpecificTestCases : RtExporterTestBase
     {
     }
 }

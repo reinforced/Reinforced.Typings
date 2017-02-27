@@ -1,9 +1,9 @@
 ﻿using Reinforced.Typings.Fluent;
 using Xunit;
 
-namespace Reinforced.Typings.Tests.ExporterIntegrationTests
+namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public partial class IntegrationalExporterTests
+    public partial class SpecificTestCases
     {
         [Fact]
         public void DDanteInheritanceBug()

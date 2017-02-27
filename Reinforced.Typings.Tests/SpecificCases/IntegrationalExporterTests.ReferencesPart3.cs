@@ -2,58 +2,62 @@
 using Reinforced.Typings.Fluent;
 using Xunit;
 
-namespace Reinforced.Typings.Tests.ExporterIntegrationTests
+namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public partial class IntegrationalExporterTests
+    public partial class SpecificTestCases
     {
         [Fact]
-        public void ReferencesPart2()
+        public void ReferencesPart3()
         {
             /**
+             * Here code significantly changed since we have switched to modules
              * File1:
-             * Reference to File3 appears as it is explicitly specified: .AddReference(typeof(SomeFluentReferencedType))
+             * Reference to File3 appears as import since we are using modules
              * Reference to jquery appears as it is explicitly specified via attribute
-             * Imports does not appear as we are not using modules
-             * Reference to File2 appears as we are exporting method "Indirect" returning SomeIndirectlyReferencedClass
+             * Import to jQuery appears as it has been explecitly specified via attribute
+             * Import to React appears as it has been explicitly specified via fluent configuration
+             * Required-import to sideeffects appears as it was explicitly specified in fluent configuration
+             * 
+             * Reference to ../Indirect/File2 appears as we are exporting method "Indirect" returning SomeIndirectlyReferencedClass
+             * 
              * Refernce to SomeFluentlyReferencedNotExported does not appear as it is not exported entirely
              */
 
             const string file1 = @"
 ///<reference path=""../../jquery.d.ts""/>
-///<reference path=""../Fluently/File3.ts""/>
-///<reference path=""../Indirect/File2.ts""/>
+import { SomeFluentReferencedType } from '../Fluently/File3';
+import * as '$' from 'JQuery';
+import * as React from 'React';
+import sideeffects = require('./sideeffects');
+import { SomeIndirectlyReferencedClass } from '../Indirect/File2';
 
-module Reinforced.Typings.Tests.ExporterIntegrationTests {
-	export class SomeReferencingType
+export class SomeReferencingType
+{
+	public Indirect() : SomeIndirectlyReferencedClass
 	{
-		public Indirect() : Reinforced.Typings.Tests.ExporterIntegrationTests.SomeIndirectlyReferencedClass
-		{
-			return null;
-		}
+		return null;
 	}
 }";
             const string file2 = @"
-module Reinforced.Typings.Tests.ExporterIntegrationTests {
-	export class SomeIndirectlyReferencedClass
-	{
-	}
+export class SomeIndirectlyReferencedClass
+{
 }";
             const string file3 = @"
-module Reinforced.Typings.Tests.ExporterIntegrationTests {
-	export class SomeFluentReferencedType
-	{
-	}
+export class SomeFluentReferencedType
+{
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment()
+                        .UseModules() //<--- this line differs from references part 2
+                );
                 s.ExportAsClass<SomeReferencingType>()
                     .AddReference(typeof(SomeFluentReferencedType))
                     .AddReference(typeof(SomeFluentlyReferencedNotExported))
                     .AddImport("* as React", "React")
                     .ExportTo("Exported/File1.ts")
                     .AddImport("sideeffects", "./sideeffects", true)
-                    .WithPublicMethods() //<--- this line differs from references part 1
+                    .WithPublicMethods()
                     ;
                 s.ExportAsClass<SomeIndirectlyReferencedClass>().ExportTo("Indirect/File2.ts");
                 s.ExportAsClass<SomeFluentReferencedType>().ExportTo("Fluently/File3.ts");
