@@ -67,10 +67,10 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public bool ExportPureTypings { get; set; }
 
-        /// <summary>
-        /// Set to true and all nullable value types will be revealed to "type | null"
-        /// </summary>
-        public bool StrictNullChecks { get; set; }
+        ///// <summary>
+        ///// Set to true and all nullable value types will be revealed to "type | null"
+        ///// </summary>
+        //public bool StrictNullChecks { get; set; }
 
         /// <summary>
         /// Sets order of applying paramters from this attribute

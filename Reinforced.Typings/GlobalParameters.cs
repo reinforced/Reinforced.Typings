@@ -98,18 +98,18 @@ namespace Reinforced.Typings
             }
         }
 
-        /// <summary>
-        ///     Enables or disables documentation generator
-        /// </summary>
-        public bool StrictNullChecks
-        {
-            get { return _strictNullChecks; }
-            set
-            {
-                if (_isLocked) return;
-                _strictNullChecks = value;
-            }
-        }
+        ///// <summary>
+        /////     Enables or disables documentation generator
+        ///// </summary>
+        //public bool StrictNullChecks
+        //{
+        //    get { return _strictNullChecks; }
+        //    set
+        //    {
+        //        if (_isLocked) return;
+        //        _strictNullChecks = value;
+        //    }
+        //}
 
         internal void Lock()
         {

@@ -59,7 +59,7 @@ namespace Reinforced.Typings
             gp.UseModules = tsGlobal.UseModules;
             gp.TabSymbol = tsGlobal.TabSymbol;
             gp.WriteWarningComment = tsGlobal.WriteWarningComment;
-            gp.StrictNullChecks = tsGlobal.StrictNullChecks;
+            //gp.StrictNullChecks = tsGlobal.StrictNullChecks;
         }
 
         /// <summary>
