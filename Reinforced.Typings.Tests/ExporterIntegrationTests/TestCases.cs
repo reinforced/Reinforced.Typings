@@ -107,4 +107,41 @@ namespace Reinforced.Typings.Tests.ExporterIntegrationTests
         string Name { get; }
     }
     #endregion
+
+    #region DDante case
+
+    public abstract class PolluxEntity<Key>
+    {
+        public Key EntityId { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime? ModifiedOn { get; set; }
+
+
+        public PolluxEntity()
+        {
+            this.CreatedOn = DateTime.Now;
+        }
+    }
+
+
+    public class ContactData : PolluxEntity<long>
+    {
+        public string Phone { get; set; }
+        public string AlternatePhone { get; set; }
+        public bool PhoneConfirmed { get; set; }
+
+        public string Email { get; set; }
+        public string AlternateEmail { get; set; }
+        public bool EmailConfirmed { get; set; }
+
+        public virtual string OwnerId { get; set; }
+
+        public ContactData()
+        {
+        }
+    }
+
+    #endregion
 }

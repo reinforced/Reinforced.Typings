@@ -67,6 +67,7 @@
     <Compile Include="Core\RtExporterTestBase.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.CrozinSubstitutions.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.DaggmanoAutoIBug.cs" />
+    <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.DDanteInheritanceBug.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.JonsaCustomIndentationTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.DecoratorsTest.cs" />
     <Compile Include="ExporterIntegrationTests\IntegrationalExporterTests.ExportOrderTest1.cs" />

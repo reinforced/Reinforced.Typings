@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Tests.Core;

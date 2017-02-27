@@ -44,10 +44,23 @@ namespace Reinforced.Typings.Generators
             var baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
             {
-                //todo if bs is generic...
-                if (ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs) != null)
+                TsDeclarationAttributeBase attr = null;
+                bool baseAsInterface = false;
+                if (bs.IsGenericType)
                 {
-                    if (bs.IsExportingAsInterface()) baseClassIsExportedAsInterface = true;
+                    var genericBase = bs.GetGenericTypeDefinition();
+                    attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(genericBase);
+                    baseAsInterface = genericBase.IsExportingAsInterface();
+                }
+                else
+                {
+                    attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs);
+                    baseAsInterface = bs.IsExportingAsInterface();
+                }
+                
+                if (attr != null)
+                {
+                    if (baseAsInterface) baseClassIsExportedAsInterface = true;
                     else
                     {
                         ((RtClass)result).Extendee = resolver.ResolveTypeName(bs);
