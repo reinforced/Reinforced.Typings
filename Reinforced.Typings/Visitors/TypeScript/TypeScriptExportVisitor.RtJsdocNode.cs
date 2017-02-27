@@ -13,7 +13,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
         {
             if (node == null) return;
 
-            if (!node.Description.Contains("\n") && node.TagToDescription.Count == 0)
+            if (!string.IsNullOrEmpty(node.Description) && !node.Description.Contains("\n") && node.TagToDescription.Count == 0)
             {
                 //handle single-line JSDOC
                 AppendTabs(); Write("/** "); Write(node.Description); WriteLine(" */");
@@ -24,8 +24,8 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 if (!string.IsNullOrEmpty(node.Description))
                 {
                     Summary(node.Description);
+                    if (node.TagToDescription.Count > 0) DocLine();
                 }
-                if (node.TagToDescription.Count > 0) DocLine();
                 foreach (var tuple in node.TagToDescription)
                 {
                     DocTag(tuple.Item1, tuple.Item2);

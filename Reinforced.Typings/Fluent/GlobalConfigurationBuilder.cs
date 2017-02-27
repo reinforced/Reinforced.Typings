@@ -119,6 +119,19 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+        /// <summary>
+        ///  If true, export will be performed in .d.ts manner (only typings, declare module etc).
+        ///  Otherwise, export will be performed to regulat .ts file
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="typings">Enables or disables option</param>
+        public static GlobalConfigurationBuilder ExportPureTypings(this GlobalConfigurationBuilder builder,
+            bool typings = true)
+        {
+            builder.Parameters.ExportPureTypings = typings;
+            return builder;
+        }
+
         //{
         //    bool strict = true)
         //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,

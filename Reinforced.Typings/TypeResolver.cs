@@ -206,9 +206,7 @@ namespace Reinforced.Typings
                 if (enumerable == null) return Cache(t, new RtArrayType(AnyType));
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
             }
-
-
-
+            
             if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
                 var methodInfo = t.GetMethod("Invoke");

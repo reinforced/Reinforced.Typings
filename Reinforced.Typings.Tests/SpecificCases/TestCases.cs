@@ -311,4 +311,26 @@ namespace Reinforced.Typings.Tests.SpecificCases
     }
 
     #endregion
+
+    #region Weird inheritance
+
+    public class BaseClass
+    {
+        public string Property { get; set; }
+
+        public void DoSomething()
+        {
+            
+        }
+    }
+
+    public class DerivedClass : BaseClass
+    {
+        public string GetName()
+        {
+            return null;
+        }
+    }
+
+    #endregion
 }

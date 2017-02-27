@@ -9,16 +9,24 @@ namespace Reinforced.Typings.Visitors.TypeScript
         public override void Visit(RtImport node)
         {
             Write("import ");
-            Write(node.Target);
-            Write(" ");
-            if (node.IsRequire)
+            if (node.Target != null)
             {
-                WriteLine(string.Format("= require('{0}');", node.From));
+                Write(node.Target);
+                Write(" ");
+                if (node.IsRequire)
+                {
+                    WriteLine(string.Format("= require('{0}');", node.From));
+                }
+                else
+                {
+                    WriteLine(string.Format("from '{0}';", node.From));
+                }
             }
             else
             {
-                WriteLine(string.Format("from '{0}';", node.From));
+                WriteLine(string.Format("'{0}';", node.From));
             }
+            
         }
 
         public override void Visit(RtReference node)

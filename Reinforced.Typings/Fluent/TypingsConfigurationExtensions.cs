@@ -430,6 +430,13 @@ namespace Reinforced.Typings.Fluent
         public static ConfigurationBuilder TryLookupDocumentationForAssembly(this ConfigurationBuilder conf,
             Assembly assmbly, string documentationFileName = null)
         {
+            if (!string.IsNullOrEmpty(documentationFileName) 
+                && Path.IsPathRooted(documentationFileName))
+            {
+                conf.AdditionalDocumentationPathes.Add(documentationFileName);
+                return conf;
+            }
+
             var assemblyDir = Path.GetDirectoryName(assmbly.Location);
             var file = string.IsNullOrEmpty(documentationFileName)
                 ? Path.GetFileNameWithoutExtension(assmbly.Location) + ".xml"

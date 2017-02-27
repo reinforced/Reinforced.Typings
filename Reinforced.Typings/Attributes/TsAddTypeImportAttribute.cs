@@ -26,7 +26,7 @@ namespace Reinforced.Typings.Attributes
 
         /// <summary>
         /// Import source is everything that follows after "from" keyword. 
-        /// Please not the you do not have to specify quotes here! Quotes will be added automatically
+        /// Please note that you do not have to specify quotes here! Quotes will be added automatically
         /// </summary>
         public string ImportSource { get; set; }
 

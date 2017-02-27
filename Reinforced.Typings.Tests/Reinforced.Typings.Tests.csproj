@@ -84,6 +84,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart3.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart4.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart5.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.WeirdInheritanceCase.cs" />
     <Compile Include="SpecificCases\TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenizing\SimpleTokenizer.cs" />
