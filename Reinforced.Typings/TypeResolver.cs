@@ -114,7 +114,7 @@ namespace Reinforced.Typings
                         return Cache(t, result);
                     }
 
-                    result.Prefix = string.Format("{0}.{1}", import.WildcardAlias, ns);
+                    result.Prefix = string.IsNullOrEmpty(ns) ? import.WildcardAlias : string.Format("{0}.{1}", import.WildcardAlias, ns);
                     return Cache(t, result);
                 }
                 else

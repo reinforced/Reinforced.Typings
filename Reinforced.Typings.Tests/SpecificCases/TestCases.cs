@@ -166,25 +166,13 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     #region Type references
 
-    public class SomeIndirectlyReferencedClass
-    {
-        
-    }
+    public class SomeIndirectlyReferencedClass { }
 
-    public class SomeOtherReferencedType
-    {
-        
-    }
+    public class SomeOtherReferencedType { }
 
-    public class SomeFluentReferencedType
-    {
+    public class SomeFluentReferencedType { }
 
-    }
-
-    public class SomeFluentlyReferencedNotExported
-    {
-        
-    }
+    public class SomeFluentlyReferencedNotExported{ }
 
     [TsAddTypeImport("* as '$'", "JQuery")]
     [TsAddTypeReference(typeof(SomeOtherReferencedType))]
