@@ -16,15 +16,17 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings
             // Configuration for exporting JQuery infrastructure
 
             // Configuration exporting test model class as interface
-            builder.ExportAsInterface<SampleResponseModel>().WithPublicProperties();
+            builder.ExportAsInterface<SampleResponseModel>().WithPublicProperties().ExportTo("models.ts");
 
             // Configuration for JQueryController
             // Setting code generator for each method performed in JQueryMethodAttribute
-            builder.ExportAsClass<JQueryController>();
+            builder.ExportAsClass<JQueryController>().ExportTo("JQueryController.ts");
 
             // Configuration for Angular.js-firndly controller
             // Setting code generator for methods also performed in attribute - see AngularMethodAttribute
-            builder.ExportAsClass<AngularController>().WithCodeGenerator<AngularControllerGenerator>();
+            builder.ExportAsClass<AngularController>()
+                .ExportTo("AngularController.ts")
+                .WithCodeGenerator<AngularControllerGenerator>();
         }
     }
 }

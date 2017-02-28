@@ -2,69 +2,9 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-module Reinforced.Typings.Samples.Difficult.CodeGenerators.Models {
-	export interface ISampleResponseModel
-	{
-		Message: string;
-		Success: boolean;
-		CurrentTime: string;
-	}
-}
+///<reference path="models.ts"/>
+
 module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
-	/** Our sample controller for testing queries made through jQuery */
-	export class JQueryController
-	{
-		/** Wrapper method for call SimpleIntMethod of JQueryController */
-		public static SimpleIntMethod(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<number>
-		{
-			return QueryController.query<number>(
-			        '/JQuery/SimpleIntMethod', 
-			        {  }, 
-			        loadingPlaceholderSelector,
-			        disableElement
-			    );
-		}
-		/** Wrapper method for call MethodWithParameters of JQueryController */
-		public static MethodWithParameters(num: number, s: string, boolValue: boolean, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<string>
-		{
-			return QueryController.query<string>(
-			        '/JQuery/MethodWithParameters', 
-			        { 'num': num, 's': s, 'boolValue': boolValue }, 
-			        loadingPlaceholderSelector,
-			        disableElement
-			    );
-		}
-		/** Wrapper method for call ReturningObject of JQueryController */
-		public static ReturningObject(loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
-		{
-			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>(
-			        '/JQuery/ReturningObject', 
-			        {  }, 
-			        loadingPlaceholderSelector,
-			        disableElement
-			    );
-		}
-		/** Wrapper method for call ReturningObjectWithParameters of JQueryController */
-		public static ReturningObjectWithParameters(echo: string, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
-		{
-			return QueryController.query<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>(
-			        '/JQuery/ReturningObjectWithParameters', 
-			        { 'echo': echo }, 
-			        loadingPlaceholderSelector,
-			        disableElement
-			    );
-		}
-		/** Wrapper method for call VoidMethodWithParameters of JQueryController */
-		public static VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel, loadingPlaceholderSelector: string = '', disableElement: string = '') : JQueryPromise<any>
-		{
-			return QueryController.query<any>(
-			        '/JQuery/VoidMethodWithParameters', 
-			        { 'model': model }, 
-			        loadingPlaceholderSelector,
-			        disableElement
-			    );
-		}
-	}
 	if (window['app']) window['app'].factory('Api.AngularController', ['$http', ($http: angular.IHttpService) => new AngularController($http)]);
 	/** Result of AngularControllerGenerator activity */
 	export class AngularController

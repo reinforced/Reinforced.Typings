@@ -175,7 +175,6 @@
     <Compile Include="Models\SampleResponseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReinforcedTypings\Angular\AngularActionCallGenerator.cs" />
-    <Compile Include="ReinforcedTypings\Angular\AngularControllerAttribute.cs" />
     <Compile Include="ReinforcedTypings\Angular\AngularControllerGenerator.cs" />
     <Compile Include="ReinforcedTypings\Angular\AngularMethodAttribute.cs" />
     <Compile Include="ReinforcedTypings\Configuration.cs" />
@@ -1021,7 +1020,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\ReinforcedTypings\AngularDemoController.ts" />
-    <TypeScriptCompile Include="Scripts\ReinforcedTypings\GeneratedTypings.ts" />
+    <TypeScriptCompile Include="Scripts\ReinforcedTypings\Generated\AngularController.ts" />
+    <TypeScriptCompile Include="Scripts\ReinforcedTypings\Generated\JQueryController.ts" />
+    <TypeScriptCompile Include="Scripts\ReinforcedTypings\Generated\models.ts" />
     <TypeScriptCompile Include="Scripts\ReinforcedTypings\IndexPage.ts" />
     <TypeScriptCompile Include="Scripts\ReinforcedTypings\query.ts" />
     <TypeScriptCompile Include="Scripts\ReinforcedTypings\app.ts" />

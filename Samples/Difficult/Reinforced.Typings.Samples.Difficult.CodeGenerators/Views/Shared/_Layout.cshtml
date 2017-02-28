@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>Reinforced.Typings Test Application</title>
     <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/Scripts/ReinforcedTypings/query.js"></script>
@@ -15,7 +16,7 @@
     
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="bodyContainer">
         <div class="jumbotron">
             <h1>Reinforced.Typings</h1>
             <p class="lead">Reinforced.Typings is a free framework for generating TypeScript glue code.</p>
@@ -30,7 +31,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Available demos:</a>
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">Available demos:</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->

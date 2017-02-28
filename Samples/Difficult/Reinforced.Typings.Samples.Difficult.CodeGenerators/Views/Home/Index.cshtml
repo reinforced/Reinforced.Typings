@@ -5,24 +5,77 @@
 
 <div class="row">
     <div class="col-md-12">
-        <p>
-            Hi! We are here to understand how to generate glue code for controllers with Reinforced.Typings. 
-            This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS. 
+        <p class="text-justify tut-text">
+            Hi! <br />
+            We are here and going to understand how to generate glue code for controllers with Reinforced.Typings.
+            This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS.
             Pick one to start with:
         </p>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-6 col-md-offset-3 text-center">
-        <a >jQuery</a>
-        <a>AngularJS</a>
+<div class="row" id="docs">
+    <div class="col-md-3 col-md-offset-3 text-center">
+        <a class="btn btn-primary  btn-block" role="button" data-parent="#docs" href="#jqueryDoc" data-toggle="collapse" aria-expanded="false">jQuery</a>
+    </div>
+    <div class="col-md-3 text-center">
+        <a class="btn btn-primary btn-block" role="button" data-parent="#docs" href="#angularDoc" data-toggle="collapse" aria-expanded="false">AngularJS</a>
+    </div>
+</div>
+<hr />
+<div>
+    <div class="row collapse" id="jqueryDoc">
+        <div class="col-md-12">
+            <h2 class="text-center">jQuery Middleware export tutorial</h2>
+            <h3>Initial setup</h3>
+            <p class="text-justify tut-text">
+                We have typical controller with several actions returning JSON/receiving parameters.
+                Also we have page containing simple <a href="#indexjsscript" data-toggle="collapse" aria-expanded="false">script (IndexPage.ts)</a> behind it. We want to make Reinforced.Typings 
+                generating <code>JQueryController</code> TypeScript class for us that will contain all the methods from our controller with suitable names. This class must be re-generated
+                each rebuild, so if we change controller action's signarutre or name - then it will be immediately reflected in TypeScript. Also we want to export our generated TypeScript to different files
+                and provide JSDOC for it. So here we go.
+            </p>
+            <div class="collapse well" id="indexjsscript">
+                <h4><span class="glyphicon glyphicon-file"></span> IndexPage.ts</h4>
+                <pre class="language-js" data-src="https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators/Scripts/ReinforcedTypings/IndexPage.ts"></pre>
+            </div>
+            <h3>Step 1</h3>
+            <p>
+                Initially let's write <a href="#queryts" data-toggle="collapse" aria-expanded="false">common TypeScript class (query.ts)</a> that all our requests will pass through. Basically, it simply arranges MVC-friendly <code>jQuery.ajax</code> parameters setup. Nothing special.
+            </p>
+            <div class="collapse well" id="queryts">
+                <h4><span class="glyphicon glyphicon-file"></span> query.ts</h4>
+                <pre class="language-js" data-src="https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators/Scripts/ReinforcedTypings/query.ts"></pre>
+            </div>
+            <h3>Step 2</h3>
+            <p>
+                Next, lets proceed to our <a href="#jquerysettings" data-toggle="collapse" aria-expanded="false">Reinforced.Typings.settings.xml</a> and set <code>RtTargetFile</code>
+            </p>
+        </div>
+    </div>
+    <div class="row collapse" id="angularDoc">
+        <div class="col-md-12">
+            <p>
+                Hi! We are here to understand how to generate glue code for controllers with Reinforced.Typings.
+                This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS.
+                Pick one to start with:
+            </p>
+        </div>
     </div>
 </div>
 
 @section Scripts
 {
     <link type="text/css" rel="stylesheet" href="~/Content/prismjs/prism.css" />
+    <style type="text/css">
+        pre[class*="language-"] {
+            font-size: 14px !important;
+        }
 
+        .tut-text {
+            font-size: 15px;
+            line-height: 2;
+        }
+    </style>
     <script src="@Url.Content("~/Content/prismjs/prism.js")"></script>
 }
 
