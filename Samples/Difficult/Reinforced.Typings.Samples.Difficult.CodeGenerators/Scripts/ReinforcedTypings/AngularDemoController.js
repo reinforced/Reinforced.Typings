@@ -46,7 +46,7 @@ var Reinforced;
                                 }).then(function (c) { return _this.voidMethodCalledCount++; });
                             };
                             return AngularDemoController;
-                        })();
+                        }());
                         Pages.AngularDemoController = AngularDemoController;
                         app.controller('AngularDemoController', ['$scope', 'Api.AngularController', AngularDemoController]);
                     })(Pages = CodeGenerators.Pages || (CodeGenerators.Pages = {}));

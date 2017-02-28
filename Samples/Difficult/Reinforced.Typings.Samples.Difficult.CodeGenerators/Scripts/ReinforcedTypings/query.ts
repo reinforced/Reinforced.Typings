@@ -1,4 +1,14 @@
-﻿class QueryController {
+﻿/**
+ * Simple intermediate class for jQuery to easily perform AJAX requests with disabling elements
+ */
+class QueryController {
+    /**
+     * Main query method that we will use to perform AJAX calls from jQuery middleware controller
+     * @param url URL to query
+     * @param data Data to send
+     * @param progressSelector Element selector to add progress indicator to
+     * @param disableSelector Selector of element that is needed to be disabled while request
+     */
     public static query<T>(url: string, data: any, progressSelector: string, disableSelector:string = ''): JQueryPromise<T> {
         var promise = jQuery.Deferred();
         var query = {

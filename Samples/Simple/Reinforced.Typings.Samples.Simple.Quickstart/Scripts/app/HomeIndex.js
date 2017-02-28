@@ -30,7 +30,7 @@ var Reinforced;
                         HomeIndexPage.prototype.onSend = function () {
                         };
                         return HomeIndexPage;
-                    })();
+                    }());
                     Quickstart.HomeIndexPage = HomeIndexPage;
                 })(Quickstart = Simple.Quickstart || (Simple.Quickstart = {}));
             })(Simple = Samples.Simple || (Samples.Simple = {}));

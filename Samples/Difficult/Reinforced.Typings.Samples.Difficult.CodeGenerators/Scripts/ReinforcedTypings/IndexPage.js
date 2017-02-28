@@ -63,7 +63,7 @@ var Reinforced;
                                 });
                             };
                             return IndexPage;
-                        })();
+                        }());
                         Pages.IndexPage = IndexPage;
                     })(Pages = CodeGenerators.Pages || (CodeGenerators.Pages = {}));
                 })(CodeGenerators = Difficult.CodeGenerators || (Difficult.CodeGenerators = {}));

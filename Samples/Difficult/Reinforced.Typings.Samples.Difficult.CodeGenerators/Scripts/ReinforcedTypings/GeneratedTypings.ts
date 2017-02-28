@@ -2,7 +2,6 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-
 module Reinforced.Typings.Samples.Difficult.CodeGenerators.Models {
 	export interface ISampleResponseModel
 	{
@@ -74,30 +73,60 @@ module Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers {
 		{
 			this.http = $http;
 		}
+		/**
+		* Simple controller action that returns integer method
+		*
+		* @returns JSON-ed random integer value
+		*/
 		public SimpleIntMethod() : angular.IPromise<number>
 		{
 			var params = {  };
 			return this.http.post('/Angular/SimpleIntMethod', params)
 			    .then((response) => { response.data['requestParams'] = params; return response.data; });
 		}
+		/**
+		* Controller action that returns
+		*
+		* @param num Number value
+		* @param s String value
+		* @param boolValue Boolean value
+		* @returns JSON-ed string containing concatenated values
+		*/
 		public MethodWithParameters(num: number, s: string, boolValue: boolean) : angular.IPromise<string>
 		{
 			var params = { 'num': num, 's': s, 'boolValue': boolValue };
 			return this.http.post('/Angular/MethodWithParameters', params)
 			    .then((response) => { response.data['requestParams'] = params; return response.data; });
 		}
+		/**
+		* Controller action that returns our simple object
+		*
+		* @returns JSON-ed simple object
+		*/
 		public ReturningObject() : angular.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
 		{
 			var params = {  };
 			return this.http.post('/Angular/ReturningObject', params)
 			    .then((response) => { response.data['requestParams'] = params; return response.data; });
 		}
+		/**
+		* Controller action that returns our simple object and consimes parameters
+		*
+		* @param echo Sample parameter
+		* @returns JSON-ed simple object
+		*/
 		public ReturningObjectWithParameters(echo: string) : angular.IPromise<Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel>
 		{
 			var params = { 'echo': echo };
 			return this.http.post('/Angular/ReturningObjectWithParameters', params)
 			    .then((response) => { response.data['requestParams'] = params; return response.data; });
 		}
+		/**
+		* Controller action that does not return anything but consumes object as parameter
+		*
+		* @param model Object parameter
+		* @returns Nothing
+		*/
 		public VoidMethodWithParameters(model: Reinforced.Typings.Samples.Difficult.CodeGenerators.Models.ISampleResponseModel) : angular.IPromise<any>
 		{
 			var params = { 'model': model };

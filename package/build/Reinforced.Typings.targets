@@ -21,12 +21,21 @@
 		<Using Namespace="System.Collections.Generic"/>
 		<Code Type="Fragment" Language="cs">
 		<![CDATA[
+			Console.WriteLine("RT is fixing build tasks");
 			string[] targets = Original.Trim().Split(new char[]{';'}, StringSplitOptions.RemoveEmptyEntries);
 			List<string> result = new List<string>();
 			foreach(string s in targets){
-				if (s!="CompileTypeScript") result.Add(s.Trim());
+                string v = s.Trim();
+                bool isCompileTs = (v=="CompileTypeScript");
+                bool isCompileTsConfig = (v=="CompileTypeScriptWithTSConfig");
+				if ((!isCompileTs)&&(!isCompileTsConfig)) {                    
+                    result.Add(v);
+                }else{
+                    Console.WriteLine(v + " task will be removed");
+                }
 			}
 			Fixed = result.ToArray();
+            Console.WriteLine("RT has fixed build tasks:" + string.Join(";",Fixed));
 		]]>
 		</Code>
 	  </Task>

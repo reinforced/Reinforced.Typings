@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <p>
+            Hi! We are here to understand how to generate glue code for controllers with Reinforced.Typings. 
+            This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS. 
+            Pick one to start with:
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 text-center">
+        <a >jQuery</a>
+        <a>AngularJS</a>
+    </div>
+</div>
+
+@section Scripts
+{
+    <link type="text/css" rel="stylesheet" href="~/Content/prismjs/prism.css" />
+
+    <script src="@Url.Content("~/Content/prismjs/prism.js")"></script>
+}
+

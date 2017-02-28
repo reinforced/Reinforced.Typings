@@ -20,8 +20,10 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>1.5</TypeScriptToolsVersion>
-    <NuGetPackageImportStamp>e5da2722</NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,8 +46,8 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Reinforced.Typings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46446044dbedcc7c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Reinforced.Typings.1.2.4\lib\net45\Reinforced.Typings.dll</HintPath>
+      <HintPath>..\..\packages\Reinforced.Typings.1.3.0\lib\net45\Reinforced.Typings.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -150,12 +152,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\..\packages\Reinforced.Typings.1.2.4\build\Reinforced.Typings.targets" Condition="Exists('..\..\packages\Reinforced.Typings.1.2.4\build\Reinforced.Typings.targets')" />
+  <Import Project="..\..\packages\Reinforced.Typings.1.3.0\build\Reinforced.Typings.targets" Condition="Exists('..\..\packages\Reinforced.Typings.1.3.0\build\Reinforced.Typings.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Reinforced.Typings.1.2.4\build\Reinforced.Typings.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Reinforced.Typings.1.2.4\build\Reinforced.Typings.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Reinforced.Typings.1.3.0\build\Reinforced.Typings.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Reinforced.Typings.1.3.0\build\Reinforced.Typings.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

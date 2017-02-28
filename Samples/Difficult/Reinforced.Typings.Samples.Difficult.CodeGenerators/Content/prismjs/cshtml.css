@@ -1,0 +1,32 @@
+.razor_comment{
+    color:#53c175;;
+}
+.razor_comment_begin{    
+    color: darkgreen;    
+}
+.razor_comment_end{
+    color: darkgreen;
+}
+.razor_pageclass{
+    color:#00cf8c
+}
+.razor_inline_key {
+    color:#00cf8c;
+}
+.razor_borders{
+    background-color: #e8e86f;
+    color:black;    
+}
+.razor_block {
+    background-color:#535645;
+}
+.razor_inline_method{
+    color:#7ee895;
+}
+.razor_inline{
+    background-color:#535645;
+}
+.razor_keyword{
+    background-color: #41412b;
+    color:#7895ff;
+}

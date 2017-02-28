@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Generators;
 
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Angular
@@ -14,6 +15,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
     {
         public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
         {
+
             result = base.GenerateNode(element, result, resolver);
             if (result == null) return null;
 
