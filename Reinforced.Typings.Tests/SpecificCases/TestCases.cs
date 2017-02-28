@@ -102,6 +102,11 @@ namespace Reinforced.Typings.Tests.SpecificCases
         {
 
         }
+
+        public void PerformRequest()
+        {
+            
+        }
     }
 
     #endregion

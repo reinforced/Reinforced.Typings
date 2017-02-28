@@ -87,7 +87,19 @@ namespace Reinforced.Typings.Generators
                 if (i < s.Length - 1 && char.IsLower(s[i + 1])) break;
                 if (char.IsUpper(s[i])) result.Append(char.ToLowerInvariant(s[i]));
             }
-            if (i < s.Length - 1) result.Append(s.Substring(i));
+
+            if (i < s.Length - 1)
+            {
+                if (i == 0)
+                {
+                    result.Append(char.ToLowerInvariant(s[0]));
+                    result.Append(s.Substring(1));
+                }
+                else
+                {
+                    result.Append(s.Substring(i));
+                }
+            }
             return result.ToString();
         }
 

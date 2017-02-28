@@ -15,6 +15,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 		id: number;
 		eta() : void;
 		isoDate(date: any) : void;
+		performRequest() : void;
 	}
 }";
             AssertConfiguration(s =>
