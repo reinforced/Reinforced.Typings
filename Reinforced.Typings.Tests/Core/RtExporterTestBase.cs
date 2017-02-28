@@ -16,8 +16,8 @@ namespace Reinforced.Typings.Tests.Core
             te.Export();
             Assert.True(mfo.DeployCalled);
             Assert.True(mfo.TempRegistryCleared);
-            var actual = mfo.ExportedFiles[Sample];
-            Assert.True(actual.TokenizeCompare(result, compareComments));
+            var actual = mfo.ExportedFiles[Sample]; //<--- variable to check in debugger
+            Assert.True(actual.TokenizeCompare(result, compareComments)); //<--- best place to put breakpoint
         }
 
         protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, Dictionary<string,string> results, bool compareComments = false)
@@ -28,10 +28,11 @@ namespace Reinforced.Typings.Tests.Core
             te.Export();
             Assert.True(mfo.DeployCalled);
             Assert.True(mfo.TempRegistryCleared);
-            foreach (var mfoExportedFile in mfo.ExportedFiles)
+            var exportedFiles = mfo.ExportedFiles; //<--- variable to check in debugger
+            foreach (var mfoExportedFile in exportedFiles) 
             {
-                var generated = mfoExportedFile.Value;
-                Assert.True(results.ContainsKey(mfoExportedFile.Key));
+                var generated = mfoExportedFile.Value; //<--- variable to check in debugger
+                Assert.True(results.ContainsKey(mfoExportedFile.Key)); //<--- best place to put breakpoint
                 var expected = results[mfoExportedFile.Key];
                 Assert.True(generated.TokenizeCompare(expected,compareComments));
             }

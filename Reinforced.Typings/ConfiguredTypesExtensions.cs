@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Reinforced.Typings.Ast.Dependency;
@@ -8,7 +7,10 @@ using Reinforced.Typings.Attributes;
 
 namespace Reinforced.Typings
 {
-    internal static class ConfiguredTypesExtensions
+    /// <summary>
+    /// Set of extension methods for RT configured types
+    /// </summary>
+    public static class ConfiguredTypesExtensions
     {
         /// <summary>
         ///     Search predicate to exclude ignored and compiler-generated items
@@ -254,6 +256,12 @@ namespace Reinforced.Typings
             return t.Namespace;
         }
 
+        /// <summary>
+        /// Obtains substitution for type
+        /// </summary>
+        /// <param name="t">Type to find substitution for</param>
+        /// <param name="currentlyExportingType">Currently exported type (to look up substitutions)</param>
+        /// <returns>Substitution AST</returns>
         public static RtTypeName Substitute(this Type t, Type currentlyExportingType)
         {
             if (currentlyExportingType != null)
@@ -268,7 +276,8 @@ namespace Reinforced.Typings
             return null;
         }
 
-        public static void AddReferencesFromTypes(this ExportedFile file, bool useImports)
+
+        internal static void AddReferencesFromTypes(this ExportedFile file, bool useImports)
         {
             foreach (var type in file.TypesToExport)
             {
