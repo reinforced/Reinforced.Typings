@@ -24,10 +24,11 @@ namespace Reinforced.Typings.Tests.SpecificCases
              */
 
             const string file1 = @"
+///<reference path=""../../bootstrap.d.ts""/>
 ///<reference path=""../../jquery.d.ts""/>
+import * as 'react' from 'React';
 import { SomeFluentReferencedType } from '../Fluently/File3';
 import * as '$' from 'JQuery';
-import * as React from 'React';
 import sideeffects = require('./sideeffects');
 import { SomeIndirectlyReferencedClass } from '../Indirect/File2';
 
@@ -39,15 +40,23 @@ export class SomeReferencingType
 	}
 }";
             const string file2 = @"
+///<reference path=""../../bootstrap.d.ts""/>
+import * as 'react' from 'React';
+
 export class SomeIndirectlyReferencedClass
 {
 }";
             const string file3 = @"
+///<reference path=""../../bootstrap.d.ts""/>
+import * as 'react' from 'React';
+
 export class SomeFluentReferencedType
 {
 }";
             AssertConfiguration(s =>
             {
+                s.AddReference("../../bootstrap.d.ts");
+                s.AddImport("* as 'react'", "React");
                 s.Global(a => a.DontWriteWarningComment()
                         .UseModules() //<--- this line differs from references part 2
                 );
