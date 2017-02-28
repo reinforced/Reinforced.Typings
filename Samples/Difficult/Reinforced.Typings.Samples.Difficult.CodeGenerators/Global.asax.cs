@@ -7,7 +7,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Reinforced.Typings.Attributes;
 
-[assembly:TsGlobal(GenerateDocumentation = true)]
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators
 {
     public class MvcApplication : System.Web.HttpApplication

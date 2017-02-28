@@ -7,7 +7,9 @@
 		<RtTargetFile></RtTargetFile>
 		
 		<!-- Here we specify our fluent method -->
-		<RtConfigurationMethod>Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Configuration.Configure</RtConfigurationMethod>
+		<RtConfigurationMethod>
+      Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Configuration.Configure
+    </RtConfigurationMethod>
 		
 		<!-- We have changed this option from 'false' to 'true' -->
 		<RtDivideTypesAmongFiles>true</RtDivideTypesAmongFiles>

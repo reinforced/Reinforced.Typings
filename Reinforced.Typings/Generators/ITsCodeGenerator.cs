@@ -14,8 +14,8 @@ namespace Reinforced.Typings.Generators
         ExportContext Context { get; set; }
 
         /// <summary>
-        ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
-        ///     WriterWrapper (3rd argument) using TypeResolver if necessary
+        ///     Main code generator method. This method should return corresponding AST node for provided 
+        ///     reflection element using source Reflection element and RT's Type Resolver
         /// </summary>
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="resolver">Type resolver</param>

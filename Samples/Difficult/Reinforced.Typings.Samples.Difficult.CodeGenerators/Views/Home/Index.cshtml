@@ -2,15 +2,97 @@
 @{
     ViewBag.Title = "Index";
 }
+@functions
+{
 
+    private static MvcHtmlString RepoLink(string file, string text)
+    {
+        const string repoPath = "https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings/";
+        file = file.Replace("<", "&lt;").Replace(">", "&gt;");
+        var link = string.Format("<code><a href='{0}{1}' target='_blank'>{2}</a></code>", repoPath, file, text);
+        return MvcHtmlString.Create(link);
+    }
+
+    private static MvcHtmlString GeneratorLink(string generator)
+    {
+        return RepoLink("Generators/" + generator + ".cs", generator);
+    }
+
+    private static MvcHtmlString AstLink(string ast)
+    {
+        return RepoLink("Ast/" + ast + ".cs", ast);
+    }
+
+    private static MvcHtmlString CodeFile(string filePath, string id, string language)
+    {
+        const string baseRepoPath = "https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators/";
+        var fname = Path.GetFileName(filePath);
+        const string codeFileHtml = @"
+            <div class=""collapse well"" id=""{0}"">
+                <h4><span class=""glyphicon glyphicon-file""></span> {3}</h4>
+                <pre class=""language-{4}"" data-src=""{1}{2}""></pre>
+            </div>";
+        var code = string.Format(codeFileHtml, id, baseRepoPath, filePath, fname, language);
+        return MvcHtmlString.Create(code);
+    }
+
+    private static MvcHtmlString CodeLink(string text, string id)
+    {
+        return MvcHtmlString.Create(string.Format(@"<a href=""#{0}"" data-toggle=""collapse"" aria-expanded=""false"">{1}</a>", id, text));
+    }
+
+    private static MvcHtmlString C(string code)
+    {
+        code = code.Replace("<", "&lt;").Replace(">", "&gt;");
+        return MvcHtmlString.Create(string.Format("<code>{0}</code>", code));
+    }
+
+}
 <div class="row">
     <div class="col-md-12">
-        <p class="text-justify tut-text">
-            Hi! <br />
-            We are here and going to understand how to generate glue code for controllers with Reinforced.Typings.
-            This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS.
-            Pick one to start with:
-        </p>
+        <div class="text">
+            <p class="text-justify tut-text">
+                <h1>Generators export tutorial</h1>
+                We are here and going to understand how to generate glue code for controllers with Reinforced.Typings. <br />
+                Basically this sample is build to unleash power of Reinforced.Typings custom code generators.
+                Code generator is special class that inherits @RepoLink("Generators/TsCodeGeneratorBase.cs", "Reinforced.Typings.Generators.TsCodeGeneratorBase<,>") type.
+                It has only one abstract method to implement - @C("GenerateNode") method that must convert
+                C# reflection element (@C("MethodInfo"), @C("Type"), @C("MemberInfo") etc...) to corresponding Reinforced.Typings AST node. <br />
+                Each Reinforced.Typings exporting attribute contains @C("CodeGeneratorType") field that you can set to @C("typeof") of @C("TsCodeGeneratorBase<,>") inheritor.
+                At the same time, each fluent configurator has @C(".WithCodeGenerator") method that you can use to specify corresponding code generator for exported member. <br />
+                Anyway, it is not so easy to implement @C("TsCodeGeneratorBase<,>") from scratch. Instead of it you can inherit code generators that are supplied along with Reinforced.Typings and
+                override their @C("GenerateNode") method using @C("base.GenerateNode(...)") call to obtain existing generated AST and make adjustments to it. That is exactly the same that we will do in current tutorials. <br />
+                Reinforced.Typings comes with following code generators:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>
+                    @GeneratorLink("ClassCodeGenerator"): converts @C("System.Type") to @AstLink("RtClass") AST node representing TypeScript class
+                </li>
+                <li>
+                    @GeneratorLink("InterfaceCodeGenerator"): converts @C("System.Type") to @AstLink("RtInterface") AST node representing TypeScript interface
+                </li>
+                <li>
+                    @GeneratorLink("EnumGenerator"): converts @C("System.Type") to @AstLink("RtEnum") AST node representing TypeScript enumeration (enum values generation is incorparated inside of this generator)
+                </li>
+                <li>
+                    @GeneratorLink("PropertyCodeGenerator"): converts @C("System.Type") to @AstLink("RtField") AST node representing TypeScript class or interface field
+                </li>
+                <li>
+                    @GeneratorLink("FieldCodeGenerator"): converts @C("System.Type") to @AstLink("RtField") AST node representing TypeScript class or interface field
+                </li>
+                <li>
+                    @GeneratorLink("MethodCodeGenerator"): converts @C("System.Type") to @AstLink("RtFuncion") AST node representing TypeScript class' or interface's method
+                </li>
+                <li>
+                    @GeneratorLink("ConstructorCodeGenerator"): converts @C("System.Type") to @AstLink("RtConstructor") AST node representing TypeScript class' constructor
+                </li>
+            </ul>
+            <p class="text-justify tut-text">
+                This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS.
+                Pick one to start with:
+            </p>
+
+        </div>
     </div>
 </div>
 <div class="row" id="docs">
@@ -23,32 +105,78 @@
 </div>
 <hr />
 <div>
-    <div class="row collapse" id="jqueryDoc">
+    <div class="row collapse text" id="jqueryDoc">
         <div class="col-md-12">
             <h2 class="text-center">jQuery Middleware export tutorial</h2>
             <h3>Initial setup</h3>
             <p class="text-justify tut-text">
                 We have typical controller with several actions returning JSON/receiving parameters.
-                Also we have page containing simple <a href="#indexjsscript" data-toggle="collapse" aria-expanded="false">script (IndexPage.ts)</a> behind it. We want to make Reinforced.Typings 
-                generating <code>JQueryController</code> TypeScript class for us that will contain all the methods from our controller with suitable names. This class must be re-generated
+                Also we have page containing simple @CodeLink("script (IndexPage.ts)", "indexjsscript") behind it. We want to make Reinforced.Typings
+                generating @C("JQueryController") TypeScript class for us that will contain all the methods from our controller with suitable names. This class must be re-generated
                 each rebuild, so if we change controller action's signarutre or name - then it will be immediately reflected in TypeScript. Also we want to export our generated TypeScript to different files
                 and provide JSDOC for it. So here we go.
             </p>
-            <div class="collapse well" id="indexjsscript">
-                <h4><span class="glyphicon glyphicon-file"></span> IndexPage.ts</h4>
-                <pre class="language-js" data-src="https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators/Scripts/ReinforcedTypings/IndexPage.ts"></pre>
-            </div>
-            <h3>Step 1</h3>
-            <p>
-                Initially let's write <a href="#queryts" data-toggle="collapse" aria-expanded="false">common TypeScript class (query.ts)</a> that all our requests will pass through. Basically, it simply arranges MVC-friendly <code>jQuery.ajax</code> parameters setup. Nothing special.
+
+            @CodeFile("Scripts/ReinforcedTypings/IndexPage.ts", "indexjsscript", "js")
+
+            <h3>Step 1 - Script for requests</h3>
+            <p class="text-justify tut-text">
+                Initially let's write @CodeLink("common TypeScript class (query.ts)", "queryts") that all our requests will pass through. Basically, it simply arranges MVC-friendly @C("jQuery.ajax") parameters setup. Nothing special.
             </p>
-            <div class="collapse well" id="queryts">
-                <h4><span class="glyphicon glyphicon-file"></span> query.ts</h4>
-                <pre class="language-js" data-src="https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators/Scripts/ReinforcedTypings/query.ts"></pre>
-            </div>
-            <h3>Step 2</h3>
-            <p>
-                Next, lets proceed to our <a href="#jquerysettings" data-toggle="collapse" aria-expanded="false">Reinforced.Typings.settings.xml</a> and set <code>RtTargetFile</code>
+
+            @CodeFile("Scripts/ReinforcedTypings/query.ts", "queryts", "js")
+
+            <h3>Step 2 - Reinforced.Typings.settings.xml</h3>
+            <p class="text-justify tut-text">
+                Next, lets proceed to our @C("Reinforced.Typings.settings.xml") file and:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>Set @C("RtDivideTypesAmongFiles") to @C("true"): it will instruct Reinforced.Typings that we are exporting several types</li>
+                <li>Set @C("RtTargetDirectory") to @C("$(ProjectDir)Scripts\\ReinforcedTypings\\Generated"): it means that we want to have our generated code under @C("Scripts/ReinforcedTypings/Generated") directory relatively to our project</li>
+                <li>Set @C("RtConfigurationMethod") to @C("Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Configuration.Configure"): we will use fluent configuration since it is better for web projects to handle all the files in single place</li>
+            </ul>
+            <p class="text-justify tut-text">
+                Now our @C("Reinforced.Typings.settings.xml") must look @CodeLink("like that", "jquerysettings")
+            </p>
+
+            @CodeFile("Reinforced.Typings.settings.xml", "jquerysettings", "html")
+
+            <h3>Step 3 - Code generator</h3>
+            <p class="text-justify tut-text">
+                Reinforced.Typings cannot dig into your methods code since there is no way to do that via reflection (and finally, RT is just special code generator, not translator).
+                So we will have to construct implementations for our methods manually. For simple methods you can use @C("Implementation") property of @C("[TsFunction]") attribute
+                (or fluent @C(".Implement") call on method configuration builder).Here we have something more complex, so we have to create our own code generator. <br />
+                We need to change generation of methods only, so we inherit @GeneratorLink("MethodCodeGenerator") and implement generation. @CodeLink("Here is code generator source with comments", "jqgenerator").
+            </p>
+            @CodeFile("ReinforcedTypings/jQuery/JQueryActionCallGenerator.cs", "jqgenerator", "csharp")
+
+            <h3>Step 4 - Attribute</h3>
+            <p class="text-justify tut-text">
+                Since MVC actions return @C("ActionResult")s, we cannot simply get information about query result via reflection. But we can override Reinforced.Typings'
+                @C("[TsFunction]") attribute. To kill two birds with one stone we also specify code generator in our attribute. @CodeLink("Here it is", "jqattrib").
+                Then we arrange this attribute @CodeLink("above our controller's actions", "jqcontroller"). Please pay attention how we specify return type of action
+            </p>
+            @CodeFile("ReinforcedTypings/jQuery/JQueryMethodAttribute.cs", "jqattrib", "csharp")
+            @CodeFile("Controllers/JQueryController.cs", "jqcontroller", "csharp")
+
+            <h3>Step 5 - Putting all together</h3>
+            <p class="text-justify tut-text">
+                Now it is time to put everything together:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>Go to your fluent configuration method and export test model to @C("models.ts") as interface, @C("JQueryController") - to @C("JQueryController.ts") as class </li>
+                <li>Arrange @C("[assembly:TsGlobal]") attribute and enable documentation generation</li>
+                <li>Enable XMLDOC export for project as described <a href="https://github.com/reinforced/Reinforced.Typings/wiki/JSDOC-support" target="_blank">here</a> </li>
+                <li>Rebuild your project, go to @C("/Scripts/ReinforcedTypings/Generated") and add generated @CodeLink("controller middleware", "jq-gen-controller") and @CodeLink("file with model", "jq-gen-models") to solution</li>
+                <li>Add @CodeLink("View", "jqview") that is using your script</li>
+            </ul>
+            @CodeFile("Scripts/ReinforcedTypings/Generated/JQueryController.ts", "jq-gen-controller", "js")
+            @CodeFile("Scripts/ReinforcedTypings/Generated/models.ts", "jq-gen-models", "js")
+
+            @CodeFile("Views/Home/JQuery.cshtml", "jqview", "cshtml")
+
+            <p class="text-center tut-text">
+                That's it. Now you can run your project, change, add and remove server methods and keep your scripts in sync with server.
             </p>
         </div>
     </div>
@@ -66,16 +194,22 @@
 @section Scripts
 {
     <link type="text/css" rel="stylesheet" href="~/Content/prismjs/prism.css" />
+    <link type="text/css" rel="stylesheet" href="~/Content/prismjs/cshtml.css" />
     <style type="text/css">
         pre[class*="language-"] {
             font-size: 14px !important;
         }
 
         .tut-text {
-            font-size: 15px;
-            line-height: 2;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 30px;
         }
     </style>
     <script src="@Url.Content("~/Content/prismjs/prism.js")"></script>
+    <script src="@Url.Content("~/Content/prismjs/cshtml.js")"></script>
 }
 

@@ -1013,6 +1013,7 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Home\Angular.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Navbar.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
