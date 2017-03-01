@@ -9,11 +9,23 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-Version **1.3.0** is under development. Features:
-* Modules export/import
-* Decorators
-* Enums bugfix
-* And others
+Version **1.3.0** releaed! 
+
+Migration tips:
+* Some of parameters are moved from [[Reinforced.Typings.settings.xml]] to [[[TsGlobal] attribute|Configuration-attributes]] and [[.Global fluent call|Fluent-configuration#global-configuration-builder]]. Please check out corresponding documentation pages to find out what has been changed
+* `RtTypeName` and other types ASTs has been moved to `Reinforced.Typings.Ast.TypeNames` namespace. Be aware of updating your usings
+
+Features:
+* Modules support 
+* Inline implementations 
+* Substitutions 
+* TS tuples 
+* Types and members reordering 
+* Global parameters 
+* Improved generics support 
+* Bugfixes
+* Updated documentation
+* Updated generators sample. Now documentation regarding using code generators is located in the [corresponding example](https://github.com/reinforced/Reinforced.Typings/tree/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators). Please refer to it to find out how to use code generators
 
 What is that?
 =================
