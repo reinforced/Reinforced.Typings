@@ -12,7 +12,8 @@ News
 Version **1.3.0** releaed! 
 
 Migration tips:
-* Some of parameters are moved from [[Reinforced.Typings.settings.xml]] to [[[TsGlobal] attribute|Configuration-attributes]] and [[.Global fluent call|Fluent-configuration#global-configuration-builder]]. Please check out corresponding documentation pages to find out what has been changed
+
+* Some of parameters are moved from [Reinforced.Typings.settings.xml](https://github.com/reinforced/Reinforced.Typings/wiki/Reinforced.Typings.settings.xml) to [[TsGlobal] attribute](https://github.com/reinforced/Reinforced.Typings/wiki/Configuration-attributes#TsGlobal) and [.Global fluent call](https://github.com/reinforced/Reinforced.Typings/wiki/Fluent-configuration#global-configuration-builder). Please check out corresponding documentation pages to find out what has been changed
 * `RtTypeName` and other types ASTs has been moved to `Reinforced.Typings.Ast.TypeNames` namespace. Be aware of updating your usings
 
 Features:
