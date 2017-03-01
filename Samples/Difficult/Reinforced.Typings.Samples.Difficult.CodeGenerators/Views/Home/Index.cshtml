@@ -88,8 +88,8 @@
                 </li>
             </ul>
             <p class="text-justify tut-text">
-                This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS.
-                Pick one to start with:
+                This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS. Please keep in mind that you will need to instal typings for jQuery and AngularJS to successfully implement this tutorial.
+                Pick one of options below to start:
             </p>
 
         </div>
@@ -164,12 +164,13 @@
                 Now it is time to put everything together:
             </p>
             <ul class="text-justify tut-text">
-                <li>Go to your fluent configuration method and export test model to @C("models.ts") as interface, @C("JQueryController") - to @C("JQueryController.ts") as class </li>
+                <li>Go to your @CodeLink("fluent configuration method", "jqfluent") and export test model to @C("models.ts") as interface, @C("JQueryController") - to @C("JQueryController.ts") as class </li>
                 <li>Arrange @C("[assembly:TsGlobal]") attribute and enable documentation generation</li>
                 <li>Enable XMLDOC export for project as described <a href="https://github.com/reinforced/Reinforced.Typings/wiki/JSDOC-support" target="_blank">here</a> </li>
                 <li>Rebuild your project, go to @C("/Scripts/ReinforcedTypings/Generated") and add generated @CodeLink("controller middleware", "jq-gen-controller") and @CodeLink("file with model", "jq-gen-models") to solution</li>
                 <li>Add @CodeLink("View", "jqview") that is using your script</li>
             </ul>
+            @CodeFile("ReinforcedTypings/Configuration.cs", "jqfluent", "csharp")
             @CodeFile("Scripts/ReinforcedTypings/Generated/JQueryController.ts", "jq-gen-controller", "js")
             @CodeFile("Scripts/ReinforcedTypings/Generated/models.ts", "jq-gen-models", "js")
 
@@ -182,10 +183,96 @@
     </div>
     <div class="row collapse" id="angularDoc">
         <div class="col-md-12">
-            <p>
-                Hi! We are here to understand how to generate glue code for controllers with Reinforced.Typings.
-                This sample contains 2 examples: one for generating middleware for jQuery and another - for AngularJS.
-                Pick one to start with:
+            <h2 class="text-center">AngularJS Middleware export tutorial</h2>
+            <h3>Initial setup</h3>
+            <p class="text-justify tut-text">
+                We have typical controller with several actions returning JSON/receiving parameters.
+                Also we have page with corresponding @CodeLink("AngularJS page controller (AngularDemoController.ts)", "pagecontroller") behind it. We want to make Reinforced.Typings
+                generating  TypeScript AngularJS service for us that will contain all the methods from our controller with suitable names. This service must be re-generated
+                each rebuild, so if we change controller action's signarutre or name - then it will be immediately reflected in TypeScript. Also we want to export our generated TypeScript to different files.
+            </p>
+
+            @CodeFile("Scripts/ReinforcedTypings/AngularDemoController.ts", "pagecontroller", "js")
+
+            <h3>Step 1 - Reinforced.Typings.settings.xml</h3>
+            <p class="text-justify tut-text">
+                Next, lets proceed to our @C("Reinforced.Typings.settings.xml") file and:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>Set @C("RtDivideTypesAmongFiles") to @C("true"): it will instruct Reinforced.Typings that we are exporting several types</li>
+                <li>Set @C("RtTargetDirectory") to @C("$(ProjectDir)Scripts\\ReinforcedTypings\\Generated"): it means that we want to have our generated code under @C("Scripts/ReinforcedTypings/Generated") directory relatively to our project</li>
+                <li>Set @C("RtConfigurationMethod") to @C("Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.Configuration.Configure"): we will use fluent configuration since it is better for web projects to handle all the files in single place</li>
+            </ul>
+            <p class="text-justify tut-text">
+                Now our @C("Reinforced.Typings.settings.xml") must look @CodeLink("like that", "ngsettings")
+            </p>
+
+            @CodeFile("Reinforced.Typings.settings.xml", "ngsettings", "html")
+
+            <h3>Step 2 - AngularJS Service class generator</h3>
+            <p class="text-justify tut-text">
+                We have to completele change class that Reinforced.Typings generates for our controller and make it look as AngularJS service. In order to do that we will create ours class code generator
+                by inheriting RT's default @GeneratorLink("ClassCodeGenerator") and modifying its original export result (@AstLink("RtClass") AST) . Particularly we will do the following:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>Add some JSDOC just to identify our class in resulting file</li>
+                <li>Add @C("$http") to our class. We will add it as constructor parameter and the store in local field</li>
+                <li>We will also generate code for automatical registration of our service in AngularJS's container of application</li>
+            </ul>
+            <p class="text-justify tut-text">
+                So, that is our @CodeLink("AngularJS service code generator source code", "nggenerator")
+            </p>
+            @CodeFile("ReinforcedTypings/Angular/AngularControllerGenerator.cs", "nggenerator", "csharp")
+
+            <h3>Step 3 - Method code generator</h3>
+            <p class="text-justify tut-text">
+                Reinforced.Typings cannot dig into your methods code since there is no way to do that via reflection (and finally, RT is just special code generator, not translator).
+                We need to provide custom implemetations for our controller's service methods.
+                So we will have to construct implementations for our methods manually. For simple methods you can use @C("Implementation") property of @C("[TsFunction]") attribute
+                (or fluent @C(".Implement") call on method configuration builder).Here we have something more complex, so we have to create our own code generator. <br />
+                We need to change all generated method's bodies among controller class, so we inherit @GeneratorLink("MethodCodeGenerator") and implement generation. 
+                And again, we will change existing RT generation result:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>Change method body to construct JSON object and use private @C("http") variable to send it to server by correct URL</li>
+                <li>Change method return type to AngularJS promise parametrized with original Action's return type</li>
+            </ul>
+            <p class="text-justify tut-text">
+                So, that is our @CodeLink("service method code generator source code", "ngmethodgenerator")
+            </p>
+            @CodeFile("ReinforcedTypings/Angular/AngularActionCallGenerator.cs", "ngmethodgenerator", "csharp")
+
+            <h3>Step 4 - Attribute</h3>
+            <p class="text-justify tut-text">
+                Since MVC actions return @C("ActionResult")s, we cannot simply get information about query result via reflection. But we can override Reinforced.Typings'
+                @C("[TsFunction]") attribute. To kill two birds with one stone we also specify code generator in our attribute. @CodeLink("Here it is", "ngattrib").
+                Then we arrange this attribute @CodeLink("above our controller's actions", "ngcontroller"). Please pay attention how we specify return type of action
+            </p>
+            
+            @CodeFile("ReinforcedTypings/Angular/AngularMethodAttribute.cs", "ngattrib", "csharp")
+
+            @CodeFile("Controllers/AngularController.cs", "ngcontroller", "csharp")
+
+            <h3>Step 5 - Putting all together</h3>
+            <p class="text-justify tut-text">
+                Now it is time to put everything together:
+            </p>
+            <ul class="text-justify tut-text">
+                <li>Go to your @CodeLink("fluent configuration method", "ngfluent") and export test model to @C("models.ts") as interface, @C("AngularController") - to @C("AngularController.ts") as class </li>
+                <li>Use @C(".WithCodeGenerator") call to instruct RT to use our class code generator on @C("AngularController") </li>
+                <li>Arrange @C("[assembly:TsGlobal]") attribute and enable documentation generation</li>
+                <li>Enable XMLDOC export for project as described <a href="https://github.com/reinforced/Reinforced.Typings/wiki/JSDOC-support" target="_blank">here</a> </li>
+                <li>Rebuild your project, go to @C("/Scripts/ReinforcedTypings/Generated") and add generated @CodeLink("controller middleware", "ng-gen-controller") and @CodeLink("file with model", "ng-gen-models") to solution</li>
+                <li>Add @CodeLink("View", "angview") that is using your script</li>
+            </ul>
+            @CodeFile("ReinforcedTypings/Configuration.cs", "ngfluent", "csharp")
+            @CodeFile("Scripts/ReinforcedTypings/Generated/AngularController.ts", "ng-gen-controller", "js")
+            @CodeFile("Scripts/ReinforcedTypings/Generated/models.ts", "ng-gen-models", "js")
+
+            @CodeFile("Views/Home/Angular.cshtml", "angview", "cshtml")
+
+            <p class="text-center tut-text">
+                That's it. Now you can run your project, change, add and remove server methods and keep your scripts in sync with server.
             </p>
         </div>
     </div>

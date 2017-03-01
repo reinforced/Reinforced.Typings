@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Models
+﻿namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Models
 {
     /// <summary>
     /// Sample model that we will use for tests

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.WebSockets;
 using Reinforced.Typings.Samples.Difficult.CodeGenerators.Models;
-using Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings;
 using Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.jQuery;
 
 namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.Controllers
