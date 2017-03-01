@@ -31,7 +31,9 @@ Features:
 What is that?
 =================
 
-Simply, this thing converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and does following tricks:
+This framework converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and simply does its job according to configuration. Please check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, code generators, fluent configuration, multi-file export, JSDOC). 
+
+In a nutshell, you can use Reinforced.Typings for:
 
 Exporting ViewModels
 -----------------
@@ -141,11 +143,11 @@ module MyApp {
 </tr>
 </table>
 
-Can temporarily disable TypeScript compilation in your project
+Temporary disabling TypeScript compilation in your project
 -------------
 Now you will not stay powerless when generated typings fail your TypeScript build in project. See [RtBypassTypeScriptCompilation](https://github.com/reinforced/Reinforced.Typings/wiki/Reinforced.Typings.settings.xml#RtBypassTypeScriptCompilation) configuration parameter.
 
-Preserves inheritance
+Inheritance preservation
 -------------
 <table>
 <tr><td align="center" width="43%">C#</td><td></td><td align="center"  width="48%">TypeScript</td></tr>
@@ -207,7 +209,7 @@ module MyApp {
 </tr>
 </table>
 
-Supports fluent configuration
+Use fluent configuration
 -------------
 Details can be found [on the corresponding wiki page](https://github.com/reinforced/Reinforced.Typings/wiki/Fluent-configuration)
 <table>
@@ -253,7 +255,7 @@ module MyApp {
 <tr><td align="center" colspan="3">Reinforced.Typings.settings.xml: <code>&lt;RtConfigurationMethod&gt;MyApp.Configuration.Configure&lt;/RtConfigurationMethod&gt;</code></td></tr>
 </table>
 
-Generates any custom glue code
+Generate any custom glue code
 -------------
 Read more [here](https://github.com/reinforced/Reinforced.Typings/wiki#writing-custom-code-generators).
 
