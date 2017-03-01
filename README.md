@@ -141,9 +141,9 @@ module MyApp {
 </tr>
 </table>
 
-Can disable itself. Or TS compilation. Or both.
+Can temporarily disable TypeScript compilation in your project
 -------------
-It is needed for some situations. See [RtBypassTypeScriptCompilation](https://github.com/reinforced/Reinforced.Typings/wiki/Reinforced.Typings.settings.xml#RtBypassTypeScriptCompilation) and [RtDisable](https://github.com/reinforced/Reinforced.Typings/wiki/Reinforced.Typings.settings.xml#RtDisable) configuration parameters.
+Now you will not stay powerless when generated typings fail your TypeScript build in project. See [RtBypassTypeScriptCompilation](https://github.com/reinforced/Reinforced.Typings/wiki/Reinforced.Typings.settings.xml#RtBypassTypeScriptCompilation) configuration parameter.
 
 Preserves inheritance
 -------------
