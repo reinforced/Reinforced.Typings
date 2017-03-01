@@ -255,7 +255,7 @@ module MyApp {
 
 Generates any custom glue code
 -------------
-Please obtain full sample code [here](https://github.com/reinforced/Reinforced.Typings/tree/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators). It is long to be fully published in readme.
+Read more [here](https://github.com/reinforced/Reinforced.Typings/wiki#writing-custom-code-generators).
 
 <table>
 <tr><td align="center" width="30%">C#</td><td></td><td align="center"  width="48%">TypeScript</td></tr>
