@@ -26,7 +26,7 @@ Features:
 * Improved generics support 
 * Bugfixes
 * Updated documentation
-* Updated generators sample. Now documentation regarding using code generators is located in the [corresponding example](https://github.com/reinforced/Reinforced.Typings/tree/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators). Please refer to it to find out how to use code generators
+* Updated generators sample. Now documentation regarding using code generators is located in the [corresponding example](https://github.com/reinforced/Reinforced.Typings/tree/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators) ( [samples .zip download](https://github.com/reinforced/Reinforced.Typings/releases/download/v1.3.0/Samples.zip) ). Please refer to it to find out how to use code generators
 
 What is that?
 =================
