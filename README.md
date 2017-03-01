@@ -31,7 +31,7 @@ Features:
 What is that?
 =================
 
-This framework converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and simply does its job according to configuration. Please check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, code generators, fluent configuration, multi-file export, JSDOC). 
+This framework converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and simply does its job according to configuration. Please check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
 
 In a nutshell, you can use Reinforced.Typings for:
 
