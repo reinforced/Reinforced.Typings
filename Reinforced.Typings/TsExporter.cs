@@ -113,7 +113,8 @@ namespace Reinforced.Typings
 
             GlobalReferences = ReferenceInspector.InspectGlobalReferences();
             _context.Generators = new GeneratorManager(_context);
-            _typesToFilesMap = _allTypes.GroupBy(c => ReferenceInspector.GetPathForType(c, stripExtension: false))
+            if (!_context.Hierarchical) _typesToFilesMap = new Dictionary<string, IEnumerable<Type>>();
+            else _typesToFilesMap = _allTypes.GroupBy(c => ReferenceInspector.GetPathForType(c, stripExtension: false))
                 .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
             _isInitialized = true;
