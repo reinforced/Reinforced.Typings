@@ -20,7 +20,6 @@ namespace Reinforced.Typings
         private readonly ExportContext _context;
         private List<Type> _allTypes;
         private HashSet<Type> _allTypesHash;
-        private ConfigurationRepository _configurationRepository;
         private bool _isInitialized;
         private Dictionary<string, IEnumerable<Type>> _typesToFilesMap;
 
@@ -82,18 +81,15 @@ namespace Reinforced.Typings
             {
                 var configurationBuilder = new ConfigurationBuilder(_context.Global);
                 _context.ConfigurationMethod(configurationBuilder);
-                _configurationRepository = configurationBuilder.Build();
-                ConfigurationRepository.Instance = _configurationRepository;
-
-                foreach (var additionalDocumentationPath in _configurationRepository.AdditionalDocumentationPathes)
-                {
-                    _context.Documentation.CacheDocumentation(additionalDocumentationPath, _context.Warnings);
-                }
+                ConfigurationRepository.Instance = configurationBuilder.Build();
             }
 
             _context.Documentation =
                 new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
-
+            foreach (var additionalDocumentationPath in ConfigurationRepository.Instance.AdditionalDocumentationPathes)
+            {
+                _context.Documentation.CacheDocumentation(additionalDocumentationPath, _context.Warnings);
+            }
 
             _allTypes = _context.SourceAssemblies
                 .SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
