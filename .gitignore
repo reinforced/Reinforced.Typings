@@ -7,7 +7,6 @@
 *.userosscache
 *.sln.docstates
 *.nupkg
-*.nuget
 package/lib/net45/
 package/tools/
 package/build/*.dll
