@@ -57,7 +57,7 @@ namespace Reinforced.Typings
             return result;
         }
 
-        public static bool CheckIgnored<T>(this IExportConfiguration<T> conf)
+        public static bool CheckIgnored<T>(this IAttributed<T> conf)
         {
             var ignore = conf as IIgnorable;
             if (ignore == null) return false;

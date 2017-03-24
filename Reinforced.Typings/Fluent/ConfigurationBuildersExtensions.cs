@@ -23,7 +23,7 @@ namespace Reinforced.Typings.Fluent
             {
                 var conf =
                     (PropertyExportConfigurationBuilder)
-                    tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfigurationBuilder());
+                    tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfigurationBuilder(propertyInfo));
                 if (configuration == null) continue;
                 try
                 {
@@ -45,7 +45,7 @@ namespace Reinforced.Typings.Fluent
             {
                 var conf =
                     (MethodConfigurationBuilder)
-                    tc.MembersConfiguration.GetOrCreate(methodInfo, () => new MethodConfigurationBuilder());
+                    tc.MembersConfiguration.GetOrCreate(methodInfo, () => new MethodConfigurationBuilder(methodInfo));
                 if (configuration == null) continue;
                 try
                 {
@@ -84,7 +84,7 @@ namespace Reinforced.Typings.Fluent
                     {
                         var pcb =
                             (ParameterConfigurationBuilder)
-                            conf.ParametersConfiguration.GetOrCreate(pi, () => new ParameterConfigurationBuilder());
+                            conf.ParametersConfiguration.GetOrCreate(pi, () => new ParameterConfigurationBuilder(pi));
 
                         var parsed = false;
                         var arg = call.Arguments[0] as LambdaExpression;
@@ -156,7 +156,7 @@ namespace Reinforced.Typings.Fluent
             ITypeConfigurationBuilder tcb = tc;
             return
                 (PropertyExportConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder());
+                tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder(prop));
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Reinforced.Typings.Fluent
             ITypeConfigurationBuilder tcb = tc;
             return
                 (PropertyExportConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder());
+                tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder(prop));
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace Reinforced.Typings.Fluent
             ITypeConfigurationBuilder tcb = tc;
             var methodConf =
                 (MethodConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodConfigurationBuilder());
+                tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodConfigurationBuilder(prop));
             ExtractParameters(tcb, method);
             return methodConf;
         }
@@ -447,7 +447,7 @@ namespace Reinforced.Typings.Fluent
             ITypeConfigurationBuilder tcb = tc;
             var methodConf =
                 (MethodConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodConfigurationBuilder());
+                tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodConfigurationBuilder(prop));
             ExtractParameters(tcb, method);
             return methodConf;
         }
@@ -731,7 +731,7 @@ namespace Reinforced.Typings.Fluent
             var n = Enum.GetName(typeof(T), value);
             var field = typeof(T).GetField(n);
             IEnumConfigurationBuidler ecb = conf;
-            var c = ecb.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration());
+            var c = ecb.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration(field));
             return c;
         }
 
@@ -744,7 +744,7 @@ namespace Reinforced.Typings.Fluent
         public static EnumValueExportConfiguration Value(this IEnumConfigurationBuidler conf, string propertyName)
         {
             var field = conf.EnumType.GetField(propertyName);
-            var c = conf.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration());
+            var c = conf.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration(field));
             return c;
         }
 

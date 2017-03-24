@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Fluent
 
         private TsInterfaceAttribute AttributePrototype { get; set; }
 
-        TsInterfaceAttribute IExportConfiguration<TsInterfaceAttribute>.AttributePrototype
+        TsInterfaceAttribute IAttributed<TsInterfaceAttribute>.AttributePrototype
         {
             get { return AttributePrototype; }
         }

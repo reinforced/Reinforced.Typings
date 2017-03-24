@@ -15,11 +15,11 @@ namespace Reinforced.Typings.Fluent
     {
         private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
 
-        private readonly Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>> _membersConfiguration =
-            new Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>>();
+        private readonly Dictionary<MemberInfo, IAttributed<TsAttributeBase>> _membersConfiguration =
+            new Dictionary<MemberInfo, IAttributed<TsAttributeBase>>();
 
-        private readonly Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> _parametersConfiguration
-            = new Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>>();
+        private readonly Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> _parametersConfiguration
+            = new Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>>();
 
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
         private readonly Dictionary<Type, RtTypeName> _substitutions = new Dictionary<Type, RtTypeName>();
@@ -35,13 +35,12 @@ namespace Reinforced.Typings.Fluent
             get { return _substitutions; }
         }
 
-        Dictionary<ParameterInfo, IExportConfiguration<TsParameterAttribute>> ITypeConfigurationBuilder.
-            ParametersConfiguration
+        Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> ITypeConfigurationBuilder.ParametersConfiguration
         {
             get { return _parametersConfiguration; }
         }
 
-        Dictionary<MemberInfo, IExportConfiguration<TsAttributeBase>> ITypeConfigurationBuilder.MembersConfiguration
+        Dictionary<MemberInfo, IAttributed<TsAttributeBase>> ITypeConfigurationBuilder.MembersConfiguration
         {
             get { return _membersConfiguration; }
         }

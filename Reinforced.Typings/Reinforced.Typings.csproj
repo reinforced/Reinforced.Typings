@@ -128,7 +128,7 @@
     <Compile Include="Fluent\Interfaces\IClassConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IDecoratorsAggregator.cs" />
     <Compile Include="Fluent\Interfaces\IEnumConfigurationBuidler.cs" />
-    <Compile Include="Fluent\Interfaces\IExportConfiguration.cs" />
+    <Compile Include="Fluent\Interfaces\IAttributed.cs" />
     <Compile Include="Fluent\Interfaces\IIgnorable.cs" />
     <Compile Include="Fluent\Interfaces\IInterfaceConfigurationBuilder.cs" />
     <Compile Include="Fluent\Interfaces\IOrderableMember.cs" />

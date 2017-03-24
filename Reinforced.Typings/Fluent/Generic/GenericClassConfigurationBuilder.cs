@@ -24,7 +24,7 @@ namespace Reinforced.Typings.Fluent.Generic
 
         private List<TsDecoratorAttribute> Decorators { get; set; }
 
-        TsClassAttribute IExportConfiguration<TsClassAttribute>.AttributePrototype
+        TsClassAttribute IAttributed<TsClassAttribute>.AttributePrototype
         {
             get { return AttributePrototype; }
         }

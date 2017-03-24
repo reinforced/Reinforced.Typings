@@ -32,7 +32,7 @@ namespace Reinforced.Typings.Fluent
             get { return _valueExportConfigurations; }
         }
 
-        TsEnumAttribute IExportConfiguration<TsEnumAttribute>.AttributePrototype
+        TsEnumAttribute IAttributed<TsEnumAttribute>.AttributePrototype
         {
             get { return AttributePrototype; }
         }

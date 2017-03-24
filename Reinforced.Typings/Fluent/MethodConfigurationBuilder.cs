@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -7,11 +8,12 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Fluent configuration builder for exported methods
     /// </summary>
-    public class MethodConfigurationBuilder : IExportConfiguration<TsFunctionAttribute>, IIgnorable,
+    public class MethodConfigurationBuilder : IMemberExportConfiguration<TsFunctionAttribute,MethodInfo>, IIgnorable,
         IDecoratorsAggregator, IOrderableMember
     {
-        internal MethodConfigurationBuilder()
+        internal MethodConfigurationBuilder(MethodInfo member)
         {
+            Member = member;
             AttributePrototype = new TsFunctionAttribute();
             Decorators = new List<TsDecoratorAttribute>();
         }
@@ -24,7 +26,7 @@ namespace Reinforced.Typings.Fluent
             get { return Decorators; }
         }
 
-        TsFunctionAttribute IExportConfiguration<TsFunctionAttribute>.AttributePrototype
+        TsFunctionAttribute IAttributed<TsFunctionAttribute>.AttributePrototype
         {
             get { return AttributePrototype; }
         }
@@ -36,5 +38,10 @@ namespace Reinforced.Typings.Fluent
             get { return AttributePrototype.Order; }
             set { AttributePrototype.Order = value; }
         }
+
+        /// <summary>
+        /// Exporting member
+        /// </summary>
+        public MethodInfo Member { get; private set; }
     }
 }

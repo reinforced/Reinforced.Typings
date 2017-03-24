@@ -75,6 +75,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.DecoratorsTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest1.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest2.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.FunctionalNames.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />

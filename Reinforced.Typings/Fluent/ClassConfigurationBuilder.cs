@@ -24,12 +24,12 @@ namespace Reinforced.Typings.Fluent
 
         private TsClassAttribute AttributePrototype { get; set; }
 
-        private List<TsDecoratorAttribute> Decorators { get; set; }
-
-        TsClassAttribute IExportConfiguration<TsClassAttribute>.AttributePrototype
+        TsClassAttribute IAttributed<TsClassAttribute>.AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return this.AttributePrototype; }
         }
+
+        private List<TsDecoratorAttribute> Decorators { get; set; }
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {

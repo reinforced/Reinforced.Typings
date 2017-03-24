@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -7,11 +8,12 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Parameter configuration builder
     /// </summary>
-    public class ParameterConfigurationBuilder : IExportConfiguration<TsParameterAttribute>, IIgnorable,
+    public class ParameterConfigurationBuilder : IMemberExportConfiguration<TsParameterAttribute,ParameterInfo>, IIgnorable,
         IDecoratorsAggregator
     {
-        internal ParameterConfigurationBuilder()
+        internal ParameterConfigurationBuilder(ParameterInfo member)
         {
+            Member = member;
             AttributePrototype = new TsParameterAttribute();
             Decorators = new List<TsDecoratorAttribute>();
         }
@@ -24,11 +26,16 @@ namespace Reinforced.Typings.Fluent
             get { return Decorators; }
         }
 
-        TsParameterAttribute IExportConfiguration<TsParameterAttribute>.AttributePrototype
+        TsParameterAttribute IAttributed<TsParameterAttribute>.AttributePrototype
         {
             get { return AttributePrototype; }
         }
 
         bool IIgnorable.Ignore { get; set; }
+
+        /// <summary>
+        /// Exporting member
+        /// </summary>
+        public ParameterInfo Member { get; private set; }
     }
 }

@@ -29,8 +29,8 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static IExportConfiguration<TsClassAttribute> WithCodeGenerator<T>(
-            this IExportConfiguration<TsClassAttribute> conf)
+        public static IAttributed<TsClassAttribute> WithCodeGenerator<T>(
+            this IAttributed<TsClassAttribute> conf)
             where T : ITsCodeGenerator<Type>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
@@ -40,8 +40,8 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static IExportConfiguration<TsInterfaceAttribute> WithCodeGenerator<T>(
-            this IExportConfiguration<TsInterfaceAttribute> conf)
+        public static IAttributed<TsInterfaceAttribute> WithCodeGenerator<T>(
+            this IAttributed<TsInterfaceAttribute> conf)
             where T : ITsCodeGenerator<Type>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
@@ -51,8 +51,8 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static IExportConfiguration<TsEnumAttribute> WithCodeGenerator<T>(
-            this IExportConfiguration<TsEnumAttribute> conf)
+        public static IAttributed<TsEnumAttribute> WithCodeGenerator<T>(
+            this IAttributed<TsEnumAttribute> conf)
             where T : ITsCodeGenerator<Type>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
@@ -62,8 +62,8 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static IExportConfiguration<TsPropertyAttribute> WithCodeGenerator<T>(
-            this IExportConfiguration<TsPropertyAttribute> conf)
+        public static IAttributed<TsPropertyAttribute> WithCodeGenerator<T>(
+            this IAttributed<TsPropertyAttribute> conf)
             where T : ITsCodeGenerator<MemberInfo>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
@@ -73,8 +73,8 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static IExportConfiguration<TsFunctionAttribute> WithCodeGenerator<T>(
-            this IExportConfiguration<TsFunctionAttribute> conf)
+        public static IAttributed<TsFunctionAttribute> WithCodeGenerator<T>(
+            this IAttributed<TsFunctionAttribute> conf)
             where T : ITsCodeGenerator<MethodInfo>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
@@ -84,8 +84,8 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static IExportConfiguration<TsParameterAttribute> WithCodeGenerator<T>(
-            this IExportConfiguration<TsParameterAttribute> conf)
+        public static IAttributed<TsParameterAttribute> WithCodeGenerator<T>(
+            this IAttributed<TsParameterAttribute> conf)
             where T : TsCodeGeneratorBase<ParameterInfo, RtArgument>
         {
             conf.AttributePrototype.CodeGeneratorType = typeof(T);
@@ -268,7 +268,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="name">Custom name to be used</param>
-        public static T OverrideName<T>(this T conf, string name) where T : IExportConfiguration<INameOverrideAttribute>
+        public static T OverrideName<T>(this T conf, string name) where T : IAttributed<INameOverrideAttribute>
         {
             conf.AttributePrototype.Name = name;
             return conf;
@@ -278,7 +278,7 @@ namespace Reinforced.Typings.Fluent
         ///     Forces member name to be camelCase
         /// </summary>
         /// <param name="conf">Configuration</param>
-        public static T CamelCase<T>(this T conf) where T : IExportConfiguration<ICamelCaseableAttribute>
+        public static T CamelCase<T>(this T conf) where T : IAttributed<ICamelCaseableAttribute>
         {
             conf.AttributePrototype.ShouldBeCamelCased = true;
             return conf;
@@ -288,7 +288,7 @@ namespace Reinforced.Typings.Fluent
         ///     Forces member name to be PascalCase
         /// </summary>
         /// <param name="conf">Configuration</param>
-        public static T PascalCase<T>(this T conf) where T : IExportConfiguration<IPascalCasableAttribute>
+        public static T PascalCase<T>(this T conf) where T : IAttributed<IPascalCasableAttribute>
         {
             conf.AttributePrototype.ShouldBePascalCased = true;
             return conf;
@@ -298,7 +298,7 @@ namespace Reinforced.Typings.Fluent
         ///     Configures exporter dont to export member to corresponding namespace
         /// </summary>
         public static T DontIncludeToNamespace<T>(this T conf, bool include = false)
-            where T : IExportConfiguration<TsDeclarationAttributeBase>
+            where T : IAttributed<TsDeclarationAttributeBase>
         {
             conf.AttributePrototype.IncludeNamespace = include;
             return conf;
@@ -310,7 +310,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configuration</param>
         /// <param name="nameSpace">Namespace name</param>
         public static T OverrideNamespace<T>(this T conf, string nameSpace)
-            where T : IExportConfiguration<TsDeclarationAttributeBase>
+            where T : IAttributed<TsDeclarationAttributeBase>
         {
             conf.AttributePrototype.Namespace = nameSpace;
             return conf;
@@ -328,7 +328,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configurator</param>
         /// <param name="typeName">TS-friendly type name</param>
         /// <returns></returns>
-        public static T Type<T>(this T conf, string typeName) where T : IExportConfiguration<TsTypedAttributeBase>
+        public static T Type<T>(this T conf, string typeName) where T : IAttributed<TsTypedAttributeBase>
         {
             conf.AttributePrototype.Type = typeName;
             return conf;
@@ -339,8 +339,8 @@ namespace Reinforced.Typings.Fluent
         ///     Feel free to use delegates here. It is very comfortable instead of regular TS functions syntax.
         /// </summary>
         /// <param name="conf">Configurator</param>
-        public static IExportConfiguration<TsTypedAttributeBase> Type<T>(
-            this IExportConfiguration<TsTypedAttributeBase> conf)
+        public static IAttributed<TsTypedAttributeBase> Type<T>(
+            this IAttributed<TsTypedAttributeBase> conf)
         {
             conf.AttributePrototype.StrongType = typeof(T);
             return conf;
@@ -353,7 +353,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configurator</param>
         /// <param name="type">Type to override with</param>
         /// <returns></returns>
-        public static T Type<T>(this T conf, Type type) where T : IExportConfiguration<TsTypedAttributeBase>
+        public static T Type<T>(this T conf, Type type) where T : IAttributed<TsTypedAttributeBase>
         {
             conf.AttributePrototype.StrongType = type;
             return conf;
@@ -370,7 +370,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configurator</param>
         /// <param name="typeName">TS-friendly type name</param>
         /// <returns></returns>
-        public static T Returns<T>(this T conf, string typeName) where T : IExportConfiguration<TsFunctionAttribute>
+        public static T Returns<T>(this T conf, string typeName) where T : IAttributed<TsFunctionAttribute>
         {
             conf.AttributePrototype.Type = typeName;
             return conf;
@@ -382,8 +382,8 @@ namespace Reinforced.Typings.Fluent
         ///     Actually this method does the same as .Type call. Just for your convinence
         /// </summary>
         /// <param name="conf">Configurator</param>
-        public static IExportConfiguration<TsTypedAttributeBase> Returns<T>(
-            this IExportConfiguration<TsFunctionAttribute> conf)
+        public static IAttributed<TsTypedAttributeBase> Returns<T>(
+            this IAttributed<TsFunctionAttribute> conf)
         {
             conf.AttributePrototype.StrongType = typeof(T);
             return conf;
@@ -397,7 +397,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configurator</param>
         /// <param name="type">Type to override with</param>
         /// <returns></returns>
-        public static T Returns<T>(this T conf, Type type) where T : IExportConfiguration<TsFunctionAttribute>
+        public static T Returns<T>(this T conf, Type type) where T : IAttributed<TsFunctionAttribute>
         {
             conf.AttributePrototype.StrongType = type;
             return conf;
@@ -417,7 +417,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configuration</param>
         /// <param name="force">Force nullable or not</param>
         public static T ForceNullable<T>(this T conf, bool force = true)
-            where T : IExportConfiguration<TsPropertyAttribute>
+            where T : IAttributed<TsPropertyAttribute>
         {
             conf.AttributePrototype.ForceNullable = force;
             return conf;
@@ -428,7 +428,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="value">Default value for parameter</param>
-        public static T DefaultValue<T>(this T conf, object value) where T : IExportConfiguration<TsParameterAttribute>
+        public static T DefaultValue<T>(this T conf, object value) where T : IAttributed<TsParameterAttribute>
         {
             conf.AttributePrototype.DefaultValue = value;
             return conf;
@@ -439,7 +439,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="auto">Add I automatically or not</param>
-        public static T AutoI<T>(this T conf, bool auto = true) where T : IExportConfiguration<TsInterfaceAttribute>
+        public static T AutoI<T>(this T conf, bool auto = true) where T : IAttributed<TsInterfaceAttribute>
         {
             conf.AttributePrototype.AutoI = auto;
             return conf;
@@ -527,7 +527,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="functionCode">Function code</param>
         /// <returns></returns>
         public static T Implement<T>(this T builder, string functionCode)
-            where T : IExportConfiguration<TsFunctionAttribute>
+            where T : IAttributed<TsFunctionAttribute>
         {
             builder.AttributePrototype.Implementation = functionCode;
             return builder;

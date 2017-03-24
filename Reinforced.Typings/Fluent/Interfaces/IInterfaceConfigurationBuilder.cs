@@ -6,7 +6,7 @@ namespace Reinforced.Typings.Fluent.Interfaces
     ///     Technical interface for interface configuration builder
     /// </summary>
     public interface IInterfaceConfigurationBuilder : ITypeConfigurationBuilder,
-        IExportConfiguration<TsInterfaceAttribute>
+        IAttributed<TsInterfaceAttribute>
     {
     }
 }
