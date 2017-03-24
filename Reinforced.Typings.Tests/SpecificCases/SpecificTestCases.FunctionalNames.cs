@@ -22,7 +22,9 @@ module Reinforced.Typings.Tests.SpecificCases {
             {
                 s.Global(a => a.DontWriteWarningComment());
                 s.ExportAsInterface<ITestInterface>()
-                .WithPublicProperties(c=>c.OverrideName("Woohoo" + c.Member.Name));
+                .WithPublicProperties(c => c.OverrideName("Woohoo" + c.Member.Name));
+
+                s.ExportAsInterfaces(new List<Type>(), c => c.WithPublicProperties(x => x.OverrideName("_" + x.Member.Name)));
             }, result);
         }
     }

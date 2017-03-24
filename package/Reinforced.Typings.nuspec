@@ -17,6 +17,7 @@
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
 - Documentation construction bugfix
+- Member field to fluent configurators
 		</releaseNotes>
     </metadata>
 </package>
