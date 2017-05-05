@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Changes indentation symbol (by default is \t). 
+        /// Changes indentation symbol (by default is \t).
         /// This ability is made by @jonsa's request - boring perfectionist
         /// </summary>
         /// <param name="builder">Conf builder</param>
@@ -132,17 +132,31 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
-        //{
-        //    bool strict = true)
-        //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,
-        ///// <param name="strict">Pass 'true' reveal all nullable types to "type | null" </param>
-        ///// <param name="builder">Conf builder</param>
-        ///// </summary>
-        ///// Enables strict null checks. Particularry, makes all exported nullable value-types of type "type | null"
+		/// <summary>
+		///  If true, will ignore warnings for finding suitable TypeScript type 'any' assumed
+		///  Otherwise, will add a warning for each case
+		/// </summary>
+		/// <param name="builder">Conf builder</param>
+		/// <param name="ignoreWarning">ignore or allow warning to be generated when a suitable type is not found for a TypeScript type</param>
+		/// 
+		public static GlobalConfigurationBuilder IgnoreSuitableTypeWarning(this GlobalConfigurationBuilder builder,
+			bool ignoreWarning = false)
+		{
+			builder.Parameters.IgnoreTypeUnknownWarning = ignoreWarning;
+			return builder;
+		}
 
-        ///// <summary>
-        //    builder.Parameters.StrictNullChecks = strict;
-        //    return builder;
-        //}
-    }
+		//{
+		//    bool strict = true)
+		//public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,
+		///// <param name="strict">Pass 'true' reveal all nullable types to "type | null" </param>
+		///// <param name="builder">Conf builder</param>
+		///// </summary>
+		///// Enables strict null checks. Particularry, makes all exported nullable value-types of type "type | null"
+
+		///// <summary>
+		//    builder.Parameters.StrictNullChecks = strict;
+		//    return builder;
+		//}
+	}
 }

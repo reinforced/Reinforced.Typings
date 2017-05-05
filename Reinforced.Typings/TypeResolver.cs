@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.TypeNames;
@@ -206,7 +207,7 @@ namespace Reinforced.Typings
                 if (enumerable == null) return Cache(t, new RtArrayType(AnyType));
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
             }
-            
+
             if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
                 var methodInfo = t.GetMethod("Invoke");
@@ -230,7 +231,8 @@ namespace Reinforced.Typings
 
             }
 
-            _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
+			if (!_context.Global.IgnoreTypeUnknownWarning)
+				_context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
 
             return Cache(t, AnyType);
         }

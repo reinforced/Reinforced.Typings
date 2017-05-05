@@ -21,9 +21,11 @@ namespace Reinforced.Typings
         private string _tabSymbol;
         private bool _useModules;
         private bool _discardNamespacesWhenUsingModules;
-        //private bool _strictNullChecks;
+		private bool _ignoreTypeUnknownWarning;
 
-        internal GlobalParameters()
+		//private bool _strictNullChecks;
+
+		internal GlobalParameters()
         {
             _tabSymbol = "\t";
             _writeWarningComment = true;
@@ -148,7 +150,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// When true, RT will ignore classes' namespaces when arraging classes and interfaces among files. 
+        /// When true, RT will ignore classes' namespaces when arraging classes and interfaces among files.
         /// This parameter only makes difference when using (--module)
         /// </summary>
         public bool DiscardNamespacesWhenUsingModules
@@ -176,5 +178,17 @@ namespace Reinforced.Typings
             }
         }
 
+		/// <summary>
+		///
+		/// </summary>
+	    public bool IgnoreTypeUnknownWarning
+		{
+			get { return _ignoreTypeUnknownWarning; }
+			set
+			{
+				if (_isLocked) return;
+				_ignoreTypeUnknownWarning = value;
+			}
+		}
     }
 }
