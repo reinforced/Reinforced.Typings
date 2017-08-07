@@ -8,9 +8,9 @@ namespace Reinforced.Typings.Attributes
 {
     /// <summary>
     /// Sets global parameters for RT export.
-    /// Warning! Use Priority property to control [TsGlobal] processing order. 
-    /// When exporting multiple assemblies and several ones will contain [TsGlobal] then the one with 
-    /// highest priority will be used. Global parameters configured from fluent configuration 
+    /// Warning! Use Priority property to control [TsGlobal] processing order.
+    /// When exporting multiple assemblies and several ones will contain [TsGlobal] then the one with
+    /// highest priority will be used. Global parameters configured from fluent configuration
     /// using builder.Global method always has highest priority
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly)]
@@ -56,7 +56,7 @@ namespace Reinforced.Typings.Attributes
         public bool UseModules { get; set; }
 
         /// <summary>
-        /// When true, RT will ignore classes' namespaces when arraging classes and interfaces among files. 
+        /// When true, RT will ignore classes' namespaces when arraging classes and interfaces among files.
         /// This parameter only makes difference when using (--module)
         /// </summary>
         public bool DiscardNamespacesWhenUsingModules { get; set; }
@@ -67,15 +67,21 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public bool ExportPureTypings { get; set; }
 
-        ///// <summary>
-        ///// Set to true and all nullable value types will be revealed to "type | null"
-        ///// </summary>
-        //public bool StrictNullChecks { get; set; }
+		/// <summary>
+		///     If true, will ignore the warning that a suitable TypeScript type was not found and that 'any' is assumed
+		///     Otherwise, will generate this warning
+		/// </summary>
+		public bool IgnoreTypeUnknownWarning { get; set; }
 
-        /// <summary>
-        /// Sets order of applying paramters from this attribute
-        /// </summary>
-        public double Priority { get; set; }
+		///// <summary>
+		///// Set to true and all nullable value types will be revealed to "type | null"
+		///// </summary>
+		//public bool StrictNullChecks { get; set; }
+
+		/// <summary>
+		/// Sets order of applying paramters from this attribute
+		/// </summary>
+		public double Priority { get; set; }
 
         /// <summary>
         /// Default constructor for TsGlobal attribute

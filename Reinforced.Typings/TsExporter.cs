@@ -58,13 +58,15 @@ namespace Reinforced.Typings
             gp.UseModules = tsGlobal.UseModules;
             gp.TabSymbol = tsGlobal.TabSymbol;
             gp.WriteWarningComment = tsGlobal.WriteWarningComment;
-            //gp.StrictNullChecks = tsGlobal.StrictNullChecks;
-        }
+			gp.IgnoreTypeUnknownWarning = tsGlobal.IgnoreTypeUnknownWarning;
 
-        /// <summary>
-        /// Initializes TS exporter. Reads all types configuration, applies fluent configuration, resolves references
-        /// </summary>
-        public void Initialize()
+			//gp.StrictNullChecks = tsGlobal.StrictNullChecks;
+		}
+
+		/// <summary>
+		/// Initializes TS exporter. Reads all types configuration, applies fluent configuration, resolves references
+		/// </summary>
+		public void Initialize()
         {
             if (_isInitialized) return;
 
@@ -74,7 +76,7 @@ namespace Reinforced.Typings
                 .OrderByDescending(c => c.Priority)
                 .FirstOrDefault();
             ApplyTsGlobal(tsGlobal, _context.Global);
-            
+
             // 2nd step - searching and processing fluent configuration
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
@@ -132,7 +134,7 @@ namespace Reinforced.Typings
                     var allFiles = string.Join(", ", _typesToFilesMap.Keys);
                     throw new Exception("Current configuration does not contain file " + fileName + ", only " + allFiles);
                 }
-                    
+
                 types = _typesToFilesMap[fileName];
             }
             ExportedFile ef = new ExportedFile

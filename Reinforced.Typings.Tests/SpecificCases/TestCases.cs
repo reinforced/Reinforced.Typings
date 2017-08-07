@@ -53,11 +53,21 @@ namespace Reinforced.Typings.Tests.SpecificCases
         public string PandaWoodProperty { get; set; }
     }
 
-    #endregion
+	#endregion
 
-    #region Enums in namespaces
+	#region IgnoreSuitableTypeNotFound warning
 
-    public class JonsaModel
+	public class UnknownType { /* doesn't matter */ }
+	public class PandaWoodIgnoreSuitableTypeNotFoundCase
+	{
+		public UnknownType UnknownTypeFieldName { get; set; }
+	}
+
+	#endregion
+
+	#region Enums in namespaces
+
+	public class JonsaModel
     {
         public JonsaEnum Enum { get; set; }
     }
@@ -105,7 +115,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
         public void PerformRequest()
         {
-            
+
         }
     }
 
@@ -274,7 +284,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     public interface ITrimplementor1<TMaster> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
     {
-        
+
     }
 
     public interface ITrimplementor2<TMaster,TChild> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
@@ -325,7 +335,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
         public void DoSomething()
         {
-            
+
         }
     }
 
