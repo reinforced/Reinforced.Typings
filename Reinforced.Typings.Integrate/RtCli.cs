@@ -86,7 +86,7 @@ namespace Reinforced.Typings.Integrate
                 Hierarchy = Hierarchical,
                 TargetDirectory = FixTargetPath(TargetDirectory),
                 TargetFile = FixTargetPath(TargetFile),
-                References = ExtractReferences(),
+                ReferencesTmpFilePath = PutReferencesToTempFile(),
                 SourceAssemblies = ExtractSourceAssemblies(),
                 DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",StringComparison.InvariantCultureIgnoreCase)?DocumentationFilePath:String.Empty,
                 ConfigurationMethod = ConfigurationMethod
@@ -108,11 +108,22 @@ namespace Reinforced.Typings.Integrate
         }
 
 
-        private string[] ExtractReferences()
+        private string PutReferencesToTempFile()
         {
-            if (References==null) return new string[0];
-            var list = References.Select(c => c.ItemSpec).ToArray();
-            return list;
+            if (References==null) return string.Empty;
+            var tmpFile = Path.GetTempFileName();
+            using (var fs = File.OpenWrite(tmpFile))
+            {
+                using (var tw = new StreamWriter(fs))
+                {
+                    foreach (var rf in References.Select(c => c.ItemSpec))
+                    {
+                        tw.WriteLine(rf);
+                    }
+                    tw.Flush();
+                }
+            }
+            return tmpFile;
         }
 
         private string[] ExtractSourceAssemblies()

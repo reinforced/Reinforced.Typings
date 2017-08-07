@@ -9,6 +9,7 @@ namespace Reinforced.Typings.Samples.Simple.Quickstart
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();

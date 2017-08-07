@@ -46,11 +46,11 @@ Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (regardless ending 
         /// If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly
         /// </summary>
         [ConsoleHelp(@"
-Semicolon-separated full list of referenced assemblies.
+Path to temporary file containing all the references for project. One reference per line.
 If not specified then the CLI will try to resolve reference assemblies 
 from same directory as target assembly. 
-Example:   rtcli.exe References=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll"" ")]
-        public string[] References { get; set; }
+Example:   rtcli.exe References=""C:\Users\AppData\Local\Temp\ANGhgRuDPG.tmp"" ")]
+        public string ReferencesTmpFilePath { get; set; }
         
         /// <summary>
         /// True to create project hierarchy in target folder. 

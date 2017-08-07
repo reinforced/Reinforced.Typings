@@ -17,7 +17,8 @@ namespace Reinforced.Typings.Cli
         private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
         private static string _lastAssemblyLocalDir;
         private static int _totalLoadedAssemblies;
-
+        private static FileStream _referencesFileStream;
+        private static string _referencesFilePath;
 
         /// <summary>
         /// Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
@@ -40,6 +41,7 @@ namespace Reinforced.Typings.Cli
                     Console.WriteLine("No valid parameters found. Exiting.");
                     Environment.Exit(0);
                 }
+                _referencesFilePath = _parameters.ReferencesTmpFilePath;
                 var settings = InstantiateExportContext();
                 ResolveFluentMethod(settings);
                 TsExporter exporter = new TsExporter(settings);
@@ -55,18 +57,27 @@ namespace Reinforced.Typings.Cli
                 var error = VisualStudioFriendlyErrorMessage.Create(rtException);
                 Console.WriteLine(error.ToString());
                 Console.WriteLine(rtException.StackTrace);
+                ReleaseReferencesTempFile();
                 Environment.Exit(1);
             }
             catch (Exception ex)
             {
                 BuildError(ex.Message);
                 Console.WriteLine(ex.StackTrace);
+                ReleaseReferencesTempFile();
                 Environment.Exit(1);
             }
 
+            ReleaseReferencesTempFile();
             Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded", _totalLoadedAssemblies);
 
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
+        }
+
+        private static void ReleaseReferencesTempFile()
+        {
+            if (_referencesFileStream != null) _referencesFileStream.Dispose();
+            if (!string.IsNullOrEmpty(_referencesFilePath)) File.Delete(_referencesFilePath);
         }
 
         private static void ResolveFluentMethod(ExportContext context)
@@ -116,9 +127,17 @@ namespace Reinforced.Typings.Cli
         public static void BuildReferencesCache()
         {
             _referencesCache.Clear();
-            foreach (var reference in _parameters.References)
+
+            if (string.IsNullOrEmpty(_referencesFilePath)) return;
+            _referencesFileStream = new FileStream(_referencesFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+            using (var tr = new StreamReader(_referencesFileStream))
             {
-                _referencesCache.Add(Path.GetFileName(reference), reference);
+                string reference;
+                while ((reference = tr.ReadLine()) != null)
+                {
+                    _referencesCache.Add(Path.GetFileName(reference), reference);
+                }
+
             }
         }
 
