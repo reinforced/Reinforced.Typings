@@ -9,24 +9,12 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-Version **1.3.0** releaed! 
-
-Migration tips:
-
-* Some of parameters are moved from [Reinforced.Typings.settings.xml](https://github.com/reinforced/Reinforced.Typings/wiki/Reinforced.Typings.settings.xml) to [[TsGlobal] attribute](https://github.com/reinforced/Reinforced.Typings/wiki/Configuration-attributes#TsGlobal) and [.Global fluent call](https://github.com/reinforced/Reinforced.Typings/wiki/Fluent-configuration#global-configuration-builder). Please check out corresponding documentation pages to find out what has been changed
-* `RtTypeName` and other types ASTs has been moved to `Reinforced.Typings.Ast.TypeNames` namespace. Be aware of updating your usings
+Version **1.3.2** releaed! 
 
 Features:
-* Modules support 
-* Inline implementations 
-* Substitutions 
-* TS tuples 
-* Types and members reordering 
-* Global parameters 
-* Improved generics support 
-* Bugfixes
-* Updated documentation
-* Updated generators sample. Now documentation regarding using code generators is located in the [corresponding example](https://github.com/reinforced/Reinforced.Typings/tree/master/Samples/Difficult/Reinforced.Typings.Samples.Difficult.CodeGenerators) ( [samples .zip download](https://github.com/reinforced/Reinforced.Typings/releases/download/v1.3.0/Samples.zip) ). Please refer to it to find out how to use code generators
+* [Inline type inferers](https://github.com/reinforced/Reinforced.Typings/wiki/Types-Resolution#inline-type-inferers)
+* ```ForceNullable``` can also be used to disable property nullability
+* Reported bugs fixes
 
 What is that?
 =================

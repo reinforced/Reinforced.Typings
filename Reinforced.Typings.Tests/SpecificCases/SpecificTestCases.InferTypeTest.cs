@@ -34,7 +34,7 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.Global(a => a.DontWriteWarningComment());
                 s.ExportAsInterface<ITestInterface>();
                 s.ExportAsInterface<IInferringTestInterface>()
-                    .WithPublicProperties()
+                    .WithPublicProperties(x => x.InferType((m, t) => new RtSimpleTypeName("Observable", t.ResolveTypeName(((PropertyInfo)m).PropertyType))))
                     .WithProperty(x => x.Guid, x => x.InferType(_ => "Observable<string>"))
                     .WithProperty(x => x.Int, x => x.InferType(_ => new RtSimpleTypeName("Observable", new RtSimpleTypeName("number"))))
                     .WithProperty(x => x.TestInterface, x => x.InferType((m, r) => new RtSimpleTypeName("Observable", r.ResolveTypeName(typeof(ITestInterface)))))
@@ -42,9 +42,9 @@ module Reinforced.Typings.Tests.SpecificCases {
                     .WithProperty(x => x.String, x => x.InferType(_ => "Observable<string>"))
                     .WithMethod(x => x.SomeMethod1(Ts.Parameter<int>(t => t.InferType(_ => "Observable<number>"))), x => x.InferType(_ => "Observable<number>"))
                     .WithMethod(x => x.SomeMethod2(Ts.Parameter<int>(
-                            t => t.InferType(_ => new RtSimpleTypeName("Observable", new RtSimpleTypeName("number"))))), 
+                            t => t.InferType(_ => new RtSimpleTypeName("Observable", new RtSimpleTypeName("number"))))),
                             x => x.InferType(_ => new RtSimpleTypeName("Observable", new RtSimpleTypeName("number"))))
-                    .WithMethod(x => x.SomeMethod3(Ts.Parameter<int>(t => t.InferType((m, r) => new RtSimpleTypeName("Observable", r.ResolveTypeName(typeof(ITestInterface)))))), 
+                    .WithMethod(x => x.SomeMethod3(Ts.Parameter<int>(t => t.InferType((m, r) => new RtSimpleTypeName("Observable", r.ResolveTypeName(typeof(ITestInterface)))))),
                             x => x.InferType((m, r) => new RtSimpleTypeName("Observable", r.ResolveTypeName(typeof(ITestInterface)))))
                     .WithMethod(x => x.SomeMethod4(Ts.Parameter<int>(t => t.InferType((m, r) => string.Format("Observable<{0}>", r.ResolveTypeName(m.ParameterType))))),
                         x => x.InferType((m, r) => string.Format("Observable<{0}>", r.ResolveTypeName(m.ReturnType))))
