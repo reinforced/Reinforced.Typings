@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Fluent
     ///     Fluent configuration builder for exported methods
     /// </summary>
     public class MethodConfigurationBuilder : IMemberExportConfiguration<TsFunctionAttribute,MethodInfo>, IIgnorable,
-        IDecoratorsAggregator, IOrderableMember
+        IDecoratorsAggregator, IOrderableMember, ISupportsInferring<MethodInfo>
     {
         internal MethodConfigurationBuilder(MethodInfo member)
         {
@@ -43,5 +43,10 @@ namespace Reinforced.Typings.Fluent
         /// Exporting member
         /// </summary>
         public MethodInfo Member { get; private set; }
+
+        /// <summary>
+        /// Type inferers set instance
+        /// </summary>
+        public InlineTypeInferers<MethodInfo> TypeInferers { get { return AttributePrototype.TypeInferers; } }
     }
 }

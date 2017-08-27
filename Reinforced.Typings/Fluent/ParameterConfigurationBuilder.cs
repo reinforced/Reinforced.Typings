@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Fluent
     ///     Parameter configuration builder
     /// </summary>
     public class ParameterConfigurationBuilder : IMemberExportConfiguration<TsParameterAttribute,ParameterInfo>, IIgnorable,
-        IDecoratorsAggregator
+        IDecoratorsAggregator, ISupportsInferring<ParameterInfo>
     {
         internal ParameterConfigurationBuilder(ParameterInfo member)
         {
@@ -37,5 +37,10 @@ namespace Reinforced.Typings.Fluent
         /// Exporting member
         /// </summary>
         public ParameterInfo Member { get; private set; }
+
+        /// <summary>
+        /// Type inferers set instance
+        /// </summary>
+        public InlineTypeInferers<ParameterInfo> TypeInferers { get { return AttributePrototype.TypeInferers; } }
     }
 }

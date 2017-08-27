@@ -31,7 +31,7 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <summary>
         /// Constructs new instance of AST node
         /// </summary>
-        public RtSimpleTypeName(string typeName, RtTypeName[] genericArguments)
+        public RtSimpleTypeName(string typeName, params RtTypeName[] genericArguments)
         {
             TypeName = typeName;
             if (genericArguments == null) genericArguments = new RtTypeName[0];

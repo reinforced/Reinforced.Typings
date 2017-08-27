@@ -17,6 +17,9 @@
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
 - Fixed large references error
+- ForceNullable now is nullable (can be disabled or enabled for some properties)
+- Added inline type inferers
+- .exe references checking
 		</releaseNotes>
     </metadata>
 </package>

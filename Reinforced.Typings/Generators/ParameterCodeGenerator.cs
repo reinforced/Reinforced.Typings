@@ -38,6 +38,7 @@ namespace Reinforced.Typings.Generators
                     isNullable = element.IsOptional;
                 }
                 else type = resolver.ResolveTypeName(element.ParameterType);
+                type = fa.TypeInferers.Infer(element, resolver) ?? type;
             }
             else
             {

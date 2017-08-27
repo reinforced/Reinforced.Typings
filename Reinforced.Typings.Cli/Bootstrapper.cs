@@ -141,10 +141,8 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-        public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
+        private static string LookupAssemblyPathInternal(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
-            if (!assemblyNameOrFullPath.EndsWith(".dll") && !assemblyNameOrFullPath.EndsWith(".exe"))
-                assemblyNameOrFullPath = assemblyNameOrFullPath + ".dll";
 #if DEBUG
             Console.WriteLine("Looking up for assembly {0}", assemblyNameOrFullPath);
 #endif
@@ -178,8 +176,26 @@ namespace Reinforced.Typings.Cli
                 return p;
             }
 
-            BuildWarn("Assembly {0} may be resolved incorrectly", assemblyNameOrFullPath, p);
+            return null;
+        }
 
+        public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
+        {
+            if (!assemblyNameOrFullPath.EndsWith(".dll") && !assemblyNameOrFullPath.EndsWith(".exe"))
+            {
+                var check = assemblyNameOrFullPath + ".dll";
+                var checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
+
+                if (!string.IsNullOrEmpty(checkResult)) return checkResult;
+
+                check = assemblyNameOrFullPath + ".exe";
+                checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
+
+                if (!string.IsNullOrEmpty(checkResult)) return checkResult;
+            }
+
+            var p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
+            BuildWarn("Assembly {0} may be resolved incorrectly", assemblyNameOrFullPath, p);
             return assemblyNameOrFullPath;
         }
 

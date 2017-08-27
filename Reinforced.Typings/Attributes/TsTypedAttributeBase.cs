@@ -19,5 +19,6 @@ namespace Reinforced.Typings.Attributes
         ///     It is useful e.g. for delegates
         /// </summary>
         public virtual Type StrongType { get; set; }
+
     }
 }

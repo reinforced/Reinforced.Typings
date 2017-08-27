@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtField GenerateNode(MemberInfo element,RtField result, TypeResolver resolver)
+        public override RtField GenerateNode(MemberInfo element, RtField result, TypeResolver resolver)
         {
             if (element.IsIgnored()) return null;
             result.IsStatic = element.IsStatic();
@@ -27,14 +27,14 @@ namespace Reinforced.Typings.Generators
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
-                RtJsdocNode jsdoc = new RtJsdocNode {Description = doc.Summary.Text};
+                RtJsdocNode jsdoc = new RtJsdocNode { Description = doc.Summary.Text };
                 result.Documentation = jsdoc;
             }
 
             var t = GetType(element);
             RtTypeName type = null;
             var propName = new RtIdentifier(element.Name);
-            
+
             var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
             if (tp != null)
             {
@@ -46,15 +46,23 @@ namespace Reinforced.Typings.Generators
                 {
                     type = new RtSimpleTypeName(tp.Type);
                 }
+                
+                type = tp.TypeInferers.Infer(element, resolver) ?? type;
 
                 if (!string.IsNullOrEmpty(tp.Name)) propName.IdentifierName = tp.Name;
-                if (tp.ForceNullable && !Context.SpecialCase) propName.IsNullable = true;
+                if (tp.NilForceNullable.HasValue && !Context.SpecialCase)
+                {
+                    propName.IsNullable = tp.NilForceNullable.Value;
+                }
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);
-            if (!propName.IsNullable && t.IsNullable() && !Context.SpecialCase)
+            if (tp != null && !tp.NilForceNullable.HasValue)
             {
-                propName.IsNullable = true;
+                if (!propName.IsNullable && t.IsNullable() && !Context.SpecialCase)
+                {
+                    propName.IsNullable = true;
+                }
             }
 
             if (element is PropertyInfo)

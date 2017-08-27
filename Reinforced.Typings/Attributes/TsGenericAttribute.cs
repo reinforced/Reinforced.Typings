@@ -6,8 +6,10 @@ namespace Reinforced.Typings.Attributes
     ///     Denotes type for generic attribute
     /// </summary>
     [AttributeUsage(AttributeTargets.GenericParameter)]
-    public class TsGenericAttribute : TsTypedAttributeBase
+    public class TsGenericAttribute : TsTypedAttributeBase, ISupportsInferring<Type>
     {
+        private readonly InlineTypeInferers<Type> _typeInferers = new InlineTypeInferers<Type>();
+
         /// <summary>
         ///     Constructs new instance of TsGenericAttribute
         /// </summary>
@@ -24,6 +26,15 @@ namespace Reinforced.Typings.Attributes
         public TsGenericAttribute(Type strongType)
         {
             StrongType = strongType;
+        }
+
+        /// <summary>
+        /// Type inferers set instance
+        /// </summary>
+        public InlineTypeInferers<Type> TypeInferers
+        {
+            get { return _typeInferers; }
+            private set { }
         }
     }
 }

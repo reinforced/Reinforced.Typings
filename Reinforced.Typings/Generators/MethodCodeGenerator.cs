@@ -92,6 +92,7 @@ namespace Reinforced.Typings.Generators
                 if (!string.IsNullOrEmpty(fa.Type)) type = new RtSimpleTypeName(fa.Type);
                 else if (fa.StrongType != null) type = resolver.ResolveTypeName(fa.StrongType);
                 else type = resolver.ResolveTypeName(element.ReturnType);
+                type = fa.TypeInferers.Infer(element, resolver) ?? type;
             }
             else
             {

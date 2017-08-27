@@ -87,6 +87,7 @@
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\INameOverrideAttribute.cs" />
+    <Compile Include="InlineTypeInferers.cs" />
     <Compile Include="Attributes\IOrderableAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeImportAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeReference.cs" />

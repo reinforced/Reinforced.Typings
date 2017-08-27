@@ -105,7 +105,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
         public void PerformRequest()
         {
-            
+
         }
     }
 
@@ -274,17 +274,17 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     public interface ITrimplementor1<TMaster> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
     {
-        
+
     }
 
-    public interface ITrimplementor2<TMaster,TChild> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
+    public interface ITrimplementor2<TMaster, TChild> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TMaster>>>
     {
         TChild Property { get; }
     }
 
     public interface ITrimplementor3<TMaster, TChild> : ITriforce<TMaster, List<TMaster>, Dictionary<int, IEnumerable<TChild>>>
     {
-        Tuple<TMaster,TChild> Property { get; }
+        Tuple<TMaster, TChild> Property { get; }
     }
 
     #endregion
@@ -325,7 +325,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
         public void DoSomething()
         {
-            
+
         }
     }
 
@@ -337,5 +337,28 @@ namespace Reinforced.Typings.Tests.SpecificCases
         }
     }
 
+    #endregion
+
+    #region New ForceNullable test
+
+    public interface INewForceNullableTest
+    {
+        int? NilInt { get; }
+        int NotNilInt { get; }
+        int? ForceNotNullableInt { get; }
+        int ForceNullableInt { get; }
+    }
+
+    #endregion
+
+    #region Inline inferring test
+    public interface IInferringTestInterface
+    {
+        string String { get; }
+        int Int { get; }
+        Guid Guid { get; }
+        DateTime DateTime { get; }
+        ITestInterface TestInterface { get; }
+    }
     #endregion
 }

@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Fluent
     ///     Fluent configuration builder for exported properties
     /// </summary>
     public class PropertyExportConfigurationBuilder : IMemberExportConfiguration<TsPropertyAttribute,MemberInfo>, IIgnorable,
-        IDecoratorsAggregator, IOrderableMember
+        IDecoratorsAggregator, IOrderableMember, ISupportsInferring<MemberInfo>
     {
         internal PropertyExportConfigurationBuilder(MemberInfo member)
         {
@@ -43,5 +43,10 @@ namespace Reinforced.Typings.Fluent
         /// Exporting member
         /// </summary>
         public MemberInfo Member { get; private set; }
+
+        /// <summary>
+        /// Type inferers set instance
+        /// </summary>
+        public InlineTypeInferers<MemberInfo> TypeInferers { get { return AttributePrototype.TypeInferers; } }
     }
 }

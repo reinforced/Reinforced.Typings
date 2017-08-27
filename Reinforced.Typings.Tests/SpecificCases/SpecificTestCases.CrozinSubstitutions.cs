@@ -1,5 +1,6 @@
 ﻿using System;
 using Reinforced.Typings.Ast.TypeNames;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
 using Xunit;
 
@@ -29,8 +30,7 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.Substitute(typeof(Guid), new RtSimpleTypeName("string"));
                 s.ExportAsInterface<CrozinSubstitutionTest>().WithPublicProperties();
                 s.ExportAsInterface<CrozinLocalSubstitutionTest>()
-                    .Substitute(typeof(DateTime), new RtSimpleTypeName("Date"))
-                    .WithPublicProperties();
+                    .Substitute(typeof(DateTime), new RtSimpleTypeName("Date"));
             }, result);
         }
     }

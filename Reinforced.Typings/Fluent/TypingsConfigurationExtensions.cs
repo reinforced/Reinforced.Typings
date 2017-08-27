@@ -416,10 +416,10 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="force">Force nullable or not</param>
-        public static T ForceNullable<T>(this T conf, bool force = true)
+        public static T ForceNullable<T>(this T conf, bool? force = true)
             where T : IAttributed<TsPropertyAttribute>
         {
-            conf.AttributePrototype.ForceNullable = force;
+            conf.AttributePrototype.NilForceNullable = force;
             return conf;
         }
 
