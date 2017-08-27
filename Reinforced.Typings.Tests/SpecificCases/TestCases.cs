@@ -359,6 +359,16 @@ namespace Reinforced.Typings.Tests.SpecificCases
         Guid Guid { get; }
         DateTime DateTime { get; }
         ITestInterface TestInterface { get; }
+
+        void VoidMethod1(int arg);
+        void VoidMethod2(int arg);
+        void VoidMethod3(int arg);
+        void VoidMethod4(int arg);
+
+        int SomeMethod1(int arg);
+        int SomeMethod2(int arg);
+        int SomeMethod3(int arg);
+        int SomeMethod4(int arg);
     }
     #endregion
 }
