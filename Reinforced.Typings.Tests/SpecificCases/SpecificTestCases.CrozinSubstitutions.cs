@@ -30,6 +30,7 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.Substitute(typeof(Guid), new RtSimpleTypeName("string"));
                 s.ExportAsInterface<CrozinSubstitutionTest>().WithPublicProperties();
                 s.ExportAsInterface<CrozinLocalSubstitutionTest>()
+                    .WithPublicProperties()
                     .Substitute(typeof(DateTime), new RtSimpleTypeName("Date"));
             }, result);
         }
