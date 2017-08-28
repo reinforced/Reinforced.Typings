@@ -118,7 +118,8 @@ namespace Reinforced.Typings.ReferencesInspection
                     if (fromConfiguration.EndsWith(".ts"))
                         fromConfiguration = fromConfiguration.Substring(0, fromConfiguration.Length - 3);
                 }
-                return Path.Combine(_context.TargetDirectory, fromConfiguration).Replace("/", "\\");
+                var r = Path.Combine(_context.TargetDirectory, fromConfiguration.Replace("/", "\\")).Replace("/", "\\");
+                return r;
             }
 
             var ns = t.GetNamespace();
@@ -187,19 +188,24 @@ namespace Reinforced.Typings.ReferencesInspection
             }
             else
             {
-                var level = current.Length - 1;
-                while (level >= 0 && (current.I(level) != desired.I(level)))
+                var level = current.Length;
+                //var cr1 = current.I(level);
+                //var ds1 = desired.I(level);
+                while (level >= 0 && (!ArrayExtensions.PartialCompare(current, desired, level)))
                 {
-                    result.Append("..\\");
+                    //var cr = current.I(level);
+                    //var ds = desired.I(level);
+                    result.Append("../");
                     level--;
+
                 }
-                level++;
+                //level++;
                 for (; level < desired.Length; level++)
                 {
-                    result.AppendFormat("{0}\\", desired[level]);
+                    result.AppendFormat("{0}/", desired[level]);
                 }
             }
-            return result.ToString().Trim('\\');
+            return result.ToString().Trim('/');
         }
 
 

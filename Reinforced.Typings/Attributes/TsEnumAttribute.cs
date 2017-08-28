@@ -8,5 +8,9 @@ namespace Reinforced.Typings.Attributes
     [AttributeUsage(AttributeTargets.Enum)]
     public class TsEnumAttribute : TsDeclarationAttributeBase
     {
+        /// <summary>
+        /// When true, results "const" enum instead of usual
+        /// </summary>
+        public bool IsConst { get; set; }
     }
 }

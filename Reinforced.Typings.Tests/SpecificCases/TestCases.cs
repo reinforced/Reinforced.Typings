@@ -371,4 +371,18 @@ namespace Reinforced.Typings.Tests.SpecificCases
         int SomeMethod4(int arg);
     }
     #endregion
+
+    #region Daniel West Ref. Files test
+
+    public enum SomeEnum
+    {
+        One, Two
+    }
+
+    public class SomeViewModel
+    {
+        public SomeEnum Enum { get; set; }
+    }
+
+    #endregion
 }

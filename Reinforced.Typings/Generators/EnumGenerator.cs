@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Reinforced.Typings.Ast;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
@@ -31,6 +32,11 @@ namespace Reinforced.Typings.Generators
                 RtJsdocNode docNode = new RtJsdocNode();
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
+            }
+            var ea = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(element);
+            if (ea != null)
+            {
+                result.IsConst = ea.IsConst;
             }
             List<RtEnumValue> valuesResult = new List<RtEnumValue>();
             for (var index = 0; index < names.Length; index++)

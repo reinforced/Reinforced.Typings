@@ -12,6 +12,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Context = WriterContext.Enum;
             AppendTabs();
             if (node.Export) Write("export ");
+            if (node.IsConst) Write("const ");
             Write("enum ");
             Visit(node.EnumName);
             WriteLine(" { ");

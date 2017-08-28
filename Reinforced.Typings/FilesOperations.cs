@@ -112,10 +112,16 @@ namespace Reinforced.Typings
 
     internal static class ArrayExtensions
     {
-        public static T I<T>(this T[] array, int idx)
+        public static bool PartialCompare(string[] array1, string[] array2, int idx)
         {
-            if (idx >= array.Length) return default(T);
-            return array[idx];
+            var minLen = array1.Length > array2.Length ? array2.Length : array1.Length;
+            if (idx > minLen) return false;
+            for (int i = 0; i < idx; i++)
+            {
+                if (array1[i] != array2[i]) return false;
+            }
+
+            return true;
         }
     }
 }

@@ -36,6 +36,11 @@ namespace Reinforced.Typings.Ast
             Decorators = new List<RtDecorator>();
         }
 
+        /// <summary>
+        /// When true, results "const" enum instead of usual
+        /// </summary>
+        public bool IsConst { get; set; }
+
         /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {

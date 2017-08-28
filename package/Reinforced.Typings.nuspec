@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.3.2</version>
+        <version>1.3.3</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,10 +16,8 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-- Fixed large references error
-- ForceNullable now is nullable (can be disabled or enabled for some properties)
-- Added inline type inferers
-- .exe references checking
+- Fixed pathes resolution error
+- Added const enums
 		</releaseNotes>
     </metadata>
 </package>
