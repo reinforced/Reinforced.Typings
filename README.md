@@ -9,11 +9,12 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-Version **1.3.2** releaed! 
+Version **1.3.3** releaed! 
 
 Features:
 * [Inline type inferers](https://github.com/reinforced/Reinforced.Typings/wiki/Types-Resolution#inline-type-inferers)
 * ```ForceNullable``` can also be used to disable property nullability
+* Const enums
 * Reported bugs fixes
 
 What is that?
