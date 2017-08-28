@@ -233,7 +233,7 @@ namespace Reinforced.Typings.Cli
         {
             if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
             AssemblyName nm = new AssemblyName(args.Name);
-            string path = LookupAssemblyPath(nm.Name + ".dll", false);
+            string path = LookupAssemblyPath(nm.Name, false);
             Assembly a = Assembly.LoadFrom(path);
             _totalLoadedAssemblies++;
 #if DEBUG
