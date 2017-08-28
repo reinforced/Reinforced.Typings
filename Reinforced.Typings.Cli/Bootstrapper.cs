@@ -64,7 +64,7 @@ namespace Reinforced.Typings.Cli
             {
                 BuildError(ex.Message);
                 Console.WriteLine(ex.StackTrace);
-                ReleaseReferencesTempFile();
+                //ReleaseReferencesTempFile();
                 Environment.Exit(1);
             }
 
@@ -181,10 +181,11 @@ namespace Reinforced.Typings.Cli
 
         public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
+            string checkResult;
             if (!assemblyNameOrFullPath.EndsWith(".dll") && !assemblyNameOrFullPath.EndsWith(".exe"))
             {
                 var check = assemblyNameOrFullPath + ".dll";
-                var checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
+                checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
 
                 if (!string.IsNullOrEmpty(checkResult)) return checkResult;
 
@@ -194,7 +195,16 @@ namespace Reinforced.Typings.Cli
                 if (!string.IsNullOrEmpty(checkResult)) return checkResult;
             }
 
-            var p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
+            var p = assemblyNameOrFullPath;
+            checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
+            if (!string.IsNullOrEmpty(checkResult)) return checkResult;
+
+            if (!string.IsNullOrEmpty(_lastAssemblyLocalDir) && !string.IsNullOrEmpty(assemblyNameOrFullPath))
+            {
+                p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
+                checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
+                if (!string.IsNullOrEmpty(checkResult)) return checkResult;
+            }
             BuildWarn("Assembly {0} may be resolved incorrectly", assemblyNameOrFullPath, p);
             return assemblyNameOrFullPath;
         }
