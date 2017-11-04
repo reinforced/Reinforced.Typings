@@ -591,7 +591,7 @@ namespace Reinforced.Typings.Fluent
                 var conf = (IInterfaceConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                {
                    Type t = null;
-                   if (!tp.IsGenericType)
+                   if (!tp._IsGenericType())
                    {
                        t = typeof(InterfaceConfigurationBuilder<>).MakeGenericType(tp);
                        return (ITypeConfigurationBuilder)Activator.CreateInstance(t, true);
@@ -646,7 +646,7 @@ namespace Reinforced.Typings.Fluent
                 var conf = (IClassConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                {
                    Type t = null;
-                   if (!tp.IsGenericType)
+                   if (!tp._IsGenericType())
                    {
                        t = typeof(ClassConfigurationBuilder<>).MakeGenericType(tp);
                        return (IClassConfigurationBuilder)Activator.CreateInstance(t, true);

@@ -45,13 +45,13 @@ namespace Reinforced.Typings.Generators
 
             if (materializedGenericParameters.Count == 0) materializedGenericParameters = null;
 
-            var bs = type.BaseType;
+            var bs = type._BaseType();
             var baseClassIsExportedAsInterface = false;
             if (bs != null && bs != typeof(object))
             {
                 TsDeclarationAttributeBase attr = null;
                 bool baseAsInterface = false;
-                if (bs.IsGenericType)
+                if (bs._IsGenericType())
                 {
                     var genericBase = bs.GetGenericTypeDefinition();
                     attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(genericBase);
@@ -85,7 +85,7 @@ namespace Reinforced.Typings.Generators
 
         private Dictionary<string, RtTypeName> MergeMaterializedGenerics(Type t, TypeResolver resovler, Dictionary<string, RtTypeName> existing)
         {
-            if (!t.IsGenericType) return existing;
+            if (!t._IsGenericType()) return existing;
             var args = t.GetGenericArguments();
             if (args.All(c => c.IsGenericParameter)) return existing;
             var genDef = t.GetGenericTypeDefinition().GetGenericArguments();
@@ -125,7 +125,7 @@ namespace Reinforced.Typings.Generators
             {
                 var attr = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(iface);
                 if (attr != null) yield return resovler.ResolveTypeName(iface);
-                else if (iface.IsGenericType)
+                else if (iface._IsGenericType())
                 {
                     var gt = iface.GetGenericTypeDefinition();
                     attr = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(gt);
@@ -161,10 +161,10 @@ namespace Reinforced.Typings.Generators
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
         protected virtual void HandleBaseClassExportingAsInterface(ITypeMember sw, Type element, TypeResolver resolver, IAutoexportSwitchAttribute swtch)
         {
-            if (element.BaseType != null)
+            if (element._BaseType() != null)
             {
                 if (
-                    element.BaseType.IsExportingAsInterface() && !element.IsExportingAsInterface())
+                    element._BaseType().IsExportingAsInterface() && !element.IsExportingAsInterface())
                 {
                     // well.. bad but often case. 
                     // Here we should export members also for base class
@@ -173,15 +173,15 @@ namespace Reinforced.Typings.Generators
 
                     if (sw.Documentation == null) sw.Documentation = new RtJsdocNode();
                     sw.Documentation.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Todo,
-                        string.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element.BaseType))));
+                        string.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element._BaseType()))));
 
-                    var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element.BaseType);
+                    var basExSwtch = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element._BaseType());
                     Context.SpecialCase = true;
-                    ExportFields(sw, element.BaseType, resolver, basExSwtch);
-                    ExportProperties(sw, element.BaseType, resolver, basExSwtch);
-                    ExportMethods(sw, element.BaseType, resolver, basExSwtch);
+                    ExportFields(sw, element._BaseType(), resolver, basExSwtch);
+                    ExportProperties(sw, element._BaseType(), resolver, basExSwtch);
+                    ExportMethods(sw, element._BaseType(), resolver, basExSwtch);
                     Context.SpecialCase = false;
-                    Context.Warnings.Add(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element.BaseType.FullName, element.FullName));
+                    Context.Warnings.Add(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element._BaseType().FullName, element.FullName));
                 }
             }
         }

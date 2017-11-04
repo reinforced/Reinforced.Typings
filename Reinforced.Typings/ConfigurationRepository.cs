@@ -222,6 +222,7 @@ namespace Reinforced.Typings
             var importsList = ImportAttributes.GetOrCreate(type);
 
             var fileAttr = type.GetCustomAttribute<TsFileAttribute>();
+
             if (fileAttr != null)
             {
                 TrackTypeFile(type, fileAttr.FileName);
@@ -249,11 +250,11 @@ namespace Reinforced.Typings
             return null;
         }
 
-        #endregion
+#endregion
 
-        #region Attribute retrieve methods
+#region Attribute retrieve methods
 
-        #region Decorator
+#region Decorator
 
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(Type t)
         {
@@ -282,7 +283,7 @@ namespace Reinforced.Typings
             return inlineDecorators.Union(fluentDecorators);
         }
 
-        #endregion
+#endregion
 
         public TAttr ForType<TAttr>(Type t)
             where TAttr : TsDeclarationAttributeBase
@@ -341,9 +342,9 @@ namespace Reinforced.Typings
             return _attributesForEnumValues.GetOr(member, () => member.GetCustomAttribute<TsValueAttribute>(false));
         }
 
-        #endregion
+#endregion
 
-        #region Ignorance tracking methods
+#region Ignorance tracking methods
 
         public bool IsIgnored(Type member)
         {
@@ -372,7 +373,10 @@ namespace Reinforced.Typings
 
         public bool IsIgnored(MemberInfo member)
         {
+#if NETCORE1
+#else
             if (member is Type) return IsIgnored((Type)member);
+#endif
             if (member is PropertyInfo) return IsIgnored((PropertyInfo)member);
             if (member is MethodInfo) return IsIgnored((MethodInfo)member);
             if (member is FieldInfo) return IsIgnored((FieldInfo)member);
@@ -384,14 +388,15 @@ namespace Reinforced.Typings
             return _ignored.Contains(member) || (member.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
         }
 
-        #endregion
+#endregion
 
-        #region Determine what is exported
+#region Determine what is exported
 
         public FieldInfo[] GetExportedFields(Type t)
         {
             if (IsIgnored(t)) return new FieldInfo[0];
-            if (t.IsEnum) return new FieldInfo[0];
+            if (t._IsEnum()) return new FieldInfo[0];
+
 
             var typeAttr = ForType(t);
             var aexpSwith = typeAttr as IAutoexportSwitchAttribute;
@@ -412,7 +417,7 @@ namespace Reinforced.Typings
         public PropertyInfo[] GetExportedProperties(Type t)
         {
             if (IsIgnored(t)) return new PropertyInfo[0];
-            if (t.IsEnum) return new PropertyInfo[0];
+            if (t._IsEnum()) return new PropertyInfo[0];
 
             var typeAttr = ForType(t);
             var aexpSwith = typeAttr as IAutoexportSwitchAttribute;
@@ -433,7 +438,7 @@ namespace Reinforced.Typings
         public MethodInfo[] GetExportedMethods(Type t)
         {
             if (IsIgnored(t)) return new MethodInfo[0];
-            if (t.IsEnum) return new MethodInfo[0];
+            if (t._IsEnum()) return new MethodInfo[0];
 
             var typeAttr = ForType(t);
             var aexpSwith = typeAttr as IAutoexportSwitchAttribute;
@@ -451,8 +456,8 @@ namespace Reinforced.Typings
             return new MethodInfo[0];
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }

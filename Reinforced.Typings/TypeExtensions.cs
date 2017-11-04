@@ -13,13 +13,65 @@ namespace Reinforced.Typings
     /// </summary>
     public static class TypeExtensions
     {
+#if NETCORE1
+        internal static T GetCustomAttribute<T>(this Type t, bool inherit = true) where T : Attribute
+        {
+            return t.GetTypeInfo().GetCustomAttribute<T>(inherit);
+        }
+        internal static IEnumerable<T> GetCustomAttributes<T>(this Type t, bool inherit = true) where T : Attribute
+        {
+            return t.GetTypeInfo().GetCustomAttributes<T>(inherit);
+        }
+#endif
+        internal static bool _IsGenericType(this Type t) 
+        {
+#if NETCORE1
+            return t.GetTypeInfo().IsGenericType;
+#else
+            return t.IsGenericType;
+#endif
+        }
+
+        internal static bool _IsGenericTypeDefinition(this Type t)
+        {
+#if NETCORE1
+            return t.GetTypeInfo().IsGenericTypeDefinition;
+#else
+            return t.IsGenericTypeDefinition;
+#endif
+        }
+        internal static Type _BaseType(this Type t)
+        {
+#if NETCORE1
+            return t.GetTypeInfo().BaseType;
+#else
+            return t.BaseType;
+#endif
+        }
+        internal static bool _IsEnum(this Type t)
+        {
+#if NETCORE1
+            return t.GetTypeInfo().IsEnum;
+#else
+            return t.IsEnum;
+#endif
+        }
+        internal static bool _IsClass(this Type t)
+        {
+#if NETCORE1
+            return t.GetTypeInfo().IsClass;
+#else
+            return t.IsClass;
+#endif
+        }
+        
         /// <summary>
         ///     Binding flags for searching all members
         /// </summary>
         public const BindingFlags MembersFlags =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly;
-        
+
 
         #region IsStatic
 
@@ -30,7 +82,11 @@ namespace Reinforced.Typings
         /// <returns>True if type is static. False otherwise</returns>
         public static bool IsStatic(this Type t)
         {
+#if NETCORE1
+            return (t.GetTypeInfo().IsAbstract && t.GetTypeInfo().IsSealed);
+#else
             return (t.IsAbstract && t.IsSealed);
+#endif
         }
 
         /// <summary>
@@ -76,7 +132,7 @@ namespace Reinforced.Typings
         /// <returns>True if type is nullable value type. False otherwise</returns>
         public static bool IsNullable(this Type t)
         {
-            return (t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(Nullable<>)));
+            return (t._IsGenericType() && (t.GetGenericTypeDefinition() == typeof(Nullable<>)));
         }
 
         /// <summary>
@@ -86,7 +142,7 @@ namespace Reinforced.Typings
         /// <returns>True when type is tuple, false otherwise</returns>
         public static bool IsTuple(this Type t)
         {
-            if (!t.IsGenericType) return false;
+            if (!t._IsGenericType()) return false;
             var gen = t.GetGenericTypeDefinition();
             if (gen == typeof(System.Tuple<>)) return true;
             if (gen == typeof(System.Tuple<,>)) return true;
@@ -107,7 +163,7 @@ namespace Reinforced.Typings
         /// <returns>True if type is derived from dictionary type</returns>
         public static bool IsDictionary(this Type t)
         {
-            if (t.IsGenericType)
+            if (t._IsGenericType())
             {
                 var tg = t.GetGenericTypeDefinition();
 
@@ -132,7 +188,7 @@ namespace Reinforced.Typings
         {
             if (t.IsArray) return true;
             if (typeof(IEnumerable).IsAssignableFrom(t)) return true;
-            if (t.IsGenericType)
+            if (t._IsGenericType())
             {
                 var tg = t.GetGenericTypeDefinition();
                 if (typeof(IEnumerable<>).IsAssignableFrom(tg)) return true;
@@ -147,11 +203,11 @@ namespace Reinforced.Typings
         /// <returns>True if supplied type is nongeneric enumerable. False otherwise</returns>
         public static bool IsNongenericEnumerable(this Type t)
         {
-            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) return false;
+            if (t._IsGenericType() && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) return false;
             var interfaces = t.GetInterfaces();
             var containsEnumerable = interfaces.Contains(typeof(IEnumerable));
             var containsGenericEnumerable =
-                interfaces.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                interfaces.Any(c => c._IsGenericType() && c.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 
             return containsEnumerable && !containsGenericEnumerable;
         }
@@ -163,8 +219,8 @@ namespace Reinforced.Typings
         /// <returns>True, if supplied type is delegate, false otherwise</returns>
         public static bool IsDelegate(this Type t)
         {
-            if (t.BaseType == null) return false;
-            return typeof(MulticastDelegate).IsAssignableFrom(t.BaseType);
+            if (t._BaseType() == null) return false;
+            return typeof(MulticastDelegate).IsAssignableFrom(t._BaseType());
         }
 
         #endregion
@@ -297,7 +353,7 @@ namespace Reinforced.Typings
         /// <returns>Clean, genericless name</returns>
         internal static string CleanGenericName(this Type t)
         {
-            if (t.IsGenericType)
+            if (t._IsGenericType())
             {
                 var name = t.Name;
                 var qidx = name.IndexOf('`');
@@ -308,8 +364,8 @@ namespace Reinforced.Typings
 
         internal static RtTypeName[] SerializeGenericArguments(this Type t)
         {
-            if (!t.IsGenericTypeDefinition) return new RtTypeName[0];
-            if (t.IsGenericTypeDefinition)
+            if (!t._IsGenericTypeDefinition()) return new RtTypeName[0];
+            if (t._IsGenericTypeDefinition())
             {
                 // arranged generic attribute means that generic type is replaced with real one
                 var args = t.GetGenericArguments().Where(g => g.GetCustomAttribute<TsGenericAttribute>() == null);

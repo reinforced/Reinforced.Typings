@@ -80,7 +80,7 @@ namespace Reinforced.Typings.Xmldoc
                 return ("``" + methodGenericArgsDict[parameterType]);
             }
 
-            if (parameterType.IsGenericType)
+            if (parameterType._IsGenericType())
             {
                 var gen = parameterType.GetGenericTypeDefinition();
                 var name = gen.FullName;

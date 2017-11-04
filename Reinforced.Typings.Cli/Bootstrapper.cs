@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+#if NETCORE1
+using System.Runtime.Loader;
+#endif
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent;
 
@@ -211,7 +214,11 @@ namespace Reinforced.Typings.Cli
 
         public static Assembly[] GetAssembliesFromArgs()
         {
+#if NETCORE1
+            AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
+#else
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+#endif
             BuildReferencesCache();
 
             List<Assembly> assemblies = new List<Assembly>();
@@ -220,7 +227,12 @@ namespace Reinforced.Typings.Cli
             {
                 var assemblyPath = _parameters.SourceAssemblies[i];
                 var path = LookupAssemblyPath(assemblyPath);
+#if NETCORE1
+                var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+#else
                 var a = Assembly.LoadFrom(path);
+#endif
+
                 _totalLoadedAssemblies++;
 
                 assemblies.Add(a);
@@ -229,6 +241,23 @@ namespace Reinforced.Typings.Cli
             return assemblies.ToArray();
         }
 
+#if NETCORE1
+        private static Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
+        {
+            AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
+            if (assemblyName.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetEntryAssembly();
+            AssemblyName nm = new AssemblyName(assemblyName.Name);
+            string path = LookupAssemblyPath(nm.Name, false);
+            var a = context.LoadFromAssemblyPath(path);
+            _totalLoadedAssemblies++;
+#if DEBUG
+            Console.WriteLine("{0} additionally resolved", nm);
+#endif  
+      
+            AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
+            return a;
+        }
+#else
         public static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
@@ -241,7 +270,7 @@ namespace Reinforced.Typings.Cli
 #endif
             return a;
         }
-
+#endif
         public static void PrintHelp()
         {
             Console.WriteLine("Available parameters:");

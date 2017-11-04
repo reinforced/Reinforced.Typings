@@ -113,7 +113,7 @@ namespace Reinforced.Typings
         /// <returns>Type name</returns>
         public static double GetOrder(this Type t)
         {
-            if (t.IsEnum)
+            if (t._IsEnum())
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
                 return te.Order;
@@ -149,7 +149,7 @@ namespace Reinforced.Typings
         /// <returns>Type name</returns>
         public static RtSimpleTypeName GetName(this Type t, RtTypeName[] genericArguments = null)
         {
-            if (t.IsEnum)
+            if (t._IsEnum())
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
                 var ns = t.Name;
@@ -170,7 +170,7 @@ namespace Reinforced.Typings
             {
                 if (ti.AutoI)
                 {
-                    if (t.IsClass) name = "I" + name;
+                    if (t._IsClass()) name = "I" + name;
                     else if (!name.StartsWith("I")) name = "I" + name;
                 }
             }
@@ -236,7 +236,7 @@ namespace Reinforced.Typings
         /// <returns>Full-qualified namespace name</returns>
         public static string GetNamespace(this Type t, bool distinguishAutoTypes = false)
         {
-            if (t.IsEnum)
+            if (t._IsEnum())
             {
                 var te = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(t);
                 if (te == null) return t.Namespace;
