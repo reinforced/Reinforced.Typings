@@ -9,7 +9,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-Version **1.3.7** releaed! Please **do not** use versions 1.3.3 - 1.3.6 - they are highly unstable and contain critical bugs.
+> :fire: Version **1.3.7** released! Please **do not** use versions 1.3.3 - 1.3.6 - they are highly unstable and contain critical bugs.
 
 Features:
 * [Inline type inferers](https://github.com/reinforced/Reinforced.Typings/wiki/Types-Resolution#inline-type-inferers)
