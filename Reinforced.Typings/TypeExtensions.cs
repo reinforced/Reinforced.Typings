@@ -64,7 +64,96 @@ namespace Reinforced.Typings
             return t.IsClass;
 #endif
         }
-        
+
+        internal static bool _IsAssignableFrom(this Type t,Type t2)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().IsAssignableFrom(t2);
+#else
+            return t.IsAssignableFrom(t2);
+#endif
+        }
+
+        internal static IEnumerable<Type> _GetInterfaces(this Type t)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetInterfaces();
+#else
+            return t.GetInterfaces();
+#endif
+        }
+        internal static FieldInfo[] _GetFields(this Type t, BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetFields(flags);
+#else
+            return t.GetFields(flags);
+#endif
+        }
+
+        internal static FieldInfo[] _GetFields(this Type t)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetFields();
+#else
+            return t.GetFields();
+#endif
+        }
+
+        internal static FieldInfo _GetField(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetField(name);
+#else
+            return t.GetField(name);
+#endif
+        }
+
+        internal static ConstructorInfo[] _GetConstructors(this Type t, BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetConstructors(flags);
+#else
+            return t.GetConstructors(flags);
+#endif
+        }
+
+
+        internal static PropertyInfo[] _GetProperties(this Type t,BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperties(flags);
+#else
+            return t.GetProperties(flags);
+#endif
+        }
+
+        internal static MethodInfo[] _GetMethods(this Type t, BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetMethods(flags);
+#else
+            return t.GetMethods(flags);
+#endif
+        }
+
+        internal static MethodInfo _GetMethod(this Type t,string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetMethod(name);
+#else
+            return t.GetMethod(name);
+#endif
+        }
+        internal static Type[] _GetGenericArguments(this Type t)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetGenericArguments();
+#else
+            return t.GetGenericArguments();
+#endif
+        }
+
         /// <summary>
         ///     Binding flags for searching all members
         /// </summary>
@@ -73,7 +162,7 @@ namespace Reinforced.Typings
             BindingFlags.DeclaredOnly;
 
 
-        #region IsStatic
+#region IsStatic
 
         /// <summary>
         ///     Determines is type is static
@@ -121,9 +210,9 @@ namespace Reinforced.Typings
             return false;
         }
 
-        #endregion
+#endregion
 
-        #region Type distinguishing
+#region Type distinguishing
 
         /// <summary>
         ///     Determines is type derived from Nullable or not
@@ -166,15 +255,15 @@ namespace Reinforced.Typings
             if (t._IsGenericType())
             {
                 var tg = t.GetGenericTypeDefinition();
-
-                if (typeof(IDictionary<,>).IsAssignableFrom(tg)) return true;
-                if (typeof(IReadOnlyDictionary<,>).IsAssignableFrom(tg)) return true;
-                if (typeof(Dictionary<,>).IsAssignableFrom(tg)) return true;
-                if (typeof(IDictionary).IsAssignableFrom(t)) return true;
+                
+                if (typeof(IDictionary<,>)._IsAssignableFrom(tg)) return true;
+                if (typeof(IReadOnlyDictionary<,>)._IsAssignableFrom(tg)) return true;
+                if (typeof(Dictionary<,>)._IsAssignableFrom(tg)) return true;
+                if (typeof(IDictionary)._IsAssignableFrom(t)) return true;
             }
             else
             {
-                if (typeof(IDictionary).IsAssignableFrom(t)) return true;
+                if (typeof(IDictionary)._IsAssignableFrom(t)) return true;
             }
             return false;
         }
@@ -187,11 +276,11 @@ namespace Reinforced.Typings
         public static bool IsEnumerable(this Type t)
         {
             if (t.IsArray) return true;
-            if (typeof(IEnumerable).IsAssignableFrom(t)) return true;
+            if (typeof(IEnumerable)._IsAssignableFrom(t)) return true;
             if (t._IsGenericType())
             {
                 var tg = t.GetGenericTypeDefinition();
-                if (typeof(IEnumerable<>).IsAssignableFrom(tg)) return true;
+                if (typeof(IEnumerable<>)._IsAssignableFrom(tg)) return true;
             }
             return false;
         }
@@ -204,7 +293,7 @@ namespace Reinforced.Typings
         public static bool IsNongenericEnumerable(this Type t)
         {
             if (t._IsGenericType() && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) return false;
-            var interfaces = t.GetInterfaces();
+            var interfaces = t._GetInterfaces();
             var containsEnumerable = interfaces.Contains(typeof(IEnumerable));
             var containsGenericEnumerable =
                 interfaces.Any(c => c._IsGenericType() && c.GetGenericTypeDefinition() == typeof(IEnumerable<>));
@@ -220,12 +309,12 @@ namespace Reinforced.Typings
         public static bool IsDelegate(this Type t)
         {
             if (t._BaseType() == null) return false;
-            return typeof(MulticastDelegate).IsAssignableFrom(t._BaseType());
+            return typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType());
         }
 
-        #endregion
+#endregion
 
-        #region Modifiers
+#region Modifiers
 
         /// <summary>
         ///     Returns access modifier for specified field
@@ -332,9 +421,9 @@ namespace Reinforced.Typings
             return string.Empty;
         }
 
-        #endregion
+#endregion
 
-        #region Utility methods
+#region Utility methods
 
         /// <summary>
         ///     Retrieves first type argument of type
@@ -343,7 +432,7 @@ namespace Reinforced.Typings
         /// <returns>First type argument</returns>
         public static Type GetArg(this Type t)
         {
-            return t.GetGenericArguments()[0];
+            return t._GetGenericArguments()[0];
         }
 
         /// <summary>
@@ -368,7 +457,7 @@ namespace Reinforced.Typings
             if (t._IsGenericTypeDefinition())
             {
                 // arranged generic attribute means that generic type is replaced with real one
-                var args = t.GetGenericArguments().Where(g => g.GetCustomAttribute<TsGenericAttribute>() == null);
+                var args = t._GetGenericArguments().Where(g => g.GetCustomAttribute<TsGenericAttribute>() == null);
                 var argsStr = args.Select(c => new RtSimpleTypeName(c.Name)).Cast<RtTypeName>().ToArray();
                 return argsStr;
             }
@@ -418,7 +507,7 @@ namespace Reinforced.Typings
             return result;
         }
 
-        #endregion
+#endregion
 
 
 

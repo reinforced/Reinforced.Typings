@@ -26,7 +26,7 @@ namespace Reinforced.Typings.Generators
             result.EnumName = element.GetName();
             result.Order = element.GetOrder();
 
-            var fields = element.GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
+            var fields = element._GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {

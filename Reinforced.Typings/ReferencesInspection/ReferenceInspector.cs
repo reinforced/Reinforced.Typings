@@ -244,7 +244,7 @@ namespace Reinforced.Typings.ReferencesInspection
                 }
             }
             if (element._BaseType() != null) InspectTypeReferences(element._BaseType(), alltypes, references);
-            var interfaces = element.GetInterfaces();
+            var interfaces = element._GetInterfaces();
             foreach (var iface in interfaces)
             {
                 InspectTypeReferences(iface, alltypes, references);
@@ -258,7 +258,7 @@ namespace Reinforced.Typings.ReferencesInspection
             if (alltypes.Contains(argument)) referenceContainer.AddIfNotExists(argument);
             if (argument._IsGenericType())
             {
-                var args = argument.GetGenericArguments();
+                var args = argument._GetGenericArguments();
                 foreach (var type in args)
                 {
                     InspectTypeReferences(type, alltypes, referenceContainer);

@@ -11,6 +11,34 @@ using Reinforced.Typings.Fluent;
 
 namespace Reinforced.Typings.Cli
 {
+    internal static class CoreTypeExtensions
+    {
+        internal static MethodInfo _GetMethod(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetMethod(name);
+#else
+            return t.GetMethod(name);
+#endif
+        }
+        internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperties(flags);
+#else
+            return t.GetProperties(flags);
+#endif
+        }
+
+        internal static PropertyInfo _GetProperty(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperty(name);
+#else
+            return t.GetProperty(name);
+#endif
+        }
+    }
     /// <summary>
     /// Class for CLI typescript typings utility
     /// </summary>
@@ -97,7 +125,7 @@ namespace Reinforced.Typings.Cli
                 var type = sourceAssembly.GetType(fullQualifiedType, false);
                 if (type != null)
                 {
-                    var constrMethod = type.GetMethod(method);
+                    var constrMethod = type._GetMethod(method);
                     if (constrMethod != null && constrMethod.IsStatic)
                     {
 
@@ -277,7 +305,7 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine();
 
             var t = typeof(ExporterConsoleParameters);
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var props = t._GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var propertyInfo in props)
             {
                 var attr = propertyInfo.GetCustomAttribute<ConsoleHelpAttribute>();
@@ -341,7 +369,7 @@ namespace Reinforced.Typings.Cli
                 var key = kv[0].Trim();
                 var value = kv[1].Trim().Trim('"');
 
-                var prop = t.GetProperty(key);
+                var prop = t._GetProperty(key);
                 if (prop == null)
                 {
                     BuildWarn("Unrecognized parameter: {0}", key);

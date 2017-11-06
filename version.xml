@@ -1,0 +1,40 @@
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+		<TargetFrameworks>net45</TargetFrameworks>        
+	</PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+        
+    </PropertyGroup>    
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp1.0'">
+        <DefineConstants>$(DefineConstants);NETCORE1</DefineConstants>
+        <NetCore>True</NetCore>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
+        <DefineConstants>$(DefineConstants);NETCORE1</DefineConstants>
+        <NetCore>True</NetCore>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+        <DefineConstants>$(DefineConstants);NETCORE1</DefineConstants>
+        <NetCore>True</NetCore>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.5'">
+        <DefineConstants>$(DefineConstants);NETCORE1;NETSTANDARD15</DefineConstants>
+        <NetCore>True</NetCore>
+    </PropertyGroup>
+    <!-- Common package parameters -->
+    <!-- <PropertyGroup> -->
+        <!-- <Authors>Pavel B. Novikov</Authors> -->
+        <!-- <PackageLicenseUrl>https://github.com/reinforced/Reinforced.Lattice/blob/master/LICENSE.md</PackageLicenseUrl> -->
+        <!-- <PackageProjectUrl>https://github.com/reinforced/Reinforced.Lattice</PackageProjectUrl> -->
+        <!-- <PackageIconUrl>https://raw.githubusercontent.com/reinforced/Reinforced.Lattice/master/icon.png</PackageIconUrl> -->
+        <!-- <RepositoryUrl>https://github.com/reinforced/Reinforced.Lattice.git</RepositoryUrl> -->
+        <!-- <Copyright>(c) 2017 Pavel B. Novikov</Copyright> -->
+        <!-- <RepositoryType>git</RepositoryType> -->
+        <!-- <PackageTags>mvc, web, datagrid, paging, filtering, data loading, ui, fluent</PackageTags> -->
+        <!-- <GenerateNuspecDependsOn>ReadRelnotes;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn> -->
+        <!-- <EnableDefaultContentItems>false</EnableDefaultContentItems> -->
+    <!-- </PropertyGroup> -->
+    <!-- <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'"> -->
+        <!-- <PackageReference Include="Microsoft.DiaSymReader.Native" Version="1.4.2" />         -->
+    <!-- </ItemGroup> -->    
+</Project>

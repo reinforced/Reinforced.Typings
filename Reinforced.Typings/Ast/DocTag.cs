@@ -210,7 +210,7 @@ namespace Reinforced.Typings.Ast
         /// <returns>JSDOC-friendly name</returns>
         public static string Tagname(this DocTag tag)
         {
-            var member = typeof (DocTag).GetField(tag.ToString());
+            var member = typeof (DocTag)._GetField(tag.ToString());
             return member.GetCustomAttribute<JsdocTagAttribute>().RawTagName;
         }
     }

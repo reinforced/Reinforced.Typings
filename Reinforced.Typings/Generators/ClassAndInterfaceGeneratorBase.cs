@@ -39,7 +39,7 @@ namespace Reinforced.Typings.Generators
                 result.Documentation = docNode;
             }
 
-            var materializedGenericParameters = type.GetGenericArguments()
+            var materializedGenericParameters = type._GetGenericArguments()
                 .Where(c => c.GetCustomAttribute<TsGenericAttribute>() != null)
                 .ToDictionary(c => c.Name, resolver.ResolveTypeName);
 
@@ -86,9 +86,9 @@ namespace Reinforced.Typings.Generators
         private Dictionary<string, RtTypeName> MergeMaterializedGenerics(Type t, TypeResolver resovler, Dictionary<string, RtTypeName> existing)
         {
             if (!t._IsGenericType()) return existing;
-            var args = t.GetGenericArguments();
+            var args = t._GetGenericArguments();
             if (args.All(c => c.IsGenericParameter)) return existing;
-            var genDef = t.GetGenericTypeDefinition().GetGenericArguments();
+            var genDef = t.GetGenericTypeDefinition()._GetGenericArguments();
             Dictionary<string, RtTypeName> result = new Dictionary<string, RtTypeName>();
             if (existing != null)
             {
@@ -120,7 +120,7 @@ namespace Reinforced.Typings.Generators
 
         private IEnumerable<RtTypeName> ExtractImplementees(Type type, TypeResolver resovler, Dictionary<string, RtTypeName> materializedGenericParameters)
         {
-            var ifaces = type.GetInterfaces();
+            var ifaces = type._GetInterfaces();
             foreach (var iface in ifaces)
             {
                 var attr = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(iface);
@@ -236,7 +236,7 @@ namespace Reinforced.Typings.Generators
                 if (!element.IsExportingAsInterface()) // constructors are not allowed on interfaces
                 {
                     var constructors =
-                        element.GetConstructors(TypeExtensions.MembersFlags)
+                        element._GetConstructors(TypeExtensions.MembersFlags)
                             .Where(c => ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate(c));
                     GenerateMembers(element, resolver, typeMember, constructors);
                 }

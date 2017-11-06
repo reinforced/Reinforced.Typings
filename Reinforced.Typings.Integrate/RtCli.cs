@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Reinforced.Typings.Cli;
@@ -68,7 +66,8 @@ namespace Reinforced.Typings.Integrate
         /// Full-qualified name of fluent configuration method
         /// </summary>
         public string ConfigurationMethod { get; set; }
-        
+
+
         protected override string GenerateFullPathToTool()
         {
             return RtCliPath;
@@ -76,7 +75,15 @@ namespace Reinforced.Typings.Integrate
 
         protected override string ToolName
         {
-            get { return "rtcli.exe"; }
+            get
+            {
+#if NETCORE1
+                return "dotnet rtcli.dll";
+#else
+                return "rtcli.exe";
+#endif
+
+            }
         }
 
         protected override string GenerateCommandLineCommands()
@@ -88,13 +95,19 @@ namespace Reinforced.Typings.Integrate
                 TargetFile = FixTargetPath(TargetFile),
                 ReferencesTmpFilePath = PutReferencesToTempFile(),
                 SourceAssemblies = ExtractSourceAssemblies(),
-                DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",StringComparison.InvariantCultureIgnoreCase)?DocumentationFilePath:String.Empty,
+                DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",
+#if NETCORE1
+                StringComparison.CurrentCultureIgnoreCase
+#else
+                StringComparison.InvariantCultureIgnoreCase
+#endif
+                ) ? DocumentationFilePath:String.Empty,
                 ConfigurationMethod = ConfigurationMethod
             };
 
             return consoleParams.ExportConsoleParameters();
         }
-
+       
         private string FixTargetPath(string path)
         {
             if (!string.IsNullOrEmpty(path))
@@ -139,5 +152,6 @@ namespace Reinforced.Typings.Integrate
             }
             return srcAssemblies.ToArray();
         }
+        
     }
 }

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reinforced.Typings.NETCore"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reinforced.Typings.Cli.NETCore", "Reinforced.Typings.Cli\Reinforced.Typings.Cli.NETCore.csproj", "{E69ACAC0-16DB-4AB9-BB4A-03EC33538D1E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reinforced.Typings.Integrate.NETCore", "Reinforced.Typings.Integrate\Reinforced.Typings.Integrate.NETCore.csproj", "{836424C9-8003-4C0F-84E1-2C17FE498648}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E69ACAC0-16DB-4AB9-BB4A-03EC33538D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E69ACAC0-16DB-4AB9-BB4A-03EC33538D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E69ACAC0-16DB-4AB9-BB4A-03EC33538D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{836424C9-8003-4C0F-84E1-2C17FE498648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{836424C9-8003-4C0F-84E1-2C17FE498648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{836424C9-8003-4C0F-84E1-2C17FE498648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{836424C9-8003-4C0F-84E1-2C17FE498648}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -375,7 +375,7 @@ namespace Reinforced.Typings
         {
 #if NETCORE1
 #else
-            if (member is Type) return IsIgnored((Type)member);
+            //if (member is Type) return IsIgnored((Type)member);
 #endif
             if (member is PropertyInfo) return IsIgnored((PropertyInfo)member);
             if (member is MethodInfo) return IsIgnored((MethodInfo)member);
@@ -404,7 +404,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetFields(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
+                    t._GetFields(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportFields)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -425,7 +425,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetProperties(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
+                    t._GetProperties(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportProperties)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
@@ -446,7 +446,7 @@ namespace Reinforced.Typings
             if (aexpSwith != null)
             {
                 var allMembers =
-                    t.GetMethods(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
+                    t._GetMethods(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
                 if (!aexpSwith.AutoExportMethods)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);

@@ -86,7 +86,7 @@ namespace Reinforced.Typings.Xmldoc
                 var name = gen.FullName;
                 var quote = name.IndexOf('`');
                 name = name.Substring(0, quote);
-                var genericParams = parameterType.GetGenericArguments()
+                var genericParams = parameterType._GetGenericArguments()
                     .Select(c => GetDocFriendlyParameterName(c, typeGenericsDict, methodGenericArgsDict)).ToArray();
                 name = string.Format("{0}{{{1}}}", name, string.Join(",", genericParams));
                 return name;
@@ -109,7 +109,7 @@ namespace Reinforced.Typings.Xmldoc
                 sb.Append('(');
 
                 var typeGenericsDict =
-                    method.DeclaringType.GetGenericArguments()
+                    method.DeclaringType._GetGenericArguments()
                         .Select((a, i) => new { a, i })
                         .ToDictionary(c => c.a, c => c.i); // type -> `0, type -> `1
 

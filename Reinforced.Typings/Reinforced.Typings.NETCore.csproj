@@ -1,13 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp1.0|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETCORE1</DefineConstants>
-  </PropertyGroup>
-
+  <Import Project="../version.xml" />
+  
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -16,8 +9,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
+  <ItemGroup >
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.0'" Include="System.Xml.XmlSerializer" Version="4.3.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.5'" Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

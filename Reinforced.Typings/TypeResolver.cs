@@ -58,7 +58,7 @@ namespace Reinforced.Typings
         private RtTypeName[] GetConcreteGenericArguments(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
             if (!t._IsGenericType()) return new RtTypeName[0];
-            var args = t.GetGenericArguments();
+            var args = t._GetGenericArguments();
             if (materializedGenerics == null) return args.Select(ResolveTypeName).ToArray();
             else
             {
@@ -167,7 +167,7 @@ namespace Reinforced.Typings
             }
             if (t.IsTuple())
             {
-                var args = t.GetGenericArguments().Select(ResolveTypeName);
+                var args = t._GetGenericArguments().Select(ResolveTypeName);
                 return Cache(t, new RtTuple(args));
             }
             if (t.IsDictionary())
@@ -177,7 +177,7 @@ namespace Reinforced.Typings
                     _context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(AnyType, t));
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
-                var gargs = t.GetGenericArguments();
+                var gargs = t._GetGenericArguments();
                 var key = ResolveTypeName(gargs[0]);
                 if (key != NumberType && key != StringType)
                 {
@@ -197,7 +197,7 @@ namespace Reinforced.Typings
                     return Cache(t, new RtArrayType(ResolveTypeName(t.GetElementType())));
                 }
                 var enumerable =
-                    t.GetInterfaces()
+                    t._GetInterfaces()
                         .FirstOrDefault(c => c._IsGenericType() && c.GetGenericTypeDefinition() == typeof(IEnumerable<>));
                 if (enumerable == null)
                 {
@@ -207,9 +207,9 @@ namespace Reinforced.Typings
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
             }
             
-            if (typeof(MulticastDelegate).IsAssignableFrom(t._BaseType()))
+            if (typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType()))
             {
-                var methodInfo = t.GetMethod("Invoke");
+                var methodInfo = t._GetMethod("Invoke");
                 return Cache(t, ConstructFunctionType(methodInfo));
             }
 
@@ -221,7 +221,7 @@ namespace Reinforced.Typings
                 if (tsFriendly != null && tsFriendly != AnyType)
                 {
                     var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
-                        t.GetGenericArguments().Select(c => ResolveTypeNameInner(c, null)).ToArray())
+                        t._GetGenericArguments().Select(c => ResolveTypeNameInner(c, null)).ToArray())
                     {
                         Prefix = tsFriendly.Prefix
                     };

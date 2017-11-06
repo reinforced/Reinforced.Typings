@@ -75,7 +75,7 @@ namespace Reinforced.Typings.Generators
                 return;
             }
             var baseConstructors =
-                bt.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
+                bt._GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
                                    BindingFlags.Static |
                                    BindingFlags.DeclaredOnly);
 
