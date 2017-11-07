@@ -46,7 +46,7 @@ namespace Reinforced.Typings.Integrate
         /// </summary>
         public bool Hierarchical { get; set; }
 
-       /// <summary>
+        /// <summary>
         /// Additional source assemblies to import
         /// </summary>
         public ITaskItem[] AdditionalSourceAssemblies { get; set; }
@@ -61,7 +61,7 @@ namespace Reinforced.Typings.Integrate
         /// </summary>
         public string DocumentationFilePath { get; set; }
 
-      
+
         /// <summary>
         /// Full-qualified name of fluent configuration method
         /// </summary>
@@ -70,7 +70,7 @@ namespace Reinforced.Typings.Integrate
 
         protected override string GenerateFullPathToTool()
         {
-            return RtCliPath;
+            return Path.Combine(RtCliPath, ToolName);
         }
 
         protected override string ToolName
@@ -101,13 +101,13 @@ namespace Reinforced.Typings.Integrate
 #else
                 StringComparison.InvariantCultureIgnoreCase
 #endif
-                ) ? DocumentationFilePath:String.Empty,
+                ) ? DocumentationFilePath : String.Empty,
                 ConfigurationMethod = ConfigurationMethod
             };
 
             return consoleParams.ExportConsoleParameters();
         }
-       
+
         private string FixTargetPath(string path)
         {
             if (!string.IsNullOrEmpty(path))
@@ -123,7 +123,7 @@ namespace Reinforced.Typings.Integrate
 
         private string PutReferencesToTempFile()
         {
-            if (References==null) return string.Empty;
+            if (References == null) return string.Empty;
             var tmpFile = Path.GetTempFileName();
             using (var fs = File.OpenWrite(tmpFile))
             {
@@ -144,7 +144,7 @@ namespace Reinforced.Typings.Integrate
             List<string> srcAssemblies = new List<string>();
             if (AdditionalSourceAssemblies != null)
             {
-                srcAssemblies.AddRange(AdditionalSourceAssemblies.Select(c=>c.ItemSpec));
+                srcAssemblies.AddRange(AdditionalSourceAssemblies.Select(c => c.ItemSpec));
             }
             if (SourceAssembly != null)
             {
@@ -152,6 +152,6 @@ namespace Reinforced.Typings.Integrate
             }
             return srcAssemblies.ToArray();
         }
-        
+
     }
 }

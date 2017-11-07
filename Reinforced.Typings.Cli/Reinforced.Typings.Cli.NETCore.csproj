@@ -2,7 +2,9 @@
     <Import Project="../version.xml" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <AssemblyName>rtcli</AssemblyName>    
+    <AssemblyName>rtcli</AssemblyName>
+    <RootNamespace>Reinforced.Typings.Cli</RootNamespace>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>    
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />

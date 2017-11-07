@@ -1,5 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../version.xml" />
+  <PropertyGroup>
+    <AssemblyName>Reinforced.Typings</AssemblyName>
+    <RootNamespace>Reinforced.Typings</RootNamespace>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+    <DocumentationFile>bin\Release\net45\Reinforced.Typings.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp1.0'">
+    <DocumentationFile>bin\Release\netcoreapp1.0\Reinforced.Typings.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\Reinforced.Typings.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.5'">
+    <DocumentationFile>bin\Release\netstandard1.5\Reinforced.Typings.xml</DocumentationFile>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
@@ -9,7 +27,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
-  <ItemGroup >
+  <ItemGroup>
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.0'" Include="System.Xml.XmlSerializer" Version="4.3.0" />
     <PackageReference Condition="'$(TargetFramework)'=='netstandard1.5'" Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>

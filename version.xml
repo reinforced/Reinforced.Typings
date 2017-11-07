@@ -1,6 +1,7 @@
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-		<TargetFrameworks>net45</TargetFrameworks>        
+		<TargetFrameworks>net45;netcoreapp1.0;netcoreapp2.0;netstandard2.0;netstandard1.5</TargetFrameworks>        
+        <!-- <TargetFramework>netstandard2.0</TargetFramework>         -->
 	</PropertyGroup>
     <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
         

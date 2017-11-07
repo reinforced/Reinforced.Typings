@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoveTypescriptStep.cs" />
     <Compile Include="RtCli.cs" />
   </ItemGroup>
   <ItemGroup>
