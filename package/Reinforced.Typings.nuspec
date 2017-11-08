@@ -36,7 +36,6 @@
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
           </group>
           <group targetFramework=".NETStandard2.0">
-            <dependency id="Reinforced.Typings" version="1.0.0" exclude="Build,Analyzers" />
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />            
           </group>

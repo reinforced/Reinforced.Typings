@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
+<Import Project="../version.xml" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.5</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.5;netstandard2.0</TargetFrameworks>
+    <!-- <TargetFrameworks>netstandard2.0</TargetFrameworks> -->
     <AssemblyName>Reinforced.Typings</AssemblyName>
     <RootNamespace>Reinforced.Typings</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -16,7 +18,11 @@
     <DefineConstants>$(DefineConstants);NETCORE1;NETSTANDARD15</DefineConstants>
     <NetCore>True</NetCore>
   </PropertyGroup>
-  
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DocumentationFile>bin\Release\netstandard2.0\Reinforced.Typings.xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
+    <NetCore>True</NetCore>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -27,6 +33,7 @@
 
   <ItemGroup>    
     <PackageReference Condition="'$(TargetFramework)'=='netstandard1.5'" Include="System.Xml.XmlSerializer" Version="4.3.0" />    
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard2.0'" Include="System.Xml.XmlSerializer" Version="4.3.0" />    
   </ItemGroup>
 
 </Project>

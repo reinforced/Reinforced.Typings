@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+<Import Project="../version.xml" />
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
     <AssemblyName>Reinforced.Typings.Integrate</AssemblyName>

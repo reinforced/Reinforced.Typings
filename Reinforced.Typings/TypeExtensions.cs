@@ -16,14 +16,14 @@ namespace Reinforced.Typings
 #if NETCORE1
         internal static T GetCustomAttribute<T>(this Type t, bool inherit = true) where T : Attribute
         {
-            return t.GetTypeInfo().GetCustomAttribute<T>(inherit);
+            return CustomAttributeExtensions.GetCustomAttribute<T>(t.GetTypeInfo(), inherit);
         }
         internal static IEnumerable<T> GetCustomAttributes<T>(this Type t, bool inherit = true) where T : Attribute
         {
-            return t.GetTypeInfo().GetCustomAttributes<T>(inherit);
+            return CustomAttributeExtensions.GetCustomAttributes<T>(t.GetTypeInfo(), inherit);
         }
 #endif
-        internal static bool _IsGenericType(this Type t) 
+        internal static bool _IsGenericType(this Type t)
         {
 #if NETCORE1
             return t.GetTypeInfo().IsGenericType;
@@ -65,7 +65,7 @@ namespace Reinforced.Typings
 #endif
         }
 
-        internal static bool _IsAssignableFrom(this Type t,Type t2)
+        internal static bool _IsAssignableFrom(this Type t, Type t2)
         {
 #if NETSTANDARD15
             return t.GetTypeInfo().IsAssignableFrom(t2);
@@ -119,7 +119,7 @@ namespace Reinforced.Typings
         }
 
 
-        internal static PropertyInfo[] _GetProperties(this Type t,BindingFlags flags)
+        internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
 #if NETSTANDARD15
             return t.GetTypeInfo().GetProperties(flags);
@@ -137,7 +137,7 @@ namespace Reinforced.Typings
 #endif
         }
 
-        internal static MethodInfo _GetMethod(this Type t,string name)
+        internal static MethodInfo _GetMethod(this Type t, string name)
         {
 #if NETSTANDARD15
             return t.GetTypeInfo().GetMethod(name);
@@ -162,7 +162,7 @@ namespace Reinforced.Typings
             BindingFlags.DeclaredOnly;
 
 
-#region IsStatic
+        #region IsStatic
 
         /// <summary>
         ///     Determines is type is static
@@ -210,9 +210,9 @@ namespace Reinforced.Typings
             return false;
         }
 
-#endregion
+        #endregion
 
-#region Type distinguishing
+        #region Type distinguishing
 
         /// <summary>
         ///     Determines is type derived from Nullable or not
@@ -255,7 +255,7 @@ namespace Reinforced.Typings
             if (t._IsGenericType())
             {
                 var tg = t.GetGenericTypeDefinition();
-                
+
                 if (typeof(IDictionary<,>)._IsAssignableFrom(tg)) return true;
                 if (typeof(IReadOnlyDictionary<,>)._IsAssignableFrom(tg)) return true;
                 if (typeof(Dictionary<,>)._IsAssignableFrom(tg)) return true;
@@ -312,9 +312,9 @@ namespace Reinforced.Typings
             return typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType());
         }
 
-#endregion
+        #endregion
 
-#region Modifiers
+        #region Modifiers
 
         /// <summary>
         ///     Returns access modifier for specified field
@@ -421,9 +421,9 @@ namespace Reinforced.Typings
             return string.Empty;
         }
 
-#endregion
+        #endregion
 
-#region Utility methods
+        #region Utility methods
 
         /// <summary>
         ///     Retrieves first type argument of type
@@ -507,7 +507,7 @@ namespace Reinforced.Typings
             return result;
         }
 
-#endregion
+        #endregion
 
 
 
