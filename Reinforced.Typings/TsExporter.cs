@@ -15,7 +15,7 @@ namespace Reinforced.Typings
     ///     Facade for final TypeScript export. This class supplies assemblies names or assemblies itself as parameter and
     ///     exports resulting TypeScript file to file or to string
     /// </summary>
-    public sealed class TsExporter : MarshalByRefObject
+    public sealed class TsExporter //: MarshalByRefObject
     {
         private readonly ExportContext _context;
         private List<Type> _allTypes;

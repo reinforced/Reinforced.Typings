@@ -53,7 +53,7 @@ namespace Reinforced.Typings.Generators
         {
             constructor.SuperCallParameters.Clear();
             // 1. Check presence of base type 
-            var bt = element.DeclaringType != null ? element.DeclaringType.BaseType : null;
+            var bt = element.DeclaringType != null ? element.DeclaringType._BaseType() : null;
             if ((bt == typeof (object) || bt.IsExportingAsInterface()) || !bt.IsExportingAsClass()) bt = null;
             
             if (bt == null)
@@ -75,7 +75,7 @@ namespace Reinforced.Typings.Generators
                 return;
             }
             var baseConstructors =
-                bt.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
+                bt._GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
                                    BindingFlags.Static |
                                    BindingFlags.DeclaredOnly);
 

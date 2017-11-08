@@ -208,7 +208,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate,
             Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type._GetProperties(TypeExtensions.MembersFlags).Where(predicate);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -223,7 +223,7 @@ namespace Reinforced.Typings.Fluent
             Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetProperties(bindingFlags);
+            var prop = tc.Type._GetProperties(bindingFlags);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -236,7 +236,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllProperties<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetProperties(TypeExtensions.MembersFlags);
+            var prop = tc.Type._GetProperties(TypeExtensions.MembersFlags);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -251,7 +251,7 @@ namespace Reinforced.Typings.Fluent
             where T : ITypeConfigurationBuilder
         {
             var prop =
-                tc.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                tc.Type._GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
                                       BindingFlags.DeclaredOnly);
             return tc.WithProperties(prop, configuration);
         }
@@ -326,7 +326,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate,
             Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetFields(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type._GetFields(TypeExtensions.MembersFlags).Where(predicate);
             return tc.WithFields(prop, configuration);
         }
 
@@ -339,7 +339,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllFields<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetFields(TypeExtensions.MembersFlags);
+            var prop = tc.Type._GetFields(TypeExtensions.MembersFlags);
             return tc.WithFields(prop, configuration);
         }
 
@@ -353,7 +353,7 @@ namespace Reinforced.Typings.Fluent
             where T : ITypeConfigurationBuilder
         {
             var prop =
-                tc.Type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance |
+                tc.Type._GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance |
                                   BindingFlags.DeclaredOnly);
             return tc.WithFields(prop, configuration);
         }
@@ -368,7 +368,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags,
             Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetFields(bindingFlags);
+            var prop = tc.Type._GetFields(bindingFlags);
             return tc.WithFields(prop, configuration);
         }
 
@@ -498,7 +498,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithMethods<T>(this T tc, Func<MethodInfo, bool> predicate,
             Action<MethodConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetMethods(TypeExtensions.MembersFlags).Where(predicate);
+            var prop = tc.Type._GetMethods(TypeExtensions.MembersFlags).Where(predicate);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -512,7 +512,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithMethods<T>(this T tc, BindingFlags bindingFlags,
             Action<MethodConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetMethods(bindingFlags);
+            var prop = tc.Type._GetMethods(bindingFlags);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -538,7 +538,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllMethods<T>(this T tc, Action<MethodConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetMethods(TypeExtensions.MembersFlags);
+            var prop = tc.Type._GetMethods(TypeExtensions.MembersFlags);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -552,7 +552,7 @@ namespace Reinforced.Typings.Fluent
             where T : ITypeConfigurationBuilder
         {
             var prop =
-                tc.Type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance |
+                tc.Type._GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance |
                                    BindingFlags.DeclaredOnly);
             return tc.WithMethods(prop, configuration);
         }
@@ -591,7 +591,7 @@ namespace Reinforced.Typings.Fluent
                 var conf = (IInterfaceConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                {
                    Type t = null;
-                   if (!tp.IsGenericType)
+                   if (!tp._IsGenericType())
                    {
                        t = typeof(InterfaceConfigurationBuilder<>).MakeGenericType(tp);
                        return (ITypeConfigurationBuilder)Activator.CreateInstance(t, true);
@@ -646,7 +646,7 @@ namespace Reinforced.Typings.Fluent
                 var conf = (IClassConfigurationBuilder)builder.TypeConfigurationBuilders.GetOrCreate(type, () =>
                {
                    Type t = null;
-                   if (!tp.IsGenericType)
+                   if (!tp._IsGenericType())
                    {
                        t = typeof(ClassConfigurationBuilder<>).MakeGenericType(tp);
                        return (IClassConfigurationBuilder)Activator.CreateInstance(t, true);
@@ -742,7 +742,7 @@ namespace Reinforced.Typings.Fluent
             where T : struct
         {
             var n = Enum.GetName(typeof(T), value);
-            var field = typeof(T).GetField(n);
+            var field = typeof(T)._GetField(n);
             IEnumConfigurationBuidler ecb = conf;
             var c = ecb.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration(field));
             return c;
@@ -756,7 +756,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Configuration builder</returns>
         public static EnumValueExportConfiguration Value(this IEnumConfigurationBuidler conf, string propertyName)
         {
-            var field = conf.EnumType.GetField(propertyName);
+            var field = conf.EnumType._GetField(propertyName);
             var c = conf.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration(field));
             return c;
         }

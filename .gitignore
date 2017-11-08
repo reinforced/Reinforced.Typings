@@ -204,3 +204,6 @@ Playground/
 /Reinforced.Typings.Private.sln
 /Reinforced.Typings/Reinforced.Typings.pfx
 docplan.txt
+/package/build
+/package/buildMultiTargeting
+/package/lib

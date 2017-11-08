@@ -1,12 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Reinforced.Typings.Cli;
+
+namespace Reinforced.Typings.Cli
+{
+    public static class TypeExtensions
+    {
+        internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperties(flags);
+#else
+            return t.GetProperties(flags);
+#endif
+        }
+    }
+}
+
 
 namespace Reinforced.Typings.Integrate
 {
@@ -16,10 +32,16 @@ namespace Reinforced.Typings.Integrate
     public class RtCli : ToolTask
     {
         /// <summary>
-        /// Path to rtcli.exe
+        /// Framework version to invoke rtcli
         /// </summary>
         [Required]
-        public string RtCliPath { get; set; }
+        public string RtFrameworkVersion { get; set; }
+
+        /// <summary>
+        /// Package's "build" directory
+        /// </summary>
+        [Required]
+        public string BuildDirectory { get; set; }
 
         /// <summary>
         /// Additional library references
@@ -48,7 +70,7 @@ namespace Reinforced.Typings.Integrate
         /// </summary>
         public bool Hierarchical { get; set; }
 
-       /// <summary>
+        /// <summary>
         /// Additional source assemblies to import
         /// </summary>
         public ITaskItem[] AdditionalSourceAssemblies { get; set; }
@@ -63,20 +85,70 @@ namespace Reinforced.Typings.Integrate
         /// </summary>
         public string DocumentationFilePath { get; set; }
 
-      
+
         /// <summary>
         /// Full-qualified name of fluent configuration method
         /// </summary>
         public string ConfigurationMethod { get; set; }
-        
+
+        /// <summary>Projects may set this to override a task's ToolName. Tasks may override this to prevent that.</summary>
+        public override string ToolExe
+        {
+            get; set;
+        }
+
         protected override string GenerateFullPathToTool()
         {
-            return RtCliPath;
+            if (IsCore)
+            {
+#if NETCORE1
+                return
+                    RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                    "dotnet.exe"
+                    : "dotnet";
+#else
+                return "dotnet.exe"; 
+#endif
+            }
+            return Path.Combine(GetProperRtcliPath(), ToolName);
         }
+
+        private string GetProperRtcliPath()
+        {
+            var bd = new DirectoryInfo(BuildDirectory);
+            var toolsPath = Path.Combine(bd.Parent.FullName, "tools");
+            var fwPath = Path.Combine(toolsPath, RtFrameworkVersion);
+            return fwPath;
+        }
+
+        private bool IsCore
+        {
+            get
+            {
+                return !(RtFrameworkVersion.StartsWith("net") &&
+                       char.IsNumber(RtFrameworkVersion[3])
+                       && char.IsNumber(RtFrameworkVersion[4]));
+            }
+        }
+
 
         protected override string ToolName
         {
-            get { return "rtcli.exe"; }
+            get
+            {
+                if (IsCore)
+                {
+#if NETCORE1
+                    return
+                        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                            "dotnet.exe"
+                            : "dotnet";
+#else
+                return "dotnet.exe";
+#endif
+                }
+                return "rtcli.exe";
+            }
         }
 
         protected override string GenerateCommandLineCommands()
@@ -86,13 +158,35 @@ namespace Reinforced.Typings.Integrate
                 Hierarchy = Hierarchical,
                 TargetDirectory = FixTargetPath(TargetDirectory),
                 TargetFile = FixTargetPath(TargetFile),
-                ReferencesTmpFilePath = PutReferencesToTempFile(),
+                ReferencesTmpFilePath = string.Empty,
                 SourceAssemblies = ExtractSourceAssemblies(),
-                DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",StringComparison.InvariantCultureIgnoreCase)?DocumentationFilePath:String.Empty,
+                DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",
+#if NETCORE1
+                StringComparison.CurrentCultureIgnoreCase
+#else
+                StringComparison.InvariantCultureIgnoreCase
+#endif
+                ) ? DocumentationFilePath : String.Empty,
                 ConfigurationMethod = ConfigurationMethod
             };
 
-            return consoleParams.ExportConsoleParameters();
+            var tmpFile = Path.GetTempFileName();
+            using (var fs = File.OpenWrite(tmpFile))
+            {
+                using (var tw = new StreamWriter(fs))
+                {
+                    consoleParams.ToFile(tw);
+                    PutReferencesToTempFile(tw);
+                    tw.Flush();
+                }
+            }
+            if (IsCore)
+            {
+                var pth = Path.Combine(GetProperRtcliPath(), "rtcli.dll");
+                return string.Format("\"{1}\" profile \"{0}\"", tmpFile, pth);
+            }
+            return string.Format("profile \"{0}\"", tmpFile);
+
         }
 
         private string FixTargetPath(string path)
@@ -108,22 +202,15 @@ namespace Reinforced.Typings.Integrate
         }
 
 
-        private string PutReferencesToTempFile()
+        private void PutReferencesToTempFile(TextWriter tw)
         {
-            if (References==null) return string.Empty;
-            var tmpFile = Path.GetTempFileName();
-            using (var fs = File.OpenWrite(tmpFile))
+            if (References == null) return;
+            foreach (var rf in References.Select(c => c.ItemSpec))
             {
-                using (var tw = new StreamWriter(fs))
-                {
-                    foreach (var rf in References.Select(c => c.ItemSpec))
-                    {
-                        tw.WriteLine(rf);
-                    }
-                    tw.Flush();
-                }
+                tw.WriteLine(rf);
             }
-            return tmpFile;
+            tw.Flush();
+
         }
 
         private string[] ExtractSourceAssemblies()
@@ -131,7 +218,7 @@ namespace Reinforced.Typings.Integrate
             List<string> srcAssemblies = new List<string>();
             if (AdditionalSourceAssemblies != null)
             {
-                srcAssemblies.AddRange(AdditionalSourceAssemblies.Select(c=>c.ItemSpec));
+                srcAssemblies.AddRange(AdditionalSourceAssemblies.Select(c => c.ItemSpec));
             }
             if (SourceAssembly != null)
             {
@@ -139,5 +226,6 @@ namespace Reinforced.Typings.Integrate
             }
             return srcAssemblies.ToArray();
         }
+
     }
 }

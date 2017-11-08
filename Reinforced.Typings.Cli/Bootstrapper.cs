@@ -3,11 +3,42 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+#if NETCORE1
+using System.Runtime.Loader;
+#endif
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent;
 
 namespace Reinforced.Typings.Cli
 {
+    internal static class CoreTypeExtensions
+    {
+        internal static MethodInfo _GetMethod(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetMethod(name);
+#else
+            return t.GetMethod(name);
+#endif
+        }
+        internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperties(flags);
+#else
+            return t.GetProperties(flags);
+#endif
+        }
+
+        internal static PropertyInfo _GetProperty(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperty(name);
+#else
+            return t.GetProperty(name);
+#endif
+        }
+    }
     /// <summary>
     /// Class for CLI typescript typings utility
     /// </summary>
@@ -17,8 +48,8 @@ namespace Reinforced.Typings.Cli
         private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
         private static string _lastAssemblyLocalDir;
         private static int _totalLoadedAssemblies;
-        private static FileStream _referencesFileStream;
-        private static string _referencesFilePath;
+        private static TextReader _profileReader;
+        private static string _profilePath;
 
         /// <summary>
         /// Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
@@ -35,13 +66,30 @@ namespace Reinforced.Typings.Cli
             }
             try
             {
-                _parameters = ExtractParametersFromArgs(args);
+                if (string.Compare(args[0], "profile",
+#if NETCORE1
+                StringComparison.CurrentCultureIgnoreCase
+#else
+                StringComparison.InvariantCultureIgnoreCase
+#endif
+                    ) == 0)
+                {
+                    if (!File.Exists(args[1]))
+                    {
+                        Console.WriteLine("Cannot find profile {0}, exiting",args[1]);
+                        return;
+                    }
+                    _parameters = ExtractParametersFromFile(args[1]);
+                }
+                else
+                {
+                    _parameters = ExtractParametersFromArgs(args);
+                }
                 if (_parameters == null)
                 {
                     Console.WriteLine("No valid parameters found. Exiting.");
-                    Environment.Exit(0);
+                    return;
                 }
-                _referencesFilePath = _parameters.ReferencesTmpFilePath;
                 var settings = InstantiateExportContext();
                 ResolveFluentMethod(settings);
                 TsExporter exporter = new TsExporter(settings);
@@ -60,6 +108,13 @@ namespace Reinforced.Typings.Cli
                 ReleaseReferencesTempFile();
                 Environment.Exit(1);
             }
+            catch (TargetInvocationException ex)
+            {
+                var e = ex.InnerException;
+                BuildError(e.Message);
+                Console.WriteLine(e.StackTrace);
+                Environment.Exit(1);
+            }
             catch (Exception ex)
             {
                 BuildError(ex.Message);
@@ -76,8 +131,10 @@ namespace Reinforced.Typings.Cli
 
         private static void ReleaseReferencesTempFile()
         {
-            if (_referencesFileStream != null) _referencesFileStream.Dispose();
-            if (!string.IsNullOrEmpty(_referencesFilePath)) File.Delete(_referencesFilePath);
+            if (_profileReader != null) _profileReader.Dispose();
+            if (!string.IsNullOrEmpty(_profilePath)) File.Delete(_profilePath);
+            if(_parameters==null) return;
+            if (!string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath)) File.Delete(_parameters.ReferencesTmpFilePath);
         }
 
         private static void ResolveFluentMethod(ExportContext context)
@@ -94,7 +151,7 @@ namespace Reinforced.Typings.Cli
                 var type = sourceAssembly.GetType(fullQualifiedType, false);
                 if (type != null)
                 {
-                    var constrMethod = type.GetMethod(method);
+                    var constrMethod = type._GetMethod(method);
                     if (constrMethod != null && constrMethod.IsStatic)
                     {
 
@@ -128,16 +185,30 @@ namespace Reinforced.Typings.Cli
         {
             _referencesCache.Clear();
 
-            if (string.IsNullOrEmpty(_referencesFilePath)) return;
-            _referencesFileStream = new FileStream(_referencesFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
-            using (var tr = new StreamReader(_referencesFileStream))
+            if (string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath) && _profileReader == null) return;
+            TextReader tr = null;
+            try
             {
+                if (_profileReader == null)
+                {
+                    tr = File.OpenText(_parameters.ReferencesTmpFilePath);
+                }
+                else
+                {
+                    tr = _profileReader;
+                }
                 string reference;
                 while ((reference = tr.ReadLine()) != null)
                 {
                     _referencesCache.Add(Path.GetFileName(reference), reference);
                 }
-
+            }
+            finally
+            {
+                if (tr != null)
+                {
+                    if (_profileReader == null) tr.Dispose();
+                }
             }
         }
 
@@ -211,7 +282,11 @@ namespace Reinforced.Typings.Cli
 
         public static Assembly[] GetAssembliesFromArgs()
         {
+#if NETCORE1
+            AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
+#else
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+#endif
             BuildReferencesCache();
 
             List<Assembly> assemblies = new List<Assembly>();
@@ -220,7 +295,12 @@ namespace Reinforced.Typings.Cli
             {
                 var assemblyPath = _parameters.SourceAssemblies[i];
                 var path = LookupAssemblyPath(assemblyPath);
+#if NETCORE1
+                var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+#else
                 var a = Assembly.LoadFrom(path);
+#endif
+
                 _totalLoadedAssemblies++;
 
                 assemblies.Add(a);
@@ -229,6 +309,23 @@ namespace Reinforced.Typings.Cli
             return assemblies.ToArray();
         }
 
+#if NETCORE1
+        private static Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
+        {
+            AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
+            if (assemblyName.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetEntryAssembly();
+            AssemblyName nm = new AssemblyName(assemblyName.Name);
+            string path = LookupAssemblyPath(nm.Name, false);
+            var a = context.LoadFromAssemblyPath(path);
+            _totalLoadedAssemblies++;
+#if DEBUG
+            Console.WriteLine("{0} additionally resolved", nm);
+#endif
+
+            AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
+            return a;
+        }
+#else
         public static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
@@ -241,14 +338,14 @@ namespace Reinforced.Typings.Cli
 #endif
             return a;
         }
-
+#endif
         public static void PrintHelp()
         {
             Console.WriteLine("Available parameters:");
             Console.WriteLine();
 
             var t = typeof(ExporterConsoleParameters);
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var props = t._GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var propertyInfo in props)
             {
                 var attr = propertyInfo.GetCustomAttribute<ConsoleHelpAttribute>();
@@ -295,6 +392,13 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine(vsm.ToString());
         }
 
+        private static ExporterConsoleParameters ExtractParametersFromFile(string fileName)
+        {
+            _profilePath = fileName;
+            _profileReader = File.OpenText(fileName);
+            return ExporterConsoleParameters.FromFile(_profileReader);
+        }
+
         public static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
         {
             var t = typeof(ExporterConsoleParameters);
@@ -312,7 +416,7 @@ namespace Reinforced.Typings.Cli
                 var key = kv[0].Trim();
                 var value = kv[1].Trim().Trim('"');
 
-                var prop = t.GetProperty(key);
+                var prop = t._GetProperty(key);
                 if (prop == null)
                 {
                     BuildWarn("Unrecognized parameter: {0}", key);

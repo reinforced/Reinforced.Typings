@@ -224,7 +224,7 @@ namespace Reinforced.Typings.ReferencesInspection
             var alltypes = _allExportedTypes;
 
             var references = new HashSet<Type>();
-            if (element.IsEnum) return references;
+            if (element._IsEnum()) return references;
 
             foreach (var fi in element.GetExportedFields()) InspectTypeReferences(ClarifyType(fi), alltypes, references);
             foreach (var pi in element.GetExportedProperties()) InspectTypeReferences(ClarifyType(pi), alltypes, references);
@@ -243,8 +243,8 @@ namespace Reinforced.Typings.ReferencesInspection
                     else InspectTypeReferences(parameterInfo.ParameterType, alltypes, references);
                 }
             }
-            if (element.BaseType != null) InspectTypeReferences(element.BaseType, alltypes, references);
-            var interfaces = element.GetInterfaces();
+            if (element._BaseType() != null) InspectTypeReferences(element._BaseType(), alltypes, references);
+            var interfaces = element._GetInterfaces();
             foreach (var iface in interfaces)
             {
                 InspectTypeReferences(iface, alltypes, references);
@@ -256,9 +256,9 @@ namespace Reinforced.Typings.ReferencesInspection
         private static void InspectTypeReferences(Type argument, HashSet<Type> alltypes, HashSet<Type> referenceContainer)
         {
             if (alltypes.Contains(argument)) referenceContainer.AddIfNotExists(argument);
-            if (argument.IsGenericType)
+            if (argument._IsGenericType())
             {
-                var args = argument.GetGenericArguments();
+                var args = argument._GetGenericArguments();
                 foreach (var type in args)
                 {
                     InspectTypeReferences(type, alltypes, referenceContainer);

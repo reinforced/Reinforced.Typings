@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+#if NETCORE1
+#else
 using System.Security.Policy;
+#endif
 using System.Text;
 
 namespace Reinforced.Typings.Cli
@@ -18,7 +22,7 @@ namespace Reinforced.Typings.Cli
         [ConsoleHelp(@"
 The semicolon-separated assemblies list to extract typings from.
 Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll""
-",Required.Reuired)]
+", Required.Reuired)]
         public string[] SourceAssemblies { get; set; }
 
         /// <summary>
@@ -51,7 +55,7 @@ If not specified then the CLI will try to resolve reference assemblies
 from same directory as target assembly. 
 Example:   rtcli.exe References=""C:\Users\AppData\Local\Temp\ANGhgRuDPG.tmp"" ")]
         public string ReferencesTmpFilePath { get; set; }
-        
+
         /// <summary>
         /// True to create project hierarchy in target folder. 
         /// False to store generated typings in single file
@@ -62,7 +66,7 @@ True to create project hierarchy in target folder.
 False (default) to store generated typings in single file. 
 Example:   rtcli.exe Hierarchy=""true"" ")]
         public bool Hierarchy { get; set; }
-       
+
         /// <summary>
         /// Full path to assembly's XMLDOC file.
         /// If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
@@ -96,16 +100,48 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
             if (!Hierarchy && string.IsNullOrEmpty(TargetFile))
                 throw new Exception("Target file must be specified in case of non-hierarchy generation");
 
-            if (Hierarchy&&string.IsNullOrEmpty(TargetDirectory))
+            if (Hierarchy && string.IsNullOrEmpty(TargetDirectory))
                 throw new Exception("Target directory must be specified in case of hierarchy generation");
 
-            if (SourceAssemblies==null||SourceAssemblies.Length==0)
+            if (SourceAssemblies == null || SourceAssemblies.Length == 0)
                 throw new Exception("Source assemblies is not specified. Nothing to export");
         }
 
         public ExporterConsoleParameters()
         {
-            
+
+        }
+
+        public static ExporterConsoleParameters FromFile(TextReader tr)
+        {
+            ExporterConsoleParameters result = new ExporterConsoleParameters();
+            result.TargetFile = tr.ReadLine();
+            result.ReferencesTmpFilePath = tr.ReadLine();
+            result.TargetDirectory = tr.ReadLine();
+            result.Hierarchy = bool.Parse(tr.ReadLine());
+            result.DocumentationFilePath = tr.ReadLine();
+            result.ConfigurationMethod = tr.ReadLine();
+            result.SourceAssemblies = new string[int.Parse(tr.ReadLine())];
+            for (int i = 0; i < result.SourceAssemblies.Length; i++)
+            {
+                result.SourceAssemblies[i] = tr.ReadLine();
+            }
+            return result;
+        }
+
+        public void ToFile(TextWriter tw)
+        {
+            tw.WriteLine(TargetFile);
+            tw.WriteLine(ReferencesTmpFilePath);
+            tw.WriteLine(TargetDirectory);
+            tw.WriteLine(Hierarchy);
+            tw.WriteLine(DocumentationFilePath);
+            tw.WriteLine(ConfigurationMethod);
+            tw.WriteLine(SourceAssemblies.Length);
+            foreach (var sourceAssembly in SourceAssemblies)
+            {
+                tw.WriteLine(sourceAssembly);
+            }
         }
 
         /// <summary>
@@ -116,16 +152,16 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
         {
             List<string> arguments = new List<string>();
 
-            var props = typeof (ExporterConsoleParameters).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var props = typeof(ExporterConsoleParameters)._GetProperties(BindingFlags.Public | BindingFlags.Instance);
             const string propFormat = "{0}=\"{1}\"";
             foreach (var propertyInfo in props)
             {
                 var pi = propertyInfo.GetValue(this);
-                if (pi==null) continue;
-                if (propertyInfo.PropertyType == (typeof (string[])))
+                if (pi == null) continue;
+                if (propertyInfo.PropertyType == (typeof(string[])))
                 {
-                    var strings = (string[]) pi;
-                    if (strings.Length==0) continue;
+                    var strings = (string[])pi;
+                    if (strings.Length == 0) continue;
                     pi = string.Join(";", strings);
                 }
 
