@@ -3,7 +3,7 @@ IMPORTANT NOTICE ABOUT Reinforced.Typings.settings.xml FILE
 -----------------------
 
 Hi!
-Congradulations. You have just installed Reinforced.Typings.
+Congratulations. You have just installed Reinforced.Typings.
 
 If you see that Reinforced.Typings.settings.xml file is included 
 into your project - please close this file and continue working. Everything if fine.
