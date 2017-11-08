@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Reinforced.Typings.Cli.NETCore": {
+      "commandName": "Project",
+      "commandLineArgs": "profile \"C:\\Users\\Murcielago\\AppData\\Local\\Temp\\tmpFBC1.tmp\""
+    }
+  }
+}

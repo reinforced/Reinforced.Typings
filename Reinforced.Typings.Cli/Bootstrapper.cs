@@ -48,8 +48,8 @@ namespace Reinforced.Typings.Cli
         private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
         private static string _lastAssemblyLocalDir;
         private static int _totalLoadedAssemblies;
-        private static FileStream _referencesFileStream;
-        private static string _referencesFilePath;
+        private static TextReader _profileReader;
+        private static string _profilePath;
 
         /// <summary>
         /// Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
@@ -66,13 +66,30 @@ namespace Reinforced.Typings.Cli
             }
             try
             {
-                _parameters = ExtractParametersFromArgs(args);
+                if (string.Compare(args[0], "profile",
+#if NETCORE1
+                StringComparison.CurrentCultureIgnoreCase
+#else
+                StringComparison.InvariantCultureIgnoreCase
+#endif
+                    ) == 0)
+                {
+                    if (!File.Exists(args[1]))
+                    {
+                        Console.WriteLine("Cannot find profile {0}, exiting",args[1]);
+                        return;
+                    }
+                    _parameters = ExtractParametersFromFile(args[1]);
+                }
+                else
+                {
+                    _parameters = ExtractParametersFromArgs(args);
+                }
                 if (_parameters == null)
                 {
                     Console.WriteLine("No valid parameters found. Exiting.");
-                    Environment.Exit(0);
+                    return;
                 }
-                _referencesFilePath = _parameters.ReferencesTmpFilePath;
                 var settings = InstantiateExportContext();
                 ResolveFluentMethod(settings);
                 TsExporter exporter = new TsExporter(settings);
@@ -91,6 +108,13 @@ namespace Reinforced.Typings.Cli
                 ReleaseReferencesTempFile();
                 Environment.Exit(1);
             }
+            catch (TargetInvocationException ex)
+            {
+                var e = ex.InnerException;
+                BuildError(e.Message);
+                Console.WriteLine(e.StackTrace);
+                Environment.Exit(1);
+            }
             catch (Exception ex)
             {
                 BuildError(ex.Message);
@@ -107,8 +131,10 @@ namespace Reinforced.Typings.Cli
 
         private static void ReleaseReferencesTempFile()
         {
-            if (_referencesFileStream != null) _referencesFileStream.Dispose();
-            if (!string.IsNullOrEmpty(_referencesFilePath)) File.Delete(_referencesFilePath);
+            if (_profileReader != null) _profileReader.Dispose();
+            if (!string.IsNullOrEmpty(_profilePath)) File.Delete(_profilePath);
+            if(_parameters==null) return;
+            if (!string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath)) File.Delete(_parameters.ReferencesTmpFilePath);
         }
 
         private static void ResolveFluentMethod(ExportContext context)
@@ -159,16 +185,30 @@ namespace Reinforced.Typings.Cli
         {
             _referencesCache.Clear();
 
-            if (string.IsNullOrEmpty(_referencesFilePath)) return;
-            _referencesFileStream = new FileStream(_referencesFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
-            using (var tr = new StreamReader(_referencesFileStream))
+            if (string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath) && _profileReader == null) return;
+            TextReader tr = null;
+            try
             {
+                if (_profileReader == null)
+                {
+                    tr = File.OpenText(_parameters.ReferencesTmpFilePath);
+                }
+                else
+                {
+                    tr = _profileReader;
+                }
                 string reference;
                 while ((reference = tr.ReadLine()) != null)
                 {
                     _referencesCache.Add(Path.GetFileName(reference), reference);
                 }
-
+            }
+            finally
+            {
+                if (tr != null)
+                {
+                    if (_profileReader == null) tr.Dispose();
+                }
             }
         }
 
@@ -280,8 +320,8 @@ namespace Reinforced.Typings.Cli
             _totalLoadedAssemblies++;
 #if DEBUG
             Console.WriteLine("{0} additionally resolved", nm);
-#endif  
-      
+#endif
+
             AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
             return a;
         }
@@ -350,6 +390,13 @@ namespace Reinforced.Typings.Cli
             var errorMessage = string.Format(message, args);
             VisualStudioFriendlyErrorMessage vsm = new VisualStudioFriendlyErrorMessage(999, errorMessage, VisualStudioFriendlyMessageType.Error, "Unexpected");
             Console.WriteLine(vsm.ToString());
+        }
+
+        private static ExporterConsoleParameters ExtractParametersFromFile(string fileName)
+        {
+            _profilePath = fileName;
+            _profileReader = File.OpenText(fileName);
+            return ExporterConsoleParameters.FromFile(_profileReader);
         }
 
         public static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)

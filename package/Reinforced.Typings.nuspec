@@ -40,7 +40,13 @@
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />            
           </group>
-        </dependencies>        
+        </dependencies>   
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="Microsoft.Build" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="Microsoft.Build.Framework" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="Microsoft.Build.Tasks.v4.0" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="Microsoft.Build.Utilities.v4.0" targetFramework=".NETFramework4.5" />
+        </frameworkAssemblies>        
     </metadata>
     <files>    
         <file src="build\**" target="build" />

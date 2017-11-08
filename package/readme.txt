@@ -25,7 +25,7 @@ So now please create empty Reinforced.Typings.settings.xml in the root
 folder of your project and put the following text there:
 
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+<Project>	
 	<PropertyGroup>
 	
 		<!-- 

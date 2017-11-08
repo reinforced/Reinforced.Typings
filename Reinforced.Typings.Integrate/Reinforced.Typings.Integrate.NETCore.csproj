@@ -1,11 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
     <AssemblyName>Reinforced.Typings.Integrate</AssemblyName>
     <RootNamespace>Reinforced.Typings.Integrate</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <DebugSymbols Condition="$(Configuration) == 'Release'">false</DebugSymbols>
+    <DebugType Condition="$(Configuration) == 'Release'">None</DebugType>
   </PropertyGroup>
   
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.6'">
+        <DefineConstants>NETCORE1;NETSTANDARD15</DefineConstants>        
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -20,8 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" />
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.6'" Include="Microsoft.Build.Framework" Version="15.1.1012" />
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.6'" Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" />
+    <Reference Condition="'$(TargetFramework)'=='net45'" Include="Microsoft.Build" />
+    <Reference Condition="'$(TargetFramework)'=='net45'" Include="Microsoft.Build.Framework" />
+    <Reference Condition="'$(TargetFramework)'=='net45'" Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Condition="'$(TargetFramework)'=='net45'" Include="Microsoft.Build.Utilities.v4.0" />
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
   </ItemGroup> 
 
 </Project>

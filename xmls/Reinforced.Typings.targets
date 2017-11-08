@@ -9,24 +9,32 @@
 			ConditionallyShowDisabledWarning;
 			$(BuildDependsOn);
 		</BuildDependsOn>
+        
         <RtTargetFramework>$(TargetFramework)</RtTargetFramework>        
         <RtTargetFramework Condition="($(TargetFramework)=='')OR($(TargetFramework)==null)">net45</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.6'">netstandard1.5</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.7'">netstandard1.5</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.8'">netstandard1.5</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.9'">netstandard1.5</RtTargetFramework>    
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.0'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.1'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.2'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.3'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.4'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.5'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.6'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.7'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.8'">netcoreapp1.0</RtTargetFramework>        
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.9'">netcoreapp1.0</RtTargetFramework>    
+        <RtTargetFramework Condition="$(TargetFramework)=='netstandard2.0'">netcoreapp2.0</RtTargetFramework>            
         
         <RtSettingsXml Condition="HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)Reinforced.Typings.settings.xml</RtSettingsXml>
         <RtSettingsXml Condition="!HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)\Reinforced.Typings.settings.xml</RtSettingsXml>
         
-        <RtToolPath Condition="HasTrailingSlash('$(MSBuildThisFileDirectory)')">$(MSBuildThisFileDirectory)$(RtTargetFramework)</RtToolPath>
-        <RtToolPath Condition="!HasTrailingSlash('$(MSBuildThisFileDirectory)')">$(MSBuildThisFileDirectory)\$(RtTargetFramework)</RtToolPath>
+        <RtTargetsPath Condition=" '$(MSBuildRuntimeType)' == 'Core'">netstandard1.6</RtTargetsPath>
+        <RtTargetsPath Condition=" '$(MSBuildRuntimeType)' != 'Core'">net45</RtTargetsPath>
 	</PropertyGroup>
     
     <Import Project="$(RtSettingsXml)" Condition="Exists($(RtSettingsXml))" />
     
-	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="$(RtTargetFramework)\Reinforced.Typings.Integrate.dll" />
-	<UsingTask TaskName="Reinforced.Typings.Integrate.RemoveTypescriptStep" AssemblyFile="$(RtTargetFramework)\Reinforced.Typings.Integrate.dll" />
+	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
+	<UsingTask TaskName="Reinforced.Typings.Integrate.RemoveTypescriptStep" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
 	
 	<Target Name="ConditionallyDisableTypeScriptCompilation" Condition="'$(RtBypassTypeScriptcompilation)' == 'true'">
 		<Warning 
@@ -67,9 +75,10 @@
 			Text="Reinforced.Typings will not run because it is disabled in its configuration"
 			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
 	</Target>
-	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">			
+	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">	     
 		<RtCli 
-			RtCliPath="$(RtToolPath)"
+            BuildDirectory="$(MSBuildThisFileDirectory)"
+			RtFrameworkVersion="$(RtTargetFramework)"
 			SourceAssembly="@(IntermediateAssembly)"
 			References="@(ReferencePath)"
 			AdditionalSourceAssemblies="@(RtAdditionalAssembly)" 
