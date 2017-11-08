@@ -9,13 +9,26 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :fire: Version **1.3.7** released! Please **do not** use versions 1.3.3 - 1.3.6 - they are highly unstable and contain critical bugs.
+> :fire: Version **1.4.0** released! **Highly expected .NET Core support added! Yes! Now RT works with MVC Core apps!** :champagne:
 
 Features:
-* [Inline type inferers](https://github.com/reinforced/Reinforced.Typings/wiki/Types-Resolution#inline-type-inferers)
-* ```ForceNullable``` can also be used to disable property nullability
-* Const enums
-* Reported bugs fixes
+* .NET Core support. .NET Standard >= 1.5 is also supported now
+* ```TargetInvokationException``` during build is now being revealed to InnerException
+* (internal) profiles instead of rtcli parmeters
+
+**Importnat Release Note!**
+
+Dear .NET Core users! 
+
+Due to NuGet's [inability to deliver content within package](https://github.com/NuGet/Home/wiki/Bringing-back-content-support,-September-24th,-2015) I cannot deliver ```Reinforced.Typings.settings.xml``` to your project automatically. [```readme.txt```](https://github.com/reinforced/Reinforced.Typings/blob/master/package/readme.txt) that is included into package basically states the same. So **you have to** create ```Reinforced.Typings.settings.xml``` in the root of your project manually. Create empty one and copypaste contents from ```readme.txt``` or download [from here](https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/package/content/Reinforced.Typings.settings.xml). Sorry for inconvenience. 
+For full-sized .NET users nothing will change.
+
+Support policy (new)
+=================
+
+Please **do not** ask your questions in github issues anymore. Such format is not suitable for storing FAQ. If you have question - please go to StackOverflow and ask it there. Tag your question with [reinforced-typings](https://stackoverflow.com/questions/tagged/reinforced-typings) tag. I watch full list of questions and will answer ASAP. Make experience that you've got available for other users! 
+
+GitHub issues are for confirmed bugs/feature requests now. If you've found bug - please write and PR test if you can. If you have feature idea - please describe it from fluent/attribute configuration point of view. Describe how'd you gonna to configure RT for desired result. Thanks in advance!
 
 What is that?
 =================
