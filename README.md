@@ -9,12 +9,10 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :fire: Version **1.4.0** released! **Highly expected .NET Core support added! Yes! Now RT works with MVC Core apps!** :champagne:
+> :fire: Version **1.4.1** released! .NET Core support still works. Just some bugs fixed.
 
-Features:
-* .NET Core support. .NET Standard >= 1.5 is also supported now
-* ```TargetInvokationException``` during build is now being revealed to InnerException
-* (internal) profiles instead of rtcli parmeters
+Bugfixes:
+* Fixed conflicts between ```[TsProperty/Function/Value]``` and corresponding fluent configuration
 
 **Importnat Release Note!**
 
