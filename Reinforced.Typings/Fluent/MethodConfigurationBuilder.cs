@@ -14,7 +14,7 @@ namespace Reinforced.Typings.Fluent
         internal MethodConfigurationBuilder(MethodInfo member)
         {
             Member = member;
-            AttributePrototype = new TsFunctionAttribute();
+            AttributePrototype = member.RetrieveOrCreateCustomAttribute<TsFunctionAttribute>();
             Decorators = new List<TsDecoratorAttribute>();
         }
 

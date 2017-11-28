@@ -12,7 +12,7 @@ namespace Reinforced.Typings.Fluent
         internal EnumValueExportConfiguration(FieldInfo member)
         {
             Member = member;
-            AttributePrototype = new TsValueAttribute();
+            AttributePrototype = member.RetrieveOrCreateCustomAttribute<TsValueAttribute>();
         }
 
         internal TsValueAttribute AttributePrototype { get; set; }

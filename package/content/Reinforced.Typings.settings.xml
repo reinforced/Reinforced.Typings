@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- 
 		Hi! This is settings file for Reinforced.Typings.
 		Since Reinforced.Typings is not a framework itself but build process extension,

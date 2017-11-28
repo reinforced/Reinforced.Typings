@@ -8,13 +8,13 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Fluent configuration builder for exported properties
     /// </summary>
-    public class PropertyExportConfigurationBuilder : IMemberExportConfiguration<TsPropertyAttribute,MemberInfo>, IIgnorable,
+    public class PropertyExportConfigurationBuilder : IMemberExportConfiguration<TsPropertyAttribute, MemberInfo>, IIgnorable,
         IDecoratorsAggregator, IOrderableMember, ISupportsInferring<MemberInfo>
     {
         internal PropertyExportConfigurationBuilder(MemberInfo member)
         {
             Member = member;
-            AttributePrototype = new TsPropertyAttribute();
+            AttributePrototype = member.RetrieveOrCreateCustomAttribute<TsPropertyAttribute>();
             Decorators = new List<TsDecoratorAttribute>();
         }
 

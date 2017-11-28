@@ -13,6 +13,21 @@ namespace Reinforced.Typings
     /// </summary>
     public static class TypeExtensions
     {
+        internal static T RetrieveOrCreateCustomAttribute<T>(this ICustomAttributeProvider member) where T:Attribute,new()
+        {
+            T proto = null;
+            var attrs = member.GetCustomAttributes(true);
+            foreach (var attribute in attrs)
+            {
+                if (typeof(T)._IsAssignableFrom(attribute.GetType()))
+                {
+                    proto = (T)attribute;
+                }
+            }
+            if (proto==null) proto = new T();
+            return proto;
+        }
+
 #if NETCORE1
         internal static T GetCustomAttribute<T>(this Type t, bool inherit = true) where T : Attribute
         {

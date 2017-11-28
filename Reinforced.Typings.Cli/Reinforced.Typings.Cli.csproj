@@ -52,9 +52,6 @@
     <Compile Include="VisualStudioFriendlyErrorMessage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.csproj">
       <Project>{2a5ccd5c-e660-4088-8937-9632abbbcdbb}</Project>
       <Name>Reinforced.Typings</Name>
