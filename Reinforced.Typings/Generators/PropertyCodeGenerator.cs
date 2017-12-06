@@ -34,7 +34,7 @@ namespace Reinforced.Typings.Generators
             var t = GetType(element);
             RtTypeName type = null;
             var propName = new RtIdentifier(element.Name);
-
+            bool isNameOverridden = false;
             var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
             if (tp != null)
             {
@@ -49,7 +49,11 @@ namespace Reinforced.Typings.Generators
                 
                 type = tp.TypeInferers.Infer(element, resolver) ?? type;
 
-                if (!string.IsNullOrEmpty(tp.Name)) propName.IdentifierName = tp.Name;
+                if (!string.IsNullOrEmpty(tp.Name))
+                {
+                    propName.IdentifierName = tp.Name;
+                    isNameOverridden = true;
+                }
                 if (tp.NilForceNullable.HasValue && !Context.SpecialCase)
                 {
                     propName.IsNullable = tp.NilForceNullable.Value;
@@ -64,14 +68,16 @@ namespace Reinforced.Typings.Generators
                     propName.IsNullable = true;
                 }
             }
-
-            if (element is PropertyInfo)
+            if (!isNameOverridden)
             {
-                propName.IdentifierName = Context.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
+                if (element is PropertyInfo)
+                {
+                    propName.IdentifierName =
+                        Context.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
+                }
+                propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
+                propName.IdentifierName = element.PascalCaseFromAttribute(propName.IdentifierName);
             }
-            propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
-            propName.IdentifierName = element.PascalCaseFromAttribute(propName.IdentifierName);
-
             result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;

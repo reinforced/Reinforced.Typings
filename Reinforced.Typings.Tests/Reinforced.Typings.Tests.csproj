@@ -82,6 +82,8 @@
     <Compile Include="SpecificCases\SpecificTestCases.RluitenConstEnums.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.TsFunctionWorks.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.TsPropertyWorks.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.OverridenNamesNotCamelCased.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.NestedClassInheritance.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />

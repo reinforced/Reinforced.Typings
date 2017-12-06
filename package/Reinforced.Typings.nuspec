@@ -17,6 +17,7 @@
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
 - Additional assemblies resolvation fix
+- Explicitly overriden names are no more subjects of casing change
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />

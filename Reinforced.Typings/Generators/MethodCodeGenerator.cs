@@ -83,11 +83,16 @@ namespace Reinforced.Typings.Generators
         protected virtual void GetFunctionNameAndReturnType(MethodInfo element, TypeResolver resolver, out string name, out RtTypeName type)
         {
             name = element.Name;
+            bool isNameOverridden = false;
             var fa = ConfigurationRepository.Instance.ForMember(element);
 
             if (fa != null)
             {
-                if (!string.IsNullOrEmpty(fa.Name)) name = fa.Name;
+                if (!string.IsNullOrEmpty(fa.Name))
+                {
+                    name = fa.Name;
+                    isNameOverridden = true;
+                }
 
                 if (!string.IsNullOrEmpty(fa.Type)) type = new RtSimpleTypeName(fa.Type);
                 else if (fa.StrongType != null) type = resolver.ResolveTypeName(fa.StrongType);
@@ -99,9 +104,12 @@ namespace Reinforced.Typings.Generators
                 type = resolver.ResolveTypeName(element.ReturnType);
             }
 
-            name = Context.ConditionallyConvertMethodNameToCamelCase(name);
-            name = element.CamelCaseFromAttribute(name);
-            name = element.PascalCaseFromAttribute(name);
+            if (!isNameOverridden)
+            {
+                name = Context.ConditionallyConvertMethodNameToCamelCase(name);
+                name = element.CamelCaseFromAttribute(name);
+                name = element.PascalCaseFromAttribute(name);
+            }
             if (element.IsGenericMethod)
             {
                 if (!(name.Contains("<") || name.Contains(">")))
