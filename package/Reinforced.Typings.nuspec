@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,7 +16,7 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-- Fix conflict between attributes and fluent configuration
+- Additional assemblies resolvation fix
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />

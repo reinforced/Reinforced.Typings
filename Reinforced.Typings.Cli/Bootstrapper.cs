@@ -46,7 +46,8 @@ namespace Reinforced.Typings.Cli
     {
         private static ExporterConsoleParameters _parameters;
         private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
-        private static string _lastAssemblyLocalDir;
+        private static readonly HashSet<string> _allAssembliesDirs = new HashSet<string>();
+        private static readonly Dictionary<string, Assembly> _alreadyLoaded = new Dictionary<string, Assembly>();
         private static int _totalLoadedAssemblies;
         private static TextReader _profileReader;
         private static string _profilePath;
@@ -76,7 +77,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!File.Exists(args[1]))
                     {
-                        Console.WriteLine("Cannot find profile {0}, exiting",args[1]);
+                        Console.WriteLine("Cannot find profile {0}, exiting", args[1]);
                         return;
                     }
                     _parameters = ExtractParametersFromFile(args[1]);
@@ -133,7 +134,7 @@ namespace Reinforced.Typings.Cli
         {
             if (_profileReader != null) _profileReader.Dispose();
             if (!string.IsNullOrEmpty(_profilePath)) File.Delete(_profilePath);
-            if(_parameters==null) return;
+            if (_parameters == null) return;
             if (!string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath)) File.Delete(_parameters.ReferencesTmpFilePath);
         }
 
@@ -218,11 +219,12 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine("Looking up for assembly {0}", assemblyNameOrFullPath);
 #endif
 
-            if (Path.IsPathRooted(assemblyNameOrFullPath))
+            if (Path.IsPathRooted(assemblyNameOrFullPath) && File.Exists(assemblyNameOrFullPath))
             {
                 if (storeIfFullName)
                 {
-                    _lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
+                    var lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
+                    if (!_allAssembliesDirs.Contains(lastAssemblyLocalDir)) _allAssembliesDirs.Add(lastAssemblyLocalDir);
                 }
 #if DEBUG
                 Console.WriteLine("Already have full path to assembly {0}", assemblyNameOrFullPath);
@@ -238,14 +240,19 @@ namespace Reinforced.Typings.Cli
 #endif
                 return rf;
             }
-            var p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
-            if (File.Exists(p))
+
+            foreach (var dir in _allAssembliesDirs)
             {
+                var p = Path.Combine(dir, assemblyNameOrFullPath);
+                if (File.Exists(p))
+                {
 #if DEBUG
-                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
+                    Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
 #endif
-                return p;
+                    return p;
+                }
             }
+
 
             return null;
         }
@@ -270,13 +277,7 @@ namespace Reinforced.Typings.Cli
             checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
             if (!string.IsNullOrEmpty(checkResult)) return checkResult;
 
-            if (!string.IsNullOrEmpty(_lastAssemblyLocalDir) && !string.IsNullOrEmpty(assemblyNameOrFullPath))
-            {
-                p = Path.Combine(_lastAssemblyLocalDir, assemblyNameOrFullPath);
-                checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
-                if (!string.IsNullOrEmpty(checkResult)) return checkResult;
-            }
-            BuildWarn("Assembly {0} may be resolved incorrectly", assemblyNameOrFullPath, p);
+
             return assemblyNameOrFullPath;
         }
 
@@ -295,6 +296,10 @@ namespace Reinforced.Typings.Cli
             {
                 var assemblyPath = _parameters.SourceAssemblies[i];
                 var path = LookupAssemblyPath(assemblyPath);
+                if (path == assemblyPath)
+                {
+                    BuildWarn("Assembly {0} may be resolved incorrectly", assemblyPath);
+                }
 #if NETCORE1
                 var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
 #else
@@ -312,26 +317,42 @@ namespace Reinforced.Typings.Cli
 #if NETCORE1
         private static Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
         {
-            AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
+            //AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
             if (assemblyName.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetEntryAssembly();
+            if (_alreadyLoaded.ContainsKey(assemblyName.FullName)) return _alreadyLoaded[assemblyName.FullName];
             AssemblyName nm = new AssemblyName(assemblyName.Name);
             string path = LookupAssemblyPath(nm.Name, false);
-            var a = context.LoadFromAssemblyPath(path);
+            Assembly a = null;
+            if (path != nm.Name) //else - lookup failed, return null
+            {
+                a = context.LoadFromAssemblyPath(path);
+            }
+            else
+            {
+                BuildWarn("Assembly {0} may be resolved incorrectly", assemblyName.FullName);
+            }
+
+            if (a != null) _alreadyLoaded[nm.FullName] = a;
             _totalLoadedAssemblies++;
 #if DEBUG
             Console.WriteLine("{0} additionally resolved", nm);
 #endif
 
-            AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
+            //AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
             return a;
         }
 #else
         public static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
+            if (_alreadyLoaded.ContainsKey(args.Name)) return _alreadyLoaded[args.Name];
             AssemblyName nm = new AssemblyName(args.Name);
             string path = LookupAssemblyPath(nm.Name, false);
-            Assembly a = Assembly.LoadFrom(path);
+            Assembly a = null;
+            if (path != nm.Name) a = Assembly.LoadFrom(path);
+            else BuildWarn("Assembly {0} may be resolved incorrectly", nm.Name);
+
+            if (a != null) _alreadyLoaded[args.Name] = a;
             _totalLoadedAssemblies++;
 #if DEBUG
             Console.WriteLine("{0} additionally resolved", nm);
