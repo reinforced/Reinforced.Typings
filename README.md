@@ -9,10 +9,11 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :fire: Version **1.4.1** released! .NET Core support still works. Just some bugs fixed.
+> :fire: Version **1.4.2** released! .NET Core support still works. Just some bugs fixed.
 
 Bugfixes:
-* Fixed conflicts between ```[TsProperty/Function/Value]``` and corresponding fluent configuration
+* Additional assemblies resolvation fix
+* Explicitly overriden names are no more subjects of casing change
 
 **Importnat Release Note!**
 
