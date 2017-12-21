@@ -4,25 +4,25 @@ using Xunit;
 
 namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public interface ITestFlatteringBase
+    public interface ITestFlatteningBase
     {
         string SomeProperty { get; }
         void DoSomething();
     }
 
-    public interface ITestFlatteringChild : ITestFlatteringBase
+    public interface ITestFlatteningChild : ITestFlatteningBase
     {
 
     }
 
-    public abstract class TestFlatteringBase
+    public abstract class TestFlatteningBase
     {
         public string SomeProperty { get; set; }
 
         public abstract void DoSomething();
     }
 
-    public class TestFlatteringChild : TestFlatteringBase
+    public class TestFlatteningChild : TestFlatteningBase
     {
         public override void DoSomething()
         {
@@ -51,12 +51,12 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-                s.ExportAsInterface<ITestFlatteringChild>().FlattenHierarchy()
+                s.ExportAsInterface<ITestFlatteningChild>().FlattenHierarchy()
                     .OverrideName("A")
                     .WithPublicProperties()
                     .WithPublicMethods();
 
-                s.ExportAsInterface<TestFlatteringChild>().FlattenHierarchy()
+                s.ExportAsInterface<TestFlatteningChild>().FlattenHierarchy()
                     .OverrideName("B")
                     .WithPublicProperties()
                     .WithPublicMethods();
