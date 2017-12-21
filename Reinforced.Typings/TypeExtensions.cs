@@ -261,7 +261,7 @@ namespace Reinforced.Typings
             {
                 var subType = queue.Dequeue();
                 
-                foreach (var subInterface in subType.GetInterfaces())
+                foreach (var subInterface in subType._GetInterfaces())
                 {
                     if (considered.Contains(subInterface)) continue;
 
@@ -271,18 +271,19 @@ namespace Reinforced.Typings
 
                 if (!limitReached)
                 {
-                    if (subType.BaseType != null)
+                    var bt = subType._BaseType();
+                    if (bt != null)
                     {
-                        if (subType.BaseType == limiter)
+                        if (bt == limiter)
                         {
                             limitReached = true;
                         }
                         else
                         {
-                            if (considered.Contains(subType.BaseType)) continue;
+                            if (considered.Contains(bt)) continue;
 
-                            considered.Add(subType.BaseType);
-                            queue.Enqueue(subType.BaseType);
+                            considered.Add(bt);
+                            queue.Enqueue(bt);
                         }
                     }
                 }
