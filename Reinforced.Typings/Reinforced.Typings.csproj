@@ -87,6 +87,19 @@
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\INameOverrideAttribute.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Enums.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Interfaces.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Classes.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Fields.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Methods.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Properties.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.Various.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.NamesAndNamespaces.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.Inferring.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.Substitutions.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.TypeAndStrongType.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.Reference.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.CodeGenerators.cs" />
     <Compile Include="InlineTypeInferers.cs" />
     <Compile Include="Attributes\IOrderableAttribute.cs" />
     <Compile Include="Attributes\TsAddTypeImportAttribute.cs" />
@@ -119,7 +132,7 @@
     <Compile Include="Exceptions\RtWarning.cs" />
     <Compile Include="ExportedFile.cs" />
     <Compile Include="Fluent\ClassConfigurationBuilder.cs" />
-    <Compile Include="Fluent\ConfigurationBuildersExtensions.cs" />
+    <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.cs" />
     <Compile Include="Fluent\EnumConfigurationBuilder.cs" />
     <Compile Include="Fluent\EnumValueExportConfiguration.cs" />
     <Compile Include="Fluent\Generic\GenericClassConfigurationBuilder.cs" />
@@ -143,7 +156,7 @@
     <Compile Include="Fluent\LambdaHelpers.cs" />
     <Compile Include="Fluent\Parameter.cs" />
     <Compile Include="Fluent\ConfigurationBuilder.cs" />
-    <Compile Include="Fluent\TypingsConfigurationExtensions.cs" />
+    <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.cs" />
     <Compile Include="GeneratorManager.cs" />
     <Compile Include="Generators\ClassAndInterfaceGeneratorBase.cs" />
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />

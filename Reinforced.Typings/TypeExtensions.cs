@@ -172,10 +172,145 @@ namespace Reinforced.Typings
         /// <summary>
         ///     Binding flags for searching all members
         /// </summary>
-        public const BindingFlags MembersFlags =
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
+        public const BindingFlags MembersFlags = PublicMembersFlags | BindingFlags.NonPublic;
+
+        /// <summary>
+        ///     Binding flags for searching all members
+        /// </summary>
+        public const BindingFlags PublicMembersFlags =
+            BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly;
 
+        #region Inheritance flattern
+        /// <summary>
+        /// Simple comparer to detect overridden methods
+        /// </summary>
+        private class MethodEqComparer : IEqualityComparer<MethodInfo>
+        {
+            public static readonly MethodEqComparer Instance = new MethodEqComparer();
+
+            public bool Equals(MethodInfo x, MethodInfo y)
+            {
+                if (x == null && y == null) return true;
+                if (x == null && y != null) return false;
+                if (y == null && x != null) return false;
+
+                if (x.Name != y.Name) return false;
+                var xparms = x.GetParameters();
+                var yparms = y.GetParameters();
+                if (xparms.Length != yparms.Length) return false;
+                for (int i = 0; i < xparms.Length; i++)
+                {
+                    if (xparms[i].Name != yparms[i].Name) return false;
+                }
+                return true;
+            }
+
+            public int GetHashCode(MethodInfo obj)
+            {
+                unchecked
+                {
+                    int hashCode = obj.Name.GetHashCode();
+                    var parms = obj.GetParameters();
+                    hashCode = (hashCode * 397) ^ parms.Length;
+                    foreach (var pi in parms)
+                    {
+                        hashCode = (hashCode * 397) ^ pi.Name.GetHashCode();
+                    }
+                    return hashCode;
+                }
+            }
+        }
+
+        
+
+        private class NameEqComparer<T> : IEqualityComparer<T> where T:MemberInfo
+        {
+            public static readonly NameEqComparer<T> Instance = new NameEqComparer<T>();
+
+            public bool Equals(T x, T y)
+            {
+                if (x == null && y == null) return true;
+                if (x == null && y != null) return false;
+                if (y == null && x != null) return false;
+
+                if (x.Name != y.Name) return false;
+                return true;
+            }
+
+            public int GetHashCode(T obj) { return obj.Name.GetHashCode(); }
+        }
+
+        private static IEqualityComparer<T> GetInheritanceEqComparer<T>() where T : MemberInfo
+        {
+            if (typeof(T) == typeof(MethodInfo)) return (IEqualityComparer<T>) MethodEqComparer.Instance;
+            return NameEqComparer<T>.Instance;
+        }
+
+        internal static T[] GetInheritedMembers<T>(this Type type, Func<Type, T[]> membersGetter, Type limiter)
+            where T:MemberInfo
+        {
+            var members = new HashSet<T>(GetInheritanceEqComparer<T>());
+            
+            var considered = new List<Type>();
+            var queue = new Queue<Type>();
+            considered.Add(type);
+            queue.Enqueue(type);
+            bool limitReached = false;
+            while (queue.Count > 0)
+            {
+                var subType = queue.Dequeue();
+                
+                foreach (var subInterface in subType.GetInterfaces())
+                {
+                    if (considered.Contains(subInterface)) continue;
+
+                    considered.Add(subInterface);
+                    queue.Enqueue(subInterface);
+                }
+
+                if (!limitReached)
+                {
+                    if (subType.BaseType != null)
+                    {
+                        if (subType.BaseType == limiter)
+                        {
+                            limitReached = true;
+                        }
+                        else
+                        {
+                            if (considered.Contains(subType.BaseType)) continue;
+
+                            considered.Add(subType.BaseType);
+                            queue.Enqueue(subType.BaseType);
+                        }
+                    }
+                }
+
+                var typeMembers = membersGetter(subType);
+                foreach (var newMember in typeMembers)
+                {
+                    if (!members.Contains(newMember)) members.Add(newMember);
+                }
+            }
+            return members.ToArray();
+        }
+
+        internal static IEnumerable<T> GetExportingMembers<T>(this Type t, bool flatternHierarchy, Func<Type, BindingFlags, T[]> membersGetter, Type limiter, bool publicOnly = false)
+            where T : MemberInfo
+        {
+            var declaredFlags = publicOnly ? PublicMembersFlags : MembersFlags;
+
+            T[] baseSet = null;
+            baseSet = flatternHierarchy ? 
+                GetInheritedMembers(t, x => membersGetter(x, declaredFlags),limiter) 
+                : membersGetter(t, declaredFlags);
+
+            var allMembers = baseSet.Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate).OfType<T>();
+            return allMembers.ToArray();
+        }
+
+        #endregion
 
         #region IsStatic
 

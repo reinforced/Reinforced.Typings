@@ -29,6 +29,16 @@ namespace Reinforced.Typings.Fluent.Generic
 
         private Dictionary<Type, RtTypeName> Substitutions { get; set; }
 
+        /// <summary>
+        /// Gets whether type configuration is flattern
+        /// </summary>
+        public abstract bool IsHierarchyFlattern { get; }
+
+        /// <summary>
+        /// Flattern limiter
+        /// </summary>
+        public abstract Type FlatternLimiter { get; }
+
         Type ITypeConfigurationBuilder.Type
         {
             get { return _type; }

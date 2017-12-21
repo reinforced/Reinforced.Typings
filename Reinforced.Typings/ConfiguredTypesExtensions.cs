@@ -177,6 +177,18 @@ namespace Reinforced.Typings
             return new RtSimpleTypeName(name, genericArguments);
         }
 
+        /// <summary>
+        /// Gets whether type configuration required flattering inheritance hierarchy
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <returns>True, when hierarchy must be flattern, false otherwise</returns>
+        public static bool IsFlattern(this Type t)
+        {
+            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
+            var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
+            return tc != null ? tc.FlatternHierarchy : ti != null ? ti.FlatternHierarchy : false;
+        }
+
 
 
         #endregion

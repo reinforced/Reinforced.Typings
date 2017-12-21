@@ -45,40 +45,45 @@ namespace Reinforced.Typings.Generators
 
             if (materializedGenericParameters.Count == 0) materializedGenericParameters = null;
 
-            var bs = type._BaseType();
-            var baseClassIsExportedAsInterface = false;
-            if (bs != null && bs != typeof(object))
+            if (!type.IsFlattern())
             {
-                TsDeclarationAttributeBase attr = null;
-                bool baseAsInterface = false;
-                if (bs._IsGenericType())
+                var bs = type._BaseType();
+                var baseClassIsExportedAsInterface = false;
+                if (bs != null && bs != typeof(object))
                 {
-                    var genericBase = bs.GetGenericTypeDefinition();
-                    attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(genericBase);
-                    baseAsInterface = genericBase.IsExportingAsInterface();
-                }
-                else
-                {
-                    attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs);
-                    baseAsInterface = bs.IsExportingAsInterface();
-                }
-
-                if (attr != null)
-                {
-                    if (baseAsInterface) baseClassIsExportedAsInterface = true;
+                    TsDeclarationAttributeBase attr = null;
+                    bool baseAsInterface = false;
+                    if (bs._IsGenericType())
+                    {
+                        var genericBase = bs.GetGenericTypeDefinition();
+                        attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(genericBase);
+                        baseAsInterface = genericBase.IsExportingAsInterface();
+                    }
                     else
                     {
-                        ((RtClass)result).Extendee = resolver.ResolveTypeName(bs, MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                        attr = ConfigurationRepository.Instance.ForType<TsDeclarationAttributeBase>(bs);
+                        baseAsInterface = bs.IsExportingAsInterface();
+                    }
+
+                    if (attr != null)
+                    {
+                        if (baseAsInterface) baseClassIsExportedAsInterface = true;
+                        else
+                        {
+                            ((RtClass) result).Extendee = resolver.ResolveTypeName(bs,
+                                MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                        }
                     }
                 }
-            }
-            var implementees = ExtractImplementees(type, resolver, materializedGenericParameters).ToList();
+                var implementees = ExtractImplementees(type, resolver, materializedGenericParameters).ToList();
 
-            if (baseClassIsExportedAsInterface)
-            {
-                implementees.Add(resolver.ResolveTypeName(bs, materializedGenericParameters));
+                if (baseClassIsExportedAsInterface)
+                {
+                    implementees.Add(resolver.ResolveTypeName(bs, materializedGenericParameters));
+                }
+                result.Implementees.AddRange(implementees.OfType<RtSimpleTypeName>());
             }
-            result.Implementees.AddRange(implementees.OfType<RtSimpleTypeName>());
+
             ExportMembers(type, resolver, result, swtch);
             Context.Location.ResetCurrentType();
         }

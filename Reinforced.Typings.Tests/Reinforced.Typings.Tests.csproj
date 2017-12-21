@@ -70,6 +70,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattering2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InlineFunctionImplementation.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaCustomIndentationTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DecoratorsTest.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.TsPropertyWorks.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.OverridenNamesNotCamelCased.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.NestedClassInheritance.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattering.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />

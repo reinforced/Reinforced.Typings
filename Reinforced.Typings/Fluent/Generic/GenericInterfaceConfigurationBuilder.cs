@@ -22,5 +22,15 @@ namespace Reinforced.Typings.Fluent.Generic
             get { return AttributePrototype.Order; }
             set { AttributePrototype.Order = value; }
         }
+
+        /// <summary>
+        /// Gets whether type configuration is flattern
+        /// </summary>
+        public override bool IsHierarchyFlattern { get { return AttributePrototype.FlatternHierarchy; } }
+
+        /// <summary>
+        /// Flattern limiter
+        /// </summary>
+        public override Type FlatternLimiter { get { return AttributePrototype.FlatternLimiter; } }
     }
 }

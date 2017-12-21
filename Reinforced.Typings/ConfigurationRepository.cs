@@ -250,11 +250,11 @@ namespace Reinforced.Typings
             return null;
         }
 
-#endregion
+        #endregion
 
-#region Attribute retrieve methods
+        #region Attribute retrieve methods
 
-#region Decorator
+        #region Decorator
 
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(Type t)
         {
@@ -283,7 +283,7 @@ namespace Reinforced.Typings
             return inlineDecorators.Union(fluentDecorators);
         }
 
-#endregion
+        #endregion
 
         public TAttr ForType<TAttr>(Type t)
             where TAttr : TsDeclarationAttributeBase
@@ -342,9 +342,9 @@ namespace Reinforced.Typings
             return _attributesForEnumValues.GetOr(member, () => member.GetCustomAttribute<TsValueAttribute>(false));
         }
 
-#endregion
+        #endregion
 
-#region Ignorance tracking methods
+        #region Ignorance tracking methods
 
         public bool IsIgnored(Type member)
         {
@@ -388,9 +388,11 @@ namespace Reinforced.Typings
             return _ignored.Contains(member) || (member.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
         }
 
-#endregion
+        #endregion
 
-#region Determine what is exported
+        #region Determine what is exported
+
+       
 
         public FieldInfo[] GetExportedFields(Type t)
         {
@@ -403,13 +405,13 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers =
-                    t._GetFields(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
+                var allMembers = t.GetExportingMembers(typeAttr.FlatternHierarchy, (tp, b) => tp._GetFields(b),typeAttr.FlatternLimiter);
+
                 if (!aexpSwith.AutoExportFields)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
                 }
-                return allMembers.OfType<FieldInfo>().ToArray();
+                return allMembers.ToArray();
             }
             return new FieldInfo[0];
         }
@@ -424,13 +426,13 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers =
-                    t._GetProperties(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
+                var allMembers = t.GetExportingMembers(typeAttr.FlatternHierarchy, (tp, b) => tp._GetProperties(b), typeAttr.FlatternLimiter);
+
                 if (!aexpSwith.AutoExportProperties)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
                 }
-                return allMembers.OfType<PropertyInfo>().ToArray();
+                return allMembers.ToArray();
             }
             return new PropertyInfo[0];
         }
@@ -445,19 +447,19 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers =
-                    t._GetMethods(TypeExtensions.MembersFlags).Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate);
+                var allMembers = t.GetExportingMembers(typeAttr.FlatternHierarchy, (tp, b) => tp._GetMethods(b), typeAttr.FlatternLimiter);
+
                 if (!aexpSwith.AutoExportMethods)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
                 }
-                return allMembers.OfType<MethodInfo>().Where(c => !c.IsSpecialName).ToArray();
+                return allMembers.Where(c => !c.IsSpecialName).ToArray();
             }
             return new MethodInfo[0];
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
     }
 }

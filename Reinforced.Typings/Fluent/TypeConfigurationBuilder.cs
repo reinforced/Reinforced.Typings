@@ -35,6 +35,16 @@ namespace Reinforced.Typings.Fluent
             get { return _substitutions; }
         }
 
+        /// <summary>
+        /// Gets whether type configuration is flattern
+        /// </summary>
+        public abstract bool IsHierarchyFlattern { get; }
+
+        /// <summary>
+        /// Flattern limiter
+        /// </summary>
+        public abstract Type FlatternLimiter { get; }
+
         Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> ITypeConfigurationBuilder.ParametersConfiguration
         {
             get { return _parametersConfiguration; }

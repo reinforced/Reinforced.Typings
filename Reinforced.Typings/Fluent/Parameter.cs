@@ -9,6 +9,7 @@ namespace Reinforced.Typings.Fluent
     /// </summary>
     public class Ts
     {
+
         internal static MethodInfo ParametrizedParameterMethod;
 
         static Ts()

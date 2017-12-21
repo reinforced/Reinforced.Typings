@@ -30,5 +30,15 @@ namespace Reinforced.Typings.Fluent.Interfaces
         /// Substitutions to be used only when in this type
         /// </summary>
         Dictionary<Type, RtTypeName> Substitutions { get; }
+
+        /// <summary>
+        /// Gets whether type configuration is flattern
+        /// </summary>
+        bool IsHierarchyFlattern { get; }
+
+        /// <summary>
+        /// Flattern limiter
+        /// </summary>
+        Type FlatternLimiter { get; }
     }
 }

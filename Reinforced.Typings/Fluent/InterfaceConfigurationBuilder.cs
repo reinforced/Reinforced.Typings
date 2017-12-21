@@ -1,4 +1,5 @@
-﻿using Reinforced.Typings.Attributes;
+﻿using System;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
@@ -25,6 +26,14 @@ namespace Reinforced.Typings.Fluent
         {
             get { return AttributePrototype; }
         }
+
+        /// <summary>
+        /// Gets whether type configuration is flattern
+        /// </summary>
+        public override bool IsHierarchyFlattern { get { return AttributePrototype.FlatternHierarchy; } }
+
+        /// <inheritdoc />
+        public override Type FlatternLimiter { get { return AttributePrototype.FlatternLimiter; } }
 
         /// <inheritdoc />
         public override double MemberOrder

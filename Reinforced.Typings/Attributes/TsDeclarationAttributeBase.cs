@@ -1,4 +1,6 @@
-﻿namespace Reinforced.Typings.Attributes
+﻿using System;
+
+namespace Reinforced.Typings.Attributes
 {
     /// <summary>
     ///     Base attribute for so-called compilation unit (class, enum, interface etc)
@@ -11,6 +13,7 @@
         protected TsDeclarationAttributeBase()
         {
             IncludeNamespace = true;
+            FlatternLimiter = typeof(object);
         }
 
         /// <summary>
@@ -30,5 +33,16 @@
 
         /// <inheritdoc />
         public double Order { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to generate properties/methods flattering inheritance hierarchy
+        /// </summary>
+        public bool FlatternHierarchy { get; set; }
+
+        /// <summary>
+        /// Flattering limiter. 
+        /// All types "deeper" than specified parent will not be considered as exporting members donors
+        /// </summary>
+        public Type FlatternLimiter { get; set; }
     }
 }
