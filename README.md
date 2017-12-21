@@ -9,7 +9,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :christmas_tree: Version **1.4.3** released! Hierarchy flattering added
+> :christmas_tree: Version **1.4.3** released! Hierarchy flattening added
 
 * See fluent ```.FlatternHierarchy``` method in [documentation](https://github.com/reinforced/Reinforced.Typings/wiki/Fluent-configuration#fluent-methods-for-types) (below the table) as well as [corresponding](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.HierarchyFlattering.cs) [tests](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.HierarchyFlattering2.cs)
 
