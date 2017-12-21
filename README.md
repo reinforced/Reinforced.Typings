@@ -9,11 +9,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :fire: Version **1.4.2** released! .NET Core support still works. Just some bugs fixed.
+> :christmas_tree: Version **1.4.3** released! Hierarchy flattering added
 
-Bugfixes:
-* Additional assemblies resolvation fix
-* Explicitly overriden names are no more subjects of casing change
+* See fluent ```.FlatternHierarchy``` method in [documentation](https://github.com/reinforced/Reinforced.Typings/wiki/Fluent-configuration#fluent-methods-for-types) (below the table) as well as [corresponding](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.HierarchyFlattering.cs) [tests](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.HierarchyFlattering2.cs)
 
 **Importnat Release Note!**
 
