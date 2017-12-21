@@ -32,13 +32,13 @@ namespace Reinforced.Typings.Fluent.Interfaces
         Dictionary<Type, RtTypeName> Substitutions { get; }
 
         /// <summary>
-        /// Gets whether type configuration is flattern
+        /// Gets whether type configuration is flatten
         /// </summary>
-        bool IsHierarchyFlattern { get; }
+        bool IsHierarchyFlatten { get; }
 
         /// <summary>
-        /// Flattern limiter
+        /// Flatten limiter
         /// </summary>
-        Type FlatternLimiter { get; }
+        Type FlattenLimiter { get; }
     }
 }

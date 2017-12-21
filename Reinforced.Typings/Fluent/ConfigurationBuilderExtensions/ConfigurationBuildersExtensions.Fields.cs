@@ -75,7 +75,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate,
             Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetFields(b),tc.FlatternLimiter).Where(predicate);
+            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetFields(b),tc.FlattenLimiter).Where(predicate);
             return tc.WithFields(prop, configuration);
         }
 
@@ -88,7 +88,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllFields<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetFields(b), tc.FlatternLimiter);
+            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetFields(b), tc.FlattenLimiter);
             return tc.WithFields(prop, configuration);
         }
 
@@ -102,7 +102,7 @@ namespace Reinforced.Typings.Fluent
             where T : ITypeConfigurationBuilder
         {
             var prop =
-                tc.Type.GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetFields(b), tc.FlatternLimiter, true);
+                tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetFields(b), tc.FlattenLimiter, true);
             return tc.WithFields(prop, configuration);
         }
 

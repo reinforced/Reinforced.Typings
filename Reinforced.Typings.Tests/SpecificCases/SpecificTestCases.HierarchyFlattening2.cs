@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public class FlatternBase<T1, T2, T3>
+    public class FlattenBase<T1, T2, T3>
     {
         public T1 Name { get; set; }
 
@@ -20,19 +20,19 @@ namespace Reinforced.Typings.Tests.SpecificCases
         string Name { get; }
     }
 
-    public class FlatternChild1 : FlatternBase<int, string, IViewModel>
+    public class FlattenChild1 : FlattenBase<int, string, IViewModel>
     {
         
     }
 
-    public class FlatternChild2 : FlatternBase<int, string, FlatternChild2>
+    public class FlattenChild2 : FlattenBase<int, string, FlattenChild2>
     {
 
     }
     public partial class SpecificTestCases
     {
         [Fact]
-        public void HierarchyFlattering2()
+        public void HierarchyFlattening2()
         {
             const string result = @"
 module Reinforced.Typings.Tests.SpecificCases {
@@ -40,17 +40,17 @@ module Reinforced.Typings.Tests.SpecificCases {
 	{
 		Name: string;
 	}
-	export interface IFlatternChild1
+	export interface IFlattenChild1
 	{
 		Name: number;
 		Value: string;
 		Set: Reinforced.Typings.Tests.SpecificCases.IViewModel[];
 	}
-	export interface IFlatternChild2
+	export interface IFlattenChild2
 	{
 		Name: number;
 		Value: string;
-		Set: Reinforced.Typings.Tests.SpecificCases.IFlatternChild2[];
+		Set: Reinforced.Typings.Tests.SpecificCases.IFlattenChild2[];
 	}
 }";
             
@@ -60,12 +60,12 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.ExportAsInterface<IViewModel>()
                     .WithPublicProperties();
 
-                s.ExportAsInterface<FlatternChild1>()
-                    .FlatternHierarchy()
+                s.ExportAsInterface<FlattenChild1>()
+                    .FlattenHierarchy()
                     .WithPublicProperties();
 
-                s.ExportAsInterface<FlatternChild2>()
-                    .FlatternHierarchy()
+                s.ExportAsInterface<FlattenChild2>()
+                    .FlattenHierarchy()
                     .WithPublicProperties();
                
 

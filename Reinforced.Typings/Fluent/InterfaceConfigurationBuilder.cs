@@ -28,12 +28,12 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Gets whether type configuration is flattern
+        /// Gets whether type configuration is flatten
         /// </summary>
-        public override bool IsHierarchyFlattern { get { return AttributePrototype.FlatternHierarchy; } }
+        public override bool IsHierarchyFlatten { get { return AttributePrototype.FlattenHierarchy; } }
 
         /// <inheritdoc />
-        public override Type FlatternLimiter { get { return AttributePrototype.FlatternLimiter; } }
+        public override Type FlattenLimiter { get { return AttributePrototype.FlattenLimiter; } }
 
         /// <inheritdoc />
         public override double MemberOrder

@@ -45,7 +45,7 @@ namespace Reinforced.Typings.Generators
 
             if (materializedGenericParameters.Count == 0) materializedGenericParameters = null;
 
-            if (!type.IsFlattern())
+            if (!type.IsFlatten())
             {
                 var bs = type._BaseType();
                 var baseClassIsExportedAsInterface = false;

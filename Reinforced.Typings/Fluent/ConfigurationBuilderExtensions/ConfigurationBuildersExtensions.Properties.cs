@@ -75,7 +75,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate,
             Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetProperties(b), tc.FlatternLimiter).Where(predicate);
+            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter).Where(predicate);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -90,7 +90,7 @@ namespace Reinforced.Typings.Fluent
             Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetProperties(bindingFlags), tc.FlatternLimiter);
+            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(bindingFlags), tc.FlattenLimiter);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -103,7 +103,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllProperties<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetProperties(b), tc.FlatternLimiter);
+            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -118,7 +118,7 @@ namespace Reinforced.Typings.Fluent
             where T : ITypeConfigurationBuilder
         {
             var prop = tc.Type
-                .GetExportingMembers(tc.IsHierarchyFlattern, (t, b) => t._GetProperties(b), tc.FlatternLimiter, true);
+                .GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter, true);
             return tc.WithProperties(prop, configuration);
         }
     }

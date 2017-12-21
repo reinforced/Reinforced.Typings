@@ -405,7 +405,7 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers = t.GetExportingMembers(typeAttr.FlatternHierarchy, (tp, b) => tp._GetFields(b),typeAttr.FlatternLimiter);
+                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetFields(b),typeAttr.FlattenLimiter);
 
                 if (!aexpSwith.AutoExportFields)
                 {
@@ -426,7 +426,7 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers = t.GetExportingMembers(typeAttr.FlatternHierarchy, (tp, b) => tp._GetProperties(b), typeAttr.FlatternLimiter);
+                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetProperties(b), typeAttr.FlattenLimiter);
 
                 if (!aexpSwith.AutoExportProperties)
                 {
@@ -447,7 +447,7 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers = t.GetExportingMembers(typeAttr.FlatternHierarchy, (tp, b) => tp._GetMethods(b), typeAttr.FlatternLimiter);
+                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetMethods(b), typeAttr.FlattenLimiter);
 
                 if (!aexpSwith.AutoExportMethods)
                 {

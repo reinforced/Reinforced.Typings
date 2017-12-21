@@ -32,7 +32,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
     public partial class SpecificTestCases
     {
         [Fact]
-        public void HierarchyFlattering()
+        public void HierarchyFlattening()
         {
             const string result = @"
 module Reinforced.Typings.Tests.SpecificCases {
@@ -51,12 +51,12 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-                s.ExportAsInterface<ITestFlatteringChild>().FlatternHierarchy()
+                s.ExportAsInterface<ITestFlatteringChild>().FlattenHierarchy()
                     .OverrideName("A")
                     .WithPublicProperties()
                     .WithPublicMethods();
 
-                s.ExportAsInterface<TestFlatteringChild>().FlatternHierarchy()
+                s.ExportAsInterface<TestFlatteringChild>().FlattenHierarchy()
                     .OverrideName("B")
                     .WithPublicProperties()
                     .WithPublicMethods();

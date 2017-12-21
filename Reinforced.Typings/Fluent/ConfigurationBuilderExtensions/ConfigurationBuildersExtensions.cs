@@ -123,21 +123,21 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        ///     Configures exporter to flattern inheritance hierarchy for supplied type
+        ///     Configures exporter to flatten inheritance hierarchy for supplied type
         /// </summary>
         /// <param name="conf">Configuration</param>
-        /// <param name="flattern">True to flatter hierarchy, False to don't</param>
+        /// <param name="flatten">True to flatter hierarchy, False to don't</param>
         /// <param name="until">
         /// All classes "deeper" than specified (including) will not be considered as exportable members donors. 
         /// By default this parameter is equal to typeof(object)
         /// </param>
-        public static T FlatternHierarchy<T>(this T conf, bool flattern = true, Type until = null)
+        public static T FlattenHierarchy<T>(this T conf, bool flatten = true, Type until = null)
             where T : IAttributed<TsDeclarationAttributeBase>
         {
-            conf.AttributePrototype.FlatternHierarchy = flattern;
+            conf.AttributePrototype.FlattenHierarchy = flatten;
             if (until != null)
             {
-                conf.AttributePrototype.FlatternLimiter = until;
+                conf.AttributePrototype.FlattenLimiter = until;
             }
             return conf;
         }

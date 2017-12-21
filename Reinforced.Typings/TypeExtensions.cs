@@ -181,7 +181,7 @@ namespace Reinforced.Typings
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly;
 
-        #region Inheritance flattern
+        #region Inheritance flatten
         /// <summary>
         /// Simple comparer to detect overridden methods
         /// </summary>
@@ -297,13 +297,13 @@ namespace Reinforced.Typings
             return members.ToArray();
         }
 
-        internal static IEnumerable<T> GetExportingMembers<T>(this Type t, bool flatternHierarchy, Func<Type, BindingFlags, T[]> membersGetter, Type limiter, bool publicOnly = false)
+        internal static IEnumerable<T> GetExportingMembers<T>(this Type t, bool flattenHierarchy, Func<Type, BindingFlags, T[]> membersGetter, Type limiter, bool publicOnly = false)
             where T : MemberInfo
         {
             var declaredFlags = publicOnly ? PublicMembersFlags : MembersFlags;
 
             T[] baseSet = null;
-            baseSet = flatternHierarchy ? 
+            baseSet = flattenHierarchy ? 
                 GetInheritedMembers(t, x => membersGetter(x, declaredFlags),limiter) 
                 : membersGetter(t, declaredFlags);
 

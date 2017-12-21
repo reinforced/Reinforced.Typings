@@ -24,13 +24,13 @@ namespace Reinforced.Typings.Fluent.Generic
         }
 
         /// <summary>
-        /// Gets whether type configuration is flattern
+        /// Gets whether type configuration is flatten
         /// </summary>
-        public override bool IsHierarchyFlattern { get { return AttributePrototype.FlatternHierarchy; } }
+        public override bool IsHierarchyFlatten { get { return AttributePrototype.FlattenHierarchy; } }
 
         /// <summary>
-        /// Flattern limiter
+        /// Flatten limiter
         /// </summary>
-        public override Type FlatternLimiter { get { return AttributePrototype.FlatternLimiter; } }
+        public override Type FlattenLimiter { get { return AttributePrototype.FlattenLimiter; } }
     }
 }

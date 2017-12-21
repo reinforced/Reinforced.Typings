@@ -13,7 +13,7 @@ namespace Reinforced.Typings.Attributes
         protected TsDeclarationAttributeBase()
         {
             IncludeNamespace = true;
-            FlatternLimiter = typeof(object);
+            FlattenLimiter = typeof(object);
         }
 
         /// <summary>
@@ -37,12 +37,12 @@ namespace Reinforced.Typings.Attributes
         /// <summary>
         /// Gets or sets whether to generate properties/methods flattering inheritance hierarchy
         /// </summary>
-        public bool FlatternHierarchy { get; set; }
+        public bool FlattenHierarchy { get; set; }
 
         /// <summary>
         /// Flattering limiter. 
         /// All types "deeper" than specified parent will not be considered as exporting members donors
         /// </summary>
-        public Type FlatternLimiter { get; set; }
+        public Type FlattenLimiter { get; set; }
     }
 }

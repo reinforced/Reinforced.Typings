@@ -181,12 +181,12 @@ namespace Reinforced.Typings
         /// Gets whether type configuration required flattering inheritance hierarchy
         /// </summary>
         /// <param name="t">Type</param>
-        /// <returns>True, when hierarchy must be flattern, false otherwise</returns>
-        public static bool IsFlattern(this Type t)
+        /// <returns>True, when hierarchy must be flatten, false otherwise</returns>
+        public static bool IsFlatten(this Type t)
         {
             var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(t);
             var ti = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(t);
-            return tc != null ? tc.FlatternHierarchy : ti != null ? ti.FlatternHierarchy : false;
+            return tc != null ? tc.FlattenHierarchy : ti != null ? ti.FlattenHierarchy : false;
         }
 
 
