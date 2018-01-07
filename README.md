@@ -114,14 +114,14 @@ namespace MyApp
     [TsInterface]
     public class Page
     {
-        public List&lt;Order&gt; Orders { get; set; }
+        public List<Order> Orders { get; set; }
 
-        public Dictionary&lt;int, Order&gt; 
+        public Dictionary<int, Order> 
                         Cache { get; set; }
 
         public string[] Tags { get; set; }
 
-        public IEnumerable&lt;object&gt; 
+        public IEnumerable<object> 
                         Things { get; set; }
     }
 }
@@ -229,7 +229,7 @@ namespace MyApp
             Configure(ConfigurationBuilder builder)
         {
             builder
-            	.ExportAsInterface&lt;SelectListItem&gt()
+            	.ExportAsInterface<SelectListItem>()
                 .OverrideNamespace("MyApp")
                 .WithPublicProperties();
         }
