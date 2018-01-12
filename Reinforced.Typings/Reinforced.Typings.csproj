@@ -43,7 +43,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Reinforced.Typings.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -217,9 +218,6 @@
     <Compile Include="TsExporter.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeResolver.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Reinforced.Typings.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

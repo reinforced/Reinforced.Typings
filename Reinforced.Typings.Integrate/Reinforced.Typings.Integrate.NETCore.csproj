@@ -19,6 +19,7 @@
   <ItemGroup>
     <Compile Include="..\Reinforced.Typings.Cli\ConsoleHelpAttribute.cs" Link="ConsoleHelpAttribute.cs" />
     <Compile Include="..\Reinforced.Typings.Cli\ExporterConsoleParameters.cs" Link="ExporterConsoleParameters.cs" />
+    <Compile Include="..\Reinforced.Typings\Sign.cs" Link="Sign.cs" />
   </ItemGroup>
 
   <ItemGroup>

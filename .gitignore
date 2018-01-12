@@ -207,3 +207,6 @@ docplan.txt
 /package/build
 /package/buildMultiTargeting
 /package/lib
+/Reinforced.Typings/Reinforced.snk
+/Reinforced.Typings.Cli/Reinforced.snk
+/Reinforced.Typings.Integrate/Reinforced.snk

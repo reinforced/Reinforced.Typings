@@ -86,6 +86,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.OverridenNamesNotCamelCased.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.NestedClassInheritance.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ClassCodeGenerators.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />
