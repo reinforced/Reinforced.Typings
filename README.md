@@ -9,7 +9,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :key: Version **1.4.5** released! Signed assembly
+> :key: Version **1.4.6** released! FQN bug fix (reported by @vmandic), correct ```ReflectionTypeLoadException``` handling
 
 * Assembly signed
 
