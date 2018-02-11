@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings
 {
@@ -13,7 +14,24 @@ namespace Reinforced.Typings
     /// </summary>
     public static class TypeExtensions
     {
-        internal static T RetrieveOrCreateCustomAttribute<T>(this ICustomAttributeProvider member) where T:Attribute,new()
+        internal static IEnumerable<Type> _GetTypes(this Assembly a, List<RtWarning> warnings)
+        {
+            try
+            {
+                return a.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                foreach (var elo in e.LoaderExceptions)
+                {
+                    warnings.Add(ErrorMessages.RTW0008_TypeloadException.Warn(elo.Message));
+                }
+                return e.Types.Where(t => t != null);
+            }
+
+        }
+
+        internal static T RetrieveOrCreateCustomAttribute<T>(this ICustomAttributeProvider member) where T : Attribute, new()
         {
             T proto = null;
             var attrs = member.GetCustomAttributes(true);
@@ -24,7 +42,7 @@ namespace Reinforced.Typings
                     proto = (T)attribute;
                 }
             }
-            if (proto==null) proto = new T();
+            if (proto == null) proto = new T();
             return proto;
         }
 
@@ -222,9 +240,9 @@ namespace Reinforced.Typings
             }
         }
 
-        
 
-        private class NameEqComparer<T> : IEqualityComparer<T> where T:MemberInfo
+
+        private class NameEqComparer<T> : IEqualityComparer<T> where T : MemberInfo
         {
             public static readonly NameEqComparer<T> Instance = new NameEqComparer<T>();
 
@@ -243,15 +261,15 @@ namespace Reinforced.Typings
 
         private static IEqualityComparer<T> GetInheritanceEqComparer<T>() where T : MemberInfo
         {
-            if (typeof(T) == typeof(MethodInfo)) return (IEqualityComparer<T>) MethodEqComparer.Instance;
+            if (typeof(T) == typeof(MethodInfo)) return (IEqualityComparer<T>)MethodEqComparer.Instance;
             return NameEqComparer<T>.Instance;
         }
 
         internal static T[] GetInheritedMembers<T>(this Type type, Func<Type, T[]> membersGetter, Type limiter)
-            where T:MemberInfo
+            where T : MemberInfo
         {
             var members = new HashSet<T>(GetInheritanceEqComparer<T>());
-            
+
             var considered = new List<Type>();
             var queue = new Queue<Type>();
             considered.Add(type);
@@ -260,7 +278,7 @@ namespace Reinforced.Typings
             while (queue.Count > 0)
             {
                 var subType = queue.Dequeue();
-                
+
                 foreach (var subInterface in subType._GetInterfaces())
                 {
                     if (considered.Contains(subInterface)) continue;
@@ -303,8 +321,8 @@ namespace Reinforced.Typings
             var declaredFlags = publicOnly ? PublicMembersFlags : MembersFlags;
 
             T[] baseSet = null;
-            baseSet = flattenHierarchy ? 
-                GetInheritedMembers(t, x => membersGetter(x, declaredFlags),limiter) 
+            baseSet = flattenHierarchy ?
+                GetInheritedMembers(t, x => membersGetter(x, declaredFlags), limiter)
                 : membersGetter(t, declaredFlags);
 
             var allMembers = baseSet.Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate).OfType<T>();

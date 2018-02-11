@@ -100,6 +100,7 @@ namespace Reinforced.Typings.Cli
                     var msg = VisualStudioFriendlyErrorMessage.Create(rtWarning);
                     Console.WriteLine(msg.ToString());
                 }
+                ReleaseReferencesTempFile();
             }
             catch (RtException rtException)
             {
@@ -116,15 +117,28 @@ namespace Reinforced.Typings.Cli
                 Console.WriteLine(e.StackTrace);
                 Environment.Exit(1);
             }
+            catch (ReflectionTypeLoadException ex)
+            {
+                BuildError(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                if (ex.LoaderExceptions != null)
+                {
+                    foreach (var elo in ex.LoaderExceptions)
+                    {
+                        BuildError(elo.Message);
+                        Console.WriteLine(elo.StackTrace);
+                    }
+                }
+                Environment.Exit(1);
+            }
             catch (Exception ex)
             {
                 BuildError(ex.Message);
                 Console.WriteLine(ex.StackTrace);
-                //ReleaseReferencesTempFile();
                 Environment.Exit(1);
             }
 
-            ReleaseReferencesTempFile();
+            
             Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded", _totalLoadedAssemblies);
 
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");

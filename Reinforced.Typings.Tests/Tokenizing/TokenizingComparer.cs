@@ -27,7 +27,10 @@ namespace Reinforced.Typings.Tests.Tokenizing
                             var canNext1 = en1.MoveNext();
                             var canNext2 = en2.MoveNext();
 
-                            if (canNext1 != canNext2) return false;
+                            if (canNext1 != canNext2)
+                            {
+                                return false;
+                            }
 
                             if (!canNext1) break;
                             

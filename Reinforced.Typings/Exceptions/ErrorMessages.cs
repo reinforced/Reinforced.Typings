@@ -112,6 +112,11 @@ namespace Reinforced.Typings.Exceptions
         /// </summary>
         public static readonly ErrorMessage RTW0007_InvalidDictionaryKey = new ErrorMessage(0007, "{0} is not valid type for JS object key (original type {1})", "Type resolvation");
 
+        /// <summary>
+        /// Error with type lo
+        /// </summary>
+        public static readonly ErrorMessage RTW0008_TypeloadException = new ErrorMessage(0008, "Some types cannot be loaded via reflection: {0}", "Type loading");
+
         #endregion
     }
 }

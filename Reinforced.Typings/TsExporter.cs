@@ -74,7 +74,7 @@ namespace Reinforced.Typings
                 .OrderByDescending(c => c.Priority)
                 .FirstOrDefault();
             ApplyTsGlobal(tsGlobal, _context.Global);
-            
+
             // 2nd step - searching and processing fluent configuration
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
@@ -92,7 +92,7 @@ namespace Reinforced.Typings
             }
 
             _allTypes = _context.SourceAssemblies
-                .SelectMany(c => c.GetTypes().Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
+                .SelectMany(c => c._GetTypes(_context.Warnings).Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
                 .Union(ConfigurationRepository.Instance.AttributesForType.Keys).Distinct()
                 .ToList();
 
@@ -123,7 +123,7 @@ namespace Reinforced.Typings
         /// <returns>Exported file dummy</returns>
         public ExportedFile SetupExportedFile(string fileName = null)
         {
-            if (fileName == _context.TargetFile) fileName = null;
+            if ((!_context.Hierarchical) && fileName == _context.TargetFile) fileName = null;
             IEnumerable<Type> types = null;
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -132,9 +132,10 @@ namespace Reinforced.Typings
                     var allFiles = string.Join(", ", _typesToFilesMap.Keys);
                     throw new Exception("Current configuration does not contain file " + fileName + ", only " + allFiles);
                 }
-                    
+
                 types = _typesToFilesMap[fileName];
             }
+            
             ExportedFile ef = new ExportedFile
             {
                 References = GlobalReferences.Duplicate(),

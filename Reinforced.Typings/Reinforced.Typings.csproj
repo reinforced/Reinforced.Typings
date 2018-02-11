@@ -183,11 +183,11 @@
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtArgument.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtInterface.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.RtField.cs" />
+    <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtSimpleTypeName.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtTuple.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtArrayType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDelegateType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDictionaryType.cs" />
-    <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtSimpleTypeNamecs.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.RtClass.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.RtConstructor.cs" />

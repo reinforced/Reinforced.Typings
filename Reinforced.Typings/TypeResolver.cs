@@ -147,6 +147,7 @@ namespace Reinforced.Typings
                     if (_context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
                     if (import == null || !import.IsWildcard)
                     {
+                        result.Prefix = ns;
                         return Cache(t, result);
                     }
 

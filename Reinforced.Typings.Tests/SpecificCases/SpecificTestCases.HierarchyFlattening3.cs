@@ -6,34 +6,38 @@ using Xunit;
 
 namespace Reinforced.Typings.Tests.SpecificCases
 {
-    public class FlattenBase<T1, T2, T3>
+    public interface IFlattenBase<T1, T2, T3>
     {
-        public T1 Name { get; set; }
+        T1 Name { get; set; }
 
-        public T2 Value { get; set; }
+        T2 Value { get; set; }
 
-        public List<T3> Set { get; set; }
+        List<T3> Set { get; set; }
     }
 
+    public interface IFlattenBase2
+    {
+        int Id { get; set; }
+    }
 
-    public interface IViewModel
+    public interface IViewModel2
     {
         string Name { get; }
     }
 
-    public class FlattenChild1 : FlattenBase<int, string, IViewModel>
+    public interface IFlattenChild1 : IFlattenBase<int, string, IViewModel>, IFlattenBase2
     {
         
     }
 
-    public class FlattenChild2 : FlattenBase<int, string, FlattenChild2>
+    public interface IFlattenChild2 : IFlattenBase<int, string, IFlattenChild2>, IFlattenBase2
     {
 
     }
     public partial class SpecificTestCases
     {
         [Fact]
-        public void HierarchyFlattening2()
+        public void HierarchyFlattening3()
         {
             const string result = @"
 module Reinforced.Typings.Tests.SpecificCases {
@@ -46,12 +50,14 @@ module Reinforced.Typings.Tests.SpecificCases {
 		Name: number;
 		Value: string;
 		Set: Reinforced.Typings.Tests.SpecificCases.IViewModel[];
+		Id: number;
 	}
 	export interface IFlattenChild2
 	{
 		Name: number;
 		Value: string;
 		Set: Reinforced.Typings.Tests.SpecificCases.IFlattenChild2[];
+		Id: number;
 	}
 }";
             
@@ -61,11 +67,11 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.ExportAsInterface<IViewModel>()
                     .WithPublicProperties();
 
-                s.ExportAsInterface<FlattenChild1>()
+                s.ExportAsInterface<IFlattenChild1>()
                     .FlattenHierarchy()
                     .WithPublicProperties();
 
-                s.ExportAsInterface<FlattenChild2>()
+                s.ExportAsInterface<IFlattenChild2>()
                     .FlattenHierarchy()
                     .WithPublicProperties();
                
