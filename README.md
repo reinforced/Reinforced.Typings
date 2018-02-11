@@ -9,9 +9,10 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :key: Version **1.4.6** released! FQN bug fix (reported by @vmandic), correct ```ReflectionTypeLoadException``` handling
+> :syringe: Version **1.4.6** released! More bugfixes for the bugfixes god
 
-* Assembly signed
+* FQN bug fix (reported by @vmandic)
+* correct ```ReflectionTypeLoadException``` handling
 
 **Importnat Release Note!**
 
