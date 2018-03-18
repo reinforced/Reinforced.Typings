@@ -19,6 +19,7 @@ namespace Reinforced.Typings.Fluent
             new Dictionary<Type, IEnumConfigurationBuidler>();
 
         private readonly Dictionary<Type, RtTypeName> _globalSubstitutions = new Dictionary<Type, RtTypeName>();
+        private readonly Dictionary<Type, Func<Type,TypeResolver,RtTypeName>> _genericSubstitutions = new Dictionary<Type, Func<Type, TypeResolver, RtTypeName>>();
         private readonly List<RtImport> _imports = new List<RtImport>();
         private readonly List<RtReference> _references = new List<RtReference>();
 
@@ -60,6 +61,11 @@ namespace Reinforced.Typings.Fluent
             get { return _globalSubstitutions; }
         }
 
+        internal Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions
+        {
+            get { return _genericSubstitutions; }
+        }
+
         internal GlobalConfigurationBuilder GlobalBuilder { get; private set; }
 
         internal ConfigurationRepository Build()
@@ -69,22 +75,31 @@ namespace Reinforced.Typings.Fluent
             {
                 repository.GlobalSubstitutions[globalSubstitution.Key] = globalSubstitution.Value;
             }
+
+            foreach (var globalGenSubstitution in GenericSubstitutions)
+            {
+                repository.GlobalGenericSubstitutions[globalGenSubstitution.Key] = globalGenSubstitution.Value;
+            }
             foreach (var kv in _typeConfigurationBuilders)
             {
+                if (kv.Value.GenericSubstitutions.Count > 0)
+                    repository.TypeGenericSubstitutions[kv.Key] = kv.Value.GenericSubstitutions;
+
+                if (kv.Value.Substitutions.Count > 0)
+                    repository.TypeSubstitutions[kv.Key] = kv.Value.Substitutions;
+
                 var cls = kv.Value as IClassConfigurationBuilder;
                 var intrf = kv.Value as IInterfaceConfigurationBuilder;
+                
                 if (cls != null)
                 {
                     repository.AttributesForType[kv.Key] = cls.AttributePrototype;
                     repository.DecoratorsForType[kv.Key] = new List<TsDecoratorAttribute>(cls.Decorators);
-                    if (cls.Substitutions.Count > 0) repository.TypeSubstitutions[kv.Key] = cls.Substitutions;
                 }
 
                 if (intrf != null)
-                {
                     repository.AttributesForType[kv.Key] = intrf.AttributePrototype;
-                    if (intrf.Substitutions.Count > 0) repository.TypeSubstitutions[kv.Key] = intrf.Substitutions;
-                }
+                
 
                 foreach (var kvm in kv.Value.MembersConfiguration)
                 {

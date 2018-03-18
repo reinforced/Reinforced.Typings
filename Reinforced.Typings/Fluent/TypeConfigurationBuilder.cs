@@ -23,6 +23,7 @@ namespace Reinforced.Typings.Fluent
 
         private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
         private readonly Dictionary<Type, RtTypeName> _substitutions = new Dictionary<Type, RtTypeName>();
+        private readonly Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> _genericSubstitutions = new Dictionary<Type, Func<Type, TypeResolver, RtTypeName>>();
 
         Type ITypeConfigurationBuilder.Type
         {
@@ -33,6 +34,14 @@ namespace Reinforced.Typings.Fluent
         Dictionary<Type, RtTypeName> ITypeConfigurationBuilder.Substitutions
         {
             get { return _substitutions; }
+        }
+
+        /// <summary>
+        /// Substitutions to be used only when in this type
+        /// </summary>
+        public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions
+        {
+            get { return _genericSubstitutions; }
         }
 
         /// <summary>

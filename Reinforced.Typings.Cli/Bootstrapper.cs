@@ -13,14 +13,7 @@ namespace Reinforced.Typings.Cli
 {
     internal static class CoreTypeExtensions
     {
-        internal static MethodInfo _GetMethod(this Type t, string name)
-        {
-#if NETSTANDARD15
-            return t.GetTypeInfo().GetMethod(name);
-#else
-            return t.GetMethod(name);
-#endif
-        }
+
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
 #if NETSTANDARD15
@@ -29,7 +22,6 @@ namespace Reinforced.Typings.Cli
             return t.GetProperties(flags);
 #endif
         }
-
         internal static PropertyInfo _GetProperty(this Type t, string name)
         {
 #if NETSTANDARD15
@@ -38,6 +30,16 @@ namespace Reinforced.Typings.Cli
             return t.GetProperty(name);
 #endif
         }
+
+        internal static MethodInfo _GetMethod(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetMethod(name);
+#else
+            return t.GetMethod(name);
+#endif
+        }
+
     }
     /// <summary>
     /// Class for CLI typescript typings utility

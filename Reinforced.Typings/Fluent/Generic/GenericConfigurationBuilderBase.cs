@@ -25,9 +25,15 @@ namespace Reinforced.Typings.Fluent.Generic
         {
             _type = t;
             Substitutions = new Dictionary<Type, RtTypeName>();
+            GenericSubstitutions = new Dictionary<Type, Func<Type, TypeResolver, RtTypeName>>();
         }
 
         private Dictionary<Type, RtTypeName> Substitutions { get; set; }
+
+        /// <summary>
+        /// Substitutions to be used only when in this type
+        /// </summary>
+        public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions { get; private set; }
 
         /// <summary>
         /// Gets whether type configuration is flatten

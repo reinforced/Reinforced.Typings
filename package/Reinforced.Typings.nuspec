@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.4.6</version>
+        <version>1.4.7</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,8 +16,9 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-- FQN issue fix
-- Proper handling of ReflectionTypeLoadException 
+- Hierarchy flattening fix
+- Automatic constant properties
+- Property initializer evaluators
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />

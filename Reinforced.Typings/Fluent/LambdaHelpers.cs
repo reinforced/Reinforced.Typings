@@ -19,11 +19,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>PropertyInfo referenced by this expression</returns>
         public static PropertyInfo ParsePropertyLambda<T1, T2>(Expression<Func<T1, T2>> lambda)
         {
-            var mex = lambda.Body as MemberExpression;
-            if (mex == null) ErrorMessages.RTE0010_PropertyLambdaExpected.Throw(lambda.ToString());
-            var pi = mex.Member as PropertyInfo;
-            if (pi == null) ErrorMessages.RTE0010_PropertyLambdaExpected.Throw(lambda.ToString());
-            return pi;
+            return ParsePropertyLambda((LambdaExpression)lambda);
         }
 
         /// <summary>
@@ -49,11 +45,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>PropertyInfo referenced by this expression</returns>
         public static FieldInfo ParseFieldLambda<T1, T2>(Expression<Func<T1, T2>> lambda)
         {
-            var mex = lambda.Body as MemberExpression;
-            if (mex == null) ErrorMessages.RTE0011_FieldLambdaExpected.Throw(lambda.ToString());
-            var pi = mex.Member as FieldInfo;
-            if (pi == null) ErrorMessages.RTE0011_FieldLambdaExpected.Throw(lambda.ToString());
-            return pi;
+            return ParseFieldLambda((LambdaExpression)lambda);
         }
 
         /// <summary>

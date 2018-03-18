@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.TypeNames;
@@ -36,6 +37,7 @@ namespace Reinforced.Typings.Generators
             var propName = new RtIdentifier(element.Name);
             bool isNameOverridden = false;
             var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
+
             if (tp != null)
             {
                 if (tp.StrongType != null)
@@ -46,7 +48,7 @@ namespace Reinforced.Typings.Generators
                 {
                     type = new RtSimpleTypeName(tp.Type);
                 }
-                
+
                 type = tp.TypeInferers.Infer(element, resolver) ?? type;
 
                 if (!string.IsNullOrEmpty(tp.Name))
@@ -78,11 +80,103 @@ namespace Reinforced.Typings.Generators
                 propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
                 propName.IdentifierName = element.PascalCaseFromAttribute(propName.IdentifierName);
             }
+
+            if (this.Context.Location.CurrentClass != null)
+            {
+                this.FillInitialization(element, result, resolver, t, tp);
+            }
             result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;
             AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
             return result;
+        }
+        private static readonly IFormatProvider JsNumberFormat = new NumberFormatInfo() { NumberDecimalSeparator = "." };
+        /// <summary>
+        /// Fills in initialization expression
+        /// </summary>
+        /// <param name="element">Class member</param>
+        /// <param name="result">Resulting AST</param>
+        /// <param name="resolver">Type resolver</param>
+        /// <param name="memberType">Field/property type</param>
+        /// <param name="attr">Attribute</param>
+        protected virtual void FillInitialization(MemberInfo element, RtField result, TypeResolver resolver, Type memberType, TsPropertyAttribute attr)
+        {
+            bool exportConstant = true;
+            if (attr != null) exportConstant = attr.Constant;
+            if (element.IsStatic() && exportConstant)
+            {
+                if (TypeResolver.NumericTypes.Contains(memberType))
+                {
+                    var val = GetStaticValue(element);
+                    if (val == null) result.InitializationExpression = "null";
+                    else if (TypeResolver.IntegerTypes.Contains(memberType))
+                    {
+                        result.InitializationExpression = val.ToString();
+                    }
+                    else
+                    {
+                        double dVal = (double)val;
+                        result.InitializationExpression = dVal.ToString(JsNumberFormat);
+                    }
+                }
+
+                if (memberType == typeof(bool))
+                {
+                    var val = GetStaticValue(element);
+                    if (val == null) result.InitializationExpression = "null";
+                    else result.InitializationExpression = ((bool)val) ? "true" : "false";
+                }
+
+                if (memberType == typeof(string))
+                {
+                    var val = GetStaticValue(element);
+                    if (val == null) result.InitializationExpression = "null";
+                    else
+                    {
+                        var sv = string.Format("'{0}'", val.ToString().Replace("'", "\\'"));
+                        result.InitializationExpression = sv;
+                    }
+                }
+
+                if (memberType._IsEnum())
+                {
+                    var val = GetStaticValue(element);
+                    if (val == null) result.InitializationExpression = "null";
+                    else
+                    {
+                        if (ConfigurationRepository.Instance.AttributesForType.ContainsKey(memberType))
+                        {
+                            var tn = resolver.ResolveTypeName(memberType);
+                            var name = Enum.GetName(memberType, val);
+                            result.InitializationExpression = string.Format("{0}.{1}", tn, name);
+                        }
+                        else
+                        {
+
+                            var v = (int)val;
+                            result.InitializationExpression = v.ToString();
+                        }
+                    }
+                }
+            }
+
+            if (attr != null && attr.InitializerEvaluator != null)
+            {
+                var val = element.IsStatic() ? GetStaticValue(element) : null;
+                result.InitializationExpression = attr.InitializerEvaluator(element, resolver, val);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves static value 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        protected virtual object GetStaticValue(MemberInfo element)
+        {
+            var pi = element as PropertyInfo;
+            return (pi.GetValue(null) ?? pi.GetConstantValue()) ?? pi.GetRawConstantValue();
         }
 
         /// <summary>

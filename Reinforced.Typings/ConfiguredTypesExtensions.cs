@@ -273,9 +273,12 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="t">Type to find substitution for</param>
         /// <param name="currentlyExportingType">Currently exported type (to look up substitutions)</param>
+        /// <param name="tr">Type resolver instance</param>
         /// <returns>Substitution AST</returns>
-        public static RtTypeName Substitute(this Type t, Type currentlyExportingType)
+        public static RtTypeName Substitute(this Type t, Type currentlyExportingType,TypeResolver tr)
         {
+            Type genericDef = t._IsGenericType() ? t.GetGenericTypeDefinition() : null;
+
             if (currentlyExportingType != null)
             {
                 if (ConfigurationRepository.Instance.TypeSubstitutions.ContainsKey(currentlyExportingType))
@@ -283,8 +286,29 @@ namespace Reinforced.Typings
                     var ts = ConfigurationRepository.Instance.TypeSubstitutions[currentlyExportingType];
                     if (ts.ContainsKey(t)) return ts[t];
                 }
+
+                if (genericDef!=null)
+                {
+                    if (ConfigurationRepository.Instance.TypeGenericSubstitutions.ContainsKey(currentlyExportingType))
+                    {
+                        if (ConfigurationRepository.Instance.TypeGenericSubstitutions[currentlyExportingType].ContainsKey(genericDef))
+                        {
+                            var r = ConfigurationRepository.Instance.TypeGenericSubstitutions[currentlyExportingType][genericDef];
+                            var ts = r(t, tr);
+                            if (ts != null) return ts;
+                        }
+                    }
+                }
             }
             if (ConfigurationRepository.Instance.GlobalSubstitutions.ContainsKey(t)) return ConfigurationRepository.Instance.GlobalSubstitutions[t];
+            if (genericDef != null)
+            {
+                if (ConfigurationRepository.Instance.GlobalGenericSubstitutions.ContainsKey(genericDef))
+                {
+                    var ts = ConfigurationRepository.Instance.GlobalGenericSubstitutions[genericDef](t, tr);
+                    if (ts != null) return ts;
+                }
+            }
             return null;
         }
 

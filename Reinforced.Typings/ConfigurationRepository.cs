@@ -84,7 +84,9 @@ namespace Reinforced.Typings
         #region Substitutions
 
         private readonly Dictionary<Type, RtTypeName> _globalSubstitutions = new Dictionary<Type, RtTypeName>();
+        private readonly Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> _globalGenericSubstitutions = new Dictionary<Type, Func<Type, TypeResolver, RtTypeName>>();
         private readonly Dictionary<Type, Dictionary<Type, RtTypeName>> _typeSubstitutions = new Dictionary<Type, Dictionary<Type, RtTypeName>>();
+        private readonly Dictionary<Type, Dictionary<System.Type, Func<Type, TypeResolver, RtTypeName>>> _typeGenericSubstitutions = new Dictionary<Type, Dictionary<System.Type, Func<Type, TypeResolver, RtTypeName>>>();
 
         #endregion
 
@@ -198,10 +200,21 @@ namespace Reinforced.Typings
             get { return _globalSubstitutions; }
         }
 
+        public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GlobalGenericSubstitutions
+        {
+            get { return _globalGenericSubstitutions; }
+        }
+
         public Dictionary<Type, Dictionary<Type, RtTypeName>> TypeSubstitutions
         {
             get { return _typeSubstitutions; }
         }
+
+        public Dictionary<Type, Dictionary<System.Type,Func<Type, TypeResolver, RtTypeName>>> TypeGenericSubstitutions
+        {
+            get { return _typeGenericSubstitutions; }
+        }
+
 
         #endregion
 
@@ -392,7 +405,7 @@ namespace Reinforced.Typings
 
         #region Determine what is exported
 
-       
+
 
         public FieldInfo[] GetExportedFields(Type t)
         {
@@ -405,9 +418,9 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetFields(b),typeAttr.FlattenLimiter);
+                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetFields(b), typeAttr.FlattenLimiter);
 
-                if (!aexpSwith.AutoExportFields)
+                if (!aexpSwith.AutoExportFields && !typeAttr.FlattenHierarchy)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
                 }
@@ -428,7 +441,7 @@ namespace Reinforced.Typings
             {
                 var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetProperties(b), typeAttr.FlattenLimiter);
 
-                if (!aexpSwith.AutoExportProperties)
+                if (!aexpSwith.AutoExportProperties && !typeAttr.FlattenHierarchy)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
                 }
@@ -447,9 +460,9 @@ namespace Reinforced.Typings
 
             if (aexpSwith != null)
             {
-                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetMethods(b), typeAttr.FlattenLimiter);
+                var allMembers = t.GetExportingMembers(typeAttr.FlattenHierarchy, (tp, b) => tp._GetMethods(b).Where(x => !x.IsSpecialName).ToArray(), typeAttr.FlattenLimiter);
 
-                if (!aexpSwith.AutoExportMethods)
+                if (!aexpSwith.AutoExportMethods && !typeAttr.FlattenHierarchy)
                 {
                     allMembers = allMembers.Where(c => ForMember(c) != null);
                 }

@@ -32,6 +32,11 @@ namespace Reinforced.Typings.Fluent.Interfaces
         Dictionary<Type, RtTypeName> Substitutions { get; }
 
         /// <summary>
+        /// Substitutions to be used only when in this type
+        /// </summary>
+        Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions { get; }
+
+        /// <summary>
         /// Gets whether type configuration is flatten
         /// </summary>
         bool IsHierarchyFlatten { get; }

@@ -11,6 +11,14 @@ namespace Reinforced.Typings.Attributes
         ISupportsInferring<MemberInfo>
 
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TsPropertyAttribute()
+        {
+            Constant = true;
+        }
+
         private readonly InlineTypeInferers<MemberInfo> _typeInferers = new InlineTypeInferers<MemberInfo>();
 
         /// <summary>
@@ -28,6 +36,13 @@ namespace Reinforced.Typings.Attributes
         /// <inheritdoc />
         public double Order { get; set; }
 
+        /// <summary>
+        /// When true, static property with well-known simple static value will be exported as object property with corresponding static initializer. 
+        /// Otherwise, setting this parameter to "true" will not take effect
+        /// </summary>
+        public bool Constant { get; set; }
+
+        internal Func<MemberInfo,TypeResolver, object, string> InitializerEvaluator { get; set; }
 
         /// <summary>
         /// Type inferers set instance

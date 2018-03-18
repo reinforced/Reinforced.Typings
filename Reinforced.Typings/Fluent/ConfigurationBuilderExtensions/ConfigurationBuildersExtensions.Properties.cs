@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings.Fluent
@@ -50,6 +51,24 @@ namespace Reinforced.Typings.Fluent
             Expression<Func<T, TData>> property, Action<PropertyExportConfigurationBuilder> configuration)
         {
             return tc.WithProperties(new[] { LambdaHelpers.ParsePropertyLambda(property) }, configuration);
+        }
+
+        /// <summary>
+        ///     Include specified property to resulting typing
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="propertyName">Name of property to include</param>
+        /// <param name="configuration">Configuration to be applied to selected property</param>
+        /// <returns>Fluent</returns>
+        public static ITypeConfigurationBuilder WithProperty(this ITypeConfigurationBuilder tc, string propertyName,
+            Action<PropertyExportConfigurationBuilder> configuration)
+        {
+            var prop = tc.Type._GetProperty(propertyName);
+            if (prop == null)
+            {
+                ErrorMessages.RTE0013_InvalidProperty.Throw(propertyName, tc.Type.FullName);
+            }
+            return tc.WithProperties(new[] { prop }, configuration);
         }
 
         /// <summary>

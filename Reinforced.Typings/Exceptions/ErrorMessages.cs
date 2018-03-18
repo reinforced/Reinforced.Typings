@@ -74,6 +74,16 @@ namespace Reinforced.Typings.Exceptions
         /// NewExpression should be provided for .WithConstructor call. Please use only lamba expressions in this place.
         /// </summary>
         public static readonly ErrorMessage RTE0012_NewExpressionLambdaExpected = new ErrorMessage(0012, "NewExpression should be provided for .WithConstructor call. Please use only 'new ...' lamba expressions in this place.", "Fluent configuration");
+
+        /// <summary>
+        /// Error when trying to locate particular field
+        /// </summary>
+        public static readonly ErrorMessage RTE0012_InvalidField = new ErrorMessage(0013, "Could not locate field {0} in class {1}", "Reflection");
+
+        /// <summary>
+        /// Error when trying to locate particular property
+        /// </summary>
+        public static readonly ErrorMessage RTE0013_InvalidProperty = new ErrorMessage(0014, "Could not locate property {0} in class {1}", "Reflection");
         #endregion
 
         #region Warnings
@@ -113,9 +123,11 @@ namespace Reinforced.Typings.Exceptions
         public static readonly ErrorMessage RTW0007_InvalidDictionaryKey = new ErrorMessage(0007, "{0} is not valid type for JS object key (original type {1})", "Type resolvation");
 
         /// <summary>
-        /// Error with type lo
+        /// Error of type loding
         /// </summary>
         public static readonly ErrorMessage RTW0008_TypeloadException = new ErrorMessage(0008, "Some types cannot be loaded via reflection: {0}", "Type loading");
+
+        
 
         #endregion
     }

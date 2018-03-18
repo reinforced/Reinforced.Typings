@@ -136,9 +136,9 @@ namespace Reinforced.Typings
         internal static FieldInfo _GetField(this Type t, string name)
         {
 #if NETSTANDARD15
-            return t.GetTypeInfo().GetField(name);
+            return t.GetTypeInfo().GetField(name, MembersFlags);
 #else
-            return t.GetField(name);
+            return t.GetField(name, MembersFlags);
 #endif
         }
 
@@ -173,9 +173,9 @@ namespace Reinforced.Typings
         internal static MethodInfo _GetMethod(this Type t, string name)
         {
 #if NETSTANDARD15
-            return t.GetTypeInfo().GetMethod(name);
+            return t.GetTypeInfo().GetMethod(name, MembersFlags);
 #else
-            return t.GetMethod(name);
+            return t.GetMethod(name, MembersFlags);
 #endif
         }
         internal static Type[] _GetGenericArguments(this Type t)
@@ -186,6 +186,16 @@ namespace Reinforced.Typings
             return t.GetGenericArguments();
 #endif
         }
+
+        internal static PropertyInfo _GetProperty(this Type t, string name)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().GetProperty(name, MembersFlags);
+#else
+            return t.GetProperty(name, MembersFlags | BindingFlags.GetProperty | BindingFlags.SetProperty);
+#endif
+        }
+
 
         /// <summary>
         ///     Binding flags for searching all members

@@ -21,6 +21,58 @@ namespace Reinforced.Typings
         private static readonly RtSimpleTypeName NumberType = new RtSimpleTypeName("number");
         private static readonly RtSimpleTypeName StringType = new RtSimpleTypeName("string");
 
+        /// <summary>
+        /// Hash set of all numeric types
+        /// </summary>
+        public static readonly HashSet<Type> NumericTypes = new HashSet<Type>(new[]
+        {
+            typeof (byte),
+            typeof (sbyte),
+            typeof (short),
+            typeof (ushort),
+            typeof (int),
+            typeof (uint),
+            typeof (long),
+            typeof (ulong),
+            typeof (float),
+            typeof (double),
+            typeof (decimal),
+            typeof (byte?),
+            typeof (sbyte?),
+            typeof (short?),
+            typeof (ushort?),
+            typeof (int?),
+            typeof (uint?),
+            typeof (long?),
+            typeof (ulong?),
+            typeof (float?),
+            typeof (double?),
+            typeof (decimal?)
+        });
+
+        /// <summary>
+        /// Hash set of all integer types
+        /// </summary>
+        public static readonly HashSet<Type> IntegerTypes = new HashSet<Type>(new[]
+        {
+            typeof (byte),
+            typeof (sbyte),
+            typeof (short),
+            typeof (ushort),
+            typeof (int),
+            typeof (uint),
+            typeof (long),
+            typeof (ulong),
+            typeof (byte?),
+            typeof (sbyte?),
+            typeof (short?),
+            typeof (ushort?),
+            typeof (int?),
+            typeof (uint?),
+            typeof (long?),
+            typeof (ulong?)
+        });
+
         private readonly Dictionary<Type, RtTypeName> _resolveCache = new Dictionary<Type, RtTypeName>
         {
             {typeof (object), AnyType},
@@ -118,7 +170,7 @@ namespace Reinforced.Typings
 
         internal RtTypeName ResolveTypeNameInner(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
-            var substitution = t.Substitute(_context.Location.CurrentType);
+            var substitution = t.Substitute(_context.Location.CurrentType, this);
             if (substitution != null) return substitution; // order important!
 
             if (t.IsGenericParameter)
@@ -207,7 +259,7 @@ namespace Reinforced.Typings
                 if (enumerable == null) return Cache(t, new RtArrayType(AnyType));
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
             }
-            
+
             if (typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType()))
             {
                 var methodInfo = t._GetMethod("Invoke");
@@ -229,6 +281,11 @@ namespace Reinforced.Typings
                     return Cache(t, parametrized);
                 }
 
+            }
+
+            if (t._IsEnum())
+            {
+                return Cache(t, NumberType);
             }
 
             _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));

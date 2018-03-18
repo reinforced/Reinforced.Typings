@@ -18,5 +18,16 @@ namespace Reinforced.Typings.Generators
             var pi = (FieldInfo) mi;
             return pi.FieldType;
         }
+
+        /// <summary>
+        /// Retrieves static value 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        protected override object GetStaticValue(MemberInfo element)
+        {
+            var fi = element as FieldInfo;
+            return fi.GetValue(null) ?? fi.GetRawConstantValue();
+        }
     }
 }
