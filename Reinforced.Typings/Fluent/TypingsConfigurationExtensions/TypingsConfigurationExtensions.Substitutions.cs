@@ -1,7 +1,5 @@
 ﻿using System;
-using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
-using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
 // ReSharper disable CheckNamespace

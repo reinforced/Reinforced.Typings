@@ -39,7 +39,7 @@ namespace Reinforced.Typings.Fluent
         ///     Adds import directive to file containing typing for current type
         ///     This method is only used while splitting generated types to different files
         /// </summary>
-        /// <param name="configuration">Configurator</param>
+        /// <param name="conf">Configurator</param>
         /// <param name="target">
         /// What we are importing from module.
         /// Everything that is placed after "import" keyword and before "from" or "= require(..)"
@@ -54,11 +54,11 @@ namespace Reinforced.Typings.Fluent
         /// Please not the you do not have to specify quotes here! Quotes will be added automatically
         /// </param>
         /// <param name="isRequire">When true, import will be generated as "import ImportTarget = require('ImportSource')"</param>
-        public static T AddImport<T>(this T configuration, string target, string from, bool isRequire = false)
+        public static T AddImport<T>(this T conf, string target, string from, bool isRequire = false)
             where T : IReferenceConfigurationBuilder
         {
-            configuration.Imports.Add(new TsAddTypeImportAttribute(target, from, isRequire));
-            return configuration;
+            conf.Imports.Add(new TsAddTypeImportAttribute(target, from, isRequire));
+            return conf;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Reinforced.Typings.Fluent
         /// <returns>Fluent</returns>
         public static ConfigurationBuilder AddReference(this ConfigurationBuilder conf, string path)
         {
-            conf.References.Add(new RtReference { Path = path });
+            conf.Context.Project.References.Add(new RtReference { Path = path });
             return conf;
         }
 

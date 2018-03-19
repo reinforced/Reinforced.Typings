@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
@@ -325,17 +326,21 @@ namespace Reinforced.Typings
             return members.ToArray();
         }
 
-        internal static IEnumerable<T> GetExportingMembers<T>(this Type t, bool flattenHierarchy, Func<Type, BindingFlags, T[]> membersGetter, Type limiter, bool publicOnly = false)
+        internal static IEnumerable<T> GetExportingMembers<T>(this TypeBlueprint t,
+            bool flattenHierarchy,
+            Func<Type, BindingFlags, T[]> membersGetter,
+            Type limiter,
+            bool publicOnly = false)
             where T : MemberInfo
         {
             var declaredFlags = publicOnly ? PublicMembersFlags : MembersFlags;
 
             T[] baseSet = null;
             baseSet = flattenHierarchy ?
-                GetInheritedMembers(t, x => membersGetter(x, declaredFlags), limiter)
-                : membersGetter(t, declaredFlags);
+                GetInheritedMembers(t.Type, x => membersGetter(x, declaredFlags), limiter)
+                : membersGetter(t.Type, declaredFlags);
 
-            var allMembers = baseSet.Where(ConfiguredTypesExtensions.TypeScriptMemberSearchPredicate).OfType<T>();
+            var allMembers = baseSet.Where(x => (x.GetCustomAttribute<CompilerGeneratedAttribute>() == null) && !t.IsIgnored(x)).OfType<T>();
             return allMembers.ToArray();
         }
 

@@ -11,15 +11,11 @@ namespace Reinforced.Typings.Fluent.Interfaces
     /// </summary>
     public interface ITypeConfigurationBuilder : IReferenceConfigurationBuilder, IOrderableMember
     {
-        /// <summary>
-        ///     Configurations for method parameters
-        /// </summary>
-        Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> ParametersConfiguration { get; }
 
         /// <summary>
-        ///     Configurations for type members
+        /// Export context
         /// </summary>
-        Dictionary<MemberInfo, IAttributed<TsAttributeBase>> MembersConfiguration { get; }
+        ExportContext Context { get; }
 
         /// <summary>
         ///     Type is being configured
@@ -45,5 +41,11 @@ namespace Reinforced.Typings.Fluent.Interfaces
         /// Flatten limiter
         /// </summary>
         Type FlattenLimiter { get; }
+
+        /// <summary>
+        /// Returns true, when hierarchy can be flatten. False otherwise
+        /// </summary>
+        /// <returns></returns>
+        bool CanFlatten();
     }
 }

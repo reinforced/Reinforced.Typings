@@ -70,6 +70,8 @@
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening4.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.InvalidFlattenOrder.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening3.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InlineFunctionImplementation.cs" />

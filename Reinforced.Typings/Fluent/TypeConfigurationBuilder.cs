@@ -13,17 +13,18 @@ namespace Reinforced.Typings.Fluent
     /// <typeparam name="TType"></typeparam>
     public abstract class TypeConfigurationBuilder<TType> : ITypeConfigurationBuilder
     {
-        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
+        internal readonly TypeBlueprint _blueprint;
+        
+        internal TypeConfigurationBuilder(ExportContext context)
+        {
+            _blueprint = context.Project.Blueprint(typeof(TType));
+            Context = context;
+        }
 
-        private readonly Dictionary<MemberInfo, IAttributed<TsAttributeBase>> _membersConfiguration =
-            new Dictionary<MemberInfo, IAttributed<TsAttributeBase>>();
-
-        private readonly Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> _parametersConfiguration
-            = new Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>>();
-
-        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
-        private readonly Dictionary<Type, RtTypeName> _substitutions = new Dictionary<Type, RtTypeName>();
-        private readonly Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> _genericSubstitutions = new Dictionary<Type, Func<Type, TypeResolver, RtTypeName>>();
+        /// <summary>
+        /// Export context
+        /// </summary>
+        public ExportContext Context { get; private set; }
 
         Type ITypeConfigurationBuilder.Type
         {
@@ -33,7 +34,7 @@ namespace Reinforced.Typings.Fluent
 
         Dictionary<Type, RtTypeName> ITypeConfigurationBuilder.Substitutions
         {
-            get { return _substitutions; }
+            get { return _blueprint.Substitutions; }
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions
         {
-            get { return _genericSubstitutions; }
+            get { return _blueprint.GenericSubstitutions; }
         }
 
         /// <summary>
@@ -54,27 +55,30 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public abstract Type FlattenLimiter { get; }
 
-        Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> ITypeConfigurationBuilder.ParametersConfiguration
+        /// <summary>
+        /// Returns true, when hierarchy can be flatten. False otherwise
+        /// </summary>
+        /// <returns></returns>
+        public bool CanFlatten()
         {
-            get { return _parametersConfiguration; }
-        }
-
-        Dictionary<MemberInfo, IAttributed<TsAttributeBase>> ITypeConfigurationBuilder.MembersConfiguration
-        {
-            get { return _membersConfiguration; }
+            return _blueprint.CanFlatten();
         }
 
         ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
         {
-            get { return _references; }
+            get { return _blueprint.References; }
         }
 
         ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports
         {
-            get { return _imports; }
+            get { return _blueprint.Imports; }
         }
 
-        string IReferenceConfigurationBuilder.PathToFile { get; set; }
+        string IReferenceConfigurationBuilder.PathToFile
+        {
+            get { return _blueprint.PathToFile; }
+            set { _blueprint.PathToFile = value; }
+        }
 
         /// <inheritdoc />
         public abstract double MemberOrder { get; set; }

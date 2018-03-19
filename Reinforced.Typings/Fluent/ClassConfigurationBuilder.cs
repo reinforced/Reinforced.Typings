@@ -11,30 +11,31 @@ namespace Reinforced.Typings.Fluent
     /// <typeparam name="T"></typeparam>
     public class ClassConfigurationBuilder<T> : TypeConfigurationBuilder<T>, IClassConfigurationBuilder
     {
-        internal ClassConfigurationBuilder()
+        public ClassConfigurationBuilder(ExportContext context) : base(context)
         {
-            AttributePrototype = new TsClassAttribute
+            if (_blueprint.TypeAttribute == null)
             {
-                AutoExportConstructors = false,
-                AutoExportFields = false,
-                AutoExportProperties = false,
-                AutoExportMethods = false
-            };
-            Decorators = new List<TsDecoratorAttribute>();
+                _blueprint.TypeAttribute = new TsClassAttribute
+                {
+                    AutoExportConstructors = false,
+                    AutoExportFields = false,
+                    AutoExportProperties = false,
+                    AutoExportMethods = false
+                };
+            }
         }
 
-        private TsClassAttribute AttributePrototype { get; set; }
-
-        TsClassAttribute IAttributed<TsClassAttribute>.AttributePrototype
+        /// <summary>
+        /// Class TS attribute prototype
+        /// </summary>
+        public TsClassAttribute AttributePrototype
         {
-            get { return this.AttributePrototype; }
+            get { return _blueprint.Attr<TsClassAttribute>(); }
         }
-
-        private List<TsDecoratorAttribute> Decorators { get; set; }
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
-            get { return Decorators; }
+            get { return _blueprint.Decorators; }
         }
 
         /// <summary>

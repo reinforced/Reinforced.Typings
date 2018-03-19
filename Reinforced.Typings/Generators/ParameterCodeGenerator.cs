@@ -20,12 +20,12 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtArgument GenerateNode(ParameterInfo element,RtArgument result, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return null;
+            if (Context.CurrentBlueprint.IsIgnored(element)) return null;
             var name = element.Name;
             RtTypeName type;
             var isNullable = false;
 
-            var fa = ConfigurationRepository.Instance.ForMember(element);
+            var fa = Context.CurrentBlueprint.ForMember(element);
             var defaultValue = GetDefaultValue(element, fa);
             if (fa != null)
             {
@@ -53,7 +53,7 @@ namespace Reinforced.Typings.Generators
             result.Type = type;
             if (isNullable && defaultValue == null) result.Identifier.IsNullable = true;
             if (defaultValue != null) result.DefaultValue = defaultValue;
-            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
+            AddDecorators(result, Context.CurrentBlueprint.DecoratorsFor(element));
             return result;
         }
 

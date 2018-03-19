@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Fluent
         {
             return
                 (EnumConfigurationBuilder<T>)
-                builder.EnumConfigurationBuilders.GetOrCreate(typeof(T), () => new EnumConfigurationBuilder<T>());
+                builder.EnumConfigurationBuilders.GetOrCreate(typeof(T), () => new EnumConfigurationBuilder<T>(builder.Context));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Reinforced.Typings.Fluent
             var n = Enum.GetName(typeof(T), value);
             var field = typeof(T)._GetField(n);
             IEnumConfigurationBuidler ecb = conf;
-            var c = ecb.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration(field));
+            var c = new EnumValueExportConfiguration(field, conf._blueprint);
             return c;
         }
 
@@ -93,7 +93,7 @@ namespace Reinforced.Typings.Fluent
         public static EnumValueExportConfiguration Value(this IEnumConfigurationBuidler conf, string propertyName)
         {
             var field = conf.EnumType._GetField(propertyName);
-            var c = conf.ValueExportConfigurations.GetOrCreate(field, () => new EnumValueExportConfiguration(field));
+            var c = new EnumValueExportConfiguration(field, conf.Context.Project.Blueprint(conf.EnumType));
             return c;
         }
 

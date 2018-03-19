@@ -22,9 +22,7 @@ namespace Reinforced.Typings.Fluent
         {
             var prop = LambdaHelpers.ParsePropertyLambda(property);
             ITypeConfigurationBuilder tcb = tc;
-            return
-                (PropertyExportConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new PropertyExportConfigurationBuilder(prop));
+            return new PropertyExportConfigurationBuilder(prop, tc._blueprint);
         }
 
         /// <summary>
@@ -66,7 +64,7 @@ namespace Reinforced.Typings.Fluent
             var prop = tc.Type._GetProperty(propertyName);
             if (prop == null)
             {
-                ErrorMessages.RTE0013_InvalidProperty.Throw(propertyName, tc.Type.FullName);
+                ErrorMessages.RTE0014_InvalidProperty.Throw(propertyName, tc.Type.FullName);
             }
             return tc.WithProperties(new[] { prop }, configuration);
         }
@@ -94,7 +92,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithProperties<T>(this T tc, Func<PropertyInfo, bool> predicate,
             Action<PropertyExportConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter).Where(predicate);
+            var prop = tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter).Where(predicate);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -109,7 +107,7 @@ namespace Reinforced.Typings.Fluent
             Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(bindingFlags), tc.FlattenLimiter);
+            var prop = tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(bindingFlags), tc.FlattenLimiter);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -122,7 +120,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllProperties<T>(this T tc, Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter);
+            var prop = tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter);
             return tc.WithProperties(prop, configuration);
         }
 
@@ -136,7 +134,7 @@ namespace Reinforced.Typings.Fluent
             Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type
+            var prop = tc.Context.Project.Blueprint(tc.Type)
                 .GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetProperties(b), tc.FlattenLimiter, true);
             return tc.WithProperties(prop, configuration);
         }

@@ -22,10 +22,11 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtClass GenerateNode(Type element, RtClass result, TypeResolver resolver)
         {
-            var tc = ConfigurationRepository.Instance.ForType<TsClassAttribute>(element);
+            var clsbp = Context.Project.Blueprint(element);
+            var tc = Context.Project.Blueprint(element).Attr<TsClassAttribute>();
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
             Export(result, element, resolver, tc);
-            AddDecorators(result,ConfigurationRepository.Instance.DecoratorsFor(element));
+            AddDecorators(result, clsbp.GetDecorators());
             return result;
         }
     }

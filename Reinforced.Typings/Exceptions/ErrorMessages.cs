@@ -78,12 +78,17 @@ namespace Reinforced.Typings.Exceptions
         /// <summary>
         /// Error when trying to locate particular field
         /// </summary>
-        public static readonly ErrorMessage RTE0012_InvalidField = new ErrorMessage(0013, "Could not locate field {0} in class {1}", "Reflection");
+        public static readonly ErrorMessage RTE0013_InvalidField = new ErrorMessage(0013, "Could not locate field {0} in class {1}", "Reflection");
 
         /// <summary>
         /// Error when trying to locate particular property
         /// </summary>
-        public static readonly ErrorMessage RTE0013_InvalidProperty = new ErrorMessage(0014, "Could not locate property {0} in class {1}", "Reflection");
+        public static readonly ErrorMessage RTE0014_InvalidProperty = new ErrorMessage(0014, "Could not locate property {0} in class {1}", "Reflection");
+
+        /// <summary>
+        /// Error when trying to locate particular property
+        /// </summary>
+        public static readonly ErrorMessage RTE0015_CannotFlatten = new ErrorMessage(0015, "Could not flatten hierarchy for class {0}. Hierarchy flattening must appear before .With* methods", "Hierarchy flattening");
         #endregion
 
         #region Warnings

@@ -22,7 +22,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtConstructor GenerateNode(ConstructorInfo element, RtConstructor result, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return null;
+            if (Context.CurrentBlueprint.IsIgnored(element)) return null;
             if (element.GetParameters().Length == 0) return null;
 
             var doc = Context.Documentation.GetDocumentationMember(element);
@@ -40,7 +40,7 @@ namespace Reinforced.Typings.Generators
             var p = element.GetParameters();
             foreach (var param in p)
             {
-                if (param.IsIgnored()) continue;
+                if (Context.CurrentBlueprint.IsIgnored(param)) continue;
                 var generator = Context.Generators.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument) argument);
@@ -54,7 +54,9 @@ namespace Reinforced.Typings.Generators
             constructor.SuperCallParameters.Clear();
             // 1. Check presence of base type 
             var bt = element.DeclaringType != null ? element.DeclaringType._BaseType() : null;
-            if ((bt == typeof (object) || bt.IsExportingAsInterface()) || !bt.IsExportingAsClass()) bt = null;
+            var bp = Context.Project.Blueprint(bt);
+
+            if ((bt == typeof (object) || bp.IsExportingAsInterface()) || !bp.IsExportingAsClass()) bt = null;
             
             if (bt == null)
             {
@@ -90,7 +92,7 @@ namespace Reinforced.Typings.Generators
             if (found)
             {
                 // 3.If constructor with same parameters found - just use it
-                constructor.SuperCallParameters.AddRange(parameters.Select(c => c.GetName()));
+                constructor.SuperCallParameters.AddRange(parameters.Select(c => Context.CurrentBlueprint.GetName(c)));
                 if (constructor.SuperCallParameters.Count > 0)
                 {
                     constructor.NeedsSuperCall = true;

@@ -18,11 +18,10 @@ namespace Reinforced.Typings.Fluent
             Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
+            tc.Context.Project.Blueprint(tc.Type).NotifyFlattenTouched();
             foreach (var propertyInfo in prop)
             {
-                var conf =
-                    (PropertyExportConfigurationBuilder)
-                    tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfigurationBuilder(propertyInfo));
+                var conf = new PropertyExportConfigurationBuilder(propertyInfo, tc.Context.Project.Blueprint(tc.Type));
                 if (configuration == null) continue;
                 try
                 {
@@ -40,11 +39,10 @@ namespace Reinforced.Typings.Fluent
         private static T ApplyMethodsConfiguration<T>(T tc, IEnumerable<MethodInfo> methds,
             Action<MethodConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
+            tc.Context.Project.Blueprint(tc.Type).NotifyFlattenTouched();
             foreach (var methodInfo in methds)
             {
-                var conf =
-                    (MethodConfigurationBuilder)
-                    tc.MembersConfiguration.GetOrCreate(methodInfo, () => new MethodConfigurationBuilder(methodInfo));
+                var conf = new MethodConfigurationBuilder(methodInfo, tc.Context.Project.Blueprint(tc.Type));
                 if (configuration == null) continue;
                 try
                 {
@@ -81,9 +79,7 @@ namespace Reinforced.Typings.Fluent
                     if (call.Method.IsGenericMethod &&
                         call.Method.GetGenericMethodDefinition() == Ts.ParametrizedParameterMethod)
                     {
-                        var pcb =
-                            (ParameterConfigurationBuilder)
-                            conf.ParametersConfiguration.GetOrCreate(pi, () => new ParameterConfigurationBuilder(pi));
+                        var pcb = new ParameterConfigurationBuilder(pi, conf.Context.Project.Blueprint(conf.Type));
 
                         var parsed = false;
                         var arg = call.Arguments[0] as LambdaExpression;
@@ -122,24 +118,6 @@ namespace Reinforced.Typings.Fluent
             }
         }
 
-        /// <summary>
-        ///     Configures exporter to flatten inheritance hierarchy for supplied type
-        /// </summary>
-        /// <param name="conf">Configuration</param>
-        /// <param name="flatten">True to flatter hierarchy, False to don't</param>
-        /// <param name="until">
-        /// All classes "deeper" than specified (including) will not be considered as exportable members donors. 
-        /// By default this parameter is equal to typeof(object)
-        /// </param>
-        public static T FlattenHierarchy<T>(this T conf, bool flatten = true, Type until = null)
-            where T : IAttributed<TsDeclarationAttributeBase>
-        {
-            conf.AttributePrototype.FlattenHierarchy = flatten;
-            if (until != null)
-            {
-                conf.AttributePrototype.FlattenLimiter = until;
-            }
-            return conf;
-        }
+        
     }
 }

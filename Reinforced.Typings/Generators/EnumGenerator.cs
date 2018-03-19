@@ -22,9 +22,12 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtEnum GenerateNode(Type element, RtEnum result, TypeResolver resolver)
         {
+            Context.Location.SetCurrentType(element);
+
             var names = Enum.GetNames(element);
-            result.EnumName = element.GetName();
-            result.Order = element.GetOrder();
+            var bp = Context.Project.Blueprint(element);
+            result.EnumName = bp.GetName();
+            result.Order = bp.GetOrder();
 
             var fields = element._GetFields().Where(c => !c.IsSpecialName).ToDictionary(c => c.Name, c => c);
             var doc = Context.Documentation.GetDocumentationMember(element);
@@ -34,7 +37,7 @@ namespace Reinforced.Typings.Generators
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
             }
-            var ea = ConfigurationRepository.Instance.ForType<TsEnumAttribute>(element);
+            var ea = Context.CurrentBlueprint.Attr<TsEnumAttribute>();
             if (ea != null)
             {
                 result.IsConst = ea.IsConst;
@@ -49,7 +52,7 @@ namespace Reinforced.Typings.Generators
                 {
                     var fieldItself = fields[n];
 
-                    var attr = ConfigurationRepository.Instance.ForEnumValue(fieldItself);
+                    var attr = Context.CurrentBlueprint.ForEnumValue(fieldItself);
                     if (attr != null) n = attr.Name;
                     RtEnumValue value = new RtEnumValue
                     {
@@ -69,7 +72,9 @@ namespace Reinforced.Typings.Generators
                 }
             }
             result.Values.AddRange(valuesResult);
-            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
+            AddDecorators(result, Context.CurrentBlueprint.GetDecorators());
+
+            Context.Location.ResetCurrentType();
             return result;
         }
     }

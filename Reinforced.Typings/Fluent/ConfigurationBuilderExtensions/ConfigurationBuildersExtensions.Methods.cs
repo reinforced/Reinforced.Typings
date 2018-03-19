@@ -22,9 +22,7 @@ namespace Reinforced.Typings.Fluent
         {
             var prop = LambdaHelpers.ParseMethodLambda(method);
             ITypeConfigurationBuilder tcb = tc;
-            var methodConf =
-                (MethodConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodConfigurationBuilder(prop));
+            var methodConf = new MethodConfigurationBuilder(prop, tc._blueprint);
             ExtractParameters(tcb, method);
             return methodConf;
         }
@@ -78,9 +76,7 @@ namespace Reinforced.Typings.Fluent
         {
             var prop = LambdaHelpers.ParseMethodLambda(method);
             ITypeConfigurationBuilder tcb = tc;
-            var methodConf =
-                (MethodConfigurationBuilder)
-                tcb.MembersConfiguration.GetOrCreate(prop, () => new MethodConfigurationBuilder(prop));
+            var methodConf = new MethodConfigurationBuilder(prop, tc._blueprint);
             ExtractParameters(tcb, method);
             return methodConf;
         }
@@ -144,7 +140,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithMethods<T>(this T tc, Func<MethodInfo, bool> predicate,
             Action<MethodConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(b), tc.FlattenLimiter).Where(predicate);
+            var prop = tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(b), tc.FlattenLimiter).Where(predicate);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -158,7 +154,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithMethods<T>(this T tc, BindingFlags bindingFlags,
             Action<MethodConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(bindingFlags), tc.FlattenLimiter);
+            var prop = tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(bindingFlags), tc.FlattenLimiter);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -172,7 +168,7 @@ namespace Reinforced.Typings.Fluent
         public static T WithAllMethods<T>(this T tc, Action<MethodConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            var prop = tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(b), tc.FlattenLimiter);
+            var prop = tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(b), tc.FlattenLimiter);
             return tc.WithMethods(prop, configuration);
         }
 
@@ -186,7 +182,7 @@ namespace Reinforced.Typings.Fluent
             where T : ITypeConfigurationBuilder
         {
             var prop =
-                tc.Type.GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(b), tc.FlattenLimiter, true);
+                tc.Context.Project.Blueprint(tc.Type).GetExportingMembers(tc.IsHierarchyFlatten, (t, b) => t._GetMethods(b), tc.FlattenLimiter, true);
             return tc.WithMethods(prop, configuration);
         }
     }

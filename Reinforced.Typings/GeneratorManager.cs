@@ -44,13 +44,12 @@ namespace Reinforced.Typings
         public ITsCodeGenerator<T> GeneratorFor<T>(T member, ExportContext context)
             where T : MemberInfo
         {
-            var attr = ConfigurationRepository.Instance.ForMember<TsTypedMemberAttributeBase>(member);
+            var attr = context.CurrentBlueprint.ForMember<TsTypedMemberAttributeBase>(member);
             var fromAttr = GetFromAttribute<T>(attr, context);
             if (fromAttr != null) return fromAttr;
             if (member is MethodInfo)
             {
-                var decType = member.DeclaringType;
-                var classAttr = ConfigurationRepository.Instance.ForType<TsClassAttribute>(decType);
+                var classAttr = context.CurrentBlueprint.Attr<TsClassAttribute>();
                 if (classAttr != null && classAttr.DefaultMethodCodeGenerator != null)
                 {
                     return LazilyInstantiateGenerator<T>(classAttr.DefaultMethodCodeGenerator, context);
@@ -70,7 +69,7 @@ namespace Reinforced.Typings
         /// <returns>Code generator for parameter info</returns>
         public ITsCodeGenerator<ParameterInfo> GeneratorFor(ParameterInfo member, ExportContext context)
         {
-            var attr = ConfigurationRepository.Instance.ForMember(member);
+            var attr = context.CurrentBlueprint.ForMember(member);
             var fromAttr = GetFromAttribute<ParameterInfo>(attr, context);
             if (fromAttr != null) return fromAttr;
             return _defaultParameterGenerator;
@@ -85,7 +84,7 @@ namespace Reinforced.Typings
         /// <returns>Code generator for specified type</returns>
         public ITsCodeGenerator<Type> GeneratorFor(Type member, ExportContext context)
         {
-            var attr = ConfigurationRepository.Instance.ForType(member);
+            var attr = context.Project.Blueprint(member).TypeAttribute;
             var fromAttr = GetFromAttribute<Type>(attr, context);
             if (fromAttr != null) return fromAttr;
 

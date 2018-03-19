@@ -7,22 +7,30 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Configuration for enum value export configuration
     /// </summary>
-    public class EnumValueExportConfiguration : IMemberExportConfiguration<TsValueAttribute,FieldInfo>, IIgnorable
+    public class EnumValueExportConfiguration : IMemberExportConfiguration<TsValueAttribute, FieldInfo>, IIgnorable
     {
-        internal EnumValueExportConfiguration(FieldInfo member)
+        private readonly TypeBlueprint _blueprint;
+        internal EnumValueExportConfiguration(FieldInfo member, TypeBlueprint blueprint)
         {
             Member = member;
-            AttributePrototype = member.RetrieveOrCreateCustomAttribute<TsValueAttribute>();
+            _blueprint = blueprint;
+            _blueprint.ForEnumValue(Member, true);
         }
-
-        internal TsValueAttribute AttributePrototype { get; set; }
 
         TsValueAttribute IAttributed<TsValueAttribute>.AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.ForEnumValue(Member, true); }
         }
 
-        bool IIgnorable.Ignore { get; set; }
+        bool IIgnorable.Ignore
+        {
+            get { return _blueprint.IsIgnored(Member); }
+            set
+            {
+                if (value) _blueprint.Ignored.Add(Member);
+                else if (_blueprint.Ignored.Contains(Member)) _blueprint.Ignored.Remove(Member);
+            }
+        }
 
         /// <summary>
         /// Exporting member

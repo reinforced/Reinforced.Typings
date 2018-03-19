@@ -8,30 +8,41 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     ///     Fluent configuration builder for exported methods
     /// </summary>
-    public class MethodConfigurationBuilder : IMemberExportConfiguration<TsFunctionAttribute,MethodInfo>, IIgnorable,
+    public class MethodConfigurationBuilder : IMemberExportConfiguration<TsFunctionAttribute, MethodInfo>, IIgnorable,
         IDecoratorsAggregator, IOrderableMember, ISupportsInferring<MethodInfo>
     {
-        internal MethodConfigurationBuilder(MethodInfo member)
+        private readonly TypeBlueprint _blueprint;
+        internal MethodConfigurationBuilder(MethodInfo member, TypeBlueprint blueprint)
         {
             Member = member;
-            AttributePrototype = member.RetrieveOrCreateCustomAttribute<TsFunctionAttribute>();
-            Decorators = new List<TsDecoratorAttribute>();
+            _blueprint = blueprint;
+            _blueprint.ForMember(Member, true);
         }
 
-        private TsFunctionAttribute AttributePrototype { get; set; }
-        private List<TsDecoratorAttribute> Decorators { get; set; }
+       
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
-            get { return Decorators; }
+            get { return _blueprint.DecoratorsListFor(Member); }
         }
 
-        TsFunctionAttribute IAttributed<TsFunctionAttribute>.AttributePrototype
+        /// <summary>
+        /// Function attribute prototype
+        /// </summary>
+        public TsFunctionAttribute AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.ForMember(Member, true); }
         }
 
-        bool IIgnorable.Ignore { get; set; }
+        bool IIgnorable.Ignore
+        {
+            get { return _blueprint.IsIgnored(Member); }
+            set
+            {
+                if (value) _blueprint.Ignored.Add(Member);
+                else if (_blueprint.Ignored.Contains(Member)) _blueprint.Ignored.Remove(Member);
+            }
+        }
 
         double IOrderableMember.MemberOrder
         {

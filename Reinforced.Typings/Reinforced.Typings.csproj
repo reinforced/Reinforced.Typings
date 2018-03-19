@@ -124,8 +124,6 @@
     <Compile Include="Attributes\TsTypedAttributeBase.cs" />
     <Compile Include="Attributes\TsTypedMemberAttributeBase.cs" />
     <Compile Include="Attributes\TsValueAttribute.cs" />
-    <Compile Include="ConfigurationRepository.cs" />
-    <Compile Include="ConfiguredTypesExtensions.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Exceptions\ErrorMessage.cs" />
     <Compile Include="Exceptions\ErrorMessages.cs" />
@@ -163,10 +161,12 @@
     <Compile Include="Generators\TsCodeGeneratorBase.cs" />
     <Compile Include="GlobalParameters.cs" />
     <Compile Include="IFilesOperations.cs" />
+    <Compile Include="ProjectBlueprint.cs" />
     <Compile Include="ReferencesInspection\ImportComparer.cs" />
     <Compile Include="ReferencesInspection\InspectedReferences.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="ReferencesInspection\ReferenceComparer.cs" />
+    <Compile Include="TypeBlueprint.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />
     <Compile Include="Visitors\TypeScript\TypeScriptExportVisitor.cs" />

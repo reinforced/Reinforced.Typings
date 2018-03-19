@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Ast;
-using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.ReferencesInspection;
@@ -79,21 +78,20 @@ namespace Reinforced.Typings
             var fluentConfigurationPresents = _context.ConfigurationMethod != null;
             if (fluentConfigurationPresents)
             {
-                var configurationBuilder = new ConfigurationBuilder(_context.Global);
+                var configurationBuilder = new ConfigurationBuilder(_context);
                 _context.ConfigurationMethod(configurationBuilder);
-                ConfigurationRepository.Instance = configurationBuilder.Build();
             }
 
             _context.Documentation =
                 new DocumentationManager(_context.Global.GenerateDocumentation ? _context.DocumentationFilePath : null, _context.Warnings);
-            foreach (var additionalDocumentationPath in ConfigurationRepository.Instance.AdditionalDocumentationPathes)
+            foreach (var additionalDocumentationPath in _context.Project.AdditionalDocumentationPathes)
             {
                 _context.Documentation.CacheDocumentation(additionalDocumentationPath, _context.Warnings);
             }
 
             _allTypes = _context.SourceAssemblies
                 .SelectMany(c => c._GetTypes(_context.Warnings).Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
-                .Union(ConfigurationRepository.Instance.AttributesForType.Keys).Distinct()
+                .Union(_context.Project.BlueprintedTypes).Distinct()
                 .ToList();
 
             _allTypesHash = new HashSet<Type>(_allTypes);
@@ -103,7 +101,7 @@ namespace Reinforced.Typings
             {
                 foreach (var type in _allTypesHash)
                 {
-                    ConfigurationRepository.Instance.AddFileSeparationSettings(type);
+                    _context.Project.AddFileSeparationSettings(type);
                 }
             }
 
@@ -135,7 +133,7 @@ namespace Reinforced.Typings
 
                 types = _typesToFilesMap[fileName];
             }
-            
+
             ExportedFile ef = new ExportedFile
             {
                 References = GlobalReferences.Duplicate(),
@@ -144,7 +142,7 @@ namespace Reinforced.Typings
                 TypesToExport = _context.Hierarchical ? new HashSet<Type>(types) : _allTypesHash
             };
             ef.TypeResolver = new TypeResolver(_context, ef, ReferenceInspector);
-            ef.AddReferencesFromTypes(_context.Global.UseModules);
+            _context.Project.AddReferencesFromTypes(ef, _context.Global.UseModules);
             return ef;
         }
 
@@ -156,7 +154,7 @@ namespace Reinforced.Typings
         {
             var ef = SetupExportedFile(fileName);
             var gen = _context.Generators.GeneratorForNamespace(_context);
-            var grp = ef.TypesToExport.GroupBy(c => c.GetNamespace(true));
+            var grp = ef.TypesToExport.GroupBy(c => _context.Project.Blueprint(c).GetNamespace(true));
             var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
                 .ToDictionary(k => k.Key, v => v.ToList());
 

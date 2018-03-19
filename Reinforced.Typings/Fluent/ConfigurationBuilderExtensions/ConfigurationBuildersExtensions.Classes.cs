@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Fluent
         {
             return
                 (ClassConfigurationBuilder<T>)
-                builder.TypeConfigurationBuilders.GetOrCreate(typeof(T), () => new ClassConfigurationBuilder<T>());
+                builder.TypeConfigurationBuilders.GetOrCreate(typeof(T), () => new ClassConfigurationBuilder<T>(builder.Context));
         }
 
         /// <summary>
@@ -41,10 +41,10 @@ namespace Reinforced.Typings.Fluent
                     if (!tp._IsGenericType())
                     {
                         t = typeof(ClassConfigurationBuilder<>).MakeGenericType(tp);
-                        return (IClassConfigurationBuilder)Activator.CreateInstance(t, true);
+                        return (IClassConfigurationBuilder)Activator.CreateInstance(t, new object[] {builder.Context});
                     }
                     t = typeof(GenericClassConfigurationBuilder);
-                    return (ITypeConfigurationBuilder)Activator.CreateInstance(t, tp);
+                    return (ITypeConfigurationBuilder)Activator.CreateInstance(t, builder.Context.Project.Blueprint(tp),builder.Context);
                 });
                 if (configuration != null)
                 {
