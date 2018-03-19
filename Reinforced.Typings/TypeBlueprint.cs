@@ -241,7 +241,7 @@ namespace Reinforced.Typings
         public FieldInfo[] GetExportedFields()
         {
             var t = Type;
-            if (IsIgnored(t)) return new FieldInfo[0];
+            if (IsIgnored()) return new FieldInfo[0];
             if (t._IsEnum()) return new FieldInfo[0];
 
 
@@ -268,7 +268,7 @@ namespace Reinforced.Typings
         public PropertyInfo[] GetExportedProperties()
         {
             var t = Type;
-            if (IsIgnored(t)) return new PropertyInfo[0];
+            if (IsIgnored()) return new PropertyInfo[0];
             if (t._IsEnum()) return new PropertyInfo[0];
 
             var typeAttr = TypeAttribute;
@@ -294,7 +294,7 @@ namespace Reinforced.Typings
         public MethodInfo[] GetExportedMethods()
         {
             var t = Type;
-            if (IsIgnored(t)) return new MethodInfo[0];
+            if (IsIgnored()) return new MethodInfo[0];
             if (t._IsEnum()) return new MethodInfo[0];
 
             var typeAttr = TypeAttribute;
