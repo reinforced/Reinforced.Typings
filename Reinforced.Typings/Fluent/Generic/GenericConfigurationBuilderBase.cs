@@ -9,31 +9,24 @@ namespace Reinforced.Typings.Fluent.Generic
 {
     abstract class GenericConfigurationBuilderBase : ITypeConfigurationBuilder
     {
-        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
+        internal readonly TypeBlueprint _blueprint;
 
-        private readonly Dictionary<MemberInfo, IAttributed<TsAttributeBase>> _membersConfiguration =
-            new Dictionary<MemberInfo, IAttributed<TsAttributeBase>>();
-
-        private readonly Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> _parametersConfiguration
-            = new Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>>();
-
-        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
-
-        private readonly Type _type;
-
-        protected GenericConfigurationBuilderBase(Type t)
+        protected GenericConfigurationBuilderBase(TypeBlueprint blueprint, ExportContext context)
         {
-            _type = t;
-            Substitutions = new Dictionary<Type, RtTypeName>();
-            GenericSubstitutions = new Dictionary<Type, Func<Type, TypeResolver, RtTypeName>>();
+            _blueprint = blueprint;
+            Context = context;
         }
-
-        private Dictionary<Type, RtTypeName> Substitutions { get; set; }
 
         /// <summary>
         /// Substitutions to be used only when in this type
         /// </summary>
-        public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions { get; private set; }
+        public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GenericSubstitutions
+        {
+            get
+            {
+                return _blueprint.GenericSubstitutions;
+            }
+        }
 
         /// <summary>
         /// Gets whether type configuration is flatten
@@ -45,35 +38,29 @@ namespace Reinforced.Typings.Fluent.Generic
         /// </summary>
         public abstract Type FlattenLimiter { get; }
 
+        /// <summary>
+        /// Export context
+        /// </summary>
+        public ExportContext Context { get; }
+
         Type ITypeConfigurationBuilder.Type
         {
-            get { return _type; }
+            get { return _blueprint.Type; }
         }
 
         Dictionary<Type, RtTypeName> ITypeConfigurationBuilder.Substitutions
         {
-            get { return Substitutions; }
-        }
-
-        Dictionary<ParameterInfo, IAttributed<TsParameterAttribute>> ITypeConfigurationBuilder.
-            ParametersConfiguration
-        {
-            get { return _parametersConfiguration; }
-        }
-
-        Dictionary<MemberInfo, IAttributed<TsAttributeBase>> ITypeConfigurationBuilder.MembersConfiguration
-        {
-            get { return _membersConfiguration; }
+            get { return _blueprint.Substitutions; }
         }
 
         ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
         {
-            get { return _references; }
+            get { return _blueprint.References; }
         }
 
         ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports
         {
-            get { return _imports; }
+            get { return _blueprint.Imports; }
         }
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }

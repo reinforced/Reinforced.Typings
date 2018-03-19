@@ -170,9 +170,14 @@ namespace Reinforced.Typings
 
         internal RtTypeName ResolveTypeNameInner(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
-            var substitution = t.Substitute(_context.Location.CurrentType, this);
+            var substitution = _context.Project.Substitute(t, this);
             if (substitution != null) return substitution; // order important!
 
+            if (_context.CurrentBlueprint != null)
+            {
+                var localSubstitution = _context.CurrentBlueprint.Substitute(t, this);
+                if (localSubstitution != null) return localSubstitution;
+            }
             if (t.IsGenericParameter)
             {
                 var genAt = t.GetCustomAttribute<TsGenericAttribute>(false);
@@ -186,12 +191,14 @@ namespace Reinforced.Typings
 
             if (materializedGenerics == null && _resolveCache.ContainsKey(t)) return _resolveCache[t];
 
-            var td = ConfigurationRepository.Instance.ForType(t);
+            var bp = _context.Project.Blueprint(t, false);
+
+            var td = bp == null ? null : bp.TypeAttribute;
             if (td != null)
             {
                 var ns = t.Namespace;
                 if (!td.IncludeNamespace) ns = string.Empty;
-                var result = t.GetName(GetConcreteGenericArguments(t, materializedGenerics));
+                var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
 
                 if (_context.Global.UseModules)
                 {

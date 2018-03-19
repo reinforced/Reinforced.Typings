@@ -33,14 +33,14 @@ namespace Reinforced.Typings.ReferencesInspection
             var references = assemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
                 .Select(c => new RtReference() { Path = c.Path })
-                .Union(ConfigurationRepository.Instance.References);
+                .Union(_context.Project.References);
 
             if (_context.Global.UseModules)
             {
                 var imports = assemblies.Where(c => c.GetCustomAttributes<TsImportAttribute>().Any())
                     .SelectMany(c => c.GetCustomAttributes<TsImportAttribute>())
                     .Select(c => new RtImport() { Target = c.ImportTarget, From = c.ImportSource, IsRequire = c.ImportRequire })
-                    .Union(ConfigurationRepository.Instance.Imports);
+                    .Union(_context.Project.Imports);
                 return new InspectedReferences(references, imports);
             }
             return new InspectedReferences(references);
@@ -108,7 +108,7 @@ namespace Reinforced.Typings.ReferencesInspection
         /// <returns>Full path to file containing exporting type</returns>
         public string GetPathForType(Type t, bool stripExtension = true)
         {
-            var fromConfiguration = ConfigurationRepository.Instance.GetPathForFile(t);
+            var fromConfiguration = _context.Project.GetPathForFile(t);
             if (!string.IsNullOrEmpty(fromConfiguration))
             {
                 if (_context.Global.UseModules && stripExtension)
@@ -122,8 +122,8 @@ namespace Reinforced.Typings.ReferencesInspection
                 return r;
             }
 
-            var ns = t.GetNamespace();
-            var tn = t.GetName().ToString();
+            var ns = _context.Project.Blueprint(t).GetNamespace();
+            var tn = _context.Project.Blueprint(t).GetName().ToString();
 
             var idx = tn.IndexOf('<');
             if (idx != -1) tn = tn.Substring(0, idx);
@@ -209,9 +209,10 @@ namespace Reinforced.Typings.ReferencesInspection
         }
 
 
-        private static Type ClarifyType(MemberInfo info)
+        private Type ClarifyType(MemberInfo info)
         {
-            var attr = ConfigurationRepository.Instance.ForMember(info);
+            
+            var attr = _context.Project.Blueprint(info.DeclaringType).ForMember(info);
             if (attr != null && attr.StrongType != null) return attr.StrongType;
             if (info is PropertyInfo) return ((PropertyInfo)info).PropertyType;
             if (info is FieldInfo) return ((FieldInfo)info).FieldType;
@@ -225,19 +226,19 @@ namespace Reinforced.Typings.ReferencesInspection
 
             var references = new HashSet<Type>();
             if (element._IsEnum()) return references;
+            var bp = _context.Project.Blueprint(element);
+            foreach (var fi in bp.GetExportedFields()) InspectTypeReferences(ClarifyType(fi), alltypes, references);
+            foreach (var pi in bp.GetExportedProperties()) InspectTypeReferences(ClarifyType(pi), alltypes, references);
 
-            foreach (var fi in element.GetExportedFields()) InspectTypeReferences(ClarifyType(fi), alltypes, references);
-            foreach (var pi in element.GetExportedProperties()) InspectTypeReferences(ClarifyType(pi), alltypes, references);
-
-            foreach (var mi in element.GetExportedMethods())
+            foreach (var mi in bp.GetExportedMethods())
             {
                 InspectTypeReferences(ClarifyType(mi), alltypes, references);
 
                 foreach (var parameterInfo in mi.GetParameters())
                 {
-                    if (parameterInfo.IsIgnored()) continue;
+                    if (bp.IsIgnored(parameterInfo)) continue;
 
-                    var paramAttr = ConfigurationRepository.Instance.ForMember(parameterInfo);
+                    var paramAttr = _context.Project.Blueprint(element).ForMember(parameterInfo);
                     if (paramAttr != null && paramAttr.StrongType != null)
                         InspectTypeReferences(paramAttr.StrongType, alltypes, references);
                     else InspectTypeReferences(parameterInfo.ParameterType, alltypes, references);

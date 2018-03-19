@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtInterface GenerateNode(Type element,RtInterface result, TypeResolver resolver)
         {
-            var tc = ConfigurationRepository.Instance.ForType<TsInterfaceAttribute>(element);
+            var tc = Context.Project.Blueprint(element).Attr<TsInterfaceAttribute>();
             if (tc == null) throw new ArgumentException("TsInterfaceAttribute is not present", "element");
             Export(result, element, resolver, tc);
             return result;

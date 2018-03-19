@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent;
+using Reinforced.Typings.Fluent.Interfaces;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings
@@ -12,16 +14,16 @@ namespace Reinforced.Typings
     /// </summary>
     public class ExportContext
     {
-        
+
         private Action<ConfigurationBuilder> _configurationMethod;
         private string _documentationFilePath;
         private bool _hierarchical;
         private bool _isLocked;
-       
+
         private Assembly[] _sourceAssemblies;
         private string _targetDirectory;
         private string _targetFile;
-        
+
         private IFilesOperations _fileOperations;
 
         /// <summary>
@@ -42,12 +44,13 @@ namespace Reinforced.Typings
         /// </summary>
         public ExportContext(IFilesOperations fileOperationsServiceOverride = null)
         {
-            Location = new Location();
             Warnings = new List<RtWarning>();
             _fileOperations = fileOperationsServiceOverride;
             if (_fileOperations == null) _fileOperations = new FilesOperations();
             _fileOperations.Context = this;
             Global = new GlobalParameters();
+            Location = new Location(this);
+            Project = new ProjectBlueprint();
         }
 
         /// <summary>
@@ -114,7 +117,7 @@ namespace Reinforced.Typings
             }
         }
 
-       
+
         /// <summary>
         ///     Path to assembly's XMLDOC file
         /// </summary>
@@ -140,7 +143,7 @@ namespace Reinforced.Typings
                 _configurationMethod = value;
             }
         }
-        
+
         /// <summary>
         ///     Documentation manager
         /// </summary>
@@ -153,6 +156,15 @@ namespace Reinforced.Typings
         public List<RtWarning> Warnings { get; private set; }
 
         #region Internals
+
+        internal TypeBlueprint CurrentBlueprint
+        {
+            get
+            {
+                if (Location._typesStack.Count == 0) return null;
+                return Location._typesStack.Peek();
+            }
+        }
 
         /// <summary>
         ///     There is a case when you are exporting base class as interface. It may lead to some unusual handling of generation,
@@ -184,8 +196,10 @@ namespace Reinforced.Typings
         /// </summary>
         public GeneratorManager Generators { get; internal set; }
 
+        internal ProjectBlueprint Project { get; private set; }
+
         #endregion
-        
+
 
     }
 }

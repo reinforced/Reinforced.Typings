@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
 
@@ -13,28 +12,17 @@ namespace Reinforced.Typings.Fluent
     public class EnumConfigurationBuilder<TEnum> : IEnumConfigurationBuidler
         where TEnum : struct
     {
-        private readonly ICollection<TsAddTypeImportAttribute> _imports = new List<TsAddTypeImportAttribute>();
-        private readonly ICollection<TsAddTypeReferenceAttribute> _references = new List<TsAddTypeReferenceAttribute>();
-
-        private readonly Dictionary<FieldInfo, EnumValueExportConfiguration> _valueExportConfigurations =
-            new Dictionary<FieldInfo, EnumValueExportConfiguration>();
-
-        internal EnumConfigurationBuilder()
+        internal readonly TypeBlueprint _blueprint;
+        internal EnumConfigurationBuilder(ExportContext context)
         {
-            AttributePrototype = new TsEnumAttribute();
-            Decorators = new List<TsDecoratorAttribute>();
-        }
-
-        private TsEnumAttribute AttributePrototype { get; set; }
-
-        Dictionary<FieldInfo, EnumValueExportConfiguration> IEnumConfigurationBuidler.ValueExportConfigurations
-        {
-            get { return _valueExportConfigurations; }
+            _blueprint = context.Project.Blueprint(typeof(TEnum));
+            Context = context;
+            if (_blueprint.TypeAttribute == null) _blueprint.TypeAttribute = new TsEnumAttribute();
         }
 
         TsEnumAttribute IAttributed<TsEnumAttribute>.AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.Attr<TsEnumAttribute>(); }
         }
 
         Type IEnumConfigurationBuidler.EnumType
@@ -42,23 +30,26 @@ namespace Reinforced.Typings.Fluent
             get { return typeof(TEnum); }
         }
 
+        /// <summary>
+        /// Export context
+        /// </summary>
+        public ExportContext Context { get; }
+
         ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
         {
-            get { return _references; }
+            get { return _blueprint.References; }
         }
 
         ICollection<TsAddTypeImportAttribute> IReferenceConfigurationBuilder.Imports
         {
-            get { return _imports; }
+            get { return _blueprint.Imports; }
         }
 
         string IReferenceConfigurationBuilder.PathToFile { get; set; }
 
-        private List<TsDecoratorAttribute> Decorators { get; set; }
-
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
-            get { return this.Decorators; }
+            get { return _blueprint.Decorators; }
         }
     }
 }

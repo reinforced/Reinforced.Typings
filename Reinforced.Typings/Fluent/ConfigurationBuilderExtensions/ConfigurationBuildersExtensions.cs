@@ -20,9 +20,7 @@ namespace Reinforced.Typings.Fluent
         {
             foreach (var propertyInfo in prop)
             {
-                var conf =
-                    (PropertyExportConfigurationBuilder)
-                    tc.MembersConfiguration.GetOrCreate(propertyInfo, () => new PropertyExportConfigurationBuilder(propertyInfo));
+                var conf = new PropertyExportConfigurationBuilder(propertyInfo, tc.Context.Project.Blueprint(tc.Type));
                 if (configuration == null) continue;
                 try
                 {
@@ -42,9 +40,7 @@ namespace Reinforced.Typings.Fluent
         {
             foreach (var methodInfo in methds)
             {
-                var conf =
-                    (MethodConfigurationBuilder)
-                    tc.MembersConfiguration.GetOrCreate(methodInfo, () => new MethodConfigurationBuilder(methodInfo));
+                var conf = new MethodConfigurationBuilder(methodInfo, tc.Context.Project.Blueprint(tc.Type));
                 if (configuration == null) continue;
                 try
                 {
@@ -81,9 +77,7 @@ namespace Reinforced.Typings.Fluent
                     if (call.Method.IsGenericMethod &&
                         call.Method.GetGenericMethodDefinition() == Ts.ParametrizedParameterMethod)
                     {
-                        var pcb =
-                            (ParameterConfigurationBuilder)
-                            conf.ParametersConfiguration.GetOrCreate(pi, () => new ParameterConfigurationBuilder(pi));
+                        var pcb = new ParameterConfigurationBuilder(pi, conf.Context.Project.Blueprint(conf.Type));
 
                         var parsed = false;
                         var arg = call.Arguments[0] as LambdaExpression;

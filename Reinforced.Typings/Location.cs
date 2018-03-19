@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
 
 namespace Reinforced.Typings
@@ -13,6 +10,7 @@ namespace Reinforced.Typings
     /// </summary>
     public class Location
     {
+        private ExportContext _exContext;
         /// <summary>
         /// Current Class 
         /// </summary>
@@ -41,7 +39,7 @@ namespace Reinforced.Typings
             get
             {
                 if (_typesStack.Count == 0) return null;
-                return _typesStack.Peek();
+                return _typesStack.Peek().Type;
             }
         }
 
@@ -69,7 +67,12 @@ namespace Reinforced.Typings
             if (location is RtNamespace) CurrentNamespace = null;
         }
 
-        private readonly Stack<Type> _typesStack = new Stack<Type>();
+        internal Stack<TypeBlueprint> _typesStack = new Stack<TypeBlueprint>();
+
+        internal Location(ExportContext exContext)
+        {
+            _exContext = exContext;
+        }
 
         /// <summary>
         /// Sets currently exported type
@@ -77,7 +80,7 @@ namespace Reinforced.Typings
         /// <param name="t"></param>
         public void SetCurrentType(Type t)
         {
-            _typesStack.Push(t);
+            _typesStack.Push(_exContext.Project.Blueprint(t));
         }
 
         /// <summary>

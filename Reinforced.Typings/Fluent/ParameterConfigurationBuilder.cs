@@ -11,19 +11,19 @@ namespace Reinforced.Typings.Fluent
     public class ParameterConfigurationBuilder : IMemberExportConfiguration<TsParameterAttribute,ParameterInfo>, IIgnorable,
         IDecoratorsAggregator, ISupportsInferring<ParameterInfo>
     {
-        internal ParameterConfigurationBuilder(ParameterInfo member)
+        private readonly TypeBlueprint _blueprint;
+        internal ParameterConfigurationBuilder(ParameterInfo member, TypeBlueprint blueprint)
         {
             Member = member;
-            AttributePrototype = new TsParameterAttribute();
-            Decorators = new List<TsDecoratorAttribute>();
+            _blueprint = blueprint;
+            _blueprint.ForMember(Member, true);
         }
 
-        private TsParameterAttribute AttributePrototype { get; set; }
-        private List<TsDecoratorAttribute> Decorators { get; set; }
+        private TsParameterAttribute AttributePrototype { get { return _blueprint.ForMember(Member, true); } }
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
-            get { return Decorators; }
+            get { return _blueprint.DecoratorsListFor(Member); }
         }
 
         TsParameterAttribute IAttributed<TsParameterAttribute>.AttributePrototype
@@ -31,7 +31,15 @@ namespace Reinforced.Typings.Fluent
             get { return AttributePrototype; }
         }
 
-        bool IIgnorable.Ignore { get; set; }
+        bool IIgnorable.Ignore
+        {
+            get { return _blueprint.IsIgnored(Member); }
+            set
+            {
+                if (value) _blueprint.Ignored.Add(Member);
+                else if (_blueprint.Ignored.Contains(Member)) _blueprint.Ignored.Remove(Member);
+            }
+        }
 
         /// <summary>
         /// Exporting member

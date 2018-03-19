@@ -6,16 +6,23 @@ namespace Reinforced.Typings.Fluent.Generic
 {
     class GenericInterfaceConfigurationBuilder : GenericConfigurationBuilderBase, IInterfaceConfigurationBuilder
     {
-        public GenericInterfaceConfigurationBuilder(Type t) : base(t)
+        public GenericInterfaceConfigurationBuilder(TypeBlueprint t, ExportContext context) : base(t, context)
         {
-            AttributePrototype = new TsInterfaceAttribute
-            {
-                AutoExportProperties = false,
-                AutoExportMethods = false
-            };
+            if (_blueprint.TypeAttribute == null)
+                _blueprint.TypeAttribute = new TsInterfaceAttribute
+                {
+                    AutoExportProperties = false,
+                    AutoExportMethods = false
+                };
         }
 
-        public TsInterfaceAttribute AttributePrototype { get; private set; }
+        public TsInterfaceAttribute AttributePrototype
+        {
+            get
+            {
+                return _blueprint.Attr<TsInterfaceAttribute>();
+            }
+        }
 
         public override double MemberOrder
         {

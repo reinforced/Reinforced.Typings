@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return null;
+            if (Context.CurrentBlueprint.IsIgnored(element)) return null;
 
             string name;
             RtTypeName type;
@@ -49,7 +49,7 @@ namespace Reinforced.Typings.Generators
                 }
                 result.Documentation = jsdoc;
             }
-            result.Order = element.GetOrder();
+            result.Order = Context.CurrentBlueprint.GetOrder(element);
 
             result.AccessModifier = element.GetModifier();
             if (Context.SpecialCase) result.AccessModifier = AccessModifier.Public;
@@ -59,17 +59,17 @@ namespace Reinforced.Typings.Generators
             var p = element.GetParameters();
             foreach (var param in p)
             {
-                if (param.IsIgnored()) continue;
+                if (Context.CurrentBlueprint.IsIgnored(param)) continue;
                 var generator = Context.Generators.GeneratorFor(param, Context);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }
-            var fa = ConfigurationRepository.Instance.ForMember(element);
+            var fa = Context.CurrentBlueprint.ForMember(element);
             if (fa != null && !string.IsNullOrEmpty(fa.Implementation))
             {
                 result.Body = new RtRaw(fa.Implementation);
             }
-            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
+            AddDecorators(result, Context.CurrentBlueprint.DecoratorsFor(element));
             return result;
         }
 
@@ -84,7 +84,7 @@ namespace Reinforced.Typings.Generators
         {
             name = element.Name;
             bool isNameOverridden = false;
-            var fa = ConfigurationRepository.Instance.ForMember(element);
+            var fa = Context.CurrentBlueprint.ForMember(element);
 
             if (fa != null)
             {
@@ -107,8 +107,8 @@ namespace Reinforced.Typings.Generators
             if (!isNameOverridden)
             {
                 name = Context.ConditionallyConvertMethodNameToCamelCase(name);
-                name = element.CamelCaseFromAttribute(name);
-                name = element.PascalCaseFromAttribute(name);
+                name = Context.CurrentBlueprint.CamelCaseFromAttribute(element, name);
+                name = Context.CurrentBlueprint.PascalCaseFromAttribute(element, name);
             }
             if (element.IsGenericMethod)
             {

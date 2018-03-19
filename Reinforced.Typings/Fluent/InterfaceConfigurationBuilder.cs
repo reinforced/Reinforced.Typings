@@ -11,20 +11,22 @@ namespace Reinforced.Typings.Fluent
     public class InterfaceConfigurationBuilder<TInterface> : TypeConfigurationBuilder<TInterface>,
         IInterfaceConfigurationBuilder
     {
-        internal InterfaceConfigurationBuilder()
+        public InterfaceConfigurationBuilder(ExportContext context) : base(context)
         {
-            AttributePrototype = new TsInterfaceAttribute
-            {
-                AutoExportProperties = false,
-                AutoExportMethods = false
-            };
+            if (_blueprint.TypeAttribute == null)
+                _blueprint.TypeAttribute = new TsInterfaceAttribute
+                {
+                    AutoExportProperties = false,
+                    AutoExportMethods = false
+                };
         }
-
-        private TsInterfaceAttribute AttributePrototype { get; set; }
-
-        TsInterfaceAttribute IAttributed<TsInterfaceAttribute>.AttributePrototype
+        
+        /// <summary>
+        /// Interface attribute prototype
+        /// </summary>
+        public TsInterfaceAttribute AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.Attr<TsInterfaceAttribute>(); }
         }
 
         /// <summary>

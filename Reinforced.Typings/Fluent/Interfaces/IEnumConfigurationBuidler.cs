@@ -17,8 +17,9 @@ namespace Reinforced.Typings.Fluent.Interfaces
         Type EnumType { get; }
 
         /// <summary>
-        ///     Configurations for exported particular enumeration values
+        /// Export context
         /// </summary>
-        Dictionary<FieldInfo, EnumValueExportConfiguration> ValueExportConfigurations { get; }
+        ExportContext Context { get; }
+        
     }
 }

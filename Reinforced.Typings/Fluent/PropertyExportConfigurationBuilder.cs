@@ -11,27 +11,36 @@ namespace Reinforced.Typings.Fluent
     public class PropertyExportConfigurationBuilder : IMemberExportConfiguration<TsPropertyAttribute, MemberInfo>, IIgnorable,
         IDecoratorsAggregator, IOrderableMember, ISupportsInferring<MemberInfo>
     {
-        internal PropertyExportConfigurationBuilder(MemberInfo member)
+        private readonly TypeBlueprint _blueprint;
+        internal PropertyExportConfigurationBuilder(MemberInfo member, TypeBlueprint blueprint)
         {
             Member = member;
-            AttributePrototype = member.RetrieveOrCreateCustomAttribute<TsPropertyAttribute>();
-            Decorators = new List<TsDecoratorAttribute>();
+            _blueprint = blueprint;
+            _blueprint.ForMember(Member, true);
         }
-
-        private TsPropertyAttribute AttributePrototype { get; set; }
-        private List<TsDecoratorAttribute> Decorators { get; set; }
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
-            get { return Decorators; }
+            get { return _blueprint.DecoratorsListFor(Member); }
         }
 
-        TsPropertyAttribute IAttributed<TsPropertyAttribute>.AttributePrototype
+        /// <summary>
+        /// Property attribute prototype
+        /// </summary>
+        public TsPropertyAttribute AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.ForMember<TsPropertyAttribute>(Member, true); }
         }
 
-        bool IIgnorable.Ignore { get; set; }
+        bool IIgnorable.Ignore
+        {
+            get { return _blueprint.IsIgnored(Member); }
+            set
+            {
+                if (value) _blueprint.Ignored.Add(Member);
+                else if (_blueprint.Ignored.Contains(Member)) _blueprint.Ignored.Remove(Member);
+            }
+        }
 
         double IOrderableMember.MemberOrder
         {

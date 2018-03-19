@@ -33,8 +33,16 @@ namespace Reinforced.Typings.Generators
             {
                 TNode currentNode = new TNode();
                 Context.Location.SetLocation(currentNode);
+                if (element is Type)
+                {
+                    Context.Location.SetCurrentType((Type)(object)element);
+                }
                 var result = GenerateNode(element, currentNode, resolver);
                 Context.Location.ResetLocation(currentNode);
+                if (element is Type)
+                {
+                    Context.Location.ResetCurrentType();
+                }
                 return result;
             }
             catch (Exception ex)
@@ -42,7 +50,7 @@ namespace Reinforced.Typings.Generators
                 ErrorMessages.RTE0004_GeneratorError.Throw(GetType().FullName, ex.Message);
                 return null; // unreacheable
             }
-            
+
         }
 
         /// <summary>

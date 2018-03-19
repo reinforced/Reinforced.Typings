@@ -7,31 +7,29 @@ namespace Reinforced.Typings.Fluent.Generic
 {
     class GenericClassConfigurationBuilder : GenericConfigurationBuilderBase, IClassConfigurationBuilder
     {
-        public GenericClassConfigurationBuilder(Type t) : base(t)
+        public GenericClassConfigurationBuilder(TypeBlueprint t, ExportContext context) : base(t, context)
         {
-            AttributePrototype = new TsClassAttribute
-            {
-                AutoExportConstructors = false,
-                AutoExportFields = false,
-                AutoExportProperties = false,
-                AutoExportMethods = false
-            };
-            Decorators = new List<TsDecoratorAttribute>();
+            if (_blueprint.TypeAttribute == null)
+                _blueprint.TypeAttribute = new TsClassAttribute
+                {
+                    AutoExportConstructors = false,
+                    AutoExportFields = false,
+                    AutoExportProperties = false,
+                    AutoExportMethods = false
+                };
         }
 
-
-        private TsClassAttribute AttributePrototype { get; set; }
-
-        private List<TsDecoratorAttribute> Decorators { get; set; }
-
-        TsClassAttribute IAttributed<TsClassAttribute>.AttributePrototype
+        /// <summary>
+        /// Class attribute prototype
+        /// </summary>
+        public TsClassAttribute AttributePrototype
         {
             get { return AttributePrototype; }
         }
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
-            get { return Decorators; }
+            get { return _blueprint.Decorators; }
         }
 
         public override double MemberOrder

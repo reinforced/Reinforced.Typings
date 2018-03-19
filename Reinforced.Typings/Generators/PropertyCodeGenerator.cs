@@ -21,9 +21,9 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtField GenerateNode(MemberInfo element, RtField result, TypeResolver resolver)
         {
-            if (element.IsIgnored()) return null;
+            if (Context.CurrentBlueprint.IsIgnored(element)) return null;
             result.IsStatic = element.IsStatic();
-            result.Order = element.GetOrder();
+            result.Order = Context.CurrentBlueprint.GetOrder(element);
 
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
@@ -36,7 +36,7 @@ namespace Reinforced.Typings.Generators
             RtTypeName type = null;
             var propName = new RtIdentifier(element.Name);
             bool isNameOverridden = false;
-            var tp = ConfigurationRepository.Instance.ForMember<TsPropertyAttribute>(element);
+            var tp = Context.CurrentBlueprint.ForMember<TsPropertyAttribute>(element);
 
             if (tp != null)
             {
@@ -77,8 +77,8 @@ namespace Reinforced.Typings.Generators
                     propName.IdentifierName =
                         Context.ConditionallyConvertPropertyNameToCamelCase(propName.IdentifierName);
                 }
-                propName.IdentifierName = element.CamelCaseFromAttribute(propName.IdentifierName);
-                propName.IdentifierName = element.PascalCaseFromAttribute(propName.IdentifierName);
+                propName.IdentifierName = Context.CurrentBlueprint.CamelCaseFromAttribute(element, propName.IdentifierName);
+                propName.IdentifierName = Context.CurrentBlueprint.PascalCaseFromAttribute(element, propName.IdentifierName);
             }
 
             if (this.Context.Location.CurrentClass != null)
@@ -88,7 +88,7 @@ namespace Reinforced.Typings.Generators
             result.Identifier = propName;
             result.AccessModifier = Context.SpecialCase ? AccessModifier.Public : element.GetModifier();
             result.Type = type;
-            AddDecorators(result, ConfigurationRepository.Instance.DecoratorsFor(element));
+            AddDecorators(result, Context.CurrentBlueprint.DecoratorsFor(element));
             return result;
         }
         private static readonly IFormatProvider JsNumberFormat = new NumberFormatInfo() { NumberDecimalSeparator = "." };
@@ -145,7 +145,8 @@ namespace Reinforced.Typings.Generators
                     if (val == null) result.InitializationExpression = "null";
                     else
                     {
-                        if (ConfigurationRepository.Instance.AttributesForType.ContainsKey(memberType))
+                        var bp = Context.Project.Blueprint(memberType, false);
+                        if (bp != null)
                         {
                             var tn = resolver.ResolveTypeName(memberType);
                             var name = Enum.GetName(memberType, val);
