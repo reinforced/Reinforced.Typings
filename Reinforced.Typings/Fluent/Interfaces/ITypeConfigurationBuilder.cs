@@ -41,5 +41,11 @@ namespace Reinforced.Typings.Fluent.Interfaces
         /// Flatten limiter
         /// </summary>
         Type FlattenLimiter { get; }
+
+        /// <summary>
+        /// Returns true, when hierarchy can be flatten. False otherwise
+        /// </summary>
+        /// <returns></returns>
+        bool CanFlatten();
     }
 }

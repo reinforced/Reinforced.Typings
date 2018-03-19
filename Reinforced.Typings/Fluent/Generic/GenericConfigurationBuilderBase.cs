@@ -39,6 +39,15 @@ namespace Reinforced.Typings.Fluent.Generic
         public abstract Type FlattenLimiter { get; }
 
         /// <summary>
+        /// Returns true, when hierarchy can be flatten. False otherwise
+        /// </summary>
+        /// <returns></returns>
+        public bool CanFlatten()
+        {
+            return _blueprint.CanFlatten();
+        }
+
+        /// <summary>
         /// Export context
         /// </summary>
         public ExportContext Context { get; }

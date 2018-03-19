@@ -33,15 +33,21 @@ namespace Reinforced.Typings
             InitFromAttributes();
         }
 
+        private bool _flattenTouched = false;
+        internal void NotifyFlattenTouched()
+        {
+            _flattenTouched = true;
+        }
+
         /// <summary>
         /// Path to file that blueprinted type will be exported to
         /// </summary>
-        public string PathToFile { get; set; }
+        public string PathToFile { get; internal set; }
 
         private void InitFromAttributes()
         {
             TypeAttribute = Type.GetCustomAttribute<TsEnumAttribute>(false)
-                            ?? (TsDeclarationAttributeBase)Type.GetCustomAttribute<TsInterfaceAttribute>(false)
+                            ?? Type.GetCustomAttribute<TsInterfaceAttribute>(false)
                             ?? (TsDeclarationAttributeBase)Type.GetCustomAttribute<TsClassAttribute>(false);
         }
 
@@ -54,11 +60,14 @@ namespace Reinforced.Typings
         /// <summary>
         /// Attribute for exporting class
         /// </summary>
-        public TsDeclarationAttributeBase TypeAttribute { get; set; }
+        public TsDeclarationAttributeBase TypeAttribute { get; internal set; }
 
         private readonly HashSet<object> _ignored = new HashSet<object>();
 
-        public HashSet<object> Ignored
+        /// <summary>
+        /// Set of ignored members
+        /// </summary>
+        internal HashSet<object> Ignored
         {
             get { return _ignored; }
             private set { }
@@ -106,6 +115,12 @@ namespace Reinforced.Typings
         /// </summary>
         public Dictionary<ParameterInfo, List<TsDecoratorAttribute>> DecoratorsForParameters { get; private set; }
 
+        /// <summary>
+        /// Retrieves configuration attribute for type member
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public TsTypedMemberAttributeBase ForMember(MemberInfo member, bool create = false)
         {
             if (member is PropertyInfo) return ForMember((PropertyInfo)member, create);
@@ -114,6 +129,12 @@ namespace Reinforced.Typings
             return null;
         }
 
+        /// <summary>
+        /// Retrieves configuration attribute for type member
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public T ForMember<T>(MemberInfo member, bool create = false) where T : TsTypedMemberAttributeBase
         {
             if (member is PropertyInfo) return (T)(object)ForMember((PropertyInfo)member, create);
@@ -123,6 +144,12 @@ namespace Reinforced.Typings
         }
 
 
+        /// <summary>
+        /// Retrieves configuration attribute for method
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public TsFunctionAttribute ForMember(MethodInfo member, bool create = false)
         {
             var v = _attributesForMethods.GetOr(member, () => member.GetCustomAttribute<TsFunctionAttribute>(false));
@@ -133,7 +160,12 @@ namespace Reinforced.Typings
             return v;
         }
 
-        
+        /// <summary>
+        /// Retrieves configuration attribute for method parameter
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public TsParameterAttribute ForMember(ParameterInfo member, bool create = false)
         {
             var v = _attributesForParameters.GetOr(member, () => member.GetCustomAttribute<TsParameterAttribute>(false));
@@ -144,6 +176,12 @@ namespace Reinforced.Typings
             return v;
         }
 
+        /// <summary>
+        /// Retrieves configuration attribute for property
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public TsPropertyAttribute ForMember(PropertyInfo member, bool create = false)
         {
             var v = _attributesForProperties.GetOr(member, () => member.GetCustomAttribute<TsPropertyAttribute>(false));
@@ -154,6 +192,12 @@ namespace Reinforced.Typings
             return v;
         }
 
+        /// <summary>
+        /// Retrieves configuration attribute for field
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public TsPropertyAttribute ForMember(FieldInfo member, bool create = false)
         {
             var v = _attributesForFields.GetOr(member, () => member.GetCustomAttribute<TsPropertyAttribute>(false));
@@ -164,11 +208,22 @@ namespace Reinforced.Typings
             return v;
         }
 
+        /// <summary>
+        /// Retrieves configuration attribute for constructor
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <returns>Configuration attribute</returns>
         public TsBaseParamAttribute ForMember(ConstructorInfo member)
         {
             return member.GetCustomAttribute<TsBaseParamAttribute>(false);
         }
 
+        /// <summary>
+        /// Retrieves configuration attribute for enum value
+        /// </summary>
+        /// <param name="member">Type member</param>
+        /// <param name="create">When true, attribute will be created if not exists</param>
+        /// <returns>Configuration attribute</returns>
         public TsValueAttribute ForEnumValue(FieldInfo member, bool create = false)
         {
             var v = _attributesForEnumValues.GetOr(member, () => member.GetCustomAttribute<TsValueAttribute>(false));
@@ -179,6 +234,10 @@ namespace Reinforced.Typings
             return v;
         }
 
+        /// <summary>
+        /// Retrieves type's exported fields
+        /// </summary>
+        /// <returns>Array of exported fields</returns>
         public FieldInfo[] GetExportedFields()
         {
             var t = Type;
@@ -186,7 +245,7 @@ namespace Reinforced.Typings
             if (t._IsEnum()) return new FieldInfo[0];
 
 
-            var typeAttr = this.TypeAttribute;
+            var typeAttr = TypeAttribute;
             var aexpSwith = typeAttr as IAutoexportSwitchAttribute;
 
             if (aexpSwith != null)
@@ -202,13 +261,17 @@ namespace Reinforced.Typings
             return new FieldInfo[0];
         }
 
+        /// <summary>
+        /// Retrieves type's exported properties
+        /// </summary>
+        /// <returns>Array of exported properties</returns>
         public PropertyInfo[] GetExportedProperties()
         {
-            var t = this.Type;
+            var t = Type;
             if (IsIgnored(t)) return new PropertyInfo[0];
             if (t._IsEnum()) return new PropertyInfo[0];
 
-            var typeAttr = this.TypeAttribute;
+            var typeAttr = TypeAttribute;
             var aexpSwith = typeAttr as IAutoexportSwitchAttribute;
 
             if (aexpSwith != null)
@@ -224,13 +287,17 @@ namespace Reinforced.Typings
             return new PropertyInfo[0];
         }
 
+        /// <summary>
+        /// Retrieves type's exported methods
+        /// </summary>
+        /// <returns>Array of exported methods</returns>
         public MethodInfo[] GetExportedMethods()
         {
             var t = Type;
             if (IsIgnored(t)) return new MethodInfo[0];
             if (t._IsEnum()) return new MethodInfo[0];
 
-            var typeAttr = this.TypeAttribute;
+            var typeAttr = TypeAttribute;
             var aexpSwith = typeAttr as IAutoexportSwitchAttribute;
 
             if (aexpSwith != null)
@@ -248,31 +315,55 @@ namespace Reinforced.Typings
 
         #region Ignorance tracking methods
 
+        /// <summary>
+        /// Checks whether type is ignored during export
+        /// </summary>
+        /// <returns>True, when type is ignored. False otherwise</returns>
         public bool IsIgnored()
         {
             return TypeAttribute == null;
         }
 
+        /// <summary>
+        /// Checks whether constructor is ignored during export
+        /// </summary>
+        /// <returns>True, when constructor is ignored. False otherwise</returns>
         public bool IsIgnored(ConstructorInfo member)
         {
             return (member.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
         }
 
+        /// <summary>
+        /// Checks whether field is ignored during export
+        /// </summary>
+        /// <returns>True, when field is ignored. False otherwise</returns>
         public bool IsIgnored(FieldInfo member)
         {
             return _ignored.Contains(member) || (member.GetCustomAttribute<TsIgnoreAttribute>() != null);
         }
 
+        /// <summary>
+        /// Checks whether property is ignored during export
+        /// </summary>
+        /// <returns>True, when property is ignored. False otherwise</returns>
         public bool IsIgnored(PropertyInfo member)
         {
             return _ignored.Contains(member) || (member.GetCustomAttribute<TsIgnoreAttribute>() != null);
         }
 
+        /// <summary>
+        /// Checks whether parameter is ignored during export
+        /// </summary>
+        /// <returns>True, when parameter is ignored. False otherwise</returns>
         public bool IsIgnored(ParameterInfo member)
         {
             return _ignored.Contains(member) || (member.GetCustomAttribute<TsIgnoreAttribute>() != null);
         }
 
+        /// <summary>
+        /// Checks whether type member is ignored during export
+        /// </summary>
+        /// <returns>True, when type member is ignored. False otherwise</returns>
         public bool IsIgnored(MemberInfo member)
         {
 #if NETCORE1
@@ -285,6 +376,10 @@ namespace Reinforced.Typings
             return false;
         }
 
+        /// <summary>
+        /// Checks whether method is ignored during export
+        /// </summary>
+        /// <returns>True, when method is ignored. False otherwise</returns>
         public bool IsIgnored(MethodInfo member)
         {
             return _ignored.Contains(member) || (member.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
@@ -292,6 +387,23 @@ namespace Reinforced.Typings
 
         #endregion
 
+        
+        internal List<TsDecoratorAttribute> DecoratorsListFor(MemberInfo t)
+        {
+            return DecoratorsForMembers.GetOrCreate(t);
+        }
+
+        internal List<TsDecoratorAttribute> DecoratorsListFor(ParameterInfo t)
+        {
+            return DecoratorsForParameters.GetOrCreate(t);
+        }
+
+       
+
+        /// <summary>
+        /// Retrieves decorators for type
+        /// </summary>
+        /// <returns>Set of type's decorators</returns>
         public IEnumerable<TsDecoratorAttribute> GetDecorators()
         {
             var inlineDecorators = Type.GetCustomAttributes<TsDecoratorAttribute>();
@@ -299,25 +411,11 @@ namespace Reinforced.Typings
             return inlineDecorators.Union(Decorators);
         }
 
-        public List<TsDecoratorAttribute> DecoratorsListFor(MemberInfo t)
-        {
-            return DecoratorsForMembers.GetOrCreate(t);
-        }
-
-        public List<TsDecoratorAttribute> DecoratorsListFor(ParameterInfo t)
-        {
-            return DecoratorsForParameters.GetOrCreate(t);
-        }
-
-        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(MemberInfo t)
-        {
-            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
-            var fluentDecorators = DecoratorsForMembers.ContainsKey(t) ? DecoratorsForMembers[t] : null;
-
-            if (fluentDecorators == null) return inlineDecorators;
-            return inlineDecorators.Union(fluentDecorators);
-        }
-
+        /// <summary>
+        /// Retrieves set of decorators for method parameter
+        /// </summary>
+        /// <param name="t">Method's parameter</param>
+        /// <returns>Set of decorators</returns>
         public IEnumerable<TsDecoratorAttribute> DecoratorsFor(ParameterInfo t)
         {
             var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
@@ -327,13 +425,29 @@ namespace Reinforced.Typings
             return inlineDecorators.Union(fluentDecorators);
         }
 
+        /// <summary>
+        /// Retrieves set of decorators for type's member
+        /// </summary>
+        /// <param name="t">Member's parameter</param>
+        /// <returns>Set of decorators</returns>
+        public IEnumerable<TsDecoratorAttribute> DecoratorsFor(MemberInfo t)
+        {
+            var inlineDecorators = t.GetCustomAttributes<TsDecoratorAttribute>();
+            var fluentDecorators = DecoratorsForMembers.ContainsKey(t) ? DecoratorsForMembers[t] : null;
+
+            if (fluentDecorators == null) return inlineDecorators;
+            return inlineDecorators.Union(fluentDecorators);
+        }
+
+        /// <summary>
+        /// Retrieves type's configuration attribute
+        /// </summary>
+        /// <typeparam name="T">Attribute type. Subclass of <see cref="TsDeclarationAttributeBase"/></typeparam>
+        /// <returns>Configuration attribute. May be null</returns>
         public T Attr<T>() where T : TsDeclarationAttributeBase
         {
             return TypeAttribute as T;
         }
-
-
-
 
         /// <summary>
         ///     Conditionally (based on attribute setting) turns member name to camelCase
@@ -363,6 +477,11 @@ namespace Reinforced.Typings
             return regularName;
         }
 
+        /// <summary>
+        /// Converts string to camelCase
+        /// </summary>
+        /// <param name="s">Source string in any case</param>
+        /// <returns>Resulting string in camelCase</returns>
         public static string ConvertToCamelCase(string s)
         {
             if (!char.IsLetter(s[0])) return s;
@@ -583,8 +702,8 @@ namespace Reinforced.Typings
             var tc = Attr<TsClassAttribute>();
             var ti = Attr<TsInterfaceAttribute>();
             if (tc == null && ti == null) return t.Namespace;
-            var nsFromAttr = tc != null ? tc.Namespace : ti != null ? ti.Namespace : t.Namespace;
-            var includeNamespace = tc != null ? tc.IncludeNamespace : ti != null ? ti.IncludeNamespace : true;
+            var nsFromAttr = tc != null ? tc.Namespace : ti.Namespace;
+            var includeNamespace = tc != null ? tc.IncludeNamespace : ti.IncludeNamespace;
 
             if (!includeNamespace) return distinguishAutoTypes ? "-" : string.Empty;
             if (!string.IsNullOrEmpty(nsFromAttr)) return nsFromAttr;
@@ -611,11 +730,24 @@ namespace Reinforced.Typings
                     if (ts != null) return ts;
                 }
             }
-
-
             return null;
         }
 
+
+        /// <summary>
+        /// Gets whether type hierarchy can be flatten
+        /// </summary>
+        /// <returns></returns>
+        public bool CanFlatten()
+        {
+            if (_flattenTouched) return false;
+            if (_attributesForProperties.Count > 0) return false;
+            if (_attributesForParameters.Count > 0) return false;
+            if (_attributesForFields.Count > 0) return false;
+            if (_attributesForMethods.Count > 0) return false;
+            if (_attributesForEnumValues.Count > 0) return false;
+            return true;
+        }
         
     }
 }

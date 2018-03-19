@@ -4,11 +4,13 @@ using System.Reflection;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
-using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings
 {
-    class ProjectBlueprint
+    /// <summary>
+    /// Class that holds information of all exported types' parameters and helper methods for it
+    /// </summary>
+    public class ProjectBlueprint
     {
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
         public ProjectBlueprint()
@@ -23,6 +25,12 @@ namespace Reinforced.Typings
         }
 
         private readonly Dictionary<Type, TypeBlueprint> _blueprints = new Dictionary<Type, TypeBlueprint>();
+
+        /// <summary>
+        /// Checks whether type is ignored for export
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public bool IsIgnored(Type t)
         {
             return Blueprint(t).IsIgnored();
@@ -32,7 +40,13 @@ namespace Reinforced.Typings
             get { return _blueprints.Keys; }
         }
 
-        internal TypeBlueprint Blueprint(Type t, bool create = true)
+        /// <summary>
+        /// Returns blueprint for type
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <param name="create">True to create blueprint if it does not exist</param>
+        /// <returns>Type blueprint</returns>
+        public TypeBlueprint Blueprint(Type t, bool create = true)
         {
             if (t == null) return null;
             if (create) return _blueprints.GetOrCreate(t, () => new TypeBlueprint(t));
@@ -40,7 +54,7 @@ namespace Reinforced.Typings
             return _blueprints[t];
         }
 
-        public void AddFileSeparationSettings(Type type)
+        internal void AddFileSeparationSettings(Type type)
         {
             var bp = Blueprint(type);
 
@@ -60,7 +74,7 @@ namespace Reinforced.Typings
 
         }
 
-        public void TrackTypeFile(Type t, string fileName)
+        internal void TrackTypeFile(Type t, string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return;
             var typesPerFile = TypesInFiles.GetOrCreate(fileName);
@@ -68,19 +82,40 @@ namespace Reinforced.Typings
             PathesToFiles[t] = fileName;
         }
 
-        public string GetPathForFile(Type t)
+        internal string GetPathForFile(Type t)
         {
             if (PathesToFiles.ContainsKey(t)) return PathesToFiles[t];
             return null;
         }
 
+        /// <summary>
+        /// Dictionary holds pathes to files
+        /// </summary>
         public Dictionary<Type, string> PathesToFiles { get; private set; }
+
+        /// <summary>
+        /// Dictionary that holds types within each file
+        /// </summary>
         public Dictionary<string, List<Type>> TypesInFiles { get; private set; }
+
+        /// <summary>
+        /// Additional pathes to look up documentation for
+        /// </summary>
         public List<string> AdditionalDocumentationPathes { get; private set; }
+
+        /// <summary>
+        /// References that will be added to each exported file
+        /// </summary>
         public List<RtReference> References { get; private set; }
+
+        /// <summary>
+        /// Imports that will be added to each exported file
+        /// </summary>
         public List<RtImport> Imports { get; private set; }
-        public Dictionary<Type, RtTypeName> GlobalSubstitutions { get; private set; }
-        public Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GlobalGenericSubstitutions { get; private set; }
+
+        
+        internal Dictionary<Type, RtTypeName> GlobalSubstitutions { get; private set; }
+        internal Dictionary<Type, Func<Type, TypeResolver, RtTypeName>> GlobalGenericSubstitutions { get; private set; }
 
         /// <summary>
         /// Obtains substitution for type

@@ -55,6 +55,15 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         public abstract Type FlattenLimiter { get; }
 
+        /// <summary>
+        /// Returns true, when hierarchy can be flatten. False otherwise
+        /// </summary>
+        /// <returns></returns>
+        public bool CanFlatten()
+        {
+            return _blueprint.CanFlatten();
+        }
+
         ICollection<TsAddTypeReferenceAttribute> IReferenceConfigurationBuilder.References
         {
             get { return _blueprint.References; }

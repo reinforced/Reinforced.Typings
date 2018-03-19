@@ -64,7 +64,7 @@ namespace Reinforced.Typings.Fluent
             var prop = tc.Type._GetProperty(propertyName);
             if (prop == null)
             {
-                ErrorMessages.RTE0013_InvalidProperty.Throw(propertyName, tc.Type.FullName);
+                ErrorMessages.RTE0014_InvalidProperty.Throw(propertyName, tc.Type.FullName);
             }
             return tc.WithProperties(new[] { prop }, configuration);
         }

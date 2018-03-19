@@ -64,7 +64,7 @@ namespace Reinforced.Typings.Fluent
             var field = tc.Type._GetField(fieldName);
             if (field == null)
             {
-                ErrorMessages.RTE0012_InvalidField.Throw(fieldName, tc.Type.FullName);
+                ErrorMessages.RTE0013_InvalidField.Throw(fieldName, tc.Type.FullName);
             }
             return tc.WithFields(new[] { field }, configuration);
         }

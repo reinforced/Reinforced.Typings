@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent.Interfaces;
 
 // ReSharper disable CheckNamespace
@@ -144,6 +145,36 @@ namespace Reinforced.Typings.Fluent
         public static T Decorator<T>(this T conf, string decorator, double order = 0) where T : IDecoratorsAggregator
         {
             conf.Decorators.Add(new TsDecoratorAttribute(decorator, order));
+            return conf;
+        }
+
+        /// <summary>
+        ///     Configures exporter to flatten inheritance hierarchy for supplied type
+        /// </summary>
+        /// <param name="conf">Configuration</param>
+        /// <param name="flatten">True to flatter hierarchy, False to don't</param>
+        /// <param name="until">
+        /// All classes "deeper" than specified (including) will not be considered as exportable members donors. 
+        /// By default this parameter is equal to typeof(object)
+        /// </param>
+        public static T FlattenHierarchy<T>(this T conf, Type until = null)
+            where T : IAttributed<TsDeclarationAttributeBase>, ITypeConfigurationBuilder
+        {
+            if (!conf.AttributePrototype.FlattenHierarchy)
+            {
+                if (!conf.CanFlatten())
+                {
+                    ErrorMessages.RTE0015_CannotFlatten.Throw(conf.Type.FullName);
+                }
+
+                conf.Context.Project.Blueprint(conf.Type).NotifyFlattenTouched();
+            }
+
+            conf.AttributePrototype.FlattenHierarchy = true;
+            if (until != null)
+            {
+                conf.AttributePrototype.FlattenLimiter = until;
+            }
             return conf;
         }
     }
