@@ -33,6 +33,11 @@ namespace Reinforced.Typings
             InitFromAttributes();
         }
 
+        /// <summary>
+        /// Path to file that blueprinted type will be exported to
+        /// </summary>
+        public string PathToFile { get; set; }
+
         private void InitFromAttributes()
         {
             TypeAttribute = Type.GetCustomAttribute<TsEnumAttribute>(false)
@@ -101,17 +106,6 @@ namespace Reinforced.Typings
         /// </summary>
         public Dictionary<ParameterInfo, List<TsDecoratorAttribute>> DecoratorsForParameters { get; private set; }
 
-        public TsFunctionAttribute ForMember(MethodInfo member, bool create = false)
-        {
-            var v = _attributesForMethods.GetOr(member, () => member.GetCustomAttribute<TsFunctionAttribute>(false));
-            if (create && v == null)
-            {
-                return _attributesForMethods.GetOrCreate(member);
-            }
-
-            return v;
-        }
-
         public TsTypedMemberAttributeBase ForMember(MemberInfo member, bool create = false)
         {
             if (member is PropertyInfo) return ForMember((PropertyInfo)member, create);
@@ -128,6 +122,18 @@ namespace Reinforced.Typings
             return null;
         }
 
+
+        public TsFunctionAttribute ForMember(MethodInfo member, bool create = false)
+        {
+            var v = _attributesForMethods.GetOr(member, () => member.GetCustomAttribute<TsFunctionAttribute>(false));
+            if (create && v == null)
+            {
+                return _attributesForMethods.GetOrCreate(member);
+            }
+            return v;
+        }
+
+        
         public TsParameterAttribute ForMember(ParameterInfo member, bool create = false)
         {
             var v = _attributesForParameters.GetOr(member, () => member.GetCustomAttribute<TsParameterAttribute>(false));
@@ -135,7 +141,6 @@ namespace Reinforced.Typings
             {
                 return _attributesForParameters.GetOrCreate(member);
             }
-
             return v;
         }
 
@@ -146,7 +151,6 @@ namespace Reinforced.Typings
             {
                 return _attributesForProperties.GetOrCreate(member);
             }
-
             return v;
         }
 
@@ -157,7 +161,6 @@ namespace Reinforced.Typings
             {
                 return _attributesForFields.GetOrCreate(member);
             }
-
             return v;
         }
 
@@ -173,7 +176,6 @@ namespace Reinforced.Typings
             {
                 return _attributesForEnumValues.GetOrCreate(member);
             }
-
             return v;
         }
 

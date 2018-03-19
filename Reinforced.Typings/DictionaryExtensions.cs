@@ -17,7 +17,9 @@ namespace Reinforced.Typings
         {
             if (!dictionary.ContainsKey(key))
             {
-                return or();
+                var v = or();
+                if (v != null) dictionary[key] = v;
+                return v;
             }
             return dictionary[key];
         }

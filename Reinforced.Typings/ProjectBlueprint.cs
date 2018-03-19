@@ -40,24 +40,24 @@ namespace Reinforced.Typings
             return _blueprints[t];
         }
 
-        public void AddFileSeparationSettings(Type type, IReferenceConfigurationBuilder refs = null)
+        public void AddFileSeparationSettings(Type type)
         {
             var bp = Blueprint(type);
 
-
-            var fileAttr = type.GetCustomAttribute<TsFileAttribute>();
-
-            if (fileAttr != null)
+            if (!string.IsNullOrEmpty(bp.PathToFile))
             {
-                TrackTypeFile(type, fileAttr.FileName);
+                TrackTypeFile(type, bp.PathToFile);
+            }
+            else
+            {
+                var fileAttr = type.GetCustomAttribute<TsFileAttribute>();
+
+                if (fileAttr != null)
+                {
+                    TrackTypeFile(type, fileAttr.FileName);
+                }
             }
 
-            if (refs != null)
-            {
-                bp.References.AddRange(refs.References);
-                bp.Imports.AddRange(refs.Imports);
-                TrackTypeFile(type, refs.PathToFile);
-            }
         }
 
         public void TrackTypeFile(Type t, string fileName)

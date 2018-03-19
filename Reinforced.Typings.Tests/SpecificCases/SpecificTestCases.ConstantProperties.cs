@@ -46,6 +46,9 @@ namespace Reinforced.Typings.Tests.SpecificCases
         {
             const string result = @"
 module Test {
+	export enum ExportedEnum { 
+		One = 1, 
+	}
 	export class ConstantTestA
 	{
 		public static StaticString: string = 'b';
@@ -62,11 +65,6 @@ module Test {
 		public static StaticString: string = 'Hello, I\'m string that originally was \'b\'';
 		public MyObject: any = { a: 10, b: 5 };
 	}
-	export enum ExportedEnum { 
-		One = 1, 
-	}
-}
-module Reinforced.Typings.Tests.SpecificCases {
 	export class ConstantTestC
 	{
 		public static WillNotBeInitialized: string;
@@ -90,6 +88,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 
                 s.ExportAsClass<ConstantTestC>()
                     .WithPublicFields()
+                    .OverrideNamespace("Test")
                     .WithField("WillNotBeInitialized", c => c.Constant(false));
             }, result);
         }

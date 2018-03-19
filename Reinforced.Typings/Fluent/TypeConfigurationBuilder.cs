@@ -65,7 +65,11 @@ namespace Reinforced.Typings.Fluent
             get { return _blueprint.Imports; }
         }
 
-        string IReferenceConfigurationBuilder.PathToFile { get; set; }
+        string IReferenceConfigurationBuilder.PathToFile
+        {
+            get { return _blueprint.PathToFile; }
+            set { _blueprint.PathToFile = value; }
+        }
 
         /// <inheritdoc />
         public abstract double MemberOrder { get; set; }

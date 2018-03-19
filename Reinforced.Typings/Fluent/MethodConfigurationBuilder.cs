@@ -19,20 +19,19 @@ namespace Reinforced.Typings.Fluent
             _blueprint.ForMember(Member, true);
         }
 
-        private TsFunctionAttribute AttributePrototype
-        {
-            get { return _blueprint.ForMember(Member, true); }
-        }
-
+       
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
         {
             get { return _blueprint.DecoratorsListFor(Member); }
         }
 
-        TsFunctionAttribute IAttributed<TsFunctionAttribute>.AttributePrototype
+        /// <summary>
+        /// Function attribute prototype
+        /// </summary>
+        public TsFunctionAttribute AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.ForMember(Member, true); }
         }
 
         bool IIgnorable.Ignore
