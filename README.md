@@ -8,8 +8,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :suspect: Version **1.4.7** released!
+> :suspect: Version **1.4.8** released!
 
+* Major refactoring
 * Hierarchy flattening fix
 * [Generic substitutions](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.GenericSubstitutions.cs) - useful thing for exporting ```Task<T>``` as promise
 * [Initialization expressions](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.ConstantProperties.cs) for static and const fields (use ```.With*Fields```). Reported by @masteroleary
