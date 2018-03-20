@@ -157,7 +157,10 @@ namespace Reinforced.Typings
 
         #region Internals
 
-        internal TypeBlueprint CurrentBlueprint
+        /// <summary>
+        /// Blueprint of type currently being exported
+        /// </summary>
+        public TypeBlueprint CurrentBlueprint
         {
             get
             {
@@ -196,7 +199,10 @@ namespace Reinforced.Typings
         /// </summary>
         public GeneratorManager Generators { get; internal set; }
 
-        internal ProjectBlueprint Project { get; private set; }
+        /// <summary>
+        /// Project blueprint
+        /// </summary>
+        public ProjectBlueprint Project { get; private set; }
 
         #endregion
 

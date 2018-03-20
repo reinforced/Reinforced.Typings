@@ -16,7 +16,7 @@
         <tags>mvc, web, typescript</tags>		
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
-- Hierarchy flattening fix
+- Exposure
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />
