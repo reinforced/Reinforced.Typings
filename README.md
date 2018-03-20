@@ -8,7 +8,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :suspect: Version **1.4.8** released!
+> :suspect: Version **1.4.9** released!
 
 * Major refactoring
 * Hierarchy flattening fix
