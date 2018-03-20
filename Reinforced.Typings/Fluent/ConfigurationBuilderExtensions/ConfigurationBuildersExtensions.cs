@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Fluent
             Action<PropertyExportConfigurationBuilder> configuration = null)
             where T : ITypeConfigurationBuilder
         {
-            tc.Context.Project.Blueprint(tc.Type).NotifyFlattenTouched();
+            
             foreach (var propertyInfo in prop)
             {
                 var conf = new PropertyExportConfigurationBuilder(propertyInfo, tc.Context.Project.Blueprint(tc.Type));
@@ -33,13 +33,14 @@ namespace Reinforced.Typings.Fluent
                         string.Format("{0}.{1}", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
                 }
             }
+            tc.Context.Project.Blueprint(tc.Type).NotifyFlattenTouched();
             return tc;
         }
 
         private static T ApplyMethodsConfiguration<T>(T tc, IEnumerable<MethodInfo> methds,
             Action<MethodConfigurationBuilder> configuration = null) where T : ITypeConfigurationBuilder
         {
-            tc.Context.Project.Blueprint(tc.Type).NotifyFlattenTouched();
+            
             foreach (var methodInfo in methds)
             {
                 var conf = new MethodConfigurationBuilder(methodInfo, tc.Context.Project.Blueprint(tc.Type));
@@ -54,6 +55,7 @@ namespace Reinforced.Typings.Fluent
                         string.Format("{0}.{1}(...)", methodInfo.DeclaringType.FullName, methodInfo.Name));
                 }
             }
+            tc.Context.Project.Blueprint(tc.Type).NotifyFlattenTouched();
             return tc;
         }
 
@@ -118,6 +120,6 @@ namespace Reinforced.Typings.Fluent
             }
         }
 
-        
+
     }
 }

@@ -50,6 +50,12 @@ namespace Reinforced.Typings.Tests.SpecificCases
                         .FlattenHierarchy();
                 }, result);
             });
+
+            AssertConfiguration(s =>
+            {
+                s.Global(a => a.DontWriteWarningComment());
+                s.ExportAsInterfaces(new[] {typeof(Flat1), typeof(Flat2), typeof(Flat3)}, x => x.FlattenHierarchy().WithPublicProperties());
+            }, result);
         }
     }
 }
