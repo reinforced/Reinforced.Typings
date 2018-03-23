@@ -24,7 +24,7 @@ namespace Reinforced.Typings.Fluent.Generic
         /// </summary>
         public TsClassAttribute AttributePrototype
         {
-            get { return AttributePrototype; }
+            get { return _blueprint.Attr<TsClassAttribute>(); }
         }
 
         List<TsDecoratorAttribute> IDecoratorsAggregator.Decorators
