@@ -15,7 +15,19 @@ namespace Reinforced.Typings.Tests.SpecificCases
         [Fact]
         public void InvalidFlattenOrder()
         {
-            const string result = @"";
+            const string result = @"
+module Reinforced.Typings.Tests.SpecificCases {
+	export interface IFlat1
+	{
+	}
+	export interface IFlat2
+	{
+	}
+	export interface IFlat3
+	{
+	}
+}
+";
 
 
             Assert.Throws<RtException>(() =>

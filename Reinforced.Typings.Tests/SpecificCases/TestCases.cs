@@ -4,12 +4,13 @@ using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Generators;
-
+//[assembly:TsGlobal(CamelCaseForProperties = true)]
 namespace Reinforced.Typings.Tests.SpecificCases
 {
 
     #region Basic test
 
+    
     public interface ITestInterface
     {
         string String { get; }

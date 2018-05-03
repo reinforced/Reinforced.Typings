@@ -38,7 +38,7 @@ namespace Reinforced.Typings.Fluent
                 var conf = builder.EnumConfigurationBuilders.GetOrCreate(type, () =>
                 {
                     var t = typeof(EnumConfigurationBuilder<>).MakeGenericType(tp);
-                    return (IEnumConfigurationBuidler)Activator.CreateInstance(t, true);
+                    return (IEnumConfigurationBuidler)Activator.CreateInstance(t, new[] { builder.Context });
                 });
                 if (configuration != null)
                 {
@@ -79,7 +79,6 @@ namespace Reinforced.Typings.Fluent
         {
             var n = Enum.GetName(typeof(T), value);
             var field = typeof(T)._GetField(n);
-            IEnumConfigurationBuidler ecb = conf;
             var c = new EnumValueExportConfiguration(field, conf._blueprint);
             return c;
         }
