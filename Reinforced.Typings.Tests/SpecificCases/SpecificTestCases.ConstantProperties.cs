@@ -47,7 +47,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
             const string result = @"
 module Test {
 	export enum ExportedEnum { 
-		One = 1, 
+		One = 1
 	}
 	export class ConstantTestA
 	{

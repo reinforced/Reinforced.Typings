@@ -37,10 +37,13 @@ namespace Reinforced.Typings.Generators
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
             }
+
+            bool stringInit = false;
             var ea = Context.CurrentBlueprint.Attr<TsEnumAttribute>();
             if (ea != null)
             {
                 result.IsConst = ea.IsConst;
+                stringInit = ea.UseString;
             }
             List<RtEnumValue> valuesResult = new List<RtEnumValue>();
             for (var index = 0; index < names.Length; index++)
@@ -54,11 +57,21 @@ namespace Reinforced.Typings.Generators
 
                     var attr = Context.CurrentBlueprint.ForEnumValue(fieldItself);
                     if (attr != null) n = attr.Name;
+                    if (string.IsNullOrEmpty(n)) n = fieldItself.Name;
                     RtEnumValue value = new RtEnumValue
                     {
                         EnumValueName = n,
                         EnumValue = Convert.ToInt64(v).ToString()
                     };
+
+                    if (stringInit)
+                    {
+                        if (attr != null && !string.IsNullOrEmpty(attr.Initializer)) value.EnumValue = String.Concat("\"", attr.Initializer, "\"");
+                        else
+                        {
+                            value.EnumValue = String.Concat("\"", n, "\"");
+                        }
+                    }
 
                     var valueDoc = Context.Documentation.GetDocumentationMember(fieldItself);
                     if (valueDoc != null)

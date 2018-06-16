@@ -15,7 +15,6 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 Write(" = ");
                 Write(node.EnumValue);
             }
-            WriteLine(", ");
         }
     }
 }

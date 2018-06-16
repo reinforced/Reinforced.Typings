@@ -15,7 +15,7 @@ interface IJonsaModel
 }
 enum JonsaEnum { 
 	Foo = 0, 
-	Bar = 1, 
+	Bar = 1
 }";
             AssertConfiguration(s =>
             {

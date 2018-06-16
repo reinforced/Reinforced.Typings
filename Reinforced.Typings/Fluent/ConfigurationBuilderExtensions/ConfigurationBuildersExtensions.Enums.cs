@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent.Interfaces;
 // ReSharper disable CheckNamespace
@@ -68,6 +69,19 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        /// Makes enum to use string initializer for its values (TypeScript 2.4)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conf">Enum configurator</param>
+        /// <param name="useString">When true, enum values will be exported with string initializers</param>
+        /// <returns>Fluent</returns>
+        public static T UseString<T>(this T conf, bool useString = true) where T : IEnumConfigurationBuidler
+        {
+            conf.AttributePrototype.UseString = useString;
+            return conf;
+        }
+
+        /// <summary>
         ///     Retrieves configuration builder for particular enumeration value
         /// </summary>
         /// <typeparam name="T">Enumeration type</typeparam>
@@ -94,6 +108,55 @@ namespace Reinforced.Typings.Fluent
             var field = conf.EnumType._GetField(propertyName);
             var c = new EnumValueExportConfiguration(field, conf.Context.Project.Blueprint(conf.EnumType));
             return c;
+        }
+
+        /// <summary>
+        ///     Configures export of particular enumeration value
+        /// </summary>
+        /// <typeparam name="T">Enumeration type</typeparam>
+        /// <param name="conf">Configuration builder</param>
+        /// <param name="value">Enum value</param>
+        /// <param name="valueConf">Enum value export configuration</param>
+        /// <returns>Configuration builder</returns>
+        public static EnumConfigurationBuilder<T> Value<T>(this EnumConfigurationBuilder<T> conf, T value, Action<EnumValueExportConfiguration> valueConf)
+            where T : struct
+        {
+            var n = Enum.GetName(typeof(T), value);
+            var field = typeof(T)._GetField(n);
+            var c = new EnumValueExportConfiguration(field, conf._blueprint);
+            valueConf(c);
+            return conf;
+        }
+
+        /// <summary>
+        ///     Configures export of particular enumeration value
+        /// </summary>
+        /// <param name="conf">Configuration builder</param>
+        /// <param name="propertyName">String enum property name</param>
+        /// <param name="valueConf">Enum value export configuration</param>
+        /// <returns>Configuration builder</returns>
+        public static T Value<T>(this T conf, string propertyName, Action<EnumValueExportConfiguration> valueConf)
+        where T: IEnumConfigurationBuidler
+        {
+            var field = conf.EnumType._GetField(propertyName);
+            var c = new EnumValueExportConfiguration(field, conf.Context.Project.Blueprint(conf.EnumType));
+            valueConf(c);
+            return conf;
+        }
+
+
+        /// <summary>
+        /// Overrides enum value's string initializer. Please escape quotes manually.
+        /// </summary>
+        /// <param name="conf"></param>
+        /// <param name="initializer"></param>
+        /// <returns></returns>
+        public static EnumValueExportConfiguration Initializer(this EnumValueExportConfiguration conf,
+            string initializer)
+        {
+            var at = (IAttributed<TsValueAttribute>) conf;
+            at.AttributePrototype.Initializer = initializer;
+            return conf;
         }
 
     }

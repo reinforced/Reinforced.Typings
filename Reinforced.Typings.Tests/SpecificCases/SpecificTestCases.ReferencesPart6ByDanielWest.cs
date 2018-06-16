@@ -17,7 +17,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 export namespace Reinforced.Typings.Tests.SpecificCases {
 	export enum SomeEnum { 
 		One = 0, 
-		Two = 1, 
+		Two = 1
 	}
 }";
             const string file2 = @"

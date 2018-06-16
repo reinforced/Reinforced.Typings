@@ -17,10 +17,13 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Visit(node.EnumName);
             WriteLine(" { ");
             Tab();
-            foreach (var rtEnumValue in node.Values)
+            var arr = node.Values.ToArray();
+            for (int i = 0; i < arr.Length; i++)
             {
-                Visit(rtEnumValue);
+                Visit(arr[i]);
+                if (i != arr.Length - 1) WriteLine(", ");
             }
+            WriteLine(string.Empty);
             UnTab();
             AppendTabs();
             WriteLine("}");

@@ -50,7 +50,7 @@ export class SomeFluentReferencedType
 export enum SomeIndirectEnum { 
 	One = 0, 
 	Two = 1, 
-	Three = 2, 
+	Three = 2 
 }";
 
             AssertConfiguration(s =>

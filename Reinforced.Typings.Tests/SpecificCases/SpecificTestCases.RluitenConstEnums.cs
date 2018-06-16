@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
             const string result = @"
 export const enum SomeEnum { 
 	One = 0, 
-	Two = 1, 
+	Two = 1 
 }";
             AssertConfiguration(s =>
             {
