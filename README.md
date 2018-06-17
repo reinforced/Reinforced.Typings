@@ -18,7 +18,9 @@ News
 * [Initialization expressions](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.ConstantProperties.cs) for static and const fields (use ```.With*Fields```). Reported by @masteroleary
 * Initialization expression evaluator - to automatically initialize your properties of exported classes
 
-Will write docs later
+My apologies
+----------------
+...for stupid .NET Core 2.1 bug and version bumps initiated by it. :( Seems that MS releases .NET Core versions faster than I update RT's code. I'm doing all my best to keep situation under control. I highly appreciate your patience and count on your understanding. Thanks all in advance, you are small but still the best community that I've seen.
 
 Support policy
 =================
@@ -28,10 +30,6 @@ Please **do not** ask your questions in github issues anymore. Such format is no
 **UPD**: You can notify me about question by sending link via Twitter ([@MurcielagoCat](https://twitter.com/MurcielagoCat)) to get answer faster.
 
 GitHub issues are for confirmed bugs/feature requests now. If you've found bug - please write and PR test if you can. If you have feature idea - please describe it from fluent/attribute configuration point of view. Describe how'd you gonna to configure RT for desired result. Thanks in advance!
-
-My apologies
-=================
-...for stupid .NET Core 2.1 bug. :( It seems that MS releases .NET Core versions faster than I update RT's code. I'm doing all my best to keep situation under control.
 
 What is that?
 =================
