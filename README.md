@@ -8,7 +8,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :palm_tree: Version **1.4.93** released!
+> :palm_tree: Version **1.4.94** released!
 
 * Enum string initializers
 * .NET Core 2.1 bugfix
