@@ -8,8 +8,10 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :suspect: Version **1.4.9** released!
+> :palm_tree: Version **1.4.93** released!
 
+* Enum string initializers
+* .NET Core 2.1 bugfix
 * Major refactoring
 * Hierarchy flattening fix
 * [Generic substitutions](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.GenericSubstitutions.cs) - useful thing for exporting ```Task<T>``` as promise
