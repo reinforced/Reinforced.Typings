@@ -29,6 +29,10 @@ Please **do not** ask your questions in github issues anymore. Such format is no
 
 GitHub issues are for confirmed bugs/feature requests now. If you've found bug - please write and PR test if you can. If you have feature idea - please describe it from fluent/attribute configuration point of view. Describe how'd you gonna to configure RT for desired result. Thanks in advance!
 
+My apologies
+=================
+...for stupid .NET Core 2.1 bug. :( It seems that MS releases .NET Core versions faster than I update RT's code. I'm doing all my best to keep situation under control.
+
 What is that?
 =================
 
