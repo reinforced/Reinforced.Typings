@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 <Import Project="../version.xml" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.5;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.5;netstandard2.0;netcoreapp2.1</TargetFrameworks>
     <!-- <TargetFrameworks>netstandard2.0</TargetFrameworks> -->
     <AssemblyName>Reinforced.Typings</AssemblyName>
     <RootNamespace>Reinforced.Typings</RootNamespace>

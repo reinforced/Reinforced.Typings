@@ -30,6 +30,7 @@ cd Reinforced.Typings.Cli
 dotnet publish Reinforced.Typings.Cli.NETCore.csproj -o ../package/tools/net45 -f net45 -c Release
 dotnet publish Reinforced.Typings.Cli.NETCore.csproj -o ../package/tools/netcoreapp1.0 -f netcoreapp1.0 -c Release
 dotnet publish Reinforced.Typings.Cli.NETCore.csproj -o ../package/tools/netcoreapp2.0 -f netcoreapp2.0 -c Release
+dotnet publish Reinforced.Typings.Cli.NETCore.csproj -o ../package/tools/netcoreapp2.1 -f netcoreapp2.1 -c Release
 
 cd ..
 

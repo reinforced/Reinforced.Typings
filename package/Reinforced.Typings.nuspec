@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.4.93</version>
+        <version>1.4.94</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -17,8 +17,6 @@
         <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
 		<releaseNotes>
 - .NET Core 2.1 support bug
-- Enum string initializers
-- Dropped comma after last enum value
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="../version.xml" />
     <PropertyGroup>
-        <TargetFrameworks>net45;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
+        <TargetFrameworks>net45;netcoreapp1.0;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
         <!-- <TargetFrameworks>netcoreapp2.0</TargetFrameworks> -->
         <OutputType>Exe</OutputType>
         <AssemblyName>rtcli</AssemblyName>
