@@ -7,6 +7,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <DebugSymbols Condition="$(Configuration) == 'Release'">false</DebugSymbols>
     <DebugType Condition="$(Configuration) == 'Release'">None</DebugType>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.6'">

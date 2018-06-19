@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 #if NETCORE1
 using System.Runtime.Loader;
 #endif
@@ -303,6 +304,7 @@ namespace Reinforced.Typings.Cli
             AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
 #else
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+            
 #endif
             BuildReferencesCache();
 
@@ -319,6 +321,8 @@ namespace Reinforced.Typings.Cli
 #if NETCORE1
                 var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
 #else
+                AssemblyName an = AssemblyName.GetAssemblyName(path);
+                var thisName = Assembly.GetCallingAssembly().GetName();
                 var a = Assembly.LoadFrom(path);
 #endif
 
@@ -330,6 +334,7 @@ namespace Reinforced.Typings.Cli
             return assemblies.ToArray();
         }
 
+       
 #if NETCORE1
         private static Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
         {

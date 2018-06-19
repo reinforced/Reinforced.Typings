@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-#if NETCORE1
-#else
-using System.Security.Policy;
-#endif
 using System.Text;
 
 namespace Reinforced.Typings.Cli

@@ -35,7 +35,7 @@ namespace Reinforced.Typings.Integrate
         /// Framework version to invoke rtcli
         /// </summary>
         [Required]
-        public string RtFrameworkVersion { get; set; }
+        public string TargetFramework { get; set; }
 
         /// <summary>
         /// Package's "build" directory
@@ -117,17 +117,37 @@ namespace Reinforced.Typings.Integrate
         {
             var bd = new DirectoryInfo(BuildDirectory);
             var toolsPath = Path.Combine(bd.Parent.FullName, "tools");
-            var fwPath = Path.Combine(toolsPath, RtFrameworkVersion);
+            var fwPath = Path.Combine(toolsPath, NormalizeFramework());
             return fwPath;
+        }
+
+        private string NormalizeFramework()
+        {
+            if (string.IsNullOrEmpty(TargetFramework)) return "net45";
+            if (TargetFramework.StartsWith("netstandard"))
+            {
+                var version = int.Parse(TargetFramework.Substring("netstandard".Length)[0].ToString());
+                if (version == 1) return "netcoreapp1.0";
+                return "netcoreapp2.0";
+            }
+            if (TargetFramework.StartsWith("netcoreapp"))
+            {
+                var version = int.Parse(TargetFramework.Substring("netcoreapp".Length)[0].ToString());
+                if (version == 1) return "netcoreapp1.0";
+                return TargetFramework;
+            }
+
+            return TargetFramework;
         }
 
         private bool IsCore
         {
             get
             {
-                return !(RtFrameworkVersion.StartsWith("net") &&
-                       char.IsNumber(RtFrameworkVersion[3])
-                       && char.IsNumber(RtFrameworkVersion[4]));
+                if (string.IsNullOrEmpty(TargetFramework)) return false;
+                if (TargetFramework.StartsWith("netstandard")) return true;
+                if (TargetFramework.StartsWith("netcoreapp")) return true;
+                return false;
             }
         }
 

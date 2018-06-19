@@ -1,17 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 <Import Project="../version.xml" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.5;netstandard2.0;netcoreapp2.1</TargetFrameworks>
-    <!-- <TargetFrameworks>netstandard2.0</TargetFrameworks> -->
+    <!-- <TargetFrameworks>net45;net461;netstandard1.5;netstandard2.0;netcoreapp2.1</TargetFrameworks> -->
+    <TargetFramework>net461</TargetFramework>
     <AssemblyName>Reinforced.Typings</AssemblyName>
     <RootNamespace>Reinforced.Typings</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <DebugSymbols Condition="$(Configuration) == 'Release'">false</DebugSymbols>
     <DebugType Condition="$(Configuration) == 'Release'">None</DebugType>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
     <DocumentationFile>bin\Release\net45\Reinforced.Typings.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+    <DocumentationFile>bin\Release\net461\Reinforced.Typings.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.5'">
     <DocumentationFile>bin\Release\netstandard1.5\Reinforced.Typings.xml</DocumentationFile>
@@ -20,6 +24,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DocumentationFile>bin\Release\netstandard2.0\Reinforced.Typings.xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
+    <NetCore>True</NetCore>
+  </PropertyGroup>
+   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
+    <DocumentationFile>bin\Release\netcoreapp2.1\Reinforced.Typings.xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
+    <NetCore>True</NetCore>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\Reinforced.Typings.xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
     <NetCore>True</NetCore>
   </PropertyGroup>

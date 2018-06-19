@@ -2,7 +2,7 @@
   "profiles": {
     "Reinforced.Typings.Cli.NETCore": {
       "commandName": "Project",
-      "commandLineArgs": "profile \"i:\\Work\\Reinforced\\lattice_bug.tmp\""
+      "commandLineArgs": "profile \"I:\\Work\\Reinforced\\net45test.tmp\""
     }
   }
 }

@@ -10,21 +10,6 @@
 			$(BuildDependsOn);
 		</BuildDependsOn>
         
-        <RtTargetFramework>$(TargetFramework)</RtTargetFramework>        
-        <RtTargetFramework Condition="($(TargetFramework)=='')OR($(TargetFramework)==null)">net45</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.0'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.1'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.2'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.3'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.4'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.5'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.6'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.7'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.8'">netcoreapp1.0</RtTargetFramework>        
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard1.9'">netcoreapp1.0</RtTargetFramework>    
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard2.0'">netcoreapp2.0</RtTargetFramework>            
-        <RtTargetFramework Condition="$(TargetFramework)=='netstandard2.1'">netcoreapp2.0</RtTargetFramework>                           
-        
         <RtSettingsXml Condition="HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)Reinforced.Typings.settings.xml</RtSettingsXml>
         <RtSettingsXml Condition="!HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)\Reinforced.Typings.settings.xml</RtSettingsXml>
         
@@ -79,7 +64,7 @@
 	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">	     
 		<RtCli 
             BuildDirectory="$(MSBuildThisFileDirectory)"
-			RtFrameworkVersion="$(RtTargetFramework)"
+			TargetFramework="$(TargetFramework)"
 			SourceAssembly="@(IntermediateAssembly)"
 			References="@(ReferencePath)"
 			AdditionalSourceAssemblies="@(RtAdditionalAssembly)" 
