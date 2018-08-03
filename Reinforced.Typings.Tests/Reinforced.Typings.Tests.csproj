@@ -85,6 +85,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.InferTypeTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart6ByDanielWest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.RluitenConstEnums.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.TsFunctionWorksWithEnum.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.TsFunctionWorks.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.TsPropertyWorks.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.OverridenNamesNotCamelCased.cs" />
