@@ -137,6 +137,7 @@ namespace Reinforced.Typings.Integrate
                 return TargetFramework;
             }
 
+            if (TargetFramework.StartsWith("net46")) return "net461";
             return TargetFramework;
         }
 
