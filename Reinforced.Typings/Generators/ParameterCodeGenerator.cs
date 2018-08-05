@@ -52,7 +52,17 @@ namespace Reinforced.Typings.Generators
             result.Identifier = new RtIdentifier(name);
             result.Type = type;
             if (isNullable && defaultValue == null) result.Identifier.IsNullable = true;
-            if (defaultValue != null) result.DefaultValue = defaultValue;
+            if (defaultValue != null)
+            {
+                //if parameter is having enum type then simple string value assignment is now right
+                //so for Enum type result.DefaultValue should be equal to ENUME_NAME+"."+DefaultValue
+                if (element.ParameterType.IsEnum)
+                {
+                    result.DefaultValue = result.Type + "." + defaultValue;
+                }
+                else
+                    result.DefaultValue = defaultValue;
+            }
             AddDecorators(result, Context.CurrentBlueprint.DecoratorsFor(element));
             return result;
         }
