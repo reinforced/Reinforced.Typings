@@ -79,6 +79,7 @@
 			ConfigurationMethod="$(RtConfigurationMethod)"
 		/>
 		
-		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != ''" />
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' == ''" />
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScriptWithTSConfig" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' != ''" />
 	</Target>
 </Project>
