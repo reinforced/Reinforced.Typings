@@ -15,7 +15,7 @@ namespace Reinforced.Typings.Cli
         public Required RequiredType { get; set; }
 
 
-        public ConsoleHelpAttribute(string helpText,Required requiredType = Required.NotReuired)
+        public ConsoleHelpAttribute(string helpText,Required requiredType = Required.Not)
         {
             HelpText = helpText;
             RequiredType = requiredType;
@@ -24,8 +24,8 @@ namespace Reinforced.Typings.Cli
 
     public enum Required
     {
-        Reuired,
-        NotReuired,
+        Is,
+        Not,
         Partially
     }
 }
