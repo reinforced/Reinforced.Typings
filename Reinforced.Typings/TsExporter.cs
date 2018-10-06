@@ -121,7 +121,7 @@ namespace Reinforced.Typings
         /// <returns>Exported file dummy</returns>
         public ExportedFile SetupExportedFile(string fileName = null)
         {
-            if ((!_context.Hierarchical) && fileName == _context.TargetFile) fileName = null;
+            if (!_context.Hierarchical && fileName == _context.TargetFile) fileName = null;
             IEnumerable<Type> types = null;
             if (!string.IsNullOrEmpty(fileName))
             {

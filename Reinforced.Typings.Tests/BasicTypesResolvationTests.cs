@@ -26,7 +26,7 @@ namespace Reinforced.Typings.Tests
             _context = new ExportContext()
             {
                 SourceAssemblies = new[] { Assembly.GetExecutingAssembly() },
-                TargetDirectory = "D:\\"
+                TargetDirectory = "targetDir/"
             };
             var exporter = new TsExporter(_context);
             exporter.Initialize();

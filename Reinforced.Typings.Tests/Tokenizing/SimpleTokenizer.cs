@@ -7,9 +7,10 @@ namespace Reinforced.Typings.Tests.Tokenizing
 {
     sealed class SimpleTokenizer
     {
+        private const string CommentSyntax = "//";
+        private const string TokenSeparators = ".,;:{[()]}=,+-/*%@!&|";
         private readonly TextReader _reader;
         private readonly bool _tokenizeComments;
-        private const string TokenSeparators = ".,;:{[()]}=,+-/*%@!&|";
         private bool _inComment;
         private readonly StringBuilder _buffer = new StringBuilder();
 
@@ -26,7 +27,7 @@ namespace Reinforced.Typings.Tests.Tokenizing
             {
                 foreach (var token in TokenizeLine(line))
                 {
-                    if (!_tokenizeComments&&token.StartsWith("//")) continue;
+                    if (!_tokenizeComments && token.StartsWith(CommentSyntax)) continue;
                     yield return token;
                 }
                 line = _reader.ReadLine();
@@ -44,7 +45,7 @@ namespace Reinforced.Typings.Tests.Tokenizing
             bool readingToken = false;
             for (int i = 0; i < s.Length; i++)
             {
-                if (Ahead(s, "//", i))
+                if (Ahead(s, CommentSyntax, i))
                 {
                     if (_buffer.Length > 0) yield return _buffer.ToString();
                     _buffer.Clear();

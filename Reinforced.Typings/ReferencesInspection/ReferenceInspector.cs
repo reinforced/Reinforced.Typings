@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -118,7 +118,7 @@ namespace Reinforced.Typings.ReferencesInspection
                     if (fromConfiguration.EndsWith(".ts"))
                         fromConfiguration = fromConfiguration.Substring(0, fromConfiguration.Length - 3);
                 }
-                var r = Path.Combine(_context.TargetDirectory, fromConfiguration.Replace("/", "\\")).Replace("/", "\\");
+                var r = Path.Combine(_context.TargetDirectory, fromConfiguration);
                 return r;
             }
 
@@ -138,7 +138,7 @@ namespace Reinforced.Typings.ReferencesInspection
             {
                 ns = ns.Replace(_context.Global.RootNamespace, string.Empty);
             }
-            ns = ns.Trim('.').Replace('.', '\\');
+            ns = ns.Trim('.').Replace('.', Path.DirectorySeparatorChar);
 
             var pth =
                 Path.Combine(
@@ -163,7 +163,6 @@ namespace Reinforced.Typings.ReferencesInspection
                 Path.GetDirectoryName(desiredFile));
 
             relPath = Path.Combine(relPath, desiredFileName);
-            relPath = relPath.Replace('\\', '/');
             if (_context.Global.UseModules)
             {
                 if (!relPath.StartsWith(".")) relPath = "./" + relPath;
@@ -177,14 +176,13 @@ namespace Reinforced.Typings.ReferencesInspection
             if (currentNamespace == desiredNamespace) return string.Empty;
             if (string.IsNullOrEmpty(currentNamespace)) return desiredNamespace;
 
-
-            var current = currentNamespace.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            var desired = desiredNamespace.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+            var current = currentNamespace.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            var desired = desiredNamespace.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
 
             var result = new StringBuilder();
             if (string.IsNullOrEmpty(desiredNamespace))
             {
-                for (var i = 0; i < current.Length; i++) result.Append("..\\");
+                for (var i = 0; i < current.Length; i++) result.Append("../");
             }
             else
             {
@@ -205,7 +203,7 @@ namespace Reinforced.Typings.ReferencesInspection
                     result.AppendFormat("{0}/", desired[level]);
                 }
             }
-            return result.ToString().Trim('/');
+            return result.ToString().Trim(Path.DirectorySeparatorChar);
         }
 
 

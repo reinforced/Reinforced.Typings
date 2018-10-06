@@ -16,9 +16,9 @@ namespace Reinforced.Typings.Cli
         /// The assemblies to extract typings from
         /// </summary>
         [ConsoleHelp(@"
-The semicolon-separated assemblies list to extract typings from.
+The semicolon-separated assembly list to extract typings from.
 Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll""
-", Required.Reuired)]
+", Required.Is)]
         public string[] SourceAssemblies { get; set; }
 
         /// <summary>
@@ -27,18 +27,18 @@ Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProj
         /// </summary>
         [ConsoleHelp(@"
 Target file where to store generated sources.
-Not required if Hirarchy=""true"" specified. Otherwise required.
+Not required if Hierarchy=""true"" is specified. Otherwise required.
 Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partially)]
         public string TargetFile { get; set; }
 
         /// <summary>
         /// Target directory where to store generated typing files. 
-        /// This parameter is not used when Hierarcy is false
+        /// This parameter is not used when Hierarchy is false
         /// </summary>
         [ConsoleHelp(@"
 Target directory where to store generated typing files. 
-Not required if Hirarchy=""false"" or not specified. Otherwise required.
-Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (regardless ending slash)", Required.Partially)]
+Not required if Hierarchy=""false"" is not specified. Otherwise required.
+Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (ending slash optional)", Required.Partially)]
         public string TargetDirectory { get; set; }
 
         /// <summary>
@@ -100,7 +100,7 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
                 throw new Exception("Target directory must be specified in case of hierarchy generation");
 
             if (SourceAssemblies == null || SourceAssemblies.Length == 0)
-                throw new Exception("Source assemblies is not specified. Nothing to export");
+                throw new Exception("No source assemblies specified. Nothing to export");
         }
 
         public ExporterConsoleParameters()
