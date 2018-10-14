@@ -397,14 +397,14 @@ namespace Reinforced.Typings.Cli
                     string requiredText = null;
                     switch (req)
                     {
-                        case Required.NotReuired:
-                            requiredText = "(not requred)";
+                        case Required.Not:
+                            requiredText = "(not required)";
                             break;
-                        case Required.Reuired:
-                            requiredText = "(requred)";
+                        case Required.Is:
+                            requiredText = "(required)";
                             break;
                         case Required.Partially:
-                            requiredText = "(sometimes requred)";
+                            requiredText = "(sometimes required)";
                             break;
                     }
                     Console.WriteLine(propertyInfo.Name + " " + requiredText);
@@ -494,7 +494,7 @@ namespace Reinforced.Typings.Cli
             }
             catch (Exception ex)
             {
-                BuildError("Parameters validation error: {0}", ex.Message);
+                BuildError("Parameter validation error: {0}", ex.Message);
                 PrintHelp();
                 return null;
             }
