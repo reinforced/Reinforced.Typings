@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Cli
         /// The assemblies to extract typings from
         /// </summary>
         [ConsoleHelp(@"
-The semicolon-separated assembly list to extract typings from.
+The semicolon-separated list of assemblies to extract typings from.
 Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll""
 ", Required.Is)]
         public string[] SourceAssemblies { get; set; }
@@ -26,8 +26,8 @@ Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProj
         /// This parameter is not used when Hierarchy is true
         /// </summary>
         [ConsoleHelp(@"
-Target file where to store generated sources.
-Not required if Hierarchy=""true"" is specified. Otherwise required.
+Target file to store generated sources.
+Not required if Hierarchy=""true"" specified. Otherwise required.
 Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partially)]
         public string TargetFile { get; set; }
 
@@ -36,9 +36,9 @@ Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partial
         /// This parameter is not used when Hierarchy is false
         /// </summary>
         [ConsoleHelp(@"
-Target directory where to store generated typing files. 
-Not required if Hierarchy=""false"" is not specified. Otherwise required.
-Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (ending slash optional)", Required.Partially)]
+Target directory to store generated typing files. 
+Not required if Hierarchy=""false"" or not specified. Otherwise required.
+Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (trailing slash optional)", Required.Partially)]
         public string TargetDirectory { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (ending slash optio
         /// If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly
         /// </summary>
         [ConsoleHelp(@"
-Path to temporary file containing all the references for project. One reference per line.
+Path to temporary file containing all references for project. One reference per line.
 If not specified then the CLI will try to resolve reference assemblies 
 from same directory as target assembly. 
 Example:   rtcli.exe References=""C:\Users\AppData\Local\Temp\ANGhgRuDPG.tmp"" ")]

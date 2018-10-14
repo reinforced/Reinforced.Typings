@@ -494,7 +494,7 @@ namespace Reinforced.Typings.Cli
             }
             catch (Exception ex)
             {
-                BuildError("Parameters validation error: {0}", ex.Message);
+                BuildError("Parameter validation error: {0}", ex.Message);
                 PrintHelp();
                 return null;
             }

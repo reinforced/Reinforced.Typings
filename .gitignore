@@ -168,6 +168,7 @@ ClientBin/
 *.publishsettings
 node_modules/
 bower_components/
+.idea
 
 # RIA/Silverlight projects
 Generated_Code/

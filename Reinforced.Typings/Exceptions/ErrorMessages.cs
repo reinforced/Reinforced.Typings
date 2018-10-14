@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Reinforced.Typings.Exceptions
 {
     /// <summary>
@@ -15,9 +10,9 @@ namespace Reinforced.Typings.Exceptions
     {
         #region Errors
         /// <summary>
-        /// Could not acuire temorary file {0}: {1}
+        /// Could not acquire temporary file {0}: {1}
         /// </summary>
-        public static readonly ErrorMessage RTE0001_TempFileError = new ErrorMessage(0001,"Could not acuire temorary file {0}: {1}","IO");
+        public static readonly ErrorMessage RTE0001_TempFileError = new ErrorMessage(0001,"Could not acquire temporary file {0}: {1}","IO");
 
         /// <summary>
         /// Could not replace source file {0}: {1}
@@ -120,7 +115,7 @@ namespace Reinforced.Typings.Exceptions
         /// <summary>
         /// Error parsering XMLDOC file {0}: {1}
         /// </summary>
-        public static readonly ErrorMessage RTW0006_DocumentationParseringError = new ErrorMessage(0006, "Error parsering XMLDOC file {0}: {1}", "JSDOC");
+        public static readonly ErrorMessage RTW0006_DocumentationParseringError = new ErrorMessage(0006, "Error parsing XMLDOC file {0}: {1}", "JSDOC");
 
         /// <summary>
         /// Error parsering XMLDOC file {0}: {1}
