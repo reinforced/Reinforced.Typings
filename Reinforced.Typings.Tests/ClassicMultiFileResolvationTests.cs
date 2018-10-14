@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Reinforced.Typings.Tests
                 a.ExportAsInterface<TestFluentAssembly.TwoInterfaces.IInterface2>().ExportTo(filePath2);
             });
 
-            return setup.Exporter.SetupExportedFile("D:\\" + filePath1);
+            return setup.Exporter.SetupExportedFile(Path.Combine(TargetDir, filePath1));
         }
 
         [Fact]
@@ -43,6 +44,7 @@ namespace Reinforced.Typings.Tests
         {
             var file = Setup2Files("File1.ts", "File2.ts", x => x.Global(a => a.UseModules()));
 
+            //todo this fails in mono, the Prefix property of this below is "" - but Prefix of one below is null
             var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
             Assert.Equal(new RtSimpleTypeName("IInterface2"), typeName, _comparer);
@@ -81,11 +83,13 @@ namespace Reinforced.Typings.Tests
             Assert.Equal("Another/File2.ts", rf.Path);
         }
 
+        
         [Fact]
         public void SimpleModuleResolvationTestDifferentDirs()
         {
             var file = Setup2Files("File1.ts", "Another/File2.ts", x => x.Global(a => a.UseModules()));
 
+            //todo this fails in mono, the Prefix property of this below is "" - but Prefix of one below is null
             var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
             Assert.Equal(new RtSimpleTypeName("IInterface2"), typeName, _comparer);

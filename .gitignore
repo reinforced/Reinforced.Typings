@@ -209,8 +209,11 @@ Playground/
 Reinforced.Typings.Private.sln
 Reinforced.Typings.pfx
 docplan.txt
-package/build
-package/content
-package/buildMultiTargeting
-package/lib
-Reinforced.snk
+/package/build
+/package/buildMultiTargeting
+/package/lib
+/Reinforced.Typings/Reinforced.snk
+/Reinforced.Typings.Cli/Reinforced.snk
+/Reinforced.Typings.Integrate/Reinforced.snk
+
+\.idea/

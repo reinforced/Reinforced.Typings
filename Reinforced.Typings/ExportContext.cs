@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.Fluent;
-using Reinforced.Typings.Fluent.Interfaces;
 using Reinforced.Typings.Xmldoc;
 
 namespace Reinforced.Typings

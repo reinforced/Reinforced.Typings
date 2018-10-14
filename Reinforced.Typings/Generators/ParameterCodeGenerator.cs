@@ -56,7 +56,7 @@ namespace Reinforced.Typings.Generators
             {
                 //if parameter is having enum type then simple string value assignment is now right
                 //so for Enum type result.DefaultValue should be equal to ENUME_NAME+"."+DefaultValue
-                if (element.ParameterType.IsEnum)
+                if (element.ParameterType._IsEnum())
                 {
                     result.DefaultValue = result.Type + "." + defaultValue;
                 }

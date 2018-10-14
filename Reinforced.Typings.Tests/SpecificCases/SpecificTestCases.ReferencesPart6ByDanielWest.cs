@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Reinforced.Typings.Fluent;
 using Xunit;
 
@@ -36,10 +37,10 @@ export namespace Reinforced.Typings.Tests.SpecificCases {
 
                 s.ExportAsEnum<SomeEnum>().ExportTo("Areas/APIv2/Models/TimeAndAttendance/Enum.ts");
                 s.ExportAsClass<SomeViewModel>().WithPublicProperties().ExportTo("Areas/Reporting/Models/Model.ts");
-            }, new Dictionary<string, string>()
+            }, new Dictionary<string, string>
             {
-                {"D:\\Areas\\APIv2\\Models\\TimeAndAttendance\\Enum.ts", file1},
-                {"D:\\Areas\\Reporting\\Models\\Model.ts", file2},
+                { Path.Combine(TargetDir, "Areas", "APIv2", "Models", "TimeAndAttendance", "Enum.ts"), file1 },
+                { Path.Combine(TargetDir, "Areas", "Reporting", "Models", "Model.ts"), file2 }
             }, compareComments: true);
         }
     }

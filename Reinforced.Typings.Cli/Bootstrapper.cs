@@ -61,7 +61,7 @@ namespace Reinforced.Typings.Cli
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            Console.WriteLine("Reinforced.Typings CLI generator (c) 2015 by Pavel B. Novikov");
+            Console.WriteLine("Reinforced.Typings CLI generator (c) 2015-2018 by Pavel B. Novikov");
 
             if (args.Length == 0)
             {
@@ -240,7 +240,7 @@ namespace Reinforced.Typings.Cli
             {
                 if (storeIfFullName)
                 {
-                    var lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
+                    var lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + Path.DirectorySeparatorChar;
                     if (!_allAssembliesDirs.Contains(lastAssemblyLocalDir)) _allAssembliesDirs.Add(lastAssemblyLocalDir);
                 }
 #if DEBUG
@@ -397,14 +397,14 @@ namespace Reinforced.Typings.Cli
                     string requiredText = null;
                     switch (req)
                     {
-                        case Required.NotReuired:
-                            requiredText = "(not requred)";
+                        case Required.Not:
+                            requiredText = "(not required)";
                             break;
-                        case Required.Reuired:
-                            requiredText = "(requred)";
+                        case Required.Is:
+                            requiredText = "(required)";
                             break;
                         case Required.Partially:
-                            requiredText = "(sometimes requred)";
+                            requiredText = "(sometimes required)";
                             break;
                     }
                     Console.WriteLine(propertyInfo.Name + " " + requiredText);
@@ -494,7 +494,7 @@ namespace Reinforced.Typings.Cli
             }
             catch (Exception ex)
             {
-                BuildError("Parameters validation error: {0}", ex.Message);
+                BuildError("Parameter validation error: {0}", ex.Message);
                 PrintHelp();
                 return null;
             }

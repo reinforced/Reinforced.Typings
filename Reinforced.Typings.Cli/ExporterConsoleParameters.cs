@@ -16,9 +16,9 @@ namespace Reinforced.Typings.Cli
         /// The assemblies to extract typings from
         /// </summary>
         [ConsoleHelp(@"
-The semicolon-separated assemblies list to extract typings from.
+The semicolon-separated list of assemblies to extract typings from.
 Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProject\Assembly2.dll""
-", Required.Reuired)]
+", Required.Is)]
         public string[] SourceAssemblies { get; set; }
 
         /// <summary>
@@ -26,19 +26,19 @@ Example:   rtcli.exe SourceAssemblies=""C:\TestProject\Assembly1.dll;C:\TestProj
         /// This parameter is not used when Hierarchy is true
         /// </summary>
         [ConsoleHelp(@"
-Target file where to store generated sources.
-Not required if Hirarchy=""true"" specified. Otherwise required.
+Target file to store generated sources.
+Not required if Hierarchy=""true"" specified. Otherwise required.
 Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partially)]
         public string TargetFile { get; set; }
 
         /// <summary>
         /// Target directory where to store generated typing files. 
-        /// This parameter is not used when Hierarcy is false
+        /// This parameter is not used when Hierarchy is false
         /// </summary>
         [ConsoleHelp(@"
-Target directory where to store generated typing files. 
-Not required if Hirarchy=""false"" or not specified. Otherwise required.
-Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (regardless ending slash)", Required.Partially)]
+Target directory to store generated typing files. 
+Not required if Hierarchy=""false"" or not specified. Otherwise required.
+Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (trailing slash optional)", Required.Partially)]
         public string TargetDirectory { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ Example:   rtcli.exe TargetDirectory=""C:\path\to\project\"" (regardless ending 
         /// If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly
         /// </summary>
         [ConsoleHelp(@"
-Path to temporary file containing all the references for project. One reference per line.
+Path to temporary file containing all references for project. One reference per line.
 If not specified then the CLI will try to resolve reference assemblies 
 from same directory as target assembly. 
 Example:   rtcli.exe References=""C:\Users\AppData\Local\Temp\ANGhgRuDPG.tmp"" ")]
@@ -100,7 +100,7 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
                 throw new Exception("Target directory must be specified in case of hierarchy generation");
 
             if (SourceAssemblies == null || SourceAssemblies.Length == 0)
-                throw new Exception("Source assemblies is not specified. Nothing to export");
+                throw new Exception("No source assemblies specified. Nothing to export");
         }
 
         public ExporterConsoleParameters()
