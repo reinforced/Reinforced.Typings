@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Reinforced.Typings.Fluent;
 using Xunit;
 
@@ -59,10 +60,10 @@ export class SomeFluentReferencedType
                     ;
                 s.ExportAsClass<SomeIndirectlyReferencedClass>().ExportTo("Stuff/Stuff.ts");
                 s.ExportAsClass<SomeFluentReferencedType>().ExportTo("Stuff/Stuff.ts");
-            }, new Dictionary<string, string>()
+            }, new Dictionary<string, string>
             {
-                {"D:\\Exported\\File1.ts", file1},
-                {"D:\\Stuff\\Stuff.ts", file2},
+                { Path.Combine(TargetDir, "Exported", "File1.ts"), file1},
+                { Path.Combine(TargetDir, "Stuff", "Stuff.ts"), file2}
             }, compareComments: true);
         }
     }

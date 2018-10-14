@@ -125,7 +125,7 @@ namespace Reinforced.Typings.Generators
                 {
                     var val = GetStaticValue(element);
                     if (val == null) result.InitializationExpression = "null";
-                    else result.InitializationExpression = ((bool)val) ? "true" : "false";
+                    else result.InitializationExpression = (bool)val ? "true" : "false";
                 }
 
                 if (memberType == typeof(string))
@@ -162,7 +162,7 @@ namespace Reinforced.Typings.Generators
                 }
             }
 
-            if (attr != null && attr.InitializerEvaluator != null)
+            if (attr?.InitializerEvaluator != null)
             {
                 var val = element.IsStatic() ? GetStaticValue(element) : null;
                 result.InitializationExpression = attr.InitializerEvaluator(element, resolver, val);

@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Generators
             foreach (var type in types)
             {
                 var converter = Context.Generators.GeneratorFor(type, Context);
-                if (converter==null) continue;
+                if (converter == null) continue;
                 var member = converter.Generate(type, resolver);
                 var m = member as RtCompilationUnit;
                 if (m != null)

@@ -11,6 +11,7 @@ namespace Reinforced.Typings.Tests
 {
     public abstract class ConfigurationBuilderTestBase
     {
+        protected const string TargetDir = "targetDir";
         protected const string Sample = "target.ts";
 
         protected TestInitializationData InitializeSingleFile(Action<ConfigurationBuilder> configuration)
@@ -22,7 +23,7 @@ namespace Reinforced.Typings.Tests
                 ConfigurationMethod = configuration,
                 Hierarchical = false,
                 SourceAssemblies = new Assembly[] { Assembly.GetExecutingAssembly(), typeof(TestFluentAssembly.TwoInterfaces.IInterface1).Assembly },
-                TargetDirectory = "D:\\",
+                TargetDirectory = TargetDir,
                 TargetFile = Sample
             };
             TsExporter te = new TsExporter(ec);
@@ -39,7 +40,7 @@ namespace Reinforced.Typings.Tests
                 ConfigurationMethod = configuration,
                 Hierarchical = true,
                 SourceAssemblies = new Assembly[] { Assembly.GetExecutingAssembly(), typeof(TestFluentAssembly.TwoInterfaces.IInterface1).Assembly },
-                TargetDirectory = "D:\\"
+                TargetDirectory = TargetDir
             };
             TsExporter te = new TsExporter(ec);
             te.Initialize();

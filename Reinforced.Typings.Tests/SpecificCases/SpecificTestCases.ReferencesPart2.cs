@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Reinforced.Typings.Fluent;
 using Xunit;
 
@@ -57,11 +58,11 @@ module Reinforced.Typings.Tests.SpecificCases {
                     ;
                 s.ExportAsClass<SomeIndirectlyReferencedClass>().ExportTo("Indirect/File2.ts");
                 s.ExportAsClass<SomeFluentReferencedType>().ExportTo("Fluently/File3.ts");
-            }, new Dictionary<string, string>()
+            }, new Dictionary<string, string>
             {
-                {"D:\\Exported\\File1.ts", file1},
-                {"D:\\Indirect\\File2.ts", file2},
-                {"D:\\Fluently\\File3.ts", file3},
+                { Path.Combine(TargetDir, "Exported", "File1.ts"), file1 },
+                { Path.Combine(TargetDir, "Indirect", "File2.ts"), file2 },
+                { Path.Combine(TargetDir, "Fluently", "File3.ts"), file3 }
             }, compareComments: true);
         }
     }

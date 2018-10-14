@@ -44,6 +44,9 @@ namespace Reinforced.Typings.Tests.SpecificCases
         [Fact]
         public void ConstantProperties()
         {
+	        // NB this test fails on Mono because the Members property of RtClass does not 
+	        // order the tokens in the same order as the CLR on Windows (ie it's CLR-specific, relying on a certain order)
+	        // (Similar to the way that the order of attributes in C# code is CLR-dependent and shouldn't be relied on)
             const string result = @"
 module Test {
 	export enum ExportedEnum { 

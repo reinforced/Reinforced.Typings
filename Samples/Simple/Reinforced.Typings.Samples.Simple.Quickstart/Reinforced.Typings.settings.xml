@@ -11,7 +11,8 @@
 	-->
 	
 	<PropertyGroup>
-	
+		<TargetFramework>net45</TargetFramework>
+		<PublishPipelineCollectFilesCore>Stub</PublishPipelineCollectFilesCore>
 		<!-- 
 			This property points target file where to put generated sources. 
 			It is not used if RtDivideTypesAmongFiles='true' specified.
@@ -45,7 +46,7 @@
 			
 			Important! In case of using this setting, do not forget to add generated files to solution manually.
 		-->
-		<RtDivideTypesAmongFiles>false</RtDivideTypesAmongFiles>
+		<RtDivideTypesAmongFiles>true</RtDivideTypesAmongFiles>
 		
 		<!--
 			... and if you use RtDivideTypesAmongFiles then please specify target directory

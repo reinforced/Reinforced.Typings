@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Ast
@@ -24,7 +25,7 @@ namespace Reinforced.Typings.Ast
         public RtTypeName Extendee { get; set; }
 
         /// <inheritdoc />
-        public List<RtNode> Members { get; private set; }
+        public List<RtNode> Members { get; private set; }        //todo this needs to be sorted to be cross-platform, it's returning different order for Mono
 
         /// <summary>
         /// Constructs new instance of AST node
@@ -53,6 +54,7 @@ namespace Reinforced.Typings.Ast
                 {
                     yield return implementee;
                 }
+                
                 yield return Extendee;
                 foreach (var rtMember in Members)
                 {

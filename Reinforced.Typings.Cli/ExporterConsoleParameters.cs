@@ -33,7 +33,7 @@ Example:   rtcli.exe TargetFile=""C:\path\to\target\file.ts""", Required.Partial
 
         /// <summary>
         /// Target directory where to store generated typing files. 
-        /// This parameter is not used when Hierarcy is false
+        /// This parameter is not used when Hierarchy is false
         /// </summary>
         [ConsoleHelp(@"
 Target directory to store generated typing files. 
