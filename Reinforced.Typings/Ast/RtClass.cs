@@ -26,6 +26,9 @@ namespace Reinforced.Typings.Ast
 
         /// <inheritdoc />
         public List<RtNode> Members { get; private set; }        //todo this needs to be sorted to be cross-platform, it's returning different order for Mono
+        
+        ///  <inheritdoc />
+        public bool Abstract { get; set; }
 
         /// <summary>
         /// Constructs new instance of AST node

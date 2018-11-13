@@ -18,6 +18,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             AppendTabs();
             Decorators(node);
             if (node.Export) Write("export ");
+            if (node.Abstract) Write("abstract ");
             Write("class ");
             Visit(node.Name);
             if (node.Extendee != null)

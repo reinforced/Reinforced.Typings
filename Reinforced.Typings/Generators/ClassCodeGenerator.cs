@@ -22,6 +22,12 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtClass GenerateNode(Type element, RtClass result, TypeResolver resolver)
         {
+#if NETCORE1
+            if (element.GetTypeInfo().IsAbstract) result.Abstract = true;
+#else
+            if (element.IsAbstract) result.Abstract = true;
+            System.Console.WriteLine($"{element} Abstract: {element.IsAbstract}");
+#endif
             var clsbp = Context.Project.Blueprint(element);
             var tc = Context.Project.Blueprint(element).Attr<TsClassAttribute>();
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
