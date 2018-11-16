@@ -104,6 +104,24 @@ namespace Reinforced.Typings
         /// <returns></returns>
         public NamespaceCodeGenerator GeneratorForNamespace(ExportContext context)
         {
+            var generatorType = context.OverridenNamespaceGenerator;
+            if(!(generatorType is null))
+            {
+#if NETCORE1
+                var constructor = generatorType.GetTypeInfo().GetConstructor(new Type[] { });
+#else
+                var constructor = generatorType.GetConstructor(new Type[] { });
+#endif
+                if (!(constructor is null))
+                {
+                    var created = constructor.Invoke(new object[] { });
+                    if (created is NamespaceCodeGenerator nscg)
+                    {
+                        nscg.Context = context;
+                        return nscg;
+                    }
+                }
+            }
             _defaultNsgenerator.Context = context;
             return _defaultNsgenerator;
         }

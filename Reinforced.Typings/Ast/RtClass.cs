@@ -30,6 +30,9 @@ namespace Reinforced.Typings.Ast
         ///  <inheritdoc />
         public bool Abstract { get; set; }
 
+        /// <inheritdoc />
+        public bool Inner { get; set; }
+
         /// <summary>
         /// Constructs new instance of AST node
         /// </summary>

@@ -153,6 +153,11 @@ namespace Reinforced.Typings
         /// </summary>
         public List<RtWarning> Warnings { get; private set; }
 
+        /// <summary>
+        ///     The type to use for namespace generation
+        /// </summary>
+        public Type OverridenNamespaceGenerator { get; set; }
+
         #region Internals
 
         /// <summary>

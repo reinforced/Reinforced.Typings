@@ -1,5 +1,6 @@
 ﻿using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
+using Reinforced.Typings.Generators;
 
 // ReSharper disable CheckNamespace
 
@@ -58,6 +59,18 @@ namespace Reinforced.Typings.Fluent
         {
             conf.AttributePrototype.Namespace = nameSpace;
             return conf;
+        }
+
+        /// <summary>
+        ///     Configures the global Namespace Generator
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="generatorType"></param>
+        /// <returns></returns>
+        public static ConfigurationBuilder SetNamespaceGenerator<T>(this ConfigurationBuilder builder) where T : NamespaceCodeGenerator
+        {
+            builder.Context.OverridenNamespaceGenerator = typeof(T);
+            return builder;
         }
     }
 }

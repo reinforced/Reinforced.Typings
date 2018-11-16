@@ -19,8 +19,14 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Decorators(node);
             if (node.Export) Write("export ");
             if (node.Abstract) Write("abstract ");
+            if (node.Inner)
+            {
+                Write("static ");
+                Visit(node.Name);
+                Write(" = ");
+            }
             Write("class ");
-            Visit(node.Name);
+            if(!node.Inner) Visit(node.Name);
             if (node.Extendee != null)
             {
                 Write(" extends ");
