@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Reinforced.Typings</id>
+        <version>1.4.95</version>
+        <title>Reinforced.Typings</title>
+        <authors>Pavel B. Novikov</authors>
+        <owners>Pavel B. Novikov</owners>
+        <projectUrl>https://github.com/reinforced/Reinforced.Typings</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/icon.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Reinforced.Typings is automated, reflection-based glue code generator for TypeScript. It is MSBuild-integrated and can generate MVC/WebAPI services glue code, JSDOC and architecture mockups from your assemblies.</description>
+        <summary>Automated, reflection-based glue code generator for TypeScript</summary>
+        <copyright>© 2015 Pavel B. Novikov</copyright>
+        <language>en-US</language>
+        <tags>mvc, web, typescript</tags>		
+        <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
+		<releaseNotes>
+- .NET Core 2.1 support bug
+		</releaseNotes>
+        <dependencies>
+          <group targetFramework=".NETFramework4.5" />
+          <group targetFramework=".NETStandard1.5">
+            <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
+            <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+            <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />                 
+          </group>
+          <group targetFramework=".NETCoreApp1.0">
+            <dependency id="Microsoft.NETCore.App" version="1.0.5" exclude="Build,Analyzers" />
+            <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
+            <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
+          </group>          
+          <group targetFramework=".NETCoreApp2.0">
+            <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
+            <dependency id="Microsoft.NETCore.App" version="2.0.0" exclude="Build,Analyzers" />
+            <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
+          </group>
+          <group targetFramework=".NETStandard2.0">
+            <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
+            <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />            
+          </group>
+        </dependencies>   
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="Microsoft.Build" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="Microsoft.Build.Framework" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="Microsoft.Build.Tasks.v4.0" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="Microsoft.Build.Utilities.v4.0" targetFramework=".NETFramework4.5" />
+        </frameworkAssemblies>        
+    </metadata>
+    <files>    
+        <file src="build\**" target="build" />
+        <file src="content\**" target="content" />
+        <file src="buildMultiTargeting\**" target="buildMultiTargeting" />
+        <file src="lib\**" target="lib" />
+        <file src="tools\**" target="tools" />        
+        <file src="readme.txt" target="" />        
+    </files>
+    
+</package>

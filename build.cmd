@@ -37,8 +37,8 @@ cd ..
 
 xcopy xmls\Reinforced.Typings.settings.xml package\content\ /I /Y
 
-xcopy xmls\ruler501.Reinforced.Typings.targets package\build\ /I /Y
-xcopy xmls\ruler501.Reinforced.Typings.Multi.targets package\buildMultiTargeting\ /I /Y
+xcopy xmls\Reinforced.Typings.targets package\build\ /I /Y
+xcopy xmls\Reinforced.Typings.Multi.targets package\buildMultiTargeting\ /I /Y
 
 xcopy xmls\Reinforced.Typings.props package\build\ /I /Y
 xcopy xmls\Reinforced.Typings.props package\buildMultiTargeting\ /I /Y
@@ -51,7 +51,7 @@ xcopy Reinforced.Typings.Integrate\bin\Release\net45\Reinforced.Typings.Integrat
 xcopy Reinforced.Typings.Integrate\bin\Release\netstandard1.6\*.* package\build\netstandard1.6\ /I /Y
 
 rem package
-nuget pack package\ruler501.Reinforced.Typings.nuspec -BasePath package
+nuget pack package\Reinforced.Typings.nuspec -BasePath package
 
 
 
