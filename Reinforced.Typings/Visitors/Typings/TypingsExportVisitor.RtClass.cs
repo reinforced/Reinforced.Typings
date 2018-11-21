@@ -15,7 +15,7 @@ namespace Reinforced.Typings.Visitors.Typings
             AppendTabs();
             if (prev == WriterContext.Module) Write("export ");
             else Write("declare ");
-
+            if (node.Abstract) Write("abstract ");
             Write("class ");
             Visit(node.Name);
             if (node.Extendee != null)
