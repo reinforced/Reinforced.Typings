@@ -21,10 +21,9 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// </summary>
         /// <param name="keySimpleType">Type for dictionary key</param>
         /// <param name="valueSimpleType">Type for disctionary value</param>
-        public RtDictionaryType(string keySimpleType, string valueSimpleType)
+        public RtDictionaryType(RtTypeName keySimpleType, RtTypeName valueSimpleType)
+            : this(keySimpleType, valueSimpleType, false)
         {
-            KeyType = new RtSimpleTypeName(keySimpleType);
-            ValueType = new RtSimpleTypeName(valueSimpleType);
         }
 
         /// <summary>
@@ -32,10 +31,12 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// </summary>
         /// <param name="keySimpleType">Type for dictionary key</param>
         /// <param name="valueSimpleType">Type for disctionary value</param>
-        public RtDictionaryType(RtTypeName keySimpleType, RtTypeName valueSimpleType)
+        /// <param name="isKeyEnum">A flag specifying whether the key is an enum type.</param>
+        public RtDictionaryType(RtTypeName keySimpleType, RtTypeName valueSimpleType, bool isKeyEnum)
         {
             KeyType = keySimpleType;
             ValueType = valueSimpleType;
+            IsKeyEnum = isKeyEnum;
         }
 
         /// <summary>
@@ -47,6 +48,11 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// Type for disctionary value
         /// </summary>
         public RtTypeName ValueType { get; private set; }
+
+        /// <summary>
+        /// A flag indicating whether the key is an enum type, and a mapped type should be generated.
+        /// </summary>
+        public bool IsKeyEnum { get; }
 
         /// <inheritdoc />
         public override IEnumerable<RtNode> Children
@@ -73,7 +79,8 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <inheritdoc />
         public override string ToString()
         {
-            return String.Format("{{ [key: {0}]: {1} }}", KeyType, ValueType);
+            string keyTypeSpec = IsKeyEnum ? " in " : ":";
+            return $"{{ [key{keyTypeSpec}{KeyType}]: {ValueType} }}";
         }
     }
 }

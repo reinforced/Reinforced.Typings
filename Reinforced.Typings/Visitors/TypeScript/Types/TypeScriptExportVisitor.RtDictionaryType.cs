@@ -9,7 +9,9 @@ namespace Reinforced.Typings.Visitors.TypeScript
         public override void Visit(RtDictionaryType node)
         {
             if (node == null) return;
-            Write("{ [key:");
+            string keyTypeSpec = node.IsKeyEnum ? " in " : ":";
+            Write("{ [key");
+            Write(keyTypeSpec);
             Visit(node.KeyType);
             Write("]: ");
             Visit(node.ValueType);

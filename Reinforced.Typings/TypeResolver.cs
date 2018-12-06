@@ -238,13 +238,14 @@ namespace Reinforced.Typings
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
                 var gargs = t._GetGenericArguments();
+                bool isKeyEnum = gargs[0].IsEnum;
                 var key = ResolveTypeName(gargs[0]);
-                if (key != NumberType && key != StringType)
+                if (key != NumberType && key != StringType && !isKeyEnum)
                 {
                     _context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, t));
                 }
                 var value = ResolveTypeName(gargs[1]);
-                return Cache(t, new RtDictionaryType(key, value));
+                return Cache(t, new RtDictionaryType(key, value, isKeyEnum));
             }
             if (t.IsNongenericEnumerable())
             {
