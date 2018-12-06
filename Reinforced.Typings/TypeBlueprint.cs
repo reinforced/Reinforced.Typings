@@ -484,28 +484,31 @@ namespace Reinforced.Typings
         /// <returns>Resulting string in camelCase</returns>
         public static string ConvertToCamelCase(string s)
         {
-            if (!char.IsLetter(s[0])) return s;
-            StringBuilder result = new StringBuilder();
-            int i;
-            for (i = 0; i < s.Length; i++)
+            if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
             {
-                if (i < s.Length - 1 && char.IsLower(s[i + 1])) break;
-                if (char.IsUpper(s[i])) result.Append(char.ToLowerInvariant(s[i]));
+                return s;
             }
 
-            if (i < s.Length - 1)
+            char[] chars = s.ToCharArray();
+
+            for (int i = 0; i < chars.Length; i++)
             {
-                if (i == 0)
+                if (i == 1 && !char.IsUpper(chars[i]))
                 {
-                    result.Append(char.ToLowerInvariant(s[0]));
-                    result.Append(s.Substring(1));
+                    break;
                 }
-                else
+
+                bool hasNext = i + 1 < chars.Length;
+                if (i > 0 && hasNext && !char.IsUpper(chars[i + 1]))
                 {
-                    result.Append(s.Substring(i));
+                    // ABCa -> abCa
+                    break;
                 }
+
+                chars[i] = char.ToLowerInvariant(chars[i]);
             }
-            return result.ToString();
+
+            return new string(chars);
         }
 
         private string ConvertToPascalCase(string s)
