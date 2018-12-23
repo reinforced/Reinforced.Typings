@@ -9,6 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reinforced.Typings.Cli.NETC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reinforced.Typings.Integrate.NETCore", "Reinforced.Typings.Integrate\Reinforced.Typings.Integrate.NETCore.csproj", "{836424C9-8003-4C0F-84E1-2C17FE498648}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cake", "cake", "{71091BA9-1588-4878-B1FA-3EF908CCD61C}"
+	ProjectSection(SolutionItems) = preProject
+		cake\build.cake = cake\build.cake
+		cake\build.ps1 = cake\build.ps1
+		cake\build.sh = cake\build.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

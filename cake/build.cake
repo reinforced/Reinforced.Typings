@@ -5,9 +5,10 @@ Task("Clean")
   CleanDirectories("../Reinforced.Typings*/**/bin");
   CleanDirectories("../Reinforced.Typings*/**/obj");
 
-  Information("Clean completed");
+  Information("Clean completed");  
 });
 
+const string packagePath = "../package";
 const string toolsPath = "../package/tools";
 const string contentPath = "../package/content";
 const string buildPath = "../package/build";
@@ -19,11 +20,12 @@ const string buildNet16 = "../package/build/netstandard1.6";
 Task("PackageClean")
   .Does(() =>
 {
-  CleanDirectory(toolsPath); EnsureDirectoryExists(toolsPath);
-  CleanDirectory(contentPath); EnsureDirectoryExists(contentPath);
   CleanDirectory(buildPath); EnsureDirectoryExists(buildPath);
   CleanDirectory(multiTargetPath); EnsureDirectoryExists(multiTargetPath);
+  CleanDirectory(contentPath); EnsureDirectoryExists(contentPath);  
   CleanDirectory(libPath); EnsureDirectoryExists(libPath);
+  CleanDirectory(toolsPath); EnsureDirectoryExists(toolsPath);
+  
   CleanDirectory(buildNet45); EnsureDirectoryExists(buildNet45);
   CleanDirectory(buildNet16); EnsureDirectoryExists(buildNet16);
 
@@ -48,28 +50,28 @@ Task("Build")
   DotNetCoreBuild("../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj", new DotNetCoreBuildSettings
   {
     Verbosity = DotNetCoreVerbosity.Minimal,
-    Configuration = "Release",
+    Configuration = "Release"
   });  
-
+  
   // dotnet versions do not compile at the moment due to error 
   // Generators\ParameterCodeGenerator.cs(59,43): error CS1061: 'Type' does not contain a definition for 'IsEnum' and no 
   // accessible extension method 'IsEnum' accepting a first argument of type 'Type' could be found
   
-  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-  //   Configuration = RELEASE, 
-  //   Framework = NETCORE21,
-  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE21)
-  // });
-  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-  //   Configuration = RELEASE, 
-  //   Framework = NETCORE20,
-  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE20)
-  // });
-  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-  //   Configuration = RELEASE, 
-  //   Framework = NETCORE1,
-  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE1)
-  // });
+  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+    Configuration = RELEASE, 
+    Framework = NETCORE21,
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE21)
+  });
+  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+    Configuration = RELEASE, 
+    Framework = NETCORE20,
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE20)
+  });
+  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+    Configuration = RELEASE, 
+    Framework = NETCORE1,
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE1)
+  });
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NET461,
@@ -84,18 +86,20 @@ Task("Build")
   CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", contentPath);
   CopyFileToDirectory("../xmls/Reinforced.Typings.targets", buildPath);
   CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", multiTargetPath);
+  CopyFileToDirectory("../xmls/Reinforced.Typings.nuspec", packagePath);
+  CopyFileToDirectory("../xmls/readme.txt", packagePath);
 
-  // this must be a relic/mistake, the files don't exist and were never copied in the original build.cmd anyway
-  // CopyFileToDirectory("../xmls/Reinforced.Typings.props", buildPath);
-  // CopyFileToDirectory("../xmls/Reinforced.Typings.props", multiTargetPath);
-  
+   
   CopyFiles("../Reinforced.Typings/bin/Release/*.*", libPath);
   CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", buildNet45);
   CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", buildNet16);
 
   NuGetPack("../package/Reinforced.Typings.nuspec", new NuGetPackSettings {
-    BasePath = "../package"
+    BasePath = packagePath
   });
+
+  MoveFiles("*.nupkg","../"); 
+
 
   Information("Build completed");
 });
