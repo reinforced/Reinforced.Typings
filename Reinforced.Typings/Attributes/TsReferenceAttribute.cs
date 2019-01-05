@@ -1,4 +1,5 @@
 ﻿using System;
+using Reinforced.Typings.Ast.Dependency;
 
 namespace Reinforced.Typings.Attributes
 {
@@ -21,5 +22,13 @@ namespace Reinforced.Typings.Attributes
         ///     Path to referenced TS file
         /// </summary>
         public virtual string Path { get; private set; }
+
+        private RtReference _reference;
+
+        internal RtReference ToReference()
+        {
+            if (_reference==null) _reference = new RtReference() {Path = Path};
+            return _reference;
+        }
     }
 }

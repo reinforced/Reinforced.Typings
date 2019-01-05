@@ -88,12 +88,16 @@
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\INameOverrideAttribute.cs" />
+    <Compile Include="Attributes\TsThirdPartyAttribute.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Enums.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Interfaces.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Classes.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Fields.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Methods.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions\ConfigurationBuildersExtensions.Properties.cs" />
+    <Compile Include="Fluent\New\MemberExportBuilder.cs" />
+    <Compile Include="Fluent\New\TypeExportBuilder.cs" />
+    <Compile Include="Fluent\New\TypeExportExtensions.cs" />
     <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.Various.cs" />
     <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.NamesAndNamespaces.cs" />
     <Compile Include="Fluent\TypingsConfigurationExtensions\TypingsConfigurationExtensions.Inferring.cs" />
@@ -166,6 +170,7 @@
     <Compile Include="ReferencesInspection\InspectedReferences.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="ReferencesInspection\ReferenceComparer.cs" />
+    <Compile Include="ReferencesInspection\ReferenceProcessorBase.cs" />
     <Compile Include="TypeBlueprint.cs" />
     <Compile Include="Visitors\TextExportingVisitor.cs" />
     <Compile Include="Visitors\TypedVisitorBase.cs" />

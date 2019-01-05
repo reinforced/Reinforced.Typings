@@ -1,4 +1,8 @@
-﻿namespace Reinforced.Typings
+﻿using System;
+using Reinforced.Typings.Exceptions;
+using Reinforced.Typings.ReferencesInspection;
+
+namespace Reinforced.Typings
 {
     /// <summary>
     /// Collections of global TS generation parameters
@@ -170,5 +174,23 @@
             }
         }
 
+        private Type _refProcessorType;
+
+        /// <summary>
+        /// Gets or sets type of <see cref="Reinforced.Typings.ReferencesInspection.ReferenceProcessorBase"/> to be used while exporting files
+        /// </summary>
+        public Type ReferencesProcessorType
+        {
+            get { return _refProcessorType; }
+            set
+            {
+                if (_isLocked) return;
+                if (!typeof(ReferenceProcessorBase).IsAssignableFrom(value))
+                {
+                    ErrorMessages.RTE0016_InvalidRefProcessorType.Throw(value);
+                }
+                _refProcessorType = value;
+            }
+        }
     }
 }

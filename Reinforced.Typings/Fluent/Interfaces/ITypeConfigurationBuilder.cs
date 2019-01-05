@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
@@ -47,5 +48,20 @@ namespace Reinforced.Typings.Fluent.Interfaces
         /// </summary>
         /// <returns></returns>
         bool CanFlatten();
+
+        /// <summary>
+        /// Gets or sets whether type is third-party
+        /// </summary>
+        bool ThirdParty { get; set; }
+
+        /// <summary>
+        /// List of third-party imports
+        /// </summary>
+        List<RtImport> ThirdPartyImports { get; }
+
+        /// <summary>
+        /// List of third-party references
+        /// </summary>
+        List<RtReference> ThirdPartyReferences { get;  }
     }
 }

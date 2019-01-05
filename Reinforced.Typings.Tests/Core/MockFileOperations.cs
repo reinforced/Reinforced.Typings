@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Visitors.TypeScript;
 using Reinforced.Typings.Visitors.Typings;
 
@@ -33,30 +34,39 @@ namespace Reinforced.Typings.Tests.Core
             TempRegistryCleared = true;
         }
 
-        public void Export(string fileName, ExportedFile file)
+        public void Export(string fileName, ExportedFile file, ReferenceProcessorBase refProcessor = null)
         {
             StringBuilder sb = new StringBuilder();
             using (var sw = new StringWriter(sb))
             {
-                ExportCore(sw, file);
+                ExportCore(sw, file,refProcessor);
             }
             ExportedFiles[fileName] = sb.ToString();
         }
 
-        protected virtual void ExportCore(TextWriter tw, ExportedFile file)
+        protected virtual void ExportCore(TextWriter tw, ExportedFile file, ReferenceProcessorBase refProcessor = null)
         {
             var visitor = Context.Global.ExportPureTypings ? new TypingsExportVisitor(tw, Context.Global.TabSymbol) : new TypeScriptExportVisitor(tw, Context.Global.TabSymbol);
             WriteWarning(tw);
-            foreach (var rtReference in file.References.References)
+
+            var references = file.References.References;
+            if (refProcessor != null) references = refProcessor.FilterReferences(references,file);
+            bool hasReferences = false;
+            foreach (var rtReference in references)
             {
                 visitor.Visit(rtReference);
+                hasReferences = true;
             }
 
-            foreach (var rtImport in file.References.Imports)
+            var imports = file.References.Imports;
+            if (refProcessor != null) imports = refProcessor.FilterImports(imports, file);
+            bool hasImports = false;
+            foreach (var rtImport in imports)
             {
                 visitor.Visit(rtImport);
+                hasImports = true;
             }
-            if (file.References.References.Any() || file.References.Imports.Any()) tw.WriteLine();
+            if (hasReferences || hasImports) tw.WriteLine();
             foreach (var fileNamespace in file.Namespaces)
             {
                 visitor.Visit(fileNamespace);

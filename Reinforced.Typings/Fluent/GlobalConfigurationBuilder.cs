@@ -1,4 +1,5 @@
 ﻿using System;
+using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings.Fluent
 {
@@ -129,6 +130,20 @@ namespace Reinforced.Typings.Fluent
             bool typings = true)
         {
             builder.Parameters.ExportPureTypings = typings;
+            return builder;
+        }
+
+        /// <summary>
+        ///  Sets rype of <see cref="Reinforced.Typings.ReferencesInspection.ReferenceProcessorBase"/> to be used to
+        /// refilter/reorder references and imports while exporting files
+        /// </summary>
+        /// <typeparam name="T">Type of references processor to be used</typeparam>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="use">When false then disables usage of references processor</param>
+        public static GlobalConfigurationBuilder WithReferencesProcessor<T>(this GlobalConfigurationBuilder builder, bool use = true)
+        where T:ReferenceProcessorBase
+        {
+            builder.Parameters.ReferencesProcessorType = use ? typeof(T) : null;
             return builder;
         }
 

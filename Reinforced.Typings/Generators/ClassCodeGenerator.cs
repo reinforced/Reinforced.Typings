@@ -26,7 +26,9 @@ namespace Reinforced.Typings.Generators
             if (element.GetTypeInfo().IsAbstract) result.Abstract = true;
 #else
             if (element.IsAbstract) result.Abstract = true;
+#if DEBUG
             System.Console.WriteLine($"{element} Abstract: {element.IsAbstract}");
+#endif
 #endif
             var clsbp = Context.Project.Blueprint(element);
             var tc = Context.Project.Blueprint(element).Attr<TsClassAttribute>();

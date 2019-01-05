@@ -32,9 +32,9 @@ namespace Reinforced.Typings.Generators
             Context.Location.SetLocation(ns);
             foreach (var type in types)
             {
-                var converter = Context.Generators.GeneratorFor(type, Context);
-                if (converter == null) continue;
-                var member = converter.Generate(type, resolver);
+                var typeGenerator = Context.Generators.GeneratorFor(type, Context);
+                if (typeGenerator == null) continue;
+                var member = typeGenerator.Generate(type, resolver);
                 var m = member as RtCompilationUnit;
                 if (m != null)
                 {
@@ -50,7 +50,9 @@ namespace Reinforced.Typings.Generators
 
 
                 ns.CompilationUnits.Add(member);
+#if DEBUG
                 Console.WriteLine("Exported {0}", type);
+#endif
             }
 
             if (Context.Global.UseModules) ns.GenerationMode = NamespaceGenerationMode.Namespace;

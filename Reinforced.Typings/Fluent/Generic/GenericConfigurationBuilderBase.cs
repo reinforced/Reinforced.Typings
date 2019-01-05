@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent.Interfaces;
@@ -78,5 +79,30 @@ namespace Reinforced.Typings.Fluent.Generic
             set { _blueprint.PathToFile = value; }
         }
         public abstract double MemberOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether type is third-party
+        /// </summary>
+        public bool ThirdParty
+        {
+            get { return _blueprint.IsThirdParty; }
+            set { _blueprint.IsThirdParty = value; }
+        }
+
+        /// <summary>
+        /// List of third-party imports
+        /// </summary>
+        public List<RtImport> ThirdPartyImports
+        {
+            get { return _blueprint.ThirdPartyImports; }
+        }
+
+        /// <summary>
+        /// List of third-party references
+        /// </summary>
+        public List<RtReference> ThirdPartyReferences
+        {
+            get { return _blueprint.ThirdPartyReferences; }
+        }
     }
 }

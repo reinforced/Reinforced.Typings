@@ -58,6 +58,7 @@ namespace Reinforced.Typings
             gp.TabSymbol = tsGlobal.TabSymbol;
             gp.WriteWarningComment = tsGlobal.WriteWarningComment;
             //gp.StrictNullChecks = tsGlobal.StrictNullChecks;
+            gp.ReferencesProcessorType = tsGlobal.ReferenceProcessorType;
         }
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace Reinforced.Typings
                 .ToList();
 
             _allTypesHash = new HashSet<Type>(_allTypes);
-            ReferenceInspector = new ReferenceInspector(_context, _allTypesHash);
+            ReferenceInspector = new ReferenceInspector(_context);
 
             if (_context.Hierarchical)
             {
@@ -108,7 +109,9 @@ namespace Reinforced.Typings
             GlobalReferences = ReferenceInspector.InspectGlobalReferences();
             _context.Generators = new GeneratorManager(_context);
             if (!_context.Hierarchical) _typesToFilesMap = new Dictionary<string, IEnumerable<Type>>();
-            else _typesToFilesMap = _allTypes.GroupBy(c => ReferenceInspector.GetPathForType(c, stripExtension: false))
+            else _typesToFilesMap =
+                _allTypes.Where(d => !_context.Project.Blueprint(d).IsThirdParty)
+                .GroupBy(c => ReferenceInspector.GetPathForType(c, stripExtension: false))
                 .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
             _isInitialized = true;
@@ -179,11 +182,15 @@ namespace Reinforced.Typings
             Initialize();
 
             _context.Lock();
-
+            ReferenceProcessorBase refProc = null;
+            if (_context.Global.ReferencesProcessorType != null)
+            {
+                refProc = (ReferenceProcessorBase)Activator.CreateInstance(_context.Global.ReferencesProcessorType);
+            }
             if (!_context.Hierarchical)
             {
                 var file = ExportTypes();
-                _context.FileOperations.Export(_context.TargetFile, file);
+                _context.FileOperations.Export(_context.TargetFile, file, refProc);
             }
             else
             {
@@ -191,7 +198,7 @@ namespace Reinforced.Typings
                 {
                     var path = kv.Key;
                     var file = ExportTypes(kv.Key);
-                    _context.FileOperations.Export(path, file);
+                    _context.FileOperations.Export(path, file, refProc);
                 }
             }
 

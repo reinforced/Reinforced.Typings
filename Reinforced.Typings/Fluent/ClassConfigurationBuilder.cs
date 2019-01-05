@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Fluent
     /// <typeparam name="T"></typeparam>
     public class ClassConfigurationBuilder<T> : TypeConfigurationBuilder<T>, IClassConfigurationBuilder
     {
-        public ClassConfigurationBuilder(ExportContext context) : base(context)
+        internal ClassConfigurationBuilder(ExportContext context) : base(context)
         {
             if (_blueprint.TypeAttribute == null)
             {

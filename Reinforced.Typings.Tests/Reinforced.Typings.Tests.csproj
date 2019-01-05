@@ -97,6 +97,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ConstantProperties.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportEnums.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.EnumStringInitializers.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ReferencesProcessor.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />

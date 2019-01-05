@@ -5,7 +5,7 @@ namespace Reinforced.Typings.Attributes
     /// <summary>
     ///     Base attribute for so-called compilation unit (class, enum, interface etc)
     /// </summary>
-    public abstract class TsDeclarationAttributeBase : TsAttributeBase, INameOverrideAttribute, IOrderableAttribute
+    public abstract class TsDeclarationAttributeBase : TsAttributeBase, INameOverrideAttribute, INamespaceOverrideAttribute, IOrderableAttribute
     {
         /// <summary>
         ///     Constructs new instance of TsDeclarationAttributeBase

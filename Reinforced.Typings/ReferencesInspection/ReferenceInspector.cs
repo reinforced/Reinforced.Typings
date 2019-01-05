@@ -15,12 +15,10 @@ namespace Reinforced.Typings.ReferencesInspection
     public sealed class ReferenceInspector
     {
         private readonly ExportContext _context;
-        private readonly HashSet<Type> _allExportedTypes;
 
-        internal ReferenceInspector(ExportContext context, HashSet<Type> allExportedTypes)
+        internal ReferenceInspector(ExportContext context)
         {
             _context = context;
-            _allExportedTypes = allExportedTypes;
         }
 
         /// <summary>
@@ -32,14 +30,14 @@ namespace Reinforced.Typings.ReferencesInspection
             var assemblies = _context.SourceAssemblies;
             var references = assemblies.Where(c => c.GetCustomAttributes<TsReferenceAttribute>().Any())
                 .SelectMany(c => c.GetCustomAttributes<TsReferenceAttribute>())
-                .Select(c => new RtReference() { Path = c.Path })
+                .Select(c => c.ToReference())
                 .Union(_context.Project.References);
 
             if (_context.Global.UseModules)
             {
                 var imports = assemblies.Where(c => c.GetCustomAttributes<TsImportAttribute>().Any())
                     .SelectMany(c => c.GetCustomAttributes<TsImportAttribute>())
-                    .Select(c => new RtImport() { Target = c.ImportTarget, From = c.ImportSource, IsRequire = c.ImportRequire })
+                    .Select(c => c.ToImport())
                     .Union(_context.Project.Imports);
                 return new InspectedReferences(references, imports);
             }
@@ -57,6 +55,14 @@ namespace Reinforced.Typings.ReferencesInspection
         {
             if (file.TypesToExport.Contains(t)) return null;
             if (file.AllTypesIsSingleFile) return null;
+            var bp = _context.Project.Blueprint(t);
+            if (bp.IsThirdParty)
+            {
+                foreach (var tpi in bp.ThirdPartyImports)
+                {
+                    file.References.AddImport(tpi);
+                }
+            }
 
             var relPath = GetRelativePathForType(t, file.FileName);
             if (string.IsNullOrEmpty(relPath)) return null;
@@ -207,63 +213,63 @@ namespace Reinforced.Typings.ReferencesInspection
         }
 
 
-        private Type ClarifyType(MemberInfo info)
-        {
+        //private Type ClarifyType(MemberInfo info)
+        //{
             
-            var attr = _context.Project.Blueprint(info.DeclaringType).ForMember(info);
-            if (attr != null && attr.StrongType != null) return attr.StrongType;
-            if (info is PropertyInfo) return ((PropertyInfo)info).PropertyType;
-            if (info is FieldInfo) return ((FieldInfo)info).FieldType;
-            if (info is MethodInfo) return ((MethodInfo)info).ReturnType;
-            return null;
-        }
+        //    var attr = _context.Project.Blueprint(info.DeclaringType).ForMember(info);
+        //    if (attr != null && attr.StrongType != null) return attr.StrongType;
+        //    if (info is PropertyInfo) return ((PropertyInfo)info).PropertyType;
+        //    if (info is FieldInfo) return ((FieldInfo)info).FieldType;
+        //    if (info is MethodInfo) return ((MethodInfo)info).ReturnType;
+        //    return null;
+        //}
 
-        private HashSet<Type> InspectReferences(Type element)
-        {
-            var alltypes = _allExportedTypes;
+        //private HashSet<Type> InspectReferences(Type element)
+        //{
+        //    var alltypes = _allExportedTypes;
 
-            var references = new HashSet<Type>();
-            if (element._IsEnum()) return references;
-            var bp = _context.Project.Blueprint(element);
-            foreach (var fi in bp.GetExportedFields()) InspectTypeReferences(ClarifyType(fi), alltypes, references);
-            foreach (var pi in bp.GetExportedProperties()) InspectTypeReferences(ClarifyType(pi), alltypes, references);
+        //    var references = new HashSet<Type>();
+        //    if (element._IsEnum()) return references;
+        //    var bp = _context.Project.Blueprint(element);
+        //    foreach (var fi in bp.GetExportedFields()) InspectTypeReferences(ClarifyType(fi), alltypes, references);
+        //    foreach (var pi in bp.GetExportedProperties()) InspectTypeReferences(ClarifyType(pi), alltypes, references);
 
-            foreach (var mi in bp.GetExportedMethods())
-            {
-                InspectTypeReferences(ClarifyType(mi), alltypes, references);
+        //    foreach (var mi in bp.GetExportedMethods())
+        //    {
+        //        InspectTypeReferences(ClarifyType(mi), alltypes, references);
 
-                foreach (var parameterInfo in mi.GetParameters())
-                {
-                    if (bp.IsIgnored(parameterInfo)) continue;
+        //        foreach (var parameterInfo in mi.GetParameters())
+        //        {
+        //            if (bp.IsIgnored(parameterInfo)) continue;
 
-                    var paramAttr = _context.Project.Blueprint(element).ForMember(parameterInfo);
-                    if (paramAttr != null && paramAttr.StrongType != null)
-                        InspectTypeReferences(paramAttr.StrongType, alltypes, references);
-                    else InspectTypeReferences(parameterInfo.ParameterType, alltypes, references);
-                }
-            }
-            if (element._BaseType() != null) InspectTypeReferences(element._BaseType(), alltypes, references);
-            var interfaces = element._GetInterfaces();
-            foreach (var iface in interfaces)
-            {
-                InspectTypeReferences(iface, alltypes, references);
-            }
+        //            var paramAttr = _context.Project.Blueprint(element).ForMember(parameterInfo);
+        //            if (paramAttr != null && paramAttr.StrongType != null)
+        //                InspectTypeReferences(paramAttr.StrongType, alltypes, references);
+        //            else InspectTypeReferences(parameterInfo.ParameterType, alltypes, references);
+        //        }
+        //    }
+        //    if (element._BaseType() != null) InspectTypeReferences(element._BaseType(), alltypes, references);
+        //    var interfaces = element._GetInterfaces();
+        //    foreach (var iface in interfaces)
+        //    {
+        //        InspectTypeReferences(iface, alltypes, references);
+        //    }
 
-            return references;
-        }
+        //    return references;
+        //}
 
-        private static void InspectTypeReferences(Type argument, HashSet<Type> alltypes, HashSet<Type> referenceContainer)
-        {
-            if (alltypes.Contains(argument)) referenceContainer.AddIfNotExists(argument);
-            if (argument._IsGenericType())
-            {
-                var args = argument._GetGenericArguments();
-                foreach (var type in args)
-                {
-                    InspectTypeReferences(type, alltypes, referenceContainer);
-                }
-            }
-        }
+        //private static void InspectTypeReferences(Type argument, HashSet<Type> alltypes, HashSet<Type> referenceContainer)
+        //{
+        //    if (alltypes.Contains(argument)) referenceContainer.AddIfNotExists(argument);
+        //    if (argument._IsGenericType())
+        //    {
+        //        var args = argument._GetGenericArguments();
+        //        foreach (var type in args)
+        //        {
+        //            InspectTypeReferences(type, alltypes, referenceContainer);
+        //        }
+        //    }
+        //}
 
 
     }

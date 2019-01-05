@@ -193,11 +193,11 @@ namespace Reinforced.Typings
 
             var bp = _context.Project.Blueprint(t, false);
 
-            var td = bp == null ? null : bp.TypeAttribute;
-            if (td != null)
+            var declaration = bp.TypeAttribute;
+            if (declaration != null)
             {
                 var ns = t.Namespace;
-                if (!td.IncludeNamespace) ns = string.Empty;
+                if (!declaration.IncludeNamespace) ns = string.Empty;
                 var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
 
                 if (_context.Global.UseModules)
@@ -216,7 +216,7 @@ namespace Reinforced.Typings
                 else
                 {
                     _refInspector.EnsureReference(t, _file);
-                    if (!string.IsNullOrEmpty(td.Namespace)) ns = td.Namespace;
+                    if (!string.IsNullOrEmpty(declaration.Namespace)) ns = declaration.Namespace;
                     result.Prefix = ns;
                     return Cache(t, result);
                 }
@@ -238,7 +238,7 @@ namespace Reinforced.Typings
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
                 var gargs = t._GetGenericArguments();
-                bool isKeyEnum = gargs[0].IsEnum;
+                bool isKeyEnum = gargs[0]._IsEnum();
                 var key = ResolveTypeName(gargs[0]);
                 if (key != NumberType && key != StringType && !isKeyEnum)
                 {
@@ -299,11 +299,6 @@ namespace Reinforced.Typings
             _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
 
             return Cache(t, AnyType);
-        }
-
-        internal void PrintCacheInfo()
-        {
-            Console.WriteLine("Types resolving cache contains {0} entries", _resolveCache.Count);
         }
 
         private RtDelegateType ConstructFunctionType(MethodInfo methodInfo)

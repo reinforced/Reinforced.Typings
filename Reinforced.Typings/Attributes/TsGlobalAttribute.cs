@@ -78,6 +78,12 @@ namespace Reinforced.Typings.Attributes
         public double Priority { get; set; }
 
         /// <summary>
+        /// Type of <see cref="Reinforced.Typings.ReferencesInspection.ReferenceProcessorBase"/> to be used to
+        /// refilter/reorder references and imports while exporting files
+        /// </summary>
+        public Type ReferenceProcessorType { get; set; }
+
+        /// <summary>
         /// Default constructor for TsGlobal attribute
         /// </summary>
         public TsGlobalAttribute()

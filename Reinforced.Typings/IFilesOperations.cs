@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings
 {
@@ -29,6 +30,7 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="fileName">File name</param>
         /// <param name="file">File to be exported</param>
-        void Export(string fileName, ExportedFile file);
+        /// <param name="refProcessor">References processor instance</param>
+        void Export(string fileName, ExportedFile file, ReferenceProcessorBase refProcessor = null);
     }
 }

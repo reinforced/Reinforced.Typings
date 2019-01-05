@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.Ast.Dependency;
 
 namespace Reinforced.Typings.Attributes
 {
@@ -33,5 +34,13 @@ namespace Reinforced.Typings.Attributes
         /// When true, import will be generated as "import ImportTarget = require('ImportSource')"
         /// </summary>
         public bool ImportRequire { get; set; }
+
+        private RtImport _import;
+
+        internal RtImport ToImport()
+        {
+            if (_import==null) _import = new RtImport() {Target = ImportTarget, From = ImportSource, IsRequire = ImportRequire};
+            return _import;
+        }
     }
 }

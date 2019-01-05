@@ -84,6 +84,11 @@ namespace Reinforced.Typings.Exceptions
         /// Error when trying to locate particular property
         /// </summary>
         public static readonly ErrorMessage RTE0015_CannotFlatten = new ErrorMessage(0015, "Could not flatten hierarchy for class {0}. Hierarchy flattening must appear before .With* methods", "Hierarchy flattening");
+
+        /// <summary>
+        /// Error when trying to specify invalid references processor type
+        /// </summary>
+        public static readonly ErrorMessage RTE0016_InvalidRefProcessorType = new ErrorMessage(0016, "Type {0} does not seem to be inherit from Reinforced.Typings.ReferencesInspection.ReferenceProcessorBase type", "References processor");
         #endregion
 
         #region Warnings

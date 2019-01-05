@@ -39,10 +39,10 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        ///     Configures exporter dont to export member to corresponding namespace
+        ///     Configures exporter do not to export member to corresponding namespace
         /// </summary>
         public static T DontIncludeToNamespace<T>(this T conf, bool include = false)
-            where T : IAttributed<TsDeclarationAttributeBase>
+            where T : IAttributed<INamespaceOverrideAttribute>
         {
             conf.AttributePrototype.IncludeNamespace = include;
             return conf;
@@ -54,7 +54,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="conf">Configuration</param>
         /// <param name="nameSpace">Namespace name</param>
         public static T OverrideNamespace<T>(this T conf, string nameSpace)
-            where T : IAttributed<TsDeclarationAttributeBase>
+            where T : IAttributed<INamespaceOverrideAttribute>
         {
             conf.AttributePrototype.Namespace = nameSpace;
             return conf;

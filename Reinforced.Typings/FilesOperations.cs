@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Reinforced.Typings.Exceptions;
+using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Visitors.TypeScript;
 using Reinforced.Typings.Visitors.Typings;
 
@@ -36,33 +37,43 @@ namespace Reinforced.Typings
             }
         }
 
-        protected virtual void ExportCore(StreamWriter tw, ExportedFile file)
+        protected virtual void ExportCore(StreamWriter tw, ExportedFile file, ReferenceProcessorBase refProcessor = null)
         {
             var visitor = Context.Global.ExportPureTypings ? new TypingsExportVisitor(tw, Context.Global.TabSymbol) : new TypeScriptExportVisitor(tw, Context.Global.TabSymbol);
             WriteWarning(tw);
-            foreach (var rtReference in file.References.References)
+
+            var references = file.References.References;
+            if (refProcessor != null) references = refProcessor.FilterReferences(references, file);
+            bool hasReferences = false;
+            foreach (var rtReference in references)
             {
                 visitor.Visit(rtReference);
+                hasReferences = true;
             }
 
-            foreach (var rtImport in file.References.Imports)
+            var imports = file.References.Imports;
+            if (refProcessor != null) imports = refProcessor.FilterImports(imports, file);
+            bool hasImports = false;
+            foreach (var rtImport in imports)
             {
                 visitor.Visit(rtImport);
+                hasImports = true;
             }
-            if (file.References.References.Any() || file.References.Imports.Any()) tw.WriteLine();
+            if (hasReferences || hasImports) tw.WriteLine();
+
             foreach (var fileNamespace in file.Namespaces)
             {
                 visitor.Visit(fileNamespace);
             }
         }
 
-        public void Export(string fileName, ExportedFile file)
+        public void Export(string fileName, ExportedFile file, ReferenceProcessorBase refProcessor = null)
         {
             using (var fs = GetTmpFile(fileName))
             {
                 using (var tw = new StreamWriter(fs))
                 {
-                    ExportCore(tw, file);
+                    ExportCore(tw, file, refProcessor);
                 }
             }
         }

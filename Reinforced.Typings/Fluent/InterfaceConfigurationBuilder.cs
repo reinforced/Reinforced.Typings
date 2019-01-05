@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Fluent
     public class InterfaceConfigurationBuilder<TInterface> : TypeConfigurationBuilder<TInterface>,
         IInterfaceConfigurationBuilder
     {
-        public InterfaceConfigurationBuilder(ExportContext context) : base(context)
+        internal InterfaceConfigurationBuilder(ExportContext context) : base(context)
         {
             if (_blueprint.TypeAttribute == null)
                 _blueprint.TypeAttribute = new TsInterfaceAttribute

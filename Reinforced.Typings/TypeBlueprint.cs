@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 
@@ -30,6 +31,8 @@ namespace Reinforced.Typings
             DecoratorsForParameters = new Dictionary<ParameterInfo, List<TsDecoratorAttribute>>();
             Decorators = new List<TsDecoratorAttribute>();
             Type = t;
+            ThirdPartyImports = new List<RtImport>();
+            ThirdPartyReferences = new List<RtReference>();
             InitFromAttributes();
         }
 
@@ -49,6 +52,28 @@ namespace Reinforced.Typings
             TypeAttribute = Type.GetCustomAttribute<TsEnumAttribute>(false)
                             ?? Type.GetCustomAttribute<TsInterfaceAttribute>(false)
                             ?? (TsDeclarationAttributeBase)Type.GetCustomAttribute<TsClassAttribute>(false);
+
+            
+            var typeRefs = Type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
+            References.AddRange(typeRefs);
+            var typeImports = Type.GetCustomAttributes<TsAddTypeImportAttribute>();
+            Imports.AddRange(typeImports);
+
+            _thirdPartyAttribute = Type.GetCustomAttribute<TsThirdPartyAttribute>();
+            if (IsThirdParty)
+            {
+                var tpRefs = Type.GetCustomAttributes<TsThirdPartyReferenceAttribute>();
+                foreach (var a in tpRefs)
+                {
+                    ThirdPartyReferences.Add(a.ToReference());
+                }
+
+                var tpImpots = Type.GetCustomAttributes<TsThirdPartyImportAttribute>();
+                foreach (var a in tpImpots)
+                {
+                    ThirdPartyImports.Add(a.ToImport());
+                }
+            }
         }
 
         /// <summary>
@@ -56,11 +81,29 @@ namespace Reinforced.Typings
         /// </summary>
         public Type Type { get; private set; }
 
-
         /// <summary>
         /// Attribute for exporting class
         /// </summary>
         public TsDeclarationAttributeBase TypeAttribute { get; internal set; }
+
+        #region Third-Party type handling
+        private TsThirdPartyAttribute _thirdPartyAttribute;
+        internal List<RtImport> ThirdPartyImports { get; private set; }
+        internal List<RtReference> ThirdPartyReferences { get; private set; }
+
+        /// <summary>
+        /// Gets whether type is used as third-party type only without export being performed
+        /// </summary>
+        public bool IsThirdParty
+        {
+            get { return _thirdPartyAttribute != null; }
+            set
+            {
+                if (!value) { _thirdPartyAttribute = null;}
+                else _thirdPartyAttribute = new TsThirdPartyAttribute();
+            }
+        }
+        #endregion
 
         private readonly HashSet<object> _ignored = new HashSet<object>();
 
@@ -319,7 +362,7 @@ namespace Reinforced.Typings
         /// Checks whether type is ignored during export
         /// </summary>
         /// <returns>True, when type is ignored. False otherwise</returns>
-        public bool IsIgnored()
+        private bool IsIgnored()
         {
             return TypeAttribute == null;
         }
@@ -387,7 +430,7 @@ namespace Reinforced.Typings
 
         #endregion
 
-        
+
         internal List<TsDecoratorAttribute> DecoratorsListFor(MemberInfo t)
         {
             return DecoratorsForMembers.GetOrCreate(t);
@@ -398,7 +441,7 @@ namespace Reinforced.Typings
             return DecoratorsForParameters.GetOrCreate(t);
         }
 
-       
+
 
         /// <summary>
         /// Retrieves decorators for type
@@ -610,7 +653,6 @@ namespace Reinforced.Typings
         /// <summary>
         ///     Retrieves type name from type itself or from corresponding Reinforced.Typings attribute
         /// </summary>
-
         /// <param name="genericArguments">Generic arguments to be substituted to type</param>
         /// <returns>Type name</returns>
         public RtSimpleTypeName GetName(RtTypeName[] genericArguments = null)
@@ -684,7 +726,6 @@ namespace Reinforced.Typings
         /// <summary>
         ///     Retrieves type namespace from type itself or from corresponding Typings attribute
         /// </summary>
-
         /// <param name="distinguishAutoTypes">
         ///     Forces GetNamespace to return "-" for interfaces with IncludeInterface = false and
         ///     null for anonymous types
@@ -751,6 +792,6 @@ namespace Reinforced.Typings
             if (_attributesForEnumValues.Count > 0) return false;
             return true;
         }
-        
+
     }
 }

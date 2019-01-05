@@ -1,4 +1,5 @@
 ﻿using System;
+using Reinforced.Typings.Ast.Dependency;
 
 namespace Reinforced.Typings.Attributes
 {
@@ -36,5 +37,13 @@ namespace Reinforced.Typings.Attributes
         ///     Raw reference path that will be added to target file
         /// </summary>
         public string RawPath { get; set; }
+
+        private RtReference _reference;
+
+        internal RtReference ToReference()
+        {
+            if (_reference == null) _reference = new RtReference() { Path = RawPath };
+            return _reference;
+        }
     }
 }

@@ -12,6 +12,23 @@
     }
 
     /// <summary>
+    /// Configuration interface for members supporting namespaces overriding
+    /// </summary>
+    public interface INamespaceOverrideAttribute
+    {
+        /// <summary>
+        ///     Name override
+        /// </summary>
+        string Namespace { get; set; }
+
+        /// <summary>
+        ///     Gets or sets whether type must be placed into corresponding namespace
+        /// </summary>
+        bool IncludeNamespace { get; set; }
+
+    }
+
+    /// <summary>
     ///     Configuration interface for members supporting camelCasing from attribute
     /// </summary>
     public interface ICamelCaseableAttribute

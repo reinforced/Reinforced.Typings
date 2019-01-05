@@ -8,11 +8,22 @@ using Reinforced.Typings.Ast.Dependency;
 namespace Reinforced.Typings.Attributes
 {
     /// <summary>
-    ///     This attribute is used to add import directive to file containing single TS class typing.
-    ///     It is only used while splitting generated type sto different files
+    /// Prevents class or interface or enum to be exported.
+    /// Instead of that it will be used like type from third-party library.
+    /// Use <see cref="RtReference"/> and <see cref="RtImport"/> attributes to specify imports that must be used
+    /// when this type appears
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Enum)]
+    public class TsThirdPartyAttribute : Attribute
+    {
+        
+    }
+
+    /// <summary>
+    ///     This attribute is used to add import directive to any file using third-party type (that is marked with <see cref="TsThirdPartyAttribute"/>)
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Enum, AllowMultiple = true)]
-    public class TsAddTypeImportAttribute : Attribute
+    public class TsThirdPartyImportAttribute : Attribute
     {
         /// <summary>
         /// What we are importing from module.
@@ -42,7 +53,7 @@ namespace Reinforced.Typings.Attributes
         /// <param name="importTarget">Target</param>
         /// <param name="importSource">Source</param>
         /// <param name="importRequire">Is import "=require(...)"</param>
-        public TsAddTypeImportAttribute(string importTarget, string importSource, bool importRequire = false)
+        public TsThirdPartyImportAttribute(string importTarget, string importSource, bool importRequire = false)
         {
             ImportTarget = importTarget;
             ImportSource = importSource;
@@ -55,6 +66,36 @@ namespace Reinforced.Typings.Attributes
         {
             if (_import == null) _import = new RtImport() { Target = ImportTarget, From = ImportSource, IsRequire = ImportRequire };
             return _import;
+        }
+    }
+
+    /// <summary>
+    ///     This attribute is used to add reference directive to file using third-party type (that is marked with <see cref="TsThirdPartyAttribute"/>)
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Enum, AllowMultiple = true)]
+    public class TsThirdPartyReferenceAttribute : Attribute
+    {
+        
+        /// <summary>
+        ///     Constructs new instance of TsAddTypeReferenceAttribute using referenced type
+        /// </summary>
+        /// <param name="path">Raw reference</param>
+        public TsThirdPartyReferenceAttribute(string path)
+        {
+            Path = path;
+        }
+        
+        /// <summary>
+        ///     Raw reference path that will be added to target file
+        /// </summary>
+        public string Path { get; set; }
+
+        private RtReference _reference;
+
+        internal RtReference ToReference()
+        {
+            if (_reference == null) _reference = new RtReference() { Path = Path };
+            return _reference;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Reinforced.Typings.Fluent
         where TEnum : struct
     {
         internal readonly TypeBlueprint _blueprint;
-        public EnumConfigurationBuilder(ExportContext context)
+        internal EnumConfigurationBuilder(ExportContext context)
         {
             _blueprint = context.Project.Blueprint(typeof(TEnum));
             Context = context;
