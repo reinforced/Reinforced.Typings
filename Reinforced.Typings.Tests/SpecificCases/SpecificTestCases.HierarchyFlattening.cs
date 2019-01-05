@@ -52,14 +52,14 @@ module Reinforced.Typings.Tests.SpecificCases {
             {
                 s.Global(a => a.DontWriteWarningComment());
                 s.ExportAsInterface<ITestFlatteningChild>().FlattenHierarchy()
-                    .OverrideName("A")
                     .WithPublicProperties()
-                    .WithPublicMethods();
+                    .WithPublicMethods()
+                    .OverrideName("A");
 
                 s.ExportAsInterface<TestFlatteningChild>().FlattenHierarchy()
-                    .OverrideName("B")
                     .WithPublicProperties()
-                    .WithPublicMethods();
+                    .WithPublicMethods()
+                    .OverrideName("B");
             }, result);
         }
     }

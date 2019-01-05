@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Fluent
     /// <summary>
     /// Fluent export configuration builder for method parameter
     /// </summary>
-    public class ParameterExportBuilder : MemberExportBuilder
+    public class ParameterExportBuilder : MemberExportBuilder, ISupportsInferring<ParameterInfo>
     {
         private readonly ParameterInfo _parMember;
         
@@ -37,6 +37,22 @@ namespace Reinforced.Typings.Fluent
         internal override List<TsDecoratorAttribute> Decorators
         {
             get { return _containingTypeBlueprint.DecoratorsListFor(_parMember); }
+        }
+
+        /// <summary>
+        /// Gets parameter being configured
+        /// </summary>
+        public ParameterInfo Member
+        {
+            get { return _parMember; }
+        }
+
+        /// <summary>
+        /// Type inferers set instance
+        /// </summary>
+        public InlineTypeInferers<ParameterInfo> TypeInferers
+        {
+            get { return Attr.TypeInferers; }
         }
     }
 }

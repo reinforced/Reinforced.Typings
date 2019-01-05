@@ -65,7 +65,7 @@ export interface IParametrized
                 }, x => x.WithPublicProperties().WithPublicMethods());
 
                 s.ExportAsInterfaces(new[] {typeof(IParametrizedGenericsInterface<int, string>)},
-                    x => x.OverrideName("Parametrized").WithPublicProperties().WithPublicMethods());
+                    x => x.WithPublicProperties().WithPublicMethods().OverrideName("Parametrized"));
             }, result);
         }
     }

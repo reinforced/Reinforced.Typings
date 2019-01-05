@@ -22,7 +22,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="auto">Add I automatically or not</param>
-        public static InterfaceExportBuilder AutoI(this InterfaceExportBuilder conf, bool auto = true)
+        public static T AutoI<T>(this T conf, bool auto = true) where T: InterfaceExportBuilder
         {
             conf.Attr.AutoI = auto;
             return conf;

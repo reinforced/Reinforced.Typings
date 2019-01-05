@@ -20,9 +20,10 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-                s.ExportAsClass<ClassWithMethods>().Decorator("sealed")
+                s.ExportAsClass<ClassWithMethods>()
                     .WithPublicProperties(a => a.Decorator("bind"))
                     .WithMethod(c => c.DoSomethinig(), c => c.Decorator("a()", -1))
+                    .Decorator("sealed")
                     ;
             }, result);
         }

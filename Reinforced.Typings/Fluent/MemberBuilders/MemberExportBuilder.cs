@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Fluent
     public class MemberExportBuilder
     {
         internal TypeBlueprint _containingTypeBlueprint;
-        private readonly MemberInfo _member;
+        internal readonly MemberInfo _member;
         internal TsTypedMemberAttributeBase _forMember;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>

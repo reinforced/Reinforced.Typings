@@ -39,5 +39,13 @@ namespace Reinforced.Typings.Fluent
         {
             get { return _containingTypeBlueprint.ForEnumValue(_member); }
         }
+
+        /// <summary>
+        /// Gets value being configured
+        /// </summary>
+        public FieldInfo Member
+        {
+            get { return _member; }
+        }
     }
 }

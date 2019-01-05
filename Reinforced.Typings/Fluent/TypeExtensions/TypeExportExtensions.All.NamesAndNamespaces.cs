@@ -11,7 +11,7 @@ namespace Reinforced.Typings.Fluent
         /// </summary>
         /// <param name="conf">Configuration</param>
         /// <param name="name">Custom name to be used</param>
-        public static T OverrideName<T>(this T conf, string name) where T : TypeExportBuilder
+        public static TypeExportBuilder OverrideName(this TypeExportBuilder conf, string name)
         {
             conf.Blueprint.TypeAttribute.Name = name;
             return conf;

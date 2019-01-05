@@ -50,8 +50,10 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment().UseModules());
-                s.ExportAsInterface<KendoDataNode>().WithPublicProperties().OverrideName("kendo.data.Node")
-                    .AutoI(false).ExportTo("kendo.ts");
+                s.ExportAsInterface<KendoDataNode>().WithPublicProperties()
+                    .AutoI(false)
+                    .OverrideName("kendo.data.Node")
+                    .ExportTo("kendo.ts");
                 s.ExportAsInterface<MyTreeNode>().WithPublicProperties().ExportTo("file1.ts");
             } , new Dictionary<string, string>
             {

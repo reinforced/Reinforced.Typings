@@ -41,6 +41,22 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        ///     Include specified method to resulting typing.
+        ///     User <see cref="Ts.Parameter{T}()" /> to mock up method parameters or specify configuration for perticular method
+        ///     parameter
+        /// </summary>
+        /// <param name="tc">Configuration builder</param>
+        /// <param name="method">Method to include</param>
+        /// <param name="configuration">configuration to be applied to method</param>
+        /// <returns>Fluent</returns>
+        public ClassExportBuilder<T> WithMethod(Expression<Action<T>> method, Action<MethodExportBuilder> configuration)
+        {
+            WithMethods(new[] { LambdaHelpers.ParseMethodLambda(method) }, configuration);
+            ExtractParameters(method);
+            return this;
+        }
+
+        /// <summary>
         ///     Include specified property to resulting typing
         /// </summary>
         /// <param name="tc">Configuration builder</param>

@@ -28,6 +28,14 @@ namespace Reinforced.Typings.Fluent
             Blueprint = blueprint;
         }
 
+        /// <summary>
+        /// Gets type that is being configured for export
+        /// </summary>
+        public Type Type
+        {
+            get { return Blueprint.Type; }
+        }
+
         protected internal void ApplyMembersConfiguration<T>(IEnumerable<MemberInfo> members, Action<T> configuration = null) where T : MemberExportBuilder
         {
             Blueprint.NotifyFlattenTouched();

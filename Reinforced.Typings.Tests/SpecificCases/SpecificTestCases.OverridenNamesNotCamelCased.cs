@@ -39,8 +39,8 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.ExportAsInterface<TestOverrides>()
                 .WithPublicProperties()
                 .WithPublicMethods()
-                .WithMethod(x=>x.AnotherMethod(),x=>x.OverrideName("Another_Method"))
-                .WithProperty(x=>x.AnotherProeprty,x=>x.OverrideName("Another_Property"))
+                .WithMethod(x => x.AnotherMethod(), x => x.OverrideName("Another_Method"))
+                .WithProperty(x => x.AnotherProeprty, x => x.OverrideName("Another_Property"))
                 ;
             }, result);
         }
