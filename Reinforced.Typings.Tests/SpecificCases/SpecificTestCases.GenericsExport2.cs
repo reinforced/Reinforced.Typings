@@ -24,7 +24,7 @@ export class GenericModel<TModel>
                 s.ExportAsClasses(new[]
                 {
                     typeof(GenericModel<>)
-                }, x => x.DontIncludeToNamespace().WithPublicProperties().WithPublicMethods());
+                }, x => x.DontIncludeToNamespace<ClassExportBuilder>().WithPublicProperties().WithPublicMethods());
                 
             }, result);
         }

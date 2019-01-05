@@ -5,14 +5,16 @@ namespace Reinforced.Typings.Attributes
     /// <summary>
     ///     Base attribute for so-called compilation unit (class, enum, interface etc)
     /// </summary>
-    public abstract class TsDeclarationAttributeBase : TsAttributeBase, INameOverrideAttribute, INamespaceOverrideAttribute, IOrderableAttribute
+    public abstract class TsDeclarationAttributeBase : TsAttributeBase
     {
         /// <summary>
         ///     Constructs new instance of TsDeclarationAttributeBase
         /// </summary>
         protected TsDeclarationAttributeBase()
         {
+            // ReSharper disable VirtualMemberCallInConstructor
             IncludeNamespace = true;
+            // ReSharper restore VirtualMemberCallInConstructor
             FlattenLimiter = typeof(object);
         }
 
@@ -31,7 +33,9 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public virtual string Name { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets order this membter will be written to output file in
+        /// </summary>
         public double Order { get; set; }
 
         /// <summary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
-using Reinforced.Typings.Fluent.Interfaces;
+using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings.Fluent
 {
@@ -11,11 +11,9 @@ namespace Reinforced.Typings.Fluent
     /// </summary>
     public class ConfigurationBuilder
     {
-        private readonly Dictionary<Type, IEnumConfigurationBuidler> _enumConfigurationBuilders =
-            new Dictionary<Type, IEnumConfigurationBuidler>();
-        
-        private readonly Dictionary<Type, ITypeConfigurationBuilder> _typeConfigurationBuilders =
-            new Dictionary<Type, ITypeConfigurationBuilder>();
+       
+        private readonly Dictionary<Type, TypeExportBuilder> _typeExportBuilders =
+            new Dictionary<Type, TypeExportBuilder>();
 
         /// <summary>
         /// Export context
@@ -42,14 +40,9 @@ namespace Reinforced.Typings.Fluent
             get { return Context.Project.Imports; }
         }
 
-        internal Dictionary<Type, ITypeConfigurationBuilder> TypeConfigurationBuilders
+        internal Dictionary<Type, TypeExportBuilder> TypeExportBuilders
         {
-            get { return _typeConfigurationBuilders; }
-        }
-
-        internal Dictionary<Type, IEnumConfigurationBuidler> EnumConfigurationBuilders
-        {
-            get { return _enumConfigurationBuilders; }
+            get { return _typeExportBuilders; }
         }
 
         internal Dictionary<Type, RtTypeName> GlobalSubstitutions
@@ -63,5 +56,18 @@ namespace Reinforced.Typings.Fluent
         }
 
         internal GlobalConfigurationBuilder GlobalBuilder { get; private set; }
+
+        internal TypeBlueprint GetCheckedBlueprint<TAttr>(Type type)
+        {
+            var bp = Context.Project.Blueprint(type);
+            if (bp.TypeAttribute != null && !typeof(TAttr).IsAssignableFrom(bp.TypeAttribute.GetType()))
+            {
+                var name = typeof(TAttr).Name.Substring(2).Replace("Attribute", string.Empty).ToLower();
+
+                ErrorMessages.RTE0017_FluentContradict.Throw(type, name);
+            }
+
+            return bp;
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Reinforced.Typings.ReferencesInspection;
+﻿using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings
 {

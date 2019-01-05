@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
-using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {

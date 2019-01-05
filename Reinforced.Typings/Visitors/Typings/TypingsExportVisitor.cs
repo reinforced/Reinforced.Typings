@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Visitors.TypeScript;
 #pragma warning disable 1591

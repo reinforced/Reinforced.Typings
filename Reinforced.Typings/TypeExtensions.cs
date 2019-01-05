@@ -344,6 +344,24 @@ namespace Reinforced.Typings
             return allMembers.ToArray();
         }
 
+        internal static IEnumerable<T> GetExportingMembers<T>(this TypeBlueprint t,
+            Func<Type, BindingFlags, T[]> membersGetter,
+            bool publicOnly = false)
+            where T : MemberInfo
+        {
+            var declaredFlags = publicOnly ? PublicMembersFlags : MembersFlags;
+            var flattenHierarchy = t.TypeAttribute.FlattenHierarchy;
+            var limiter = t.TypeAttribute.FlattenLimiter;
+
+            T[] baseSet = null;
+            baseSet = flattenHierarchy ?
+                GetInheritedMembers(t.Type, x => membersGetter(x, declaredFlags), limiter)
+                : membersGetter(t.Type, declaredFlags);
+
+            var allMembers = baseSet.Where(x => (x.GetCustomAttribute<CompilerGeneratedAttribute>() == null) && !t.IsIgnored(x)).OfType<T>();
+            return allMembers.ToArray();
+        }
+
         #endregion
 
         #region IsStatic

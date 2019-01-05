@@ -34,7 +34,7 @@ namespace Reinforced.Typings.Fluent
         /// <typeparam name="T">Parameter type</typeparam>
         /// <param name="configuration">Fluent parameter configuration</param>
         /// <returns>Mock</returns>
-        public static T Parameter<T>(Action<ParameterConfigurationBuilder> configuration)
+        public static T Parameter<T>(Action<ParameterExportBuilder> configuration)
         {
             return default(T);
         }

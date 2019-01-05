@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Visitors.TypeScript;

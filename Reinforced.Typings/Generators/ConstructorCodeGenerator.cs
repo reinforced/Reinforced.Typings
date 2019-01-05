@@ -4,7 +4,6 @@ using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
-using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {

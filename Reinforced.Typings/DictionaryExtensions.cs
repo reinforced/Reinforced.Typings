@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Reinforced.Typings.Fluent.Interfaces;
 
 namespace Reinforced.Typings
 {
@@ -57,13 +56,6 @@ namespace Reinforced.Typings
                 dictionary[key] = result;
             }
             return result;
-        }
-
-        public static bool CheckIgnored<T>(this IAttributed<T> conf)
-        {
-            var ignore = conf as IIgnorable;
-            if (ignore == null) return false;
-            return ignore.Ignore;
         }
     }
 }

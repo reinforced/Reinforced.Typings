@@ -49,7 +49,6 @@ namespace Reinforced.Typings.Exceptions
         /// </summary>
         public static readonly ErrorMessage RTE0008_FluentWithMethodError = new ErrorMessage(0008, "MethodCallExpression should be provided for .WithMethod call. Please use only lamba expressions in this place.", "Fluent configuration");
 
-
         /// <summary>
         /// Sorry, but {0} is not very good idea for parameter configuration. Try using simplier lambda expression.
         /// </summary>
@@ -89,6 +88,11 @@ namespace Reinforced.Typings.Exceptions
         /// Error when trying to specify invalid references processor type
         /// </summary>
         public static readonly ErrorMessage RTE0016_InvalidRefProcessorType = new ErrorMessage(0016, "Type {0} does not seem to be inherit from Reinforced.Typings.ReferencesInspection.ReferenceProcessorBase type", "References processor");
+
+        /// <summary>
+        /// Contradictious export instructions: class {0} cannot be exported as {1} because it is already exported as something else
+        /// </summary>
+        public static readonly ErrorMessage RTE0017_FluentContradict = new ErrorMessage(0017, "Contradictious export instructions: class {0} cannot be exported as {1} because it is already exported as something else (probably via attributes)", "Fluent configuration");
         #endregion
 
         #region Warnings

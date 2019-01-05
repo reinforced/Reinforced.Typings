@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+// ReSharper disable ValueParameterNotUsed
 
 namespace Reinforced.Typings.Attributes
 {
@@ -7,7 +8,7 @@ namespace Reinforced.Typings.Attributes
     ///     Overrides property/field export settings
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class TsPropertyAttribute : TsTypedMemberAttributeBase, IOrderableAttribute,
+    public class TsPropertyAttribute : TsTypedMemberAttributeBase,
         ISupportsInferring<MemberInfo>
 
     {
@@ -33,7 +34,9 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public virtual bool ForceNullable { get { return NilForceNullable ?? false; } set { NilForceNullable = value; } }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets order this membter will be written to output file in
+        /// </summary>
         public double Order { get; set; }
 
         /// <summary>

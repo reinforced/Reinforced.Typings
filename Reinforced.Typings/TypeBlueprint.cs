@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
@@ -33,6 +32,10 @@ namespace Reinforced.Typings
             Type = t;
             ThirdPartyImports = new List<RtImport>();
             ThirdPartyReferences = new List<RtReference>();
+            TypeAttribute = Type.GetCustomAttribute<TsEnumAttribute>(false)
+                            ?? Type.GetCustomAttribute<TsInterfaceAttribute>(false)
+                            ?? (TsDeclarationAttributeBase)Type.GetCustomAttribute<TsClassAttribute>(false);
+            _thirdPartyAttribute = Type.GetCustomAttribute<TsThirdPartyAttribute>();
             InitFromAttributes();
         }
 
@@ -49,19 +52,19 @@ namespace Reinforced.Typings
 
         private void InitFromAttributes()
         {
-            TypeAttribute = Type.GetCustomAttribute<TsEnumAttribute>(false)
-                            ?? Type.GetCustomAttribute<TsInterfaceAttribute>(false)
-                            ?? (TsDeclarationAttributeBase)Type.GetCustomAttribute<TsClassAttribute>(false);
-
+            
             
             var typeRefs = Type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
             References.AddRange(typeRefs);
             var typeImports = Type.GetCustomAttributes<TsAddTypeImportAttribute>();
             Imports.AddRange(typeImports);
 
-            _thirdPartyAttribute = Type.GetCustomAttribute<TsThirdPartyAttribute>();
+            
             if (IsThirdParty)
             {
+                ThirdPartyReferences.Clear();
+                ThirdPartyImports.Clear();
+
                 var tpRefs = Type.GetCustomAttributes<TsThirdPartyReferenceAttribute>();
                 foreach (var a in tpRefs)
                 {
@@ -84,7 +87,15 @@ namespace Reinforced.Typings
         /// <summary>
         /// Attribute for exporting class
         /// </summary>
-        public TsDeclarationAttributeBase TypeAttribute { get; internal set; }
+        public TsDeclarationAttributeBase TypeAttribute
+        {
+            get { return _typeAttribute; }
+            internal set
+            {
+                _typeAttribute = value;
+                InitFromAttributes();
+            }
+        }
 
         #region Third-Party type handling
         private TsThirdPartyAttribute _thirdPartyAttribute;
@@ -100,7 +111,11 @@ namespace Reinforced.Typings
             set
             {
                 if (!value) { _thirdPartyAttribute = null;}
-                else _thirdPartyAttribute = new TsThirdPartyAttribute();
+                else
+                {
+                    _thirdPartyAttribute = new TsThirdPartyAttribute();
+                    InitFromAttributes();
+                }
             }
         }
         #endregion
@@ -121,6 +136,7 @@ namespace Reinforced.Typings
         private readonly Dictionary<ParameterInfo, TsParameterAttribute> _attributesForParameters;
         private readonly Dictionary<FieldInfo, TsPropertyAttribute> _attributesForFields;
         private readonly Dictionary<FieldInfo, TsValueAttribute> _attributesForEnumValues;
+        private TsDeclarationAttributeBase _typeAttribute;
 
         /// <summary>
         /// Substitutions

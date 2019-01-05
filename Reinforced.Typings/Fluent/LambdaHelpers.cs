@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Reinforced.Typings.Exceptions;
+// ReSharper disable PossibleNullReferenceException
 
 namespace Reinforced.Typings.Fluent
 {

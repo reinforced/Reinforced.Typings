@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace Reinforced.Typings.Attributes
 {

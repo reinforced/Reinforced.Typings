@@ -3,8 +3,7 @@
     /// <summary>
     ///     Base attribute for class members and method parameters
     /// </summary>
-    public abstract class TsTypedMemberAttributeBase : TsTypedAttributeBase, INameOverrideAttribute,
-        ICamelCaseableAttribute, IPascalCasableAttribute
+    public abstract class TsTypedMemberAttributeBase : TsTypedAttributeBase
     {
         /// <summary>
         ///     When true them member name will be camelCased regardless configuration setting

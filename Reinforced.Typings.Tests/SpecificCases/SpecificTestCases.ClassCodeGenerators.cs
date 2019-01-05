@@ -25,14 +25,14 @@ namespace Reinforced.Typings.Tests.SpecificCases
             foreach (var rMember in r.Members)
             {
                 var m = rMember as RtFuncion;
-                if (m!=null)
+                if (m != null)
                 {
                     m.AccessModifier = null;
-                    
+
                     ns.CompilationUnits.Add(m);
                 }
             }
-            
+
             // return null instead of result to 
             // suppress writing AST of original class 
             // to resulting file
@@ -54,10 +54,11 @@ GetName(arg: number) : string
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-    s.ExportAsClass<CodeGeneratedClass>()
-                .WithPublicMethods()
-                .WithCodeGenerator<FunClassCodeGenerator>()
-                .DontIncludeToNamespace();
+                s.ExportAsClass<CodeGeneratedClass>()
+                            .WithPublicMethods()
+                            .WithCodeGenerator<FunClassCodeGenerator>()
+                            .DontIncludeToNamespace()
+                    ;
             }, result);
         }
     }

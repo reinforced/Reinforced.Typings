@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Reinforced.Typings.Attributes;
-
-namespace Reinforced.Typings.Generators
+﻿namespace Reinforced.Typings.Generators
 {
     /// <summary>
     ///     Various extensions for settings

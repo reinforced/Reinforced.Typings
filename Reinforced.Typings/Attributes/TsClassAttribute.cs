@@ -13,10 +13,12 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public TsClassAttribute()
         {
+            // ReSharper disable VirtualMemberCallInConstructor
             AutoExportProperties = true;
             AutoExportMethods = true;
             IncludeNamespace = true;
             AutoExportConstructors = false;
+            // ReSharper restore VirtualMemberCallInConstructor
         }
 
         /// <summary>

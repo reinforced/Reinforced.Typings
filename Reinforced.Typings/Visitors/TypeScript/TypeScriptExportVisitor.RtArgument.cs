@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Reinforced.Typings.Ast;
+﻿using Reinforced.Typings.Ast;
 #pragma warning disable 1591
 namespace Reinforced.Typings.Visitors.TypeScript
 {
