@@ -143,41 +143,7 @@ namespace Reinforced.Typings
             return null;
         }
 
-        internal void AddReferencesFromTypes(ExportedFile file, bool useImports)
-        {
-            foreach (var type in file.TypesToExport)
-            {
-                AddTypeSpecificReferences(file, type);
-                if (useImports) AddTypeSpecificImports(file, type);
-            }
-        }
-
-        private void AddTypeSpecificReferences(ExportedFile file, Type t)
-        {
-            var references = Blueprint(t).References;
-            
-            foreach (var tsAddTypeReferenceAttribute in references)
-            {
-                if (tsAddTypeReferenceAttribute.Type != null)
-                {
-                    file.TypeResolver.ResolveTypeName(tsAddTypeReferenceAttribute.Type);
-                }
-                else
-                {
-                    file.References.AddReference(tsAddTypeReferenceAttribute.ToReference());
-                }
-            }
-
-        }
-
-        private void AddTypeSpecificImports(ExportedFile file, Type t)
-        {
-            var imports = Blueprint(t).Imports;
-            foreach (var tsAddTypeImportAttribute in imports)
-            {
-                file.References.AddImport(tsAddTypeImportAttribute.ToImport());
-            }
-        }
+        
 
     }
 }

@@ -51,7 +51,7 @@ export interface IParametrized
 
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment().UseModules());
+                s.Global(a => a.DontWriteWarningComment().UseModules().ReorderMembers());
                 s.ExportAsInterfaces(new[]
                 {
                     typeof(ISimpleGenericsInterface<>),

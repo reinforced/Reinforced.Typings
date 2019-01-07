@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.ReferencesInspection;
 
@@ -10,21 +13,16 @@ namespace Reinforced.Typings
     public class GlobalParameters
     {
         private bool _isLocked;
-        private bool _writeWarningComment;
-        private string _rootNamespace;
-        private bool _camelCaseForMethods;
-        private bool _camelCaseForProperties;
-        private bool _generateDocumentation;
-        private bool _exportPureTyings;
-        private string _tabSymbol;
-        private bool _useModules;
-        private bool _discardNamespacesWhenUsingModules;
-        //private bool _strictNullChecks;
+        
+        private readonly TsGlobalAttribute _attr;
 
-        internal GlobalParameters()
+        internal GlobalParameters(Assembly[] sourceAssemblies)
         {
-            _tabSymbol = "\t";
-            _writeWarningComment = true;
+            var tsGlobal = sourceAssemblies.Select(c => c.GetCustomAttribute<TsGlobalAttribute>())
+                .Where(c => c != null)
+                .OrderByDescending(c => c.Priority)
+                .FirstOrDefault();
+            _attr = tsGlobal ?? new TsGlobalAttribute();
         }
 
         /// <summary>
@@ -35,11 +33,11 @@ namespace Reinforced.Typings
         /// </summary>
         public bool WriteWarningComment
         {
-            get { return _writeWarningComment; }
+            get { return _attr == null ? true : _attr.WriteWarningComment; }
             set
             {
                 if (_isLocked) return;
-                _writeWarningComment = value;
+                _attr.WriteWarningComment = value;
             }
         }
 
@@ -49,11 +47,11 @@ namespace Reinforced.Typings
         /// </summary>
         public string RootNamespace
         {
-            get { return _rootNamespace; }
+            get { return _attr.RootNamespace; }
             set
             {
                 if (_isLocked) return;
-                _rootNamespace = value;
+                _attr.RootNamespace = value;
             }
         }
 
@@ -62,11 +60,11 @@ namespace Reinforced.Typings
         /// </summary>
         public bool CamelCaseForMethods
         {
-            get { return _camelCaseForMethods; }
+            get { return _attr.CamelCaseForMethods; }
             set
             {
                 if (_isLocked) return;
-                _camelCaseForMethods = value;
+                _attr.CamelCaseForMethods = value;
             }
         }
 
@@ -75,11 +73,11 @@ namespace Reinforced.Typings
         /// </summary>
         public bool CamelCaseForProperties
         {
-            get { return _camelCaseForProperties; }
+            get { return _attr.CamelCaseForProperties; }
             set
             {
                 if (_isLocked) return;
-                _camelCaseForProperties = value;
+                _attr.CamelCaseForProperties = value;
             }
         }
 
@@ -88,11 +86,11 @@ namespace Reinforced.Typings
         /// </summary>
         public bool GenerateDocumentation
         {
-            get { return _generateDocumentation; }
+            get { return _attr.GenerateDocumentation; }
             set
             {
                 if (_isLocked) return;
-                _generateDocumentation = value;
+                _attr.GenerateDocumentation = value;
             }
         }
 
@@ -124,11 +122,11 @@ namespace Reinforced.Typings
         /// </summary>
         public string TabSymbol
         {
-            get { return _tabSymbol; }
+            get { return _attr.TabSymbol; }
             set
             {
                 if (_isLocked) return;
-                _tabSymbol = value;
+                _attr.TabSymbol = value;
             }
         }
 
@@ -137,11 +135,11 @@ namespace Reinforced.Typings
         /// </summary>
         public bool UseModules
         {
-            get { return _useModules; }
+            get { return _attr.UseModules; }
             set
             {
                 if (_isLocked) return;
-                _useModules = value;
+                _attr.UseModules = value;
             }
         }
 
@@ -151,11 +149,11 @@ namespace Reinforced.Typings
         /// </summary>
         public bool DiscardNamespacesWhenUsingModules
         {
-            get { return _discardNamespacesWhenUsingModules; }
+            get { return _attr.DiscardNamespacesWhenUsingModules; }
             set
             {
                 if (_isLocked) return;
-                _discardNamespacesWhenUsingModules = value;
+                _attr.DiscardNamespacesWhenUsingModules = value;
             }
         }
 
@@ -166,22 +164,20 @@ namespace Reinforced.Typings
         /// </summary>
         public bool ExportPureTypings
         {
-            get { return _exportPureTyings; }
+            get { return _attr.ExportPureTypings; }
             set
             {
                 if (_isLocked) return;
-                _exportPureTyings = value;
+                _attr.ExportPureTypings = value;
             }
         }
-
-        private Type _refProcessorType;
 
         /// <summary>
         /// Gets or sets type of <see cref="Reinforced.Typings.ReferencesInspection.ReferenceProcessorBase"/> to be used while exporting files
         /// </summary>
         public Type ReferencesProcessorType
         {
-            get { return _refProcessorType; }
+            get { return _attr.ReferenceProcessorType; }
             set
             {
                 if (_isLocked) return;
@@ -189,7 +185,20 @@ namespace Reinforced.Typings
                 {
                     ErrorMessages.RTE0016_InvalidRefProcessorType.Throw(value);
                 }
-                _refProcessorType = value;
+                _attr.ReferenceProcessorType = value;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether it is needed to sort exported members alphabetically
+        /// </summary>
+        public bool ReorderMembers
+        {
+            get { return _attr.ReorderMembers; }
+            set
+            {
+                if (_isLocked) return;
+                _attr.ReorderMembers = value;
             }
         }
     }

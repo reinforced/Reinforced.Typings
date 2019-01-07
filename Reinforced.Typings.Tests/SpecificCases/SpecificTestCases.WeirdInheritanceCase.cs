@@ -19,17 +19,17 @@ export interface IBaseClass
 */
 export class DerivedClass implements IBaseClass
 {
+	public Property: string;
+	public DoSomething() : void { } 
 	public GetName() : string
 	{
 		return null;
 	}
-	public Property: string;
-	public DoSomething() : void { } 
 }
 ";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment().UseModules());
+                s.Global(a => a.DontWriteWarningComment().UseModules().ReorderMembers());
                 s.ExportAsInterface<BaseClass>().WithPublicProperties().WithPublicMethods();
                 s.ExportAsClass<DerivedClass>().WithPublicProperties().WithPublicMethods();
             }, result, compareComments: true);

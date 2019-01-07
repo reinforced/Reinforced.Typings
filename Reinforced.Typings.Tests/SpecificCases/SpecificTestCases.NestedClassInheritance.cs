@@ -42,11 +42,10 @@ module TestB {
 		id: string;
 		text: string;
 	}
-}
-";
+}";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<TestB.SomeOtherClass.SomeDerivedClass>()
                     .WithPublicProperties();
                 s.ExportAsInterface<TestA.TestParentClassA>()

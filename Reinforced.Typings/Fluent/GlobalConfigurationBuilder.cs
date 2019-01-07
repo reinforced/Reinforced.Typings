@@ -147,6 +147,18 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+        /// <summary>
+        ///  Enables or disables exporting members reordering (aphabetical, constructors-fields-properties-methods).
+        ///  Warning! Enabling this option discards <see cref="MemberExportExtensions.Order(Reinforced.Typings.Fluent.MethodExportBuilder,double)"/> calls as well as "Order" member attributes property
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="reorder">True to reorder exported members alphabetically, false otherwise</param>
+        public static GlobalConfigurationBuilder ReorderMembers(this GlobalConfigurationBuilder builder, bool reorder = true)
+        {
+            builder.Parameters.ReorderMembers = reorder;
+            return builder;
+        }
+
         //{
         //    bool strict = true)
         //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,

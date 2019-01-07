@@ -5,6 +5,18 @@ namespace Reinforced.Typings.Tests.SpecificCases
 {
     public partial class SpecificTestCases
     {
+        #region New ForceNullable test
+
+        public interface INewForceNullableTest
+        {
+            int? NilInt { get; }
+            int NotNilInt { get; }
+            int? ForceNotNullableInt { get; }
+            int ForceNullableInt { get; }
+        }
+
+        #endregion
+
         [Fact]
         public void NewForceNullable()
         {
@@ -12,15 +24,15 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {
 	export interface INewForceNullableTest
 	{
-		NilInt?: number;
-		NotNilInt: number;
 		ForceNotNullableInt: number;
 		ForceNullableInt?: number;
+		NilInt?: number;
+		NotNilInt: number;
 	}
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<INewForceNullableTest>()
                     .WithPublicProperties()
                     .WithProperty(c => c.ForceNotNullableInt, c => c.ForceNullable(false))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 // ReSharper disable CheckNamespace
@@ -146,7 +147,7 @@ namespace Reinforced.Typings.Fluent
                 {
                     var bp = builder.GetCheckedBlueprint<TsEnumAttribute>(type);
                     var t = typeof(EnumExportBuilder<>).MakeGenericType(type);
-                    return (EnumExportBuilder)Activator.CreateInstance(t, new object[] { bp });
+                    return (EnumExportBuilder)Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { bp }, null);
                 });
 
                 var conf = untypedConf as EnumExportBuilder;

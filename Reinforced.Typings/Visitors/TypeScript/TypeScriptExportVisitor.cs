@@ -8,14 +8,20 @@ using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors.TypeScript
 {
-    
+
     public partial class TypeScriptExportVisitor : TextExportingVisitor
     {
         protected WriterContext Context { get; set; }
 
-        public TypeScriptExportVisitor(TextWriter writer, string tabulation)
-            : base(writer,tabulation)
+        /// <summary>
+        /// Gets whether it is needed to reorder class/interface members alphabetically when exporting
+        /// </summary>
+        protected bool ReorderMembers { get; private set; }
+
+        public TypeScriptExportVisitor(TextWriter writer, string tabulation, bool reorderMembers)
+            : base(writer, tabulation)
         {
+            ReorderMembers = reorderMembers;
             Context = WriterContext.None;
         }
 
@@ -34,7 +40,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
 
         protected void Decorators(IDecoratable member)
         {
-            foreach (var memberDecorator in member.Decorators.OrderBy(c=>c.Order))
+            foreach (var memberDecorator in member.Decorators.OrderBy(c => c.Order))
             {
                 Visit(memberDecorator);
             }
@@ -127,10 +133,56 @@ namespace Reinforced.Typings.Visitors.TypeScript
 
         public override void Visit(RtDecorator node)
         {
-            if (node==null) return;
+            if (node == null) return;
             Write("@");
             Write(node.Decorator);
             Write(" ");
+        }
+
+        private bool IsKnownMember(RtNode n)
+        {
+            if (n is RtConstructor) return true;
+            if (n is RtField) return true;
+            if (n is RtFuncion) return true;
+            return false;
+        }
+
+        private IEnumerable<RtNode> DoNodesOrder(List<RtNode> nodes)
+        {
+            var constructors = nodes.Where(d => d is RtConstructor).OfType<RtConstructor>();
+            var fields = nodes.Where(d => d is RtField).OfType<RtField>().OrderBy(d => d.Identifier.IdentifierName);
+            var methods = nodes.Where(d => d is RtFuncion).OfType<RtFuncion>().OrderBy(d => d.Identifier.IdentifierName);
+            var rest = nodes.Where(d => !IsKnownMember(d));
+
+            return constructors.Cast<RtNode>()
+                    .Union(fields)
+                    .Union(methods)
+                    .Union(rest);
+        }
+
+        protected IEnumerable<RtNode> DoSortClassMembers(List<RtNode> nodes)
+        {
+            if (ReorderMembers)
+            {
+                return DoNodesOrder(nodes);
+            }
+            else
+            {
+                return nodes.OrderBy(c =>
+                    c is RtConstructor ? int.MinValue : (c is RtMember ? ((RtMember)c).Order : (double?)null));
+            }
+        }
+
+        protected IEnumerable<RtNode> DoSortInterfaceMembers(List<RtNode> nodes)
+        {
+            if (ReorderMembers)
+            {
+                return DoNodesOrder(nodes);
+            }
+            else
+            {
+                return nodes.OrderBy(c => c is RtMember ? ((RtMember)c).Order : (double?)null);
+            }
         }
     }
 

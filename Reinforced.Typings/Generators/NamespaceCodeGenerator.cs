@@ -28,11 +28,10 @@ namespace Reinforced.Typings.Generators
             if (string.IsNullOrEmpty(namespaceName) || needToDiscard) ns.IsAmbientNamespace = true;
             ns.Name = namespaceName;
 
-            Context.CurrentNamespace = namespaceName;
             Context.Location.SetLocation(ns);
             foreach (var type in types)
             {
-                var typeGenerator = Context.Generators.GeneratorFor(type, Context);
+                var typeGenerator = Context.Generators.GeneratorFor(type);
                 if (typeGenerator == null) continue;
                 var member = typeGenerator.Generate(type, resolver);
                 var m = member as RtCompilationUnit;
@@ -49,7 +48,7 @@ namespace Reinforced.Typings.Generators
                 }
 
 
-                ns.CompilationUnits.Add(member);
+                if (member!=null) ns.CompilationUnits.Add(member);
 #if DEBUG
                 Console.WriteLine("Exported {0}", type);
 #endif
@@ -57,7 +56,6 @@ namespace Reinforced.Typings.Generators
 
             if (Context.Global.UseModules) ns.GenerationMode = NamespaceGenerationMode.Namespace;
 
-            Context.CurrentNamespace = null;
             Context.Location.ResetLocation(ns);
             return ns;
         }

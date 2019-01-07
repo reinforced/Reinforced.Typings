@@ -14,7 +14,7 @@ namespace Reinforced.Typings
     public class TypeBlueprint
     {
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public TypeBlueprint(Type t)
+        internal TypeBlueprint(Type t)
         {
             _attributesForParameters = new Dictionary<ParameterInfo, TsParameterAttribute>();
             _attributesForProperties = new Dictionary<PropertyInfo, TsPropertyAttribute>();
@@ -52,8 +52,6 @@ namespace Reinforced.Typings
 
         private void InitFromAttributes()
         {
-            
-            
             var typeRefs = Type.GetCustomAttributes<TsAddTypeReferenceAttribute>();
             References.AddRange(typeRefs);
             var typeImports = Type.GetCustomAttributes<TsAddTypeImportAttribute>();

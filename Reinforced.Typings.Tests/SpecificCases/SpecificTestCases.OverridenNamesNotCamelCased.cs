@@ -27,15 +27,15 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {
 	export interface ITestOverrides
 	{
-		ID?: number;
 		Another_Property: string;
-		DO_DOMETHING() : void;
+		ID?: number;
 		Another_Method() : void;
+		DO_DOMETHING() : void;
 	}
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment().CamelCaseForMethods().CamelCaseForProperties());
+                s.Global(a => a.DontWriteWarningComment().CamelCaseForMethods().CamelCaseForProperties().ReorderMembers());
                 s.ExportAsInterface<TestOverrides>()
                 .WithPublicProperties()
                 .WithPublicMethods()

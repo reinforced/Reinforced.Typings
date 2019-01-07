@@ -72,8 +72,8 @@ export enum SomeIndirectEnum {
                 s.ExportAsEnum<SomeIndirectEnum>().DontIncludeToNamespace().ExportTo("Stuff/Stuff.ts");
             }, new Dictionary<string, string>
             {
-                { Path.Combine(TargetDir, "Exported", "File1.ts"), file1},
-                { Path.Combine(TargetDir, "Stuff", "Stuff.ts"), file2}
+                { Path.Combine(TargetDir, "Exported/File1.ts"), file1},
+                { Path.Combine(TargetDir, "Stuff/Stuff.ts"), file2}
             }, compareComments: true);
         }
     }

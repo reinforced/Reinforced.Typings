@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 // ReSharper disable CheckNamespace
@@ -25,7 +26,7 @@ namespace Reinforced.Typings.Fluent
 
         internal TsClassAttribute Attr
         {
-            get { return (TsClassAttribute) Blueprint.TypeAttribute; }
+            get { return (TsClassAttribute)Blueprint.TypeAttribute; }
         }
     }
 
@@ -74,9 +75,9 @@ namespace Reinforced.Typings.Fluent
                     if (!type._IsGenericTypeDefinition())
                     {
                         var t = typeof(ClassExportBuilder<>).MakeGenericType(type);
-                        return (ClassExportBuilder)Activator.CreateInstance(t, new object[] { bp });
+                        return (ClassExportBuilder)Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { bp }, null);
                     }
-                    
+
                     return new ClassExportBuilder(bp);
                 });
 

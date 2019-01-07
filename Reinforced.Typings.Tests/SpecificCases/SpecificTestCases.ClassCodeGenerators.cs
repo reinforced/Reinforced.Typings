@@ -53,7 +53,7 @@ GetName(arg: number) : string
 ";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsClass<CodeGeneratedClass>()
                             .WithPublicMethods()
                             .WithCodeGenerator<FunClassCodeGenerator>()

@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Fluent
             if (member != null)
             {
                 _member = member;
-                _forMember = containingTypeBlueprint.ForMember(member);
+                _forMember = containingTypeBlueprint.ForMember(member,true);
             }
         }
 

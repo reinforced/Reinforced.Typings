@@ -15,5 +15,17 @@ namespace Reinforced.Typings.Fluent
             conf.Attr.CodeGeneratorType = typeof(T);
             return conf;
         }
+
+        /// <summary>
+        ///   Configures class to be exported as abstract or not.
+        ///   Pass null value to identify automatically
+        /// </summary>
+        public static T Abstract<T>(this T conf, bool? isAbstract = true)
+            where T : ClassExportBuilder
+        {
+            conf.Attr.IsAbstract = isAbstract;
+
+            return conf;
+        }
     }
 }

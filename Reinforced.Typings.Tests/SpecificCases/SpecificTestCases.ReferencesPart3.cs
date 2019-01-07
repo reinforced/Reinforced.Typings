@@ -73,9 +73,9 @@ export class SomeFluentReferencedType
                 s.ExportAsClass<SomeFluentReferencedType>().ExportTo("Fluently/File3.ts");
             }, new Dictionary<string, string>
             {
-                { Path.Combine(TargetDir, "Exported", "File1.ts"), file1 },
-                { Path.Combine(TargetDir, "Indirect", "File2.ts"), file2 },
-                { Path.Combine(TargetDir, "Fluently", "File3.ts"), file3 }
+                { Path.Combine(TargetDir, "Exported/File1.ts"), file1 },
+                { Path.Combine(TargetDir, "Indirect/File2.ts"), file2 },
+                { Path.Combine(TargetDir, "Fluently/File3.ts"), file3 }
             }, compareComments: true);
         }
     }

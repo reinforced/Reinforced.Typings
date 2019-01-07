@@ -23,7 +23,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Br(); AppendTabs();
             Write("{"); Br();
             Tab();
-            foreach (var rtMember in node.Members.OrderBy(c=> c is RtMember ? ((RtMember) c).Order : (double?) null))
+            foreach (var rtMember in DoSortInterfaceMembers(node.Members))
             {
                 Visit(rtMember);
             }

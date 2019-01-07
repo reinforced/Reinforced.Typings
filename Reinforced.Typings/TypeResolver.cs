@@ -6,7 +6,6 @@ using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
-using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings
 {
@@ -91,18 +90,19 @@ namespace Reinforced.Typings
             {typeof (decimal), NumberType}
         };
 
-        private readonly ExportContext _context;
+        private ExportContext Context
+        {
+            get { return _file.Context; }
+        }
+
         private readonly ExportedFile _file;
-        private readonly ReferenceInspector _refInspector;
 
         /// <summary>
         ///     Constructs new type resolver
         /// </summary>
-        internal TypeResolver(ExportContext context, ExportedFile file, ReferenceInspector refInspector)
+        internal TypeResolver(ExportedFile file)
         {
-            _context = context;
             _file = file;
-            _refInspector = refInspector;
         }
 
         private RtTypeName[] GetConcreteGenericArguments(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
@@ -168,12 +168,12 @@ namespace Reinforced.Typings
 
         internal RtTypeName ResolveTypeNameInner(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
-            var substitution = _context.Project.Substitute(t, this);
+            var substitution = Context.Project.Substitute(t, this);
             if (substitution != null) return substitution; // order important!
 
-            if (_context.CurrentBlueprint != null)
+            if (Context.CurrentBlueprint != null)
             {
-                var localSubstitution = _context.CurrentBlueprint.Substitute(t, this);
+                var localSubstitution = Context.CurrentBlueprint.Substitute(t, this);
                 if (localSubstitution != null) return localSubstitution;
             }
             if (t.IsGenericParameter)
@@ -189,19 +189,19 @@ namespace Reinforced.Typings
 
             if (materializedGenerics == null && _resolveCache.ContainsKey(t)) return _resolveCache[t];
 
-            var bp = _context.Project.Blueprint(t, false);
+            var bp = Context.Project.Blueprint(t, false);
 
-            var declaration = bp.TypeAttribute;
+            var declaration = bp == null ? null : bp.TypeAttribute;
             if (declaration != null)
             {
                 var ns = t.Namespace;
                 if (!declaration.IncludeNamespace) ns = string.Empty;
                 var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
 
-                if (_context.Global.UseModules)
+                if (Context.Global.UseModules)
                 {
-                    var import = _refInspector.EnsureImport(t, result.TypeName, _file);
-                    if (_context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
+                    var import = _file.EnsureImport(t, result.TypeName);
+                    if (Context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
                     if (import == null || !import.IsWildcard)
                     {
                         result.Prefix = ns;
@@ -213,7 +213,7 @@ namespace Reinforced.Typings
                 }
                 else
                 {
-                    _refInspector.EnsureReference(t, _file);
+                    _file.EnsureReference(t);
                     if (!string.IsNullOrEmpty(declaration.Namespace)) ns = declaration.Namespace;
                     result.Prefix = ns;
                     return Cache(t, result);
@@ -232,7 +232,7 @@ namespace Reinforced.Typings
             {
                 if (!t._IsGenericType())
                 {
-                    _context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(AnyType, t));
+                    Context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(AnyType, t));
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
                 var gargs = t._GetGenericArguments();
@@ -240,7 +240,7 @@ namespace Reinforced.Typings
                 var key = ResolveTypeName(gargs[0]);
                 if (key != NumberType && key != StringType && !isKeyEnum)
                 {
-                    _context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, t));
+                    Context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, t));
                 }
                 var value = ResolveTypeName(gargs[1]);
                 return Cache(t, new RtDictionaryType(key, value, isKeyEnum));
@@ -294,7 +294,7 @@ namespace Reinforced.Typings
                 return Cache(t, NumberType);
             }
 
-            _context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
+            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
 
             return Cache(t, AnyType);
         }

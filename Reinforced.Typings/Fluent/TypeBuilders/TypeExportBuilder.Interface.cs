@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 // ReSharper disable CheckNamespace
@@ -70,7 +71,7 @@ namespace Reinforced.Typings.Fluent
                     if (!type._IsGenericTypeDefinition())
                     {
                         var t = typeof(InterfaceExportBuilder<>).MakeGenericType(type);
-                        return (InterfaceExportBuilder)Activator.CreateInstance(t, new object[] { bp });
+                        return (InterfaceExportBuilder)Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { bp }, null);
                     }
 
                     return new InterfaceExportBuilder(bp);

@@ -20,7 +20,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment().CamelCaseForMethods().CamelCaseForProperties());
+                s.Global(a => a.DontWriteWarningComment().CamelCaseForMethods().CamelCaseForProperties().ReorderMembers());
                 s.ExportAsInterface<PandaWoodCamelCaseTest>().WithPublicProperties().WithPublicMethods();
             }, result);
         }

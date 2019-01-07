@@ -31,34 +31,6 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     #endregion
 
-    #region Decorators
-
-    public class ClassWithMethods
-    {
-        public string String { get; set; }
-        public int Int { get; set; }
-
-        [TsDecorator("b()")]
-        public void DoSomethinig()
-        {
-
-        }
-    }
-
-
-
-    #endregion
-
-    #region ForceNullable property
-
-    public class PandaWoodForceNullableCase
-    {
-        [TsProperty(ForceNullable = true)]
-        public string PandaWoodProperty { get; set; }
-    }
-
-    #endregion
-
     #region Enums in namespaces
 
     public class JonsaModel
@@ -73,23 +45,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     #endregion
 
-    #region Substitutions
-
-    public class CrozinSubstitutionTest
-    {
-        public Guid GuidProperty { get; set; }
-
-        public DateTime TimeProperty { get; set; }
-    }
-
-    public class CrozinLocalSubstitutionTest
-    {
-        public Guid OneMoreGuidProperty { get; set; }
-
-        public DateTime OneMoreTimeProperty { get; set; }
-    }
-
-    #endregion
+    
 
     #region Camelcase
 
@@ -145,42 +101,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
     }
     #endregion
 
-    #region DDante case
-
-    public abstract class PolluxEntity<Key>
-    {
-        public Key EntityId { get; set; }
-
-        public DateTime CreatedOn { get; set; }
-
-        public DateTime? ModifiedOn { get; set; }
-
-
-        public PolluxEntity()
-        {
-            this.CreatedOn = DateTime.Now;
-        }
-    }
-
-
-    public class ContactData : PolluxEntity<long>
-    {
-        public string Phone { get; set; }
-        public string AlternatePhone { get; set; }
-        public bool PhoneConfirmed { get; set; }
-
-        public string Email { get; set; }
-        public string AlternateEmail { get; set; }
-        public bool EmailConfirmed { get; set; }
-
-        public virtual string OwnerId { get; set; }
-
-        public ContactData()
-        {
-        }
-    }
-
-    #endregion
+    
 
     #region Type references
 
@@ -293,33 +214,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     #endregion
 
-    #region DGoncharovGenericsTestCase
-
-    public class SelectListItem
-    {
-        public string Text { get; set; }
-
-        public string Value { get; set; }
-    }
-
-    public class TypedBasicResult<T>
-    {
-        public int Status { get; set; }
-
-        public string Message { get; set; }
-
-        public T Data { get; set; }
-    }
-
-    public class RequestHandler
-    {
-        public TypedBasicResult<IEnumerable<SelectListItem>> DoRequest()
-        {
-            return null;
-        }
-    }
-
-    #endregion
+    
 
     #region Weird inheritance
 
@@ -343,17 +238,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     #endregion
 
-    #region New ForceNullable test
-
-    public interface INewForceNullableTest
-    {
-        int? NilInt { get; }
-        int NotNilInt { get; }
-        int? ForceNotNullableInt { get; }
-        int ForceNullableInt { get; }
-    }
-
-    #endregion
+    
 
     #region Inline inferring test
     public interface IInferringTestInterface

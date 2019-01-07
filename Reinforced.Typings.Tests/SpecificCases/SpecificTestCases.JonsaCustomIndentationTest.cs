@@ -12,13 +12,13 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {
 #export interface ITestInterface
 #{
-##String: string;
 ##Int: number;
+##String: string;
 #}
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment().TabSymbol("#"));
+                s.Global(a => a.DontWriteWarningComment().TabSymbol("#").ReorderMembers());
                 s.ExportAsInterface<ITestInterface>().WithPublicProperties();
             }, result);
         }

@@ -10,7 +10,7 @@ namespace Reinforced.Typings
     /// </summary>
     public class Location
     {
-        private ExportContext _exContext;
+        private readonly ExportContext _exContext;
         /// <summary>
         /// Current Class 
         /// </summary>

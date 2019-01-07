@@ -38,7 +38,10 @@ namespace Reinforced.Typings
 
         protected virtual void ExportCore(StreamWriter tw, ExportedFile file, ReferenceProcessorBase refProcessor = null)
         {
-            var visitor = Context.Global.ExportPureTypings ? new TypingsExportVisitor(tw, Context.Global.TabSymbol) : new TypeScriptExportVisitor(tw, Context.Global.TabSymbol);
+            var visitor = Context.Global.ExportPureTypings 
+                ? new TypingsExportVisitor(tw, Context.Global.TabSymbol, Context.Global.ReorderMembers) 
+                : new TypeScriptExportVisitor(tw, Context.Global.TabSymbol, Context.Global.ReorderMembers);
+
             WriteWarning(tw);
 
             var references = file.References.References;

@@ -1,10 +1,21 @@
-﻿using Reinforced.Typings.Fluent;
+﻿using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Fluent;
 using Xunit;
 
 namespace Reinforced.Typings.Tests.SpecificCases
 {
     public partial class SpecificTestCases
     {
+        #region ForceNullable property
+
+        public class PandaWoodForceNullableCase
+        {
+            [TsProperty(ForceNullable = true)]
+            public string PandaWoodProperty { get; set; }
+        }
+
+        #endregion
+
         [Fact]
         public void PandaWoodForceNullableTest()
         {

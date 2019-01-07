@@ -75,7 +75,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 ";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.SubstituteGeneric(typeof(INotPromise<>), (t, tr) => new RtSimpleTypeName("angular.Promise", t.GetGenericArguments().Select(tr.ResolveTypeName).ToArray()));
 
                 s.ExportAsInterface<A>()

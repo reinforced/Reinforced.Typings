@@ -14,13 +14,13 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {
 	export interface ITestInterface
 	{
-		WoohooString: string;
 		WoohooInt: number;
+		WoohooString: string;
 	}
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<ITestInterface>()
                 .WithPublicProperties(c => c.OverrideName("Woohoo" + c.Member.Name));
 

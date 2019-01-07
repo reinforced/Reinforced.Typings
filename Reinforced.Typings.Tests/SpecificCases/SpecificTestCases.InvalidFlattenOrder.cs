@@ -65,7 +65,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterfaces(new[] {typeof(Flat1), typeof(Flat2), typeof(Flat3)}, x => x.FlattenHierarchy().WithPublicProperties());
             }, result);
         }

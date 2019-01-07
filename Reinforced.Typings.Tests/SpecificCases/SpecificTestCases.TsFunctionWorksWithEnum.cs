@@ -16,9 +16,9 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {
 	export interface IMyFunctionWithEnumTestClass
 	{
-		MyProperty: string;
-		MyNumber: number;
 		MyEnum: TestEnum;
+		MyNumber: number;
+		MyProperty: string;
 		doSomething1(a: number) : string;
 		doSomethingForEnum1(a: TestEnum) : TestEnum;
 		doSomethingForEnumWithDefault1(a: TestEnum = TestEnum.One) : TestEnum;
@@ -29,7 +29,7 @@ enum TestEnum {
 }";
             AssertConfiguration(s =>
             {
-                s.Global(x => x.DontWriteWarningComment());
+                s.Global(x => x.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<MyFunctionWithEnumTestClass>()
                   .WithPublicMethods(x => x.CamelCase())
                   .WithPublicProperties();

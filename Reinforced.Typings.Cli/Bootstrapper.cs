@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 #if NETCORE1
 using System.Runtime.Loader;
 #endif
@@ -42,18 +41,20 @@ namespace Reinforced.Typings.Cli
         }
 
     }
+
+    internal class ReferenceCacheEntry
+    {
+
+    }
     /// <summary>
     /// Class for CLI typescript typings utility
     /// </summary>
     public static class Bootstrapper
     {
         private static ExporterConsoleParameters _parameters;
-        private static readonly Dictionary<string, string> _referencesCache = new Dictionary<string, string>();
-        private static readonly HashSet<string> _allAssembliesDirs = new HashSet<string>();
-        private static readonly Dictionary<string, Assembly> _alreadyLoaded = new Dictionary<string, Assembly>();
-        private static int _totalLoadedAssemblies;
         private static TextReader _profileReader;
         private static string _profilePath;
+        private static AssemblyManager _assemblyManager;
 
         /// <summary>
         /// Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
@@ -116,6 +117,7 @@ namespace Reinforced.Typings.Cli
             catch (TargetInvocationException ex)
             {
                 var e = ex.InnerException;
+                // ReSharper disable once PossibleNullReferenceException
                 BuildError(e.Message);
                 Console.WriteLine(e.StackTrace);
                 Environment.Exit(1);
@@ -141,8 +143,11 @@ namespace Reinforced.Typings.Cli
                 Environment.Exit(1);
             }
 
-            
-            Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded", _totalLoadedAssemblies);
+            if (_assemblyManager != null)
+            {
+                Console.WriteLine("Reinforced.Typings generation finished with total {0} assemblies loaded",
+                    _assemblyManager.TotalLoadedAssemblies);
+            }
 
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
         }
@@ -188,199 +193,19 @@ namespace Reinforced.Typings.Cli
 
         public static ExportContext InstantiateExportContext()
         {
-            ExportContext context = new ExportContext
+            _assemblyManager = new AssemblyManager(_parameters.SourceAssemblies,_profileReader,_parameters.ReferencesTmpFilePath,BuildWarn);
+
+            var srcAssemblies = _assemblyManager.GetAssembliesFromArgs();
+            ExportContext context = new ExportContext(srcAssemblies)
             {
                 Hierarchical = _parameters.Hierarchy,
                 TargetDirectory = _parameters.TargetDirectory,
                 TargetFile = _parameters.TargetFile,
-                SourceAssemblies = GetAssembliesFromArgs(),
                 DocumentationFilePath = _parameters.DocumentationFilePath
             };
             return context;
         }
 
-        public static void BuildReferencesCache()
-        {
-            _referencesCache.Clear();
-
-            if (string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath) && _profileReader == null) return;
-            TextReader tr = null;
-            try
-            {
-                if (_profileReader == null)
-                {
-                    tr = File.OpenText(_parameters.ReferencesTmpFilePath);
-                }
-                else
-                {
-                    tr = _profileReader;
-                }
-                string reference;
-                while ((reference = tr.ReadLine()) != null)
-                {
-                    _referencesCache.Add(Path.GetFileName(reference), reference);
-                }
-            }
-            finally
-            {
-                if (tr != null)
-                {
-                    if (_profileReader == null) tr.Dispose();
-                }
-            }
-        }
-
-        private static string LookupAssemblyPathInternal(string assemblyNameOrFullPath, bool storeIfFullName = true)
-        {
-#if DEBUG
-            Console.WriteLine("Looking up for assembly {0}", assemblyNameOrFullPath);
-#endif
-
-            if (Path.IsPathRooted(assemblyNameOrFullPath) && File.Exists(assemblyNameOrFullPath))
-            {
-                if (storeIfFullName)
-                {
-                    var lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + Path.DirectorySeparatorChar;
-                    if (!_allAssembliesDirs.Contains(lastAssemblyLocalDir)) _allAssembliesDirs.Add(lastAssemblyLocalDir);
-                }
-#if DEBUG
-                Console.WriteLine("Already have full path to assembly {0}", assemblyNameOrFullPath);
-#endif
-                return assemblyNameOrFullPath;
-            }
-
-            if (_referencesCache.ContainsKey(assemblyNameOrFullPath))
-            {
-                var rf = _referencesCache[assemblyNameOrFullPath];
-#if DEBUG
-                Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, rf);
-#endif
-                return rf;
-            }
-
-            foreach (var dir in _allAssembliesDirs)
-            {
-                var p = Path.Combine(dir, assemblyNameOrFullPath);
-                if (File.Exists(p))
-                {
-#if DEBUG
-                    Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
-#endif
-                    return p;
-                }
-            }
-
-
-            return null;
-        }
-
-        public static string LookupAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
-        {
-            string checkResult;
-            if (!assemblyNameOrFullPath.EndsWith(".dll") && !assemblyNameOrFullPath.EndsWith(".exe"))
-            {
-                var check = assemblyNameOrFullPath + ".dll";
-                checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
-
-                if (!string.IsNullOrEmpty(checkResult)) return checkResult;
-
-                check = assemblyNameOrFullPath + ".exe";
-                checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
-
-                if (!string.IsNullOrEmpty(checkResult)) return checkResult;
-            }
-
-            var p = assemblyNameOrFullPath;
-            checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
-            if (!string.IsNullOrEmpty(checkResult)) return checkResult;
-
-
-            return assemblyNameOrFullPath;
-        }
-
-        public static Assembly[] GetAssembliesFromArgs()
-        {
-#if NETCORE1
-            AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
-#else
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-            
-#endif
-            BuildReferencesCache();
-
-            List<Assembly> assemblies = new List<Assembly>();
-
-            for (int i = 0; i < _parameters.SourceAssemblies.Length; i++)
-            {
-                var assemblyPath = _parameters.SourceAssemblies[i];
-                var path = LookupAssemblyPath(assemblyPath);
-                if (path == assemblyPath)
-                {
-                    BuildWarn("Assembly {0} may be resolved incorrectly", assemblyPath);
-                }
-#if NETCORE1
-                var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-#else
-                AssemblyName an = AssemblyName.GetAssemblyName(path);
-                var thisName = Assembly.GetCallingAssembly().GetName();
-                var a = Assembly.LoadFrom(path);
-#endif
-
-                _totalLoadedAssemblies++;
-
-                assemblies.Add(a);
-            }
-
-            return assemblies.ToArray();
-        }
-
-       
-#if NETCORE1
-        private static Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
-        {
-            //AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
-            if (assemblyName.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetEntryAssembly();
-            if (_alreadyLoaded.ContainsKey(assemblyName.FullName)) return _alreadyLoaded[assemblyName.FullName];
-            AssemblyName nm = new AssemblyName(assemblyName.Name);
-            string path = LookupAssemblyPath(nm.Name, false);
-            Assembly a = null;
-            if (path != nm.Name) //else - lookup failed, return null
-            {
-                a = context.LoadFromAssemblyPath(path);
-            }
-            else
-            {
-                BuildWarn("Assembly {0} may be resolved incorrectly", assemblyName.FullName);
-            }
-
-            if (a != null) _alreadyLoaded[nm.FullName] = a;
-            _totalLoadedAssemblies++;
-#if DEBUG
-            Console.WriteLine("{0} additionally resolved", nm);
-#endif
-
-            //AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
-            return a;
-        }
-#else
-        public static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            if (args.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetExecutingAssembly();
-            if (_alreadyLoaded.ContainsKey(args.Name)) return _alreadyLoaded[args.Name];
-            AssemblyName nm = new AssemblyName(args.Name);
-            string path = LookupAssemblyPath(nm.Name, false);
-            Assembly a = null;
-            if (path != nm.Name) a = Assembly.LoadFrom(path);
-            else BuildWarn("Assembly {0} may be resolved incorrectly", nm.Name);
-
-            if (a != null) _alreadyLoaded[args.Name] = a;
-            _totalLoadedAssemblies++;
-#if DEBUG
-            Console.WriteLine("{0} additionally resolved", nm);
-#endif
-            return a;
-        }
-#endif
         public static void PrintHelp()
         {
             Console.WriteLine("Available parameters:");

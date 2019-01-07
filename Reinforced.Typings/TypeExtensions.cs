@@ -10,6 +10,17 @@ using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings
 {
+    internal static class HashSetExtensions
+    {
+        internal static void AddIfNotExists<T>(this HashSet<T> hashSet, T val)
+        {
+            if (hashSet.Contains(val)) return;
+            hashSet.Add(val);
+        }
+
+
+    }
+
     /// <summary>
     ///     Useful extensions for reflection
     /// </summary>
@@ -105,6 +116,24 @@ namespace Reinforced.Typings
             return t.GetTypeInfo().IsAssignableFrom(t2);
 #else
             return t.IsAssignableFrom(t2);
+#endif
+        }
+
+        internal static bool _IsAbstract(this Type t)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().IsAbstract;
+#else
+            return t.IsAbstract;
+#endif
+        }
+
+        internal static bool _IsInterface(this Type t)
+        {
+#if NETSTANDARD15
+            return t.GetTypeInfo().IsInterface;
+#else
+            return t.IsInterface;
 #endif
         }
 

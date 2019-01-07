@@ -54,30 +54,29 @@ module Test {
 	}
 	export class ConstantTestA
 	{
-		public static StaticString: string = 'b';
-		public static StaticNumber: number = 42;
-		public static StaticExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
-		public static StaticNotExEnum: number = 2;
-		public static ConstantString: string = 'a';
 		public static ConstantNumber: number = 42;
+		public static ConstantString: string = 'a';
 		public static ConstExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
 		public static ConstNotExEnum: number = 2;
+		public static StaticExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
+		public static StaticNotExEnum: number = 2;
+		public static StaticNumber: number = 42;
+		public static StaticString: string = 'b';
 	}
 	export class ConstantTestB
 	{
-		public static StaticString: string = 'Hello, I\'m string that originally was \'b\'';
 		public MyObject: any = { a: 10, b: 5 };
+		public static StaticString: string = 'Hello, I\'m string that originally was \'b\'';
 	}
 	export class ConstantTestC
 	{
-		public static WillNotBeInitialized: string;
 		public static WillBeInitialized: string = 'a';
+		public static WillNotBeInitialized: string;
 	}
-}
-";
+}";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsEnum<ExportedEnum>().OverrideNamespace("Test");
                 s.ExportAsClass<ConstantTestA>()
                     .WithAllFields()

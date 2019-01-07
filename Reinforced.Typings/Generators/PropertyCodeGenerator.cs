@@ -12,6 +12,17 @@ namespace Reinforced.Typings.Generators
     /// </summary>
     public class PropertyCodeGenerator : TsCodeGeneratorBase<MemberInfo, RtField>
     {
+        private bool HasToBeNullable(TsPropertyAttribute tp, Type propType)
+        {
+            var hasNullable = tp != null && tp.NilForceNullable.HasValue;
+            if (hasNullable)
+            {
+                return tp.NilForceNullable.Value;
+            }
+
+            return propType.IsNullable();
+        }
+
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
         ///     WriterWrapper (3rd argument) using TypeResolver if necessary
@@ -56,20 +67,15 @@ namespace Reinforced.Typings.Generators
                     propName.IdentifierName = tp.Name;
                     isNameOverridden = true;
                 }
-                if (tp.NilForceNullable.HasValue && !Context.SpecialCase)
-                {
-                    propName.IsNullable = tp.NilForceNullable.Value;
-                }
+            }
+            
+            if (!Context.SpecialCase)
+            {
+                propName.IsNullable = HasToBeNullable(tp, t);
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);
-            if (tp != null && !tp.NilForceNullable.HasValue)
-            {
-                if (!propName.IsNullable && t.IsNullable() && !Context.SpecialCase)
-                {
-                    propName.IsNullable = true;
-                }
-            }
+            
             if (!isNameOverridden)
             {
                 if (element is PropertyInfo)

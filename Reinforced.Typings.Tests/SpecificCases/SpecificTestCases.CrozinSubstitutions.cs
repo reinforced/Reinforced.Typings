@@ -8,6 +8,24 @@ namespace Reinforced.Typings.Tests.SpecificCases
 {
     public partial class SpecificTestCases
     {
+        #region Substitutions
+
+        public class CrozinSubstitutionTest
+        {
+            public Guid GuidProperty { get; set; }
+
+            public DateTime TimeProperty { get; set; }
+        }
+
+        public class CrozinLocalSubstitutionTest
+        {
+            public Guid OneMoreGuidProperty { get; set; }
+
+            public DateTime OneMoreTimeProperty { get; set; }
+        }
+
+        #endregion
+
         [Fact]
         public void CrozinSubstitutions()
         {
@@ -26,7 +44,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 }";
             AssertConfiguration(s =>
             {
-                s.Global(x => x.DontWriteWarningComment());
+                s.Global(x => x.DontWriteWarningComment().ReorderMembers());
                 s.Substitute(typeof(Guid), new RtSimpleTypeName("string"));
                 s.ExportAsInterface<CrozinSubstitutionTest>().WithPublicProperties();
                 s.ExportAsInterface<CrozinLocalSubstitutionTest>()

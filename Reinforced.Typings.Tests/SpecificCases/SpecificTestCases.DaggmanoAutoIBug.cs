@@ -37,7 +37,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<InternalUserDaggmano>().WithPublicProperties();
                 s.ExportAsInterface<ExternalUserDaggmano>().WithPublicProperties();
                 s.ExportAsInterface<IAlreadyContainsI>().WithPublicProperties();

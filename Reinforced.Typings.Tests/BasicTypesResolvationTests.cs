@@ -23,14 +23,13 @@ namespace Reinforced.Typings.Tests
 
         public BasicTypesResolvationTests()
         {
-            _context = new ExportContext()
+            _context = new ExportContext(new[] { Assembly.GetExecutingAssembly() })
             {
-                SourceAssemblies = new[] { Assembly.GetExecutingAssembly() },
                 TargetDirectory = "targetDir/"
             };
             var exporter = new TsExporter(_context);
             exporter.Initialize();
-            _tr = exporter.SetupExportedFile().TypeResolver;
+            _tr = _context.CreateExportedFile().TypeResolver;
             _comparer = new TypeNameEqualityComparer();
         }
 

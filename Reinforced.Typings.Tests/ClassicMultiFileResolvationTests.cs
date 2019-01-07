@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Tests.Core;
@@ -24,7 +21,7 @@ namespace Reinforced.Typings.Tests
                 a.ExportAsInterface<TestFluentAssembly.TwoInterfaces.IInterface2>().ExportTo(filePath2);
             });
 
-            return setup.Exporter.SetupExportedFile(Path.Combine(TargetDir, filePath1));
+            return setup.Exporter.Context.CreateExportedFile(Path.Combine(TargetDir, filePath1));
         }
 
         [Fact]

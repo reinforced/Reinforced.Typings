@@ -16,14 +16,14 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {
 	export interface IMyPropertyTestClass
 	{
-		myProperty: string;
-		MyNumber: number;
 		myNumber: number;
+		MyNumber: number;
+		myProperty: string;
 	}
 }";
             AssertConfiguration(s =>
             {
-                s.Global(x=>x.DontWriteWarningComment());
+                s.Global(x=>x.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<MyPropertyTestClass>().WithPublicProperties();
             }, result);
         }

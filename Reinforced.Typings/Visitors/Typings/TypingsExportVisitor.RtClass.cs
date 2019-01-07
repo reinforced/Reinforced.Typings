@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Visitors.Typings
             Write("{");
             Br();
             Tab();
-            var members = node.Members.OrderBy(c => c is RtConstructor ? 0 : 1);
+            var members = DoSortClassMembers(node.Members);
             foreach (var rtMember in members)
             {
                 Visit(rtMember);

@@ -88,6 +88,10 @@
     <Compile Include="Ast\TypeNames\RtTypeName.cs" />
     <Compile Include="Attributes\IAutoexportSwitchAttribute.cs" />
     <Compile Include="Attributes\TsThirdPartyAttribute.cs" />
+    <Compile Include="ExportContext\ExportContext.Operations.cs" />
+    <Compile Include="ExportContext\ExportContext.Readonly.cs" />
+    <Compile Include="ExportContext\ExportContext.Configurables.cs" />
+    <Compile Include="ExportContext\ExportContext.Initialization.cs" />
     <Compile Include="Fluent\ConfigurationBuilderExtensions.cs" />
     <Compile Include="Fluent\MemberBuilders\MemberExportBuilder.EnumValue.cs" />
     <Compile Include="Fluent\MemberBuilders\MemberExportBuilder.cs" />
@@ -182,6 +186,7 @@
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtArrayType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDelegateType.cs" />
     <Compile Include="Visitors\TypeScript\Types\TypeScriptExportVisitor.RtDictionaryType.cs" />
+    <Compile Include="Visitors\Typings\TypingsExportVisitor.RtEnum.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.RtClass.cs" />
     <Compile Include="Visitors\Typings\TypingsExportVisitor.RtConstructor.cs" />
@@ -194,7 +199,7 @@
     <Compile Include="Xmldoc\Model\DocumentationMemberExtensions.cs" />
     <Compile Include="Xmldoc\Model\Model.cs" />
     <Compile Include="Xmldoc\Model\XmlIgnoreInner.cs" />
-    <Compile Include="ExportContext.cs" />
+    <Compile Include="ExportContext\ExportContext.cs" />
     <Compile Include="FilesOperations.cs" />
     <Compile Include="Generators\ClassCodeGenerator.cs" />
     <Compile Include="Generators\ConstructorCodeGenerator.cs" />
@@ -208,7 +213,6 @@
     <Compile Include="Generators\PropertyCodeGenerator.cs" />
     <Compile Include="Generators\ContextExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferencesInspection\ReferenceInspector.cs" />
     <Compile Include="TsExporter.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeResolver.cs" />

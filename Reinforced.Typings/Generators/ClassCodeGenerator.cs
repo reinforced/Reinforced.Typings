@@ -18,19 +18,20 @@ namespace Reinforced.Typings.Generators
         /// <param name="resolver">Type resolver</param>
         public override RtClass GenerateNode(Type element, RtClass result, TypeResolver resolver)
         {
-#if NETCORE1
-            if (element.GetTypeInfo().IsAbstract) result.Abstract = true;
-#else
-            if (element.IsAbstract) result.Abstract = true;
-#if DEBUG
-            System.Console.WriteLine($"{element} Abstract: {element.IsAbstract}");
-#endif
-#endif
+
             var clsbp = Context.Project.Blueprint(element);
             var tc = Context.Project.Blueprint(element).Attr<TsClassAttribute>();
             if (tc == null) throw new ArgumentException("TsClassAttribute is not present", "element");
             Export(result, element, resolver, tc);
             AddDecorators(result, clsbp.GetDecorators());
+            if (!tc.IsAbstract.HasValue)
+            {
+                result.Abstract = element._IsAbstract() && !element._IsInterface();
+            }
+            else
+            {
+                result.Abstract = tc.IsAbstract.Value;
+            }
             return result;
         }
     }

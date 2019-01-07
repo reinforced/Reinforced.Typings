@@ -12,7 +12,7 @@ namespace Reinforced.Typings.Visitors.Typings
         }
 
 
-        public TypingsExportVisitor(TextWriter writer, string tabulation) : base(writer, tabulation)
+        public TypingsExportVisitor(TextWriter writer, string tabulation, bool reorderMembers) : base(writer, tabulation, reorderMembers)
         {
         }
     }

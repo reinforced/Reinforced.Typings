@@ -41,8 +41,8 @@ namespace Reinforced.Typings.Fluent
             Blueprint.NotifyFlattenTouched();
             foreach (var member in members)
             {
+                var conf = (T)Activator.CreateInstance(typeof(T), BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { Blueprint, member }, null);
                 if (configuration == null) continue;
-                var conf = (T)Activator.CreateInstance(typeof(T), new object[] { Blueprint, member });
                 try
                 {
                     configuration(conf);
@@ -64,8 +64,8 @@ namespace Reinforced.Typings.Fluent
             Blueprint.NotifyFlattenTouched();
             foreach (var methodInfo in methds)
             {
-                if (configuration == null) continue;
                 var conf = new MethodExportBuilder(Blueprint, methodInfo);
+                if (configuration == null) continue;
                 try
                 {
                     configuration(conf);

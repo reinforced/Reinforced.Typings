@@ -60,7 +60,7 @@ namespace Reinforced.Typings.Generators
             foreach (var param in p)
             {
                 if (Context.CurrentBlueprint.IsIgnored(param)) continue;
-                var generator = Context.Generators.GeneratorFor(param, Context);
+                var generator = Context.Generators.GeneratorFor(param);
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }

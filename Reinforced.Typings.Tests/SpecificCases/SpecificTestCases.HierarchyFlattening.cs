@@ -50,7 +50,7 @@ module Reinforced.Typings.Tests.SpecificCases {
             
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<ITestFlatteningChild>().FlattenHierarchy()
                     .WithPublicProperties()
                     .WithPublicMethods()

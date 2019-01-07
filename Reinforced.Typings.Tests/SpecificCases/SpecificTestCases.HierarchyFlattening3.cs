@@ -47,23 +47,23 @@ module Reinforced.Typings.Tests.SpecificCases {
 	}
 	export interface IFlattenChild1
 	{
-		Name: number;
-		Value: string;
-		Set: Reinforced.Typings.Tests.SpecificCases.IViewModel[];
 		Id: number;
+		Name: number;
+		Set: Reinforced.Typings.Tests.SpecificCases.IViewModel[];
+		Value: string;
 	}
 	export interface IFlattenChild2
 	{
-		Name: number;
-		Value: string;
-		Set: Reinforced.Typings.Tests.SpecificCases.IFlattenChild2[];
 		Id: number;
+		Name: number;
+		Set: Reinforced.Typings.Tests.SpecificCases.IFlattenChild2[];
+		Value: string;
 	}
 }";
             
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<IViewModel>()
                     .WithPublicProperties();
 

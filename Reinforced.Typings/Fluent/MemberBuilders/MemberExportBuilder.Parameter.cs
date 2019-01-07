@@ -11,12 +11,12 @@ namespace Reinforced.Typings.Fluent
     public class ParameterExportBuilder : MemberExportBuilder, ISupportsInferring<ParameterInfo>
     {
         private readonly ParameterInfo _parMember;
-        
-        internal ParameterExportBuilder(TypeBlueprint containingTypeBlueprint, ParameterInfo member) 
+
+        internal ParameterExportBuilder(TypeBlueprint containingTypeBlueprint, ParameterInfo member)
             : base(containingTypeBlueprint, null)
         {
             _parMember = member;
-            _forMember = containingTypeBlueprint.ForMember(member);
+            _forMember = containingTypeBlueprint.ForMember(member, true);
         }
 
         internal TsParameterAttribute Attr

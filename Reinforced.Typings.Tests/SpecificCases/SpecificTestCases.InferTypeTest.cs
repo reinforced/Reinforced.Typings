@@ -18,10 +18,10 @@ module Reinforced.Typings.Tests.SpecificCases {
 	}
 	export interface IInferringTestInterface
 	{
-		String: Observable<string>;
-		Int: Observable<number>;
-		Guid: Observable<string>;
 		DateTime: Observable<any>;
+		Guid: Observable<string>;
+		Int: Observable<number>;
+		String: Observable<string>;
 		TestInterface: Observable<Reinforced.Typings.Tests.SpecificCases.ITestInterface>;
 		SomeMethod1(arg: Observable<number>) : Observable<number>;
 		SomeMethod2(arg: Observable<number>) : Observable<number>;
@@ -31,7 +31,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 }";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsInterface<ITestInterface>();
                 s.ExportAsInterface<IInferringTestInterface>()
                     .WithPublicProperties(x => x.InferType((m, t) => new RtSimpleTypeName("Observable", t.ResolveTypeName(((PropertyInfo)m).PropertyType))))

@@ -37,7 +37,7 @@ namespace Reinforced.Typings.Fluent
 
         internal TsValueAttribute Attr
         {
-            get { return _containingTypeBlueprint.ForEnumValue(_member); }
+            get { return _containingTypeBlueprint.ForEnumValue(_member,true); }
         }
 
         /// <summary>

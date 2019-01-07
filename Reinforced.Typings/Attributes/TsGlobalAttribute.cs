@@ -1,4 +1,5 @@
 ﻿using System;
+using Reinforced.Typings.Fluent;
 
 namespace Reinforced.Typings.Attributes
 {
@@ -78,6 +79,12 @@ namespace Reinforced.Typings.Attributes
         /// refilter/reorder references and imports while exporting files
         /// </summary>
         public Type ReferenceProcessorType { get; set; }
+
+        /// <summary>
+        ///  Gets or sets whether members reordering (aphabetical, constructors-fields-properties-methods) is enabled
+        ///  Warning! Enabling this option discards <see cref="MemberExportExtensions.Order(Reinforced.Typings.Fluent.MethodExportBuilder,double)"/> calls as well as "Order" member attributes property
+        /// </summary>
+        public bool ReorderMembers { get; set; }
 
         /// <summary>
         /// Default constructor for TsGlobal attribute

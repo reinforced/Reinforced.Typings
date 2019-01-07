@@ -16,23 +16,23 @@ namespace Reinforced.Typings.Tests.SpecificCases
 module Reinforced.Typings.Tests.SpecificCases {{
 	export class ClassWithManyMethods
 	{{
+        public DoSomethingElse() : void
+		{{
+			{implementation1}
+		}}
+        public DoSomethingElseWithResult() : string
+		{{
+			{implementation2}
+		}}
 		public DoSomethinig() : void
 		{{
 			{implementation1}
-		}}
-		public DoSomethingElse() : void
-		{{
-			{implementation1}
-		}}
-		public DoSomethingElseWithResult() : string
-		{{
-			{implementation2}
 		}}
 	}}
 }}";
             AssertConfiguration(s =>
             {
-                s.Global(a => a.DontWriteWarningComment());
+                s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.ExportAsClass<ClassWithManyMethods>()
                     .WithPublicMethods(c => c.Implement(implementation1))
                     .WithMethod(c => c.DoSomethingElseWithResult(), c => c.Implement(implementation2))

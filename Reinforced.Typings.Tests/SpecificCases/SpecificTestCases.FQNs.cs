@@ -58,17 +58,18 @@ export namespace Reinforced.Typings.Tests.SpecificCases.FqnTest.Ns2 {
 export namespace Reinforced.Typings.Tests.SpecificCases.FqnTest.Ns3 {
 	export class FqnClass3
 	{
+		public AClass1PropNs3: Reinforced.Typings.Tests.SpecificCases.FqnTest.Ns1.FqnClass1;
 		public AnIntegerPropNs3: number;
 		public AStringPropNs3: string;
-		public AClass1PropNs3: Reinforced.Typings.Tests.SpecificCases.FqnTest.Ns1.FqnClass1;
 	}
-}";
+}
+";
             var types =new[] { typeof(FqnTest.Ns1.FqnClass1), typeof(FqnTest.Ns2.FqnClass2), typeof(FqnTest.Ns3.FqnClass3) };
 
             AssertConfiguration(s =>
             {
                 s.ExportAsClasses(types.Where(x => x.IsClass), c => c.WithAllFields().WithAllMethods().WithAllProperties());
-                s.Global(c => c.UseModules(true, false).DontWriteWarningComment());
+                s.Global(c => c.UseModules(true, false).DontWriteWarningComment().ReorderMembers());
             }, result);
         }
     }
