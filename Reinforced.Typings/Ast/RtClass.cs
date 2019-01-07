@@ -20,13 +20,17 @@ namespace Reinforced.Typings.Ast
         /// <inheritdoc />
         public List<RtSimpleTypeName> Implementees { get; private set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets type name that this class is being extened (inherit) from
+        /// </summary>
         public RtTypeName Extendee { get; set; }
 
         /// <inheritdoc />
-        public List<RtNode> Members { get; private set; }        //todo this needs to be sorted to be cross-platform, it's returning different order for Mono
+        public List<RtNode> Members { get; private set; } 
         
-        ///  <inheritdoc />
+        /// <summary>
+        /// Gets or sets whether generated class will be abstract or not
+        /// </summary>
         public bool Abstract { get; set; }
 
         /// <summary>
