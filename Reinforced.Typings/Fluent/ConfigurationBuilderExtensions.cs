@@ -87,6 +87,7 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+
         /// <summary>
         ///     Tries to find documentation .xml file for specified assembly and take it in account when generating documentaion
         /// </summary>

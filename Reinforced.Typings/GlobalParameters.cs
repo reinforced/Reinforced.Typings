@@ -94,6 +94,19 @@ namespace Reinforced.Typings
             }
         }
 
+        /// <summary>
+        ///    Gets or sets whether all nullable properties must be exported as optional
+        /// </summary>
+        public bool AutoOptionalProperties
+        {
+            get { return _attr.AutoOptionalProperties; }
+            set
+            {
+                if (_isLocked) return;
+                _attr.AutoOptionalProperties = value;
+            }
+        }
+
         ///// <summary>
         /////     Enables or disables documentation generator
         ///// </summary>

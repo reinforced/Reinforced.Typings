@@ -104,6 +104,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.Constructor.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DocumentationForNestedTypes.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.LineAfterTest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.AutoOptional.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />

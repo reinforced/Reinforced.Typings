@@ -159,6 +159,17 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+        /// <summary>
+        ///  Tells RT to make all nullable value-type properties optional automatically
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="autoOptional">True to export make all nullable-typed properties optional</param>
+        public static GlobalConfigurationBuilder AutoOptionalProperties(this GlobalConfigurationBuilder builder, bool autoOptional = true)
+        {
+            builder.Parameters.AutoOptionalProperties = autoOptional;
+            return builder;
+        }
+
         //{
         //    bool strict = true)
         //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,

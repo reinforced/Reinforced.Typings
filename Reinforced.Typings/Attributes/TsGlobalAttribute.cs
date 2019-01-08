@@ -87,6 +87,11 @@ namespace Reinforced.Typings.Attributes
         public bool ReorderMembers { get; set; }
 
         /// <summary>
+        /// Gets or sets whether all nullable properties must be exported as optional
+        /// </summary>
+        public bool AutoOptionalProperties { get; set; }
+
+        /// <summary>
         /// Default constructor for TsGlobal attribute
         /// </summary>
         public TsGlobalAttribute()

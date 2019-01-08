@@ -20,7 +20,12 @@ namespace Reinforced.Typings.Generators
                 return tp.NilForceNullable.Value;
             }
 
-            return propType.IsNullable();
+            if (Context.Global.AutoOptionalProperties)
+            {
+                return propType.IsNullable();
+            }
+
+            return false;
         }
 
         /// <summary>
