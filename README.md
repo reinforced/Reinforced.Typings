@@ -8,7 +8,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> 🎄 Version **1.4.96** released
+> 🎄 Version **1.4.97** released
 
 * Minor quick update made according to @GreenAirplane's advise. 
 * .NET Core 2.2 support
