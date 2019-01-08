@@ -3,8 +3,8 @@
 		<RtSettingsXml Condition="HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)Reinforced.Typings.settings.xml</RtSettingsXml>
 		<RtSettingsXml Condition="!HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)\Reinforced.Typings.settings.xml</RtSettingsXml>
 
-		<RtTargetsPath Condition=" '$(MSBuildRuntimeType)' == 'Core'">netstandard1.6</RtTargetsPath>
-		<RtTargetsPath Condition=" '$(MSBuildRuntimeType)' != 'Core'">net45</RtTargetsPath>
+		<RtTargetsPath Condition=" '$(MSBuildRuntimeType)' == 'Core'">netstandard2.0</RtTargetsPath>
+		<RtTargetsPath Condition=" '$(MSBuildRuntimeType)' != 'Core'">net46</RtTargetsPath>
 	</PropertyGroup>
     
 	<PropertyGroup Condition="Exists($(RtSettingsXml))" >
