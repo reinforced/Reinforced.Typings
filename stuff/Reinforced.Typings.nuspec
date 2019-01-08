@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.5</version>
+        <version>$$VERSION$$</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov and contributors</authors>
         <owners>Pavel B. Novikov</owners>
@@ -14,9 +14,9 @@
         <copyright>© 2015 Pavel B. Novikov</copyright>
         <language>en-US</language>
         <tags>mvc, web, typescript</tags>		
-        <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
+        <license type="file">license\license.txt</license>
 		<releaseNotes>
-- Several bug fixes
+$$RELNOTES$$
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />
@@ -47,13 +47,14 @@
             <frameworkAssembly assemblyName="Microsoft.Build.Utilities.v4.0" targetFramework=".NETFramework4.5" />
         </frameworkAssemblies>        
     </metadata>
-    <files>    
-        <file src="build\**" target="build" />
-        <file src="content\**" target="content" />
-        <file src="buildMultiTargeting\**" target="buildMultiTargeting" />
-        <file src="lib\**" target="lib" />
-        <file src="tools\**" target="tools" />        
-        <file src="readme.txt" target="" />        
-    </files>
+	<files>    
+		<file src="build\**" target="build" />
+		<file src="content\**" target="content" />
+		<file src="buildMultiTargeting\**" target="buildMultiTargeting" />
+		<file src="lib\**" target="lib" />
+		<file src="tools\**" target="tools" />        
+		<file src="readme.txt" target="" />
+		<file src="license\**" target="license" />		
+	</files>
     
 </package>

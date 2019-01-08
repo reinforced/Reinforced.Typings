@@ -28,11 +28,12 @@ const string NETCORE20 = "netcoreapp2.0";
 const string NETCORE10 = "netcoreapp1.0";
 const string NETCORE11 = "netcoreapp1.1";
 const string NET461 = "net461";
+const string NET46 = "net46";
 const string NET45 = "net45";
 
 var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22}; //new[] { NET45, NET461,NETCORE20,NETCORE21,NETCORE22};
 var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NET45, NET461};
-var taskFrameworks = new[] { NET45, NETSTANDARD16};
+var taskFrameworks = new[] { NET46, NETSTANDARD20};
 
 var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD16,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22});
 

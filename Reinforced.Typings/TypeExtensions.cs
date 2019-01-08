@@ -473,6 +473,8 @@ namespace Reinforced.Typings
             if (gen == typeof(System.Tuple<,,,,,,>)) return true;
             if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
             if (gen == typeof(System.Tuple<,,,,,,,>)) return true;
+            if (gen.FullName != null && gen.FullName.StartsWith("System.ValueTuple`")) return true;
+
             return false;
         }
 
