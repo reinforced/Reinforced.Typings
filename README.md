@@ -8,15 +8,13 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :palm_tree: Version **1.4.95** released!
+> 🎄 Version **1.4.96** released
 
-* Enum string initializers
-* .NET Core 2.1 bugfix
-* Major refactoring
-* Hierarchy flattening fix
-* [Generic substitutions](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.GenericSubstitutions.cs) - useful thing for exporting ```Task<T>``` as promise
-* [Initialization expressions](https://github.com/reinforced/Reinforced.Typings/blob/master/Reinforced.Typings.Tests/SpecificCases/SpecificTestCases.ConstantProperties.cs) for static and const fields (use ```.With*Fields```). Reported by @masteroleary
-* Initialization expression evaluator - to automatically initialize your properties of exported classes
+* Minor quick update made according to @GreenAirplane's advise. 
+* .NET Core 2.2 support
+* CLI/task/bootstrapper fixes
+* ```RtForceTargetFramework``` parameter added
+* Bigger release is coming
 
 My apologies
 ----------------
