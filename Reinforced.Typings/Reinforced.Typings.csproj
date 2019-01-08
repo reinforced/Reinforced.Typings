@@ -103,13 +103,16 @@
     <Compile Include="Fluent\MemberBuilders\MemberExportBuilder.Method.cs" />
     <Compile Include="Fluent\MemberBuilders\MemberExportBuilder.Property.cs" />
     <Compile Include="Fluent\MemberBuilders\MemberExportBuilder.Parameter.cs" />
+    <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.ThirdParty`1.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.Class`1.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.Interface`1.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.Enum.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.Interface.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.Class.cs" />
+    <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.ThirdParty.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.ClassOrInterface.cs" />
     <Compile Include="Fluent\TypeBuilders\TypeExportBuilder.cs" />
+    <Compile Include="Fluent\TypeExtensions\TypeExportExtensions.All.ThirdParty.cs" />
     <Compile Include="Fluent\TypeExtensions\TypeExportExtensions.Enum.cs" />
     <Compile Include="Fluent\TypeExtensions\TypeExportExtensions.Interface.cs" />
     <Compile Include="Fluent\TypeExtensions\TypeExportExtensions.Class.cs" />

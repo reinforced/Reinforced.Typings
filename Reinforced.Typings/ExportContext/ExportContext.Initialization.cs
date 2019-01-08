@@ -76,8 +76,10 @@ namespace Reinforced.Typings
         private void BuildTypesCache()
         {
             var allTypes = SourceAssemblies
-                .SelectMany(c => c._GetTypes(Warnings).Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null))
-                .Union(Project.BlueprintedTypes).Distinct()
+                .SelectMany(c => c._GetTypes(Warnings)
+                    .Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null || d.GetCustomAttribute<TsThirdPartyAttribute>() != null))
+                .Union(Project.BlueprintedTypes)
+                .Distinct()
                 .ToList();
 
             _allTypesHash = new HashSet<Type>(allTypes);
@@ -90,11 +92,11 @@ namespace Reinforced.Typings
             }
             if (!Hierarchical) TypesToFilesMap = new Dictionary<string, IEnumerable<Type>>();
             else TypesToFilesMap =
-                allTypes.Where(d => !Project.Blueprint(d).IsThirdParty)
+                allTypes.Where(d => Project.Blueprint(d).ThirdParty == null)
                     .GroupBy(c => GetPathForType(c, stripExtension: false))
                     .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
-            
+
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 // ReSharper disable CheckNamespace
 namespace Reinforced.Typings
 {
@@ -77,7 +79,7 @@ namespace Reinforced.Typings
         public ExportedFile CreateExportedFile(string fileName = null)
         {
             if (!Hierarchical && fileName == TargetFile) fileName = null;
-            HashSet<Type> types = null;
+            IEnumerable<Type> types = null;
             if (!string.IsNullOrEmpty(fileName))
             {
                 if (!TypesToFilesMap.ContainsKey(fileName))
@@ -92,8 +94,9 @@ namespace Reinforced.Typings
             {
                 types = _allTypesHash;
             }
+            var typesHash = new HashSet<Type>(types.Where(d => Project.Blueprint(d).ThirdParty == null));
 
-            ExportedFile ef = new ExportedFile(types, fileName, _globalReferences.Duplicate(), this);
+            ExportedFile ef = new ExportedFile(typesHash, fileName, _globalReferences.Duplicate(), this);
             return ef;
         }
     }

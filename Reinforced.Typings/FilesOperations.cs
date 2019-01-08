@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Exceptions;
 using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Visitors.TypeScript;
@@ -45,7 +46,11 @@ namespace Reinforced.Typings
             WriteWarning(tw);
 
             var references = file.References.References;
-            if (refProcessor != null) references = refProcessor.FilterReferences(references, file);
+            if (refProcessor != null)
+            {
+                references = refProcessor.FilterReferences(references, file);
+                if (references==null) references = new RtReference[0];
+            }
             bool hasReferences = false;
             foreach (var rtReference in references)
             {
@@ -54,7 +59,11 @@ namespace Reinforced.Typings
             }
 
             var imports = file.References.Imports;
-            if (refProcessor != null) imports = refProcessor.FilterImports(imports, file);
+            if (refProcessor != null)
+            {
+                imports = refProcessor.FilterImports(imports, file);
+                if (imports==null) imports = new RtImport[0];
+            }
             bool hasImports = false;
             foreach (var rtImport in imports)
             {

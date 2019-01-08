@@ -9,7 +9,8 @@ namespace Reinforced.Typings.ReferencesInspection
     public abstract class ReferenceProcessorBase
     {
         /// <summary>
-        /// Returns refiltered and reordered import directives that must appear in resulting file
+        /// Returns refiltered and reordered import directives that must appear in resulting file.
+        /// Return null to remain references list untouched
         /// </summary>
         /// <param name="imports">Set on initially computed imports</param>
         /// <param name="file">File that is being exported currently</param>
@@ -18,6 +19,7 @@ namespace Reinforced.Typings.ReferencesInspection
 
         /// <summary>
         /// Returns refiltered and reordered reference directives that must appear in resulting file
+        /// Return null to remain imports list untouched
         /// </summary>
         /// <param name="references">Set on initially computed references</param>
         /// <param name="file">File that is being exported currently</param>

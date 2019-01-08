@@ -190,35 +190,47 @@ namespace Reinforced.Typings
             if (materializedGenerics == null && _resolveCache.ContainsKey(t)) return _resolveCache[t];
 
             var bp = Context.Project.Blueprint(t, false);
-
-            var declaration = bp == null ? null : bp.TypeAttribute;
-            if (declaration != null)
+            if (bp != null && bp.ThirdParty != null)
             {
-                var ns = t.Namespace;
-                if (!declaration.IncludeNamespace) ns = string.Empty;
                 var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
-
-                if (Context.Global.UseModules)
+                if (Context.Global.UseModules) _file.EnsureImport(t, result.TypeName);
+                _file.EnsureReference(t);
+                return Cache(t, result);
+            }
+            else
+            {
+                var declaration = bp == null ? null : bp.TypeAttribute;
+                if (declaration != null)
                 {
-                    var import = _file.EnsureImport(t, result.TypeName);
-                    if (Context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
-                    if (import == null || !import.IsWildcard)
+                    var ns = t.Namespace;
+                    if (!declaration.IncludeNamespace) ns = string.Empty;
+                    var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
+
+                    if (Context.Global.UseModules)
                     {
+                        var import = _file.EnsureImport(t, result.TypeName);
+                        if (Context.Global.DiscardNamespacesWhenUsingModules) ns = string.Empty;
+                        if (import == null || !import.IsWildcard)
+                        {
+                            result.Prefix = ns;
+                            return Cache(t, result);
+                        }
+
+                        result.Prefix = string.IsNullOrEmpty(ns)
+                            ? import.WildcardAlias
+                            : string.Format("{0}.{1}", import.WildcardAlias, ns);
+                        return Cache(t, result);
+                    }
+                    else
+                    {
+                        _file.EnsureReference(t);
+                        if (!string.IsNullOrEmpty(declaration.Namespace)) ns = declaration.Namespace;
                         result.Prefix = ns;
                         return Cache(t, result);
                     }
-
-                    result.Prefix = string.IsNullOrEmpty(ns) ? import.WildcardAlias : string.Format("{0}.{1}", import.WildcardAlias, ns);
-                    return Cache(t, result);
-                }
-                else
-                {
-                    _file.EnsureReference(t);
-                    if (!string.IsNullOrEmpty(declaration.Namespace)) ns = declaration.Namespace;
-                    result.Prefix = ns;
-                    return Cache(t, result);
                 }
             }
+
             if (t.IsNullable())
             {
                 return ResolveTypeName(t.GetArg());

@@ -12,7 +12,16 @@ namespace Reinforced.Typings.Attributes
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Enum)]
     public class TsThirdPartyAttribute : Attribute
     {
-        
+        /// <inheritdoc />
+        public TsThirdPartyAttribute(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// Gets or sets full quialified name of third party type to avoid dealing with namespaces, I letters etc
+        /// </summary>
+        public string Name { get; internal set; }
     }
 
     /// <summary>

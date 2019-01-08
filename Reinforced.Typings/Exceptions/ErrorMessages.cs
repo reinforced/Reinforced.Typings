@@ -93,6 +93,11 @@ namespace Reinforced.Typings.Exceptions
         /// Contradictious export instructions: class {0} cannot be exported as {1} because it is already exported as something else
         /// </summary>
         public static readonly ErrorMessage RTE0017_FluentContradict = new ErrorMessage(0017, "Contradictious export instructions: class {0} cannot be exported as {1} because it is already exported as something else (probably via attributes)", "Fluent configuration");
+
+        /// <summary>
+        /// Contradictious export instructions: class {0} cannot be exported as {1} because it is already exported as something else
+        /// </summary>
+        public static readonly ErrorMessage RTE0018_FluentThirdParty = new ErrorMessage(0018, "Contradictious export instructions: class {0} is already being exported as third-party, but you try to reexport it as {1}", "Fluent configuration");
         #endregion
 
         #region Warnings

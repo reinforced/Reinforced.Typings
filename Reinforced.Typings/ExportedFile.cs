@@ -73,12 +73,14 @@ namespace Reinforced.Typings
             if (TypesToExport.Contains(t)) return null;
             if (AllTypesIsSingleFile) return null;
             var bp = _context.Project.Blueprint(t);
-            if (bp.IsThirdParty)
+            if (bp.ThirdParty != null)
             {
                 foreach (var tpi in bp.ThirdPartyImports)
                 {
                     References.AddImport(tpi);
                 }
+
+                return null;
             }
 
             var relPath = GetRelativePathForType(t, FileName);
@@ -112,14 +114,23 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="t">Type to reference</param>
         /// <returns>Reference AST node or null if no reference needed. Returns existing reference in case if type is already referenced</returns>
-        internal RtReference EnsureReference(Type t)
+        internal void EnsureReference(Type t)
         {
-            if (TypesToExport.Contains(t)) return null;
-            if (AllTypesIsSingleFile) return null;
+            if (TypesToExport.Contains(t)) return;
+            if (AllTypesIsSingleFile) return;
+            var bp = _context.Project.Blueprint(t);
+            if (bp.ThirdParty != null)
+            {
+                foreach (var tpi in bp.ThirdPartyReferences)
+                {
+                    References.AddReference(tpi);
+                }
+                return;
+            }
+
             var relPath = GetRelativePathForType(t, FileName);
             var result = new RtReference() { Path = relPath };
             References.AddReference(result);
-            return result;
         }
 
         private string GetRelativePathForType(Type typeToReference, string currentFile)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Visitors.TypeScript;
 using Reinforced.Typings.Visitors.Typings;
@@ -52,7 +53,11 @@ namespace Reinforced.Typings.Tests.Core
             WriteWarning(tw);
 
             var references = file.References.References;
-            if (refProcessor != null) references = refProcessor.FilterReferences(references,file);
+            if (refProcessor != null)
+            {
+                references = refProcessor.FilterReferences(references,file);
+                if (references == null) references = new RtReference[0];
+            }
             bool hasReferences = false;
             foreach (var rtReference in references)
             {
@@ -61,7 +66,11 @@ namespace Reinforced.Typings.Tests.Core
             }
 
             var imports = file.References.Imports;
-            if (refProcessor != null) imports = refProcessor.FilterImports(imports, file);
+            if (refProcessor != null)
+            {
+                imports = refProcessor.FilterImports(imports, file);
+                if (imports == null) imports = new RtImport[0];
+            }
             bool hasImports = false;
             foreach (var rtImport in imports)
             {

@@ -60,7 +60,7 @@ namespace Reinforced.Typings
         internal void AddFileSeparationSettings(Type type)
         {
             var bp = Blueprint(type);
-            if (bp.IsThirdParty) return;
+            if (bp.ThirdParty != null) return;
 
             if (!string.IsNullOrEmpty(bp.PathToFile))
             {
@@ -143,7 +143,7 @@ namespace Reinforced.Typings
             return null;
         }
 
-        
+
 
     }
 }

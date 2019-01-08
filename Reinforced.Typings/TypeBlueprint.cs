@@ -57,8 +57,13 @@ namespace Reinforced.Typings
             var typeImports = Type.GetCustomAttributes<TsAddTypeImportAttribute>();
             Imports.AddRange(typeImports);
 
+            InitThirdPartyImports();
             
-            if (IsThirdParty)
+        }
+
+        private void InitThirdPartyImports()
+        {
+            if (ThirdParty != null)
             {
                 ThirdPartyReferences.Clear();
                 ThirdPartyImports.Clear();
@@ -103,17 +108,13 @@ namespace Reinforced.Typings
         /// <summary>
         /// Gets whether type is used as third-party type only without export being performed
         /// </summary>
-        public bool IsThirdParty
+        public TsThirdPartyAttribute ThirdParty
         {
-            get { return _thirdPartyAttribute != null; }
+            get { return _thirdPartyAttribute; }
             set
             {
-                if (!value) { _thirdPartyAttribute = null;}
-                else
-                {
-                    _thirdPartyAttribute = new TsThirdPartyAttribute();
-                    InitFromAttributes();
-                }
+                _thirdPartyAttribute = value;
+                InitFromAttributes();
             }
         }
         #endregion
@@ -672,31 +673,42 @@ namespace Reinforced.Typings
         public RtSimpleTypeName GetName(RtTypeName[] genericArguments = null)
         {
             var t = Type;
-            if (t._IsEnum())
+            string name = null;
+            if (ThirdParty == null)
             {
-                var te = Attr<TsEnumAttribute>();
-                var ns = t.Name;
-                if (te != null && !string.IsNullOrEmpty(te.Name))
+                if (t._IsEnum())
                 {
-                    ns = te.Name;
+                    var te = Attr<TsEnumAttribute>();
+                    var ns = t.Name;
+                    if (te != null && !string.IsNullOrEmpty(te.Name))
+                    {
+                        ns = te.Name;
+                    }
+
+                    return new RtSimpleTypeName(ns);
                 }
-                return new RtSimpleTypeName(ns);
+
+                var tc = Attr<TsClassAttribute>();
+                var ti = Attr<TsInterfaceAttribute>();
+                var nameFromAttr = tc != null ? tc.Name : ti != null ? ti.Name : null;
+                name = (!string.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName());
+                if (ti != null)
+                {
+                    if (ti.AutoI)
+                    {
+                        if (t._IsClass()) name = "I" + name;
+                        else if (!name.StartsWith("I")) name = "I" + name;
+                    }
+                }
+            }
+            else
+            {
+                name = ThirdParty.Name;
             }
 
-            var tc = Attr<TsClassAttribute>();
-            var ti = Attr<TsInterfaceAttribute>();
-            var nameFromAttr = tc != null ? tc.Name : ti != null ? ti.Name : null;
-            var name = (!string.IsNullOrEmpty(nameFromAttr) ? nameFromAttr : t.CleanGenericName());
             if (genericArguments == null) genericArguments = t.SerializeGenericArguments();
 
-            if (ti != null)
-            {
-                if (ti.AutoI)
-                {
-                    if (t._IsClass()) name = "I" + name;
-                    else if (!name.StartsWith("I")) name = "I" + name;
-                }
-            }
+            
             return new RtSimpleTypeName(name, genericArguments);
         }
         #endregion

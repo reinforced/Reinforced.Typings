@@ -12,8 +12,8 @@ namespace Reinforced.Typings.Fluent
     public class ConfigurationBuilder
     {
        
-        private readonly Dictionary<Type, TypeExportBuilder> _typeExportBuilders =
-            new Dictionary<Type, TypeExportBuilder>();
+        private readonly Dictionary<Type, TypeExportBuilder> _typeExportBuilders = new Dictionary<Type, TypeExportBuilder>();
+        private readonly Dictionary<Type, ThirdPartyExportBuilder> _thirdPartyBuilders = new Dictionary<Type, ThirdPartyExportBuilder>();
 
         /// <summary>
         /// Export context
@@ -45,6 +45,11 @@ namespace Reinforced.Typings.Fluent
             get { return _typeExportBuilders; }
         }
 
+        internal Dictionary<Type, ThirdPartyExportBuilder> ThirdPartyBuilders
+        {
+            get { return _thirdPartyBuilders; }
+        }
+
         internal Dictionary<Type, RtTypeName> GlobalSubstitutions
         {
             get { return Context.Project.GlobalSubstitutions; }
@@ -65,6 +70,23 @@ namespace Reinforced.Typings.Fluent
                 var name = typeof(TAttr).Name.Substring(2).Replace("Attribute", string.Empty).ToLower();
 
                 ErrorMessages.RTE0017_FluentContradict.Throw(type, name);
+            }
+
+            if (bp.ThirdParty != null)
+            {
+                var name = typeof(TAttr).Name.Substring(2).Replace("Attribute", string.Empty).ToLower();
+                ErrorMessages.RTE0018_FluentThirdParty.Throw(type, name);
+            }
+            return bp;
+        }
+
+        internal TypeBlueprint GetCheckedThirdPartyBlueprint(Type type)
+        {
+            var bp = Context.Project.Blueprint(type);
+
+            if (bp.TypeAttribute != null)
+            {
+                ErrorMessages.RTE0017_FluentContradict.Throw(type, "third party");
             }
 
             return bp;
