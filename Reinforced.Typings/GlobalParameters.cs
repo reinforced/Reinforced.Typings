@@ -194,7 +194,7 @@ namespace Reinforced.Typings
             set
             {
                 if (_isLocked) return;
-                if (!typeof(ReferenceProcessorBase).IsAssignableFrom(value))
+                if (!typeof(ReferenceProcessorBase)._IsAssignableFrom(value))
                 {
                     ErrorMessages.RTE0016_InvalidRefProcessorType.Throw(value);
                 }

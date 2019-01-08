@@ -110,7 +110,7 @@ namespace Reinforced.Typings.Cli
                 }
             }
         }
-        
+
 #if NETCORE1
         private Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
         {
@@ -118,16 +118,16 @@ namespace Reinforced.Typings.Cli
             if (assemblyName.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetEntryAssembly();
             if (_alreadyLoaded.ContainsKey(assemblyName.FullName)) return _alreadyLoaded[assemblyName.FullName];
             AssemblyName nm = new AssemblyName(assemblyName.Name);
-            string paths = LookupAssemblyPath(nm.Name, false);
+            var paths = LookupPossibleAssemblyPath(nm.Name, false);
             Assembly a = null;
             foreach (var path in paths)
             {
-                if (path != nm.Name) a = Assembly.LoadFrom(path);
+                if (path != nm.Name) a = context.LoadFromAssemblyPath(path);
                 else BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { nm.Name });
 
                 if (a != null)
                 {
-                    _alreadyLoaded[args.Name] = a;
+                    _alreadyLoaded[assemblyName.FullName] = a;
                     _totalLoadedAssemblies++;
                 }
                 

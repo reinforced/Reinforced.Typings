@@ -76,7 +76,7 @@ module Pollux.Models {
 }";
             AssertConfiguration(config =>
             {
-                config.Global(a => a.DontWriteWarningComment().ReorderMembers());
+                config.Global(a => a.DontWriteWarningComment().ReorderMembers().AutoOptionalProperties());
                 var polluxBase = typeof(PolluxEntity<>);
 
                 var types = new[] { polluxBase, typeof(ContactData), typeof(OtherData<>) };

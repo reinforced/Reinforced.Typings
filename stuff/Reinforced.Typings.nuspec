@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Reinforced.Typings is automated, reflection-based glue code generator for TypeScript. It is MSBuild-integrated and can generate MVC/WebAPI services glue code, JSDOC and architecture mockups from your assemblies.</description>
         <summary>Automated, reflection-based glue code generator for TypeScript</summary>
-        <copyright>© 2015 Pavel B. Novikov</copyright>
+        <copyright>© 2019 Pavel B. Novikov</copyright>
         <language>en-US</language>
         <tags>mvc, web, typescript</tags>		
         <license type="file">license\license.txt</license>

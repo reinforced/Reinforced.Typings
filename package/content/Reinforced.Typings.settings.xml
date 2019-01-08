@@ -73,9 +73,11 @@
 
 		<!--
 			Forces RT to use specified target framework.
-			Use this parameter if your RT is experiencing some problems with identifying framework version to use
+			Use this parameter if your RT is experiencing some problems with identifying framework version to use.
+			Available values: 
+				net45, net461, netcoreapp1.0, netcoreapp1.1, netcoreapp2.0, netcoreapp2.1, netcoreapp2.2
 		-->
-		<!-- <RtForceTargetFramework>nectoreapp2.2</RtForceTargetFramework>	-->	
+		<!-- <RtForceTargetFramework>netcoreapp2.2</RtForceTargetFramework>	-->	
 		
 	</PropertyGroup>
 	

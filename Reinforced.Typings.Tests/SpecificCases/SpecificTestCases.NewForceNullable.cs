@@ -1,4 +1,5 @@
-﻿using Reinforced.Typings.Fluent;
+﻿using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Fluent;
 using Xunit;
 
 namespace Reinforced.Typings.Tests.SpecificCases
@@ -9,6 +10,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
         public interface INewForceNullableTest
         {
+            [TsProperty(ForceNullable = true)]
             int? NilInt { get; }
             int NotNilInt { get; }
             int? ForceNotNullableInt { get; }

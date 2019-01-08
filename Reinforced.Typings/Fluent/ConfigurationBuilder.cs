@@ -65,7 +65,7 @@ namespace Reinforced.Typings.Fluent
         internal TypeBlueprint GetCheckedBlueprint<TAttr>(Type type)
         {
             var bp = Context.Project.Blueprint(type);
-            if (bp.TypeAttribute != null && !typeof(TAttr).IsAssignableFrom(bp.TypeAttribute.GetType()))
+            if (bp.TypeAttribute != null && !typeof(TAttr)._IsAssignableFrom(bp.TypeAttribute.GetType()))
             {
                 var name = typeof(TAttr).Name.Substring(2).Replace("Attribute", string.Empty).ToLower();
 

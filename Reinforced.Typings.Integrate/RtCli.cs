@@ -14,7 +14,7 @@ namespace Reinforced.Typings.Cli
     {
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetProperties(flags);
 #else
             return t.GetProperties(flags);

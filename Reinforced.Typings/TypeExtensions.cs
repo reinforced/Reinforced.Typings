@@ -121,7 +121,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsAbstract(this Type t)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().IsAbstract;
 #else
             return t.IsAbstract;
@@ -130,7 +130,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsInterface(this Type t)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().IsInterface;
 #else
             return t.IsInterface;
