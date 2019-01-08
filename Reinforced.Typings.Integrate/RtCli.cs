@@ -34,8 +34,12 @@ namespace Reinforced.Typings.Integrate
         /// <summary>
         /// Framework version to invoke rtcli
         /// </summary>
-        [Required]
         public string TargetFramework { get; set; }
+
+        /// <summary>
+        /// Forced usage of target framework
+        /// </summary>
+        public string RtForceTargetFramework { get; set; }
 
         /// <summary>
         /// Package's "build" directory
@@ -123,7 +127,11 @@ namespace Reinforced.Typings.Integrate
 
         private string NormalizeFramework()
         {
-            if (string.IsNullOrEmpty(TargetFramework)) return "net45";
+            if (string.IsNullOrEmpty(TargetFramework))
+            {
+                if (!string.IsNullOrEmpty(RtForceTargetFramework)) return RtForceTargetFramework;
+                return "net45";
+            }
             if (TargetFramework.StartsWith("netstandard"))
             {
                 var version = int.Parse(TargetFramework.Substring("netstandard".Length)[0].ToString());

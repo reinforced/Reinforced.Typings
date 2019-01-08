@@ -238,7 +238,7 @@ namespace Reinforced.Typings
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
                 var gargs = t._GetGenericArguments();
-                bool isKeyEnum = gargs[0].IsEnum;
+                bool isKeyEnum = gargs[0]._IsEnum();
                 var key = ResolveTypeName(gargs[0]);
                 if (key != NumberType && key != StringType && !isKeyEnum)
                 {

@@ -69,7 +69,13 @@
 			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
 			typings generation.
 		-->
-		<RtDisable>false</RtDisable>		
+		<RtDisable>false</RtDisable>
+
+		<!--
+			Forces RT to use specified target framework.
+			Use this parameter if your RT is experiencing some problems with identifying framework version to use
+		-->
+		<!-- <RtForceTargetFramework>nectoreapp2.2</RtForceTargetFramework>	-->	
 		
 	</PropertyGroup>
 	

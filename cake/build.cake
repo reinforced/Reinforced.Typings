@@ -1,4 +1,7 @@
+#addin "Cake.FileHelpers"
 var target = Argument("target", "Build");
+const string version = "1.4.96";
+
 Task("Clean")
   .Does(() =>
 {
@@ -8,96 +11,161 @@ Task("Clean")
   Information("Clean completed");
 });
 
+const string packageRoot = "../package";
 const string toolsPath = "../package/tools";
 const string contentPath = "../package/content";
 const string buildPath = "../package/build";
 const string multiTargetPath = "../package/buildMultiTargeting";
 const string libPath = "../package/lib";
-const string buildNet45 = "../package/build/net45";
-const string buildNet16 = "../package/build/netstandard1.6";
-
-Task("PackageClean")
-  .Does(() =>
-{
-  CleanDirectory(toolsPath); EnsureDirectoryExists(toolsPath);
-  CleanDirectory(contentPath); EnsureDirectoryExists(contentPath);
-  CleanDirectory(buildPath); EnsureDirectoryExists(buildPath);
-  CleanDirectory(multiTargetPath); EnsureDirectoryExists(multiTargetPath);
-  CleanDirectory(libPath); EnsureDirectoryExists(libPath);
-  CleanDirectory(buildNet45); EnsureDirectoryExists(buildNet45);
-  CleanDirectory(buildNet16); EnsureDirectoryExists(buildNet16);
-
-  Information("PackageClean completed");
-});
-
 const string RELEASE = "Release";
+const string NETCORE22 = "netcoreapp2.2";
 const string NETCORE21 = "netcoreapp2.1";
+const string NETSTANDARD16 = "netstandard1.6";
+const string NETSTANDARD15 = "netstandard1.5";
+const string NETSTANDARD20 = "netstandard2.0";
 const string NETCORE20 = "netcoreapp2.0";
 const string NETCORE1 = "netcoreapp1.0";
 const string NET461 = "net461";
 const string NET45 = "net45";
 
+var cliFrameworks = new[] {NET45, NET461,NETCORE1,NETCORE20,NETCORE21,NETCORE22};
+var rtFrameworks = new[] {NET45, NET461,NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22};
+var taskFrameworks = new[] {NET45, NETSTANDARD16};
+
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
+const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
+const string IntegrateProject = "../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj";
+
+Task("PackageClean")
+  .Description("Cleaning temporary package folder")
+  .Does(() =>
+{
+  CleanDirectory(packageRoot); EnsureDirectoryExists(packageRoot);
+  CleanDirectory(toolsPath); EnsureDirectoryExists(toolsPath);
+  CleanDirectory(contentPath); EnsureDirectoryExists(contentPath);
+  CleanDirectory(buildPath); EnsureDirectoryExists(buildPath);
+  CleanDirectory(multiTargetPath); EnsureDirectoryExists(multiTargetPath);
+  CleanDirectory(libPath); EnsureDirectoryExists(libPath);
+});
+
+
+
+Task("UpdateTargetFrameworks")
+.Description("Updating TargetFramework property according to build settings")
+.Does(()=>{
+  // Update target frameworks 
+  const string tfParameter = "TargetFrameworks";
+  var tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>";
+
+  ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{string.Join(";",cliFrameworks)}</{tfParameter}>");       
+  ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{string.Join(";",rtFrameworks)}</{tfParameter}>");  
+});
+
+Task("UpdateVersions")
+.Description("Updating assembly/file versions")
+.Does(()=>{
+ // Update versions
+  foreach(var p in new[]{CliNetCoreProject,RtNetCoreProject,IntegrateProject}){
+    foreach(var par in new[]{"AssemblyVersion","FileVersion","InformationalVersion"}){
+      var rgx = $"<{par}>[0-9.]*</{par}>";
+      ReplaceRegexInFiles(p,rgx,$"<{par}>{version}</{par}>");
+    }    
+  }
+});
+
+Task("BuildIntegrate")
+.Description("Building RT's integration MSBuild task")
+.Does(()=>{
+  foreach(var fw in taskFrameworks){
+    DotNetCoreBuild(IntegrateProject, new DotNetCoreBuildSettings
+    {
+      Verbosity = DotNetCoreVerbosity.Quiet,
+      Configuration = RELEASE,
+      OutputDirectory = System.IO.Path.Combine(buildPath, fw)
+    });    
+  }  
+  
+});
 
 Task("Build")
   .IsDependentOn("Clean")
   .IsDependentOn("PackageClean")
+  .IsDependentOn("UpdateTargetFrameworks")
+  .IsDependentOn("UpdateVersions")
+  .IsDependentOn("BuildIntegrate")
   .Does(() =>
 {
-  // Mono gives me error for this -> MSB3644: The reference assemblies for framework ".NETFramework,Version=v4.5" were not found
-  DotNetCoreBuild("../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj", new DotNetCoreBuildSettings
+  // Build various versions of lib
+  foreach(var fw in rtFrameworks){
+     Information("---------");
+     Information("Building lib for {0}",fw);
+     Information("---------");
+     DotNetCorePublish(RtNetCoreProject, new DotNetCorePublishSettings {  
+        Configuration = RELEASE, 
+        Framework = fw,
+        Verbosity = DotNetCoreVerbosity.Quiet,
+        OutputDirectory = System.IO.Path.Combine(libPath, fw),
+        MSBuildSettings = new DotNetCoreMSBuildSettings()
+          .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml")        
+      });
+  }
+
+  // Build various versions of CLI tool
+  foreach(var fw in cliFrameworks){
+      Information("---------");
+      Information("Building CLI for {0}",fw);
+      Information("---------");
+      DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+        Configuration = RELEASE, 
+        Framework = fw,
+        OutputDirectory = System.IO.Path.Combine(toolsPath, fw)        
+      });
+  }
+
+  
+  Information("---------");
+  Information("Copying build stuff");
+  Information("---------");
+
+  // Copy build stuff
+  CopyFileToDirectory("../stuff/Reinforced.Typings.settings.xml", contentPath);
+  CopyFileToDirectory("../stuff/Reinforced.Typings.targets", buildPath);
+  CopyFileToDirectory("../stuff/Reinforced.Typings.Multi.targets", multiTargetPath);
+
+  Information("---------");
+  Information("Writing readme");
+  Information("---------");
+  
+  // Copy readme with actual version of Reinforced.Typings.settings.xml
+  CopyFileToDirectory("../stuff/readme.txt", packageRoot);
+  using(var tr = System.IO.File.OpenRead("../stuff/Reinforced.Typings.settings.xml"))
+  using(var tw = new System.IO.FileStream(System.IO.Path.Combine(packageRoot,"readme.txt"),FileMode.Append))
   {
-    Verbosity = DotNetCoreVerbosity.Minimal,
-    Configuration = "Release",
-  });  
+    tr.CopyTo(tw);
+  }
 
-  // dotnet versions do not compile at the moment due to error 
-  // Generators\ParameterCodeGenerator.cs(59,43): error CS1061: 'Type' does not contain a definition for 'IsEnum' and no 
-  // accessible extension method 'IsEnum' accepting a first argument of type 'Type' could be found
-  
-  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-  //   Configuration = RELEASE, 
-  //   Framework = NETCORE21,
-  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE21)
-  // });
-  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-  //   Configuration = RELEASE, 
-  //   Framework = NETCORE20,
-  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE20)
-  // });
-  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-  //   Configuration = RELEASE, 
-  //   Framework = NETCORE1,
-  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE1)
-  // });
-  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-    Configuration = RELEASE, 
-    Framework = NET461,
-    OutputDirectory = System.IO.Path.Combine(toolsPath, NET461)
-  });
-  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-    Configuration = RELEASE, 
-    Framework = NET45,
-    OutputDirectory = System.IO.Path.Combine(toolsPath, NET45)
-  });
+  Information("---------");
+  Information("Updating nuspec");
+  Information("---------");
+  // Copy nuspec
+  CopyFileToDirectory("../stuff/Reinforced.Typings.nuspec", packageRoot);
+  ReplaceTextInFiles("../package/*.nuspec","$$VERSION$$",version);
+  var rn = string.Empty;
+  if (System.IO.File.Exists(System.IO.Path.Combine("../stuff/relnotes", version) + ".md")){
+        rn = System.IO.File.ReadAllText(System.IO.Path.Combine("../stuff/relnotes", version) + ".md");
+  }
 
-  CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", contentPath);
-  CopyFileToDirectory("../xmls/Reinforced.Typings.targets", buildPath);
-  CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", multiTargetPath);
+  ReplaceTextInFiles("../package/*.nuspec","$$RELNOTES$$",rn);
 
-  // this must be a relic/mistake, the files don't exist and were never copied in the original build.cmd anyway
-  // CopyFileToDirectory("../xmls/Reinforced.Typings.props", buildPath);
-  // CopyFileToDirectory("../xmls/Reinforced.Typings.props", multiTargetPath);
-  
-  CopyFiles("../Reinforced.Typings/bin/Release/*.*", libPath);
-  CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", buildNet45);
-  CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", buildNet16);
-
+  Information("---------");
+  Information("Packaging");
+  Information("---------");
   NuGetPack("../package/Reinforced.Typings.nuspec", new NuGetPackSettings {
-    BasePath = "../package"
+    BasePath = "../package",
+    OutputDirectory = "../"
   });
 
-  Information("Build completed");
+  Information("Build complete");
 });
 
 RunTarget(target);
