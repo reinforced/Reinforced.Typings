@@ -31,5 +31,7 @@ namespace Reinforced.Typings.Attributes
         ///     When true, code for all constructors will be automatically generated
         /// </summary>
         bool AutoExportConstructors { get; }
+
+        
     }
 }

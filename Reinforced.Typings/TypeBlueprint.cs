@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
@@ -99,6 +100,8 @@ namespace Reinforced.Typings
                 InitFromAttributes();
             }
         }
+
+        internal RtRaw ConstructorBody { get; set; }
 
         #region Third-Party type handling
         private TsThirdPartyAttribute _thirdPartyAttribute;

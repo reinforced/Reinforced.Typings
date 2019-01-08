@@ -1,4 +1,6 @@
 ﻿using System;
+using Reinforced.Typings.Ast;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Generators;
 // ReSharper disable CheckNamespace
 
@@ -25,6 +27,26 @@ namespace Reinforced.Typings.Fluent
         {
             conf.Attr.IsAbstract = isAbstract;
 
+            return conf;
+        }
+
+        /// <summary>
+        /// Configures class to export constructor
+        /// If constructor body is not specified, then default body will be generated.
+        /// Default body is empty if there are no inheritance.
+        /// If there is inheritance then RT will try to generate optimal super() call 
+        /// that can be controlled by <see cref="TsBaseParamAttribute"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conf"></param>
+        /// <param name="exportConstructors">When true, constructor will be exported</param>
+        /// <param name="constructorBody">Optional constructor body implementation</param>
+        /// <returns></returns>
+        public static T WithConstructor<T>(this T conf, RtRaw constructorBody = null, bool exportConstructors = true)
+            where T : ClassExportBuilder
+        {
+            conf.Attr.AutoExportConstructors = exportConstructors;
+            conf.Blueprint.ConstructorBody = constructorBody;
             return conf;
         }
     }

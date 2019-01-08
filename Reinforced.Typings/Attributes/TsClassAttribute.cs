@@ -46,6 +46,8 @@ namespace Reinforced.Typings.Attributes
         /// </summary>
         public virtual bool AutoExportConstructors { get; set; }
 
+        
+
         /// <summary>
         /// Gets or sets whether class is being exported as abstract or not.
         /// Null value means automatic detection

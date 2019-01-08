@@ -22,8 +22,7 @@ namespace Reinforced.Typings.Generators
         public override RtConstructor GenerateNode(ConstructorInfo element, RtConstructor result, TypeResolver resolver)
         {
             if (Context.CurrentBlueprint.IsIgnored(element)) return null;
-            if (element.GetParameters().Length == 0) return null;
-
+            
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
@@ -44,7 +43,13 @@ namespace Reinforced.Typings.Generators
                 var argument = generator.Generate(param, resolver);
                 result.Arguments.Add((RtArgument)argument);
             }
-            SetupSuperCall(result, element, Context.Project.Blueprint(element.DeclaringType).ForMember(element));
+
+            var bp = Context.Project.Blueprint(element.DeclaringType);
+            if (bp.ConstructorBody != null)
+            {
+                result.SuperCallParameters.Clear();
+                result.Body = bp.ConstructorBody;
+            }else SetupSuperCall(result, element, bp.ForMember(element));
             return result;
         }
 

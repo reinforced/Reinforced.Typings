@@ -269,7 +269,11 @@ namespace Reinforced.Typings.Generators
                     var constructors =
                         element._GetConstructors(TypeExtensions.MembersFlags)
                             .Where(c => (c.GetCustomAttribute<CompilerGeneratedAttribute>() == null) && !bp.IsIgnored(c));
-                    GenerateMembers(element, resolver, typeMember, constructors);
+                    if (!constructors.Any())
+                        constructors =
+                            element._GetConstructors(TypeExtensions.MembersFlags)
+                                .Where(c => !bp.IsIgnored(c));
+                    GenerateMembers(element, resolver, typeMember, constructors.Take(1));
                 }
             }
         }
