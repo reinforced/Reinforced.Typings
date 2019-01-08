@@ -92,7 +92,7 @@ namespace Reinforced.Typings.Fluent
                     if (!type._IsGenericTypeDefinition())
                     {
                         var t = typeof(ThirdPartyExportBuilder<>).MakeGenericType(type);
-                        return (ThirdPartyExportBuilder)Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { bp }, null);
+                        return (ThirdPartyExportBuilder)t.InstanceInternal(bp);
                     }
 
                     return new ThirdPartyExportBuilder(bp);

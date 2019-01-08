@@ -14,7 +14,7 @@ namespace Reinforced.Typings.Cli
     {
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetProperties(flags);
 #else
             return t.GetProperties(flags);
@@ -105,7 +105,7 @@ namespace Reinforced.Typings.Integrate
         {
             if (IsCore)
             {
-#if NETCORE1
+#if NETCORE
                 return
                     RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
                     "dotnet.exe"
@@ -129,7 +129,7 @@ namespace Reinforced.Typings.Integrate
         {
             if (!string.IsNullOrEmpty(RtForceTargetFramework)) return RtForceTargetFramework;
             if (string.IsNullOrEmpty(TargetFramework))
-#if NETCORE1
+#if NETCORE
                 return "netcoreapp2.0";
 #else
                 return "net45";
@@ -165,7 +165,7 @@ namespace Reinforced.Typings.Integrate
             {
                 if (IsCore)
                 {
-#if NETCORE1
+#if NETCORE
                     return
                         RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
                             "dotnet.exe"
@@ -188,7 +188,7 @@ namespace Reinforced.Typings.Integrate
                 ReferencesTmpFilePath = string.Empty,
                 SourceAssemblies = ExtractSourceAssemblies(),
                 DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",
-#if NETCORE1
+#if NETCORE
                 StringComparison.CurrentCultureIgnoreCase
 #else
                 StringComparison.InvariantCultureIgnoreCase

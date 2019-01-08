@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if NETCORE1
+#if NETCORE
 using System.Runtime.Loader;
 #endif
 using Reinforced.Typings.Exceptions;
@@ -16,7 +16,7 @@ namespace Reinforced.Typings.Cli
 
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetProperties(flags);
 #else
             return t.GetProperties(flags);
@@ -24,7 +24,7 @@ namespace Reinforced.Typings.Cli
         }
         internal static PropertyInfo _GetProperty(this Type t, string name)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetProperty(name);
 #else
             return t.GetProperty(name);
@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Cli
 
         internal static MethodInfo _GetMethod(this Type t, string name)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetMethod(name);
 #else
             return t.GetMethod(name);
@@ -72,7 +72,7 @@ namespace Reinforced.Typings.Cli
             try
             {
                 if (string.Compare(args[0], "profile",
-#if NETCORE1
+#if NETCORE
                 StringComparison.CurrentCultureIgnoreCase
 #else
                 StringComparison.InvariantCultureIgnoreCase

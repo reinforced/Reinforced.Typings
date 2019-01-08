@@ -26,6 +26,25 @@ namespace Reinforced.Typings
     /// </summary>
     public static class TypeExtensions
     {
+        internal static object InstanceInternal(this Type t, params object[] parameters)
+        {
+#if NETCOREAPP1_0
+            var dc = t.GetTypeInfo().DeclaredConstructors;
+            var needed = dc.Where(d=>d.GetParameters().Length == parameters.Length).FirstOrDefault();
+            return needed.Invoke(parameters);
+#elif NETSTANDARD1_5
+            var dc = t.GetTypeInfo().DeclaredConstructors;
+            var needed = dc.Where(d=>d.GetParameters().Length == parameters.Length).FirstOrDefault();
+            return needed.Invoke(parameters);
+#elif NETSTANDARD1_6
+            var dc = t.GetTypeInfo().DeclaredConstructors;
+            var needed = dc.Where(d=>d.GetParameters().Length == parameters.Length).FirstOrDefault();
+            return needed.Invoke(parameters);
+#else
+            return Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, parameters, null);
+#endif
+        }
+
         internal static IEnumerable<Type> _GetTypes(this Assembly a, List<RtWarning> warnings)
         {
             try
@@ -58,7 +77,7 @@ namespace Reinforced.Typings
             return proto;
         }
 
-#if NETCORE1
+#if NETCORE
         internal static T GetCustomAttribute<T>(this Type t, bool inherit = true) where T : Attribute
         {
             return CustomAttributeExtensions.GetCustomAttribute<T>(t.GetTypeInfo(), inherit);
@@ -70,7 +89,7 @@ namespace Reinforced.Typings
 #endif
         internal static bool _IsGenericType(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsGenericType;
 #else
             return t.IsGenericType;
@@ -79,7 +98,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsGenericTypeDefinition(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsGenericTypeDefinition;
 #else
             return t.IsGenericTypeDefinition;
@@ -87,7 +106,7 @@ namespace Reinforced.Typings
         }
         internal static Type _BaseType(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().BaseType;
 #else
             return t.BaseType;
@@ -95,7 +114,7 @@ namespace Reinforced.Typings
         }
         internal static bool _IsEnum(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsEnum;
 #else
             return t.IsEnum;
@@ -103,7 +122,7 @@ namespace Reinforced.Typings
         }
         internal static bool _IsClass(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsClass;
 #else
             return t.IsClass;
@@ -112,7 +131,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsAssignableFrom(this Type t, Type t2)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsAssignableFrom(t2);
 #else
             return t.IsAssignableFrom(t2);
@@ -121,7 +140,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsAbstract(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsAbstract;
 #else
             return t.IsAbstract;
@@ -130,7 +149,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsInterface(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().IsInterface;
 #else
             return t.IsInterface;
@@ -139,7 +158,7 @@ namespace Reinforced.Typings
 
         internal static IEnumerable<Type> _GetInterfaces(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetInterfaces();
 #else
             return t.GetInterfaces();
@@ -147,7 +166,7 @@ namespace Reinforced.Typings
         }
         internal static FieldInfo[] _GetFields(this Type t, BindingFlags flags)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetFields(flags);
 #else
             return t.GetFields(flags);
@@ -156,7 +175,7 @@ namespace Reinforced.Typings
 
         internal static FieldInfo[] _GetFields(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetFields();
 #else
             return t.GetFields();
@@ -165,7 +184,7 @@ namespace Reinforced.Typings
 
         internal static FieldInfo _GetField(this Type t, string name)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetField(name, MembersFlags);
 #else
             return t.GetField(name, MembersFlags);
@@ -174,7 +193,7 @@ namespace Reinforced.Typings
 
         internal static ConstructorInfo[] _GetConstructors(this Type t, BindingFlags flags)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetConstructors(flags);
 #else
             return t.GetConstructors(flags);
@@ -184,7 +203,7 @@ namespace Reinforced.Typings
 
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetProperties(flags);
 #else
             return t.GetProperties(flags);
@@ -193,7 +212,7 @@ namespace Reinforced.Typings
 
         internal static MethodInfo[] _GetMethods(this Type t, BindingFlags flags)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetMethods(flags);
 #else
             return t.GetMethods(flags);
@@ -202,7 +221,7 @@ namespace Reinforced.Typings
 
         internal static MethodInfo _GetMethod(this Type t, string name)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetMethod(name, MembersFlags);
 #else
             return t.GetMethod(name, MembersFlags);
@@ -210,7 +229,7 @@ namespace Reinforced.Typings
         }
         internal static Type[] _GetGenericArguments(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetGenericArguments();
 #else
             return t.GetGenericArguments();
@@ -219,7 +238,7 @@ namespace Reinforced.Typings
 
         internal static PropertyInfo _GetProperty(this Type t, string name)
         {
-#if NETCORE1
+#if NETCORE
             return t.GetTypeInfo().GetProperty(name, MembersFlags);
 #else
             return t.GetProperty(name, MembersFlags | BindingFlags.GetProperty | BindingFlags.SetProperty);
@@ -239,7 +258,7 @@ namespace Reinforced.Typings
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.DeclaredOnly;
 
-        #region Inheritance flatten
+#region Inheritance flatten
         /// <summary>
         /// Simple comparer to detect overridden methods
         /// </summary>
@@ -391,9 +410,9 @@ namespace Reinforced.Typings
             return allMembers.ToArray();
         }
 
-        #endregion
+#endregion
 
-        #region IsStatic
+#region IsStatic
 
         /// <summary>
         ///     Determines is type is static
@@ -402,7 +421,7 @@ namespace Reinforced.Typings
         /// <returns>True if type is static. False otherwise</returns>
         public static bool IsStatic(this Type t)
         {
-#if NETCORE1
+#if NETCORE
             return (t.GetTypeInfo().IsAbstract && t.GetTypeInfo().IsSealed);
 #else
             return (t.IsAbstract && t.IsSealed);
@@ -441,9 +460,9 @@ namespace Reinforced.Typings
             return false;
         }
 
-        #endregion
+#endregion
 
-        #region Type distinguishing
+#region Type distinguishing
 
         /// <summary>
         ///     Determines is type derived from Nullable or not
@@ -545,9 +564,9 @@ namespace Reinforced.Typings
             return typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType());
         }
 
-        #endregion
+#endregion
 
-        #region Modifiers
+#region Modifiers
 
         /// <summary>
         ///     Returns access modifier for specified field
@@ -654,9 +673,9 @@ namespace Reinforced.Typings
             return string.Empty;
         }
 
-        #endregion
+#endregion
 
-        #region Utility methods
+#region Utility methods
 
         /// <summary>
         ///     Retrieves first type argument of type
@@ -740,7 +759,7 @@ namespace Reinforced.Typings
             return result;
         }
 
-        #endregion
+#endregion
 
 
 

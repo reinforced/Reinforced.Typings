@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if NETCORE1
+#if NETCORE
 using System.Runtime.Loader;
 #endif
 
@@ -50,7 +50,7 @@ namespace Reinforced.Typings.Cli
         {
             BuildReferencesCache();
 
-#if NETCORE1
+#if NETCORE
             AssemblyLoadContext.Default.Resolving += CurrentDomainOnAssemblyResolve;
 #else
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
@@ -67,7 +67,7 @@ namespace Reinforced.Typings.Cli
                     {
                         BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { assemblyPath });
                     }
-#if NETCORE1
+#if NETCORE
                     var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
 #else
                     var a = Assembly.LoadFrom(path);
@@ -111,7 +111,7 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-#if NETCORE1
+#if NETCORE
         private Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
         {
             //AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;

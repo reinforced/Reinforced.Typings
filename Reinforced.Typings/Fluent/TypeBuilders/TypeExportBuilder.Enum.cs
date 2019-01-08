@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
 // ReSharper disable CheckNamespace
@@ -50,7 +49,6 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Retrieves configuration builder for particular enumeration value
         /// </summary>
-        /// <typeparam name="T">Enumeration type</typeparam>
         /// <param name="value">Enum value</param>
         /// <returns>Configuration builder</returns>
         public EnumValueExportBuilder Value(T value)
@@ -64,7 +62,6 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Configures export of particular enumeration value
         /// </summary>
-        /// <typeparam name="T">Enumeration type</typeparam>
         /// <param name="value">Enum value</param>
         /// <param name="valueConf">Enum value export configuration</param>
         /// <returns>Configuration builder</returns>
@@ -147,7 +144,7 @@ namespace Reinforced.Typings.Fluent
                 {
                     var bp = builder.GetCheckedBlueprint<TsEnumAttribute>(type);
                     var t = typeof(EnumExportBuilder<>).MakeGenericType(type);
-                    return (EnumExportBuilder)Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { bp }, null);
+                    return (EnumExportBuilder)t.InstanceInternal(bp);
                 });
 
                 var conf = untypedConf as EnumExportBuilder;

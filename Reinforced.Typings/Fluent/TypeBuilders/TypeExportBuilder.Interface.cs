@@ -71,7 +71,7 @@ namespace Reinforced.Typings.Fluent
                     if (!type._IsGenericTypeDefinition())
                     {
                         var t = typeof(InterfaceExportBuilder<>).MakeGenericType(type);
-                        return (InterfaceExportBuilder)Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { bp }, null);
+                        return (InterfaceExportBuilder)t.InstanceInternal(bp);
                     }
 
                     return new InterfaceExportBuilder(bp);

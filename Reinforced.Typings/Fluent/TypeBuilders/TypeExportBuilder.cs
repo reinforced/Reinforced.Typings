@@ -41,7 +41,7 @@ namespace Reinforced.Typings.Fluent
             Blueprint.NotifyFlattenTouched();
             foreach (var member in members)
             {
-                var conf = (T)Activator.CreateInstance(typeof(T), BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { Blueprint, member }, null);
+                var conf = (T)typeof(T).InstanceInternal(Blueprint, member);
                 if (configuration == null) continue;
                 try
                 {

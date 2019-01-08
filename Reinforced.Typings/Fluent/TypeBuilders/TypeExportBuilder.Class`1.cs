@@ -29,7 +29,6 @@ namespace Reinforced.Typings.Fluent
         ///     User <see cref="Ts.Parameter{T}()" /> to mock up method parameters or specify configuration for perticular method
         ///     parameter
         /// </summary>
-        /// <param name="tc">Configuration builder</param>
         /// <param name="method">Method to include</param>
         /// <param name="configuration">configuration to be applied to method</param>
         /// <returns>Fluent</returns>
@@ -45,7 +44,6 @@ namespace Reinforced.Typings.Fluent
         ///     User <see cref="Ts.Parameter{T}()" /> to mock up method parameters or specify configuration for perticular method
         ///     parameter
         /// </summary>
-        /// <param name="tc">Configuration builder</param>
         /// <param name="method">Method to include</param>
         /// <param name="configuration">configuration to be applied to method</param>
         /// <returns>Fluent</returns>
@@ -59,7 +57,6 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Include specified property to resulting typing
         /// </summary>
-        /// <param name="tc">Configuration builder</param>
         /// <param name="property">Property to include</param>
         /// <param name="configuration">Configuration to be applied to selected property</param>
         /// <returns>Fluent</returns>

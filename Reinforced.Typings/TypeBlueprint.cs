@@ -427,7 +427,7 @@ namespace Reinforced.Typings
         /// <returns>True, when type member is ignored. False otherwise</returns>
         public bool IsIgnored(MemberInfo member)
         {
-#if NETCORE1
+#if NETCORE
 #else
             //if (member is Type) return IsIgnored((Type)member);
 #endif

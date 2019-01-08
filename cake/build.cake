@@ -103,7 +103,7 @@ Task("Build")
           
       if (netCore.Contains(fw)){
         mbs = new DotNetCoreMSBuildSettings()
-          .WithProperty("RtAdditionalConstants","NETCORE1")
+          .WithProperty("RtAdditionalConstants","NETCORE;" + fw.ToUpperInvariant().Replace(".","_"))
           .WithProperty("RtNetCore","True");
       }
       DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
@@ -129,7 +129,7 @@ Task("Build")
 
       if (netCore.Contains(fw)){
         mbs = mbs
-          .WithProperty("RtAdditionalConstants","NETCORE1")
+          .WithProperty("RtAdditionalConstants","NETCORE;" + fw.ToUpperInvariant().Replace(".","_"))
           .WithProperty("RtNetCore","True");
       }
      DotNetCorePublish(RtNetCoreProject, new DotNetCorePublishSettings {  
