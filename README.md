@@ -16,10 +16,6 @@ News
 * ```RtForceTargetFramework``` parameter added
 * Bigger release is coming
 
-My apologies
-----------------
-...for stupid .NET Core 2.1 bug and version bumps initiated by it. :( Seems that MS releases .NET Core versions faster than I update RT's code. I'm doing all my best to keep situation under control. I highly appreciate your patience and count on your understanding. Thanks all in advance, you are small but still the best community that I've seen.
-
 Support policy
 =================
 
