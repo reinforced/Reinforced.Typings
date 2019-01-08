@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.4.96</version>
+        <version>1.4.97</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,10 +16,7 @@
         <tags>mvc, web, typescript</tags>		
         <license type="file">license\license.txt</license>
 		<releaseNotes>
-- .NET Core 2.2 support
-- Moved builds to Cake
-- #92 Setting changes are not respected within Visual Studio until restart - fixed
-- For better flexibility added RtForceTargetFramework configuration setting
+- MSBuild behavior fixes
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />

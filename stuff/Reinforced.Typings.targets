@@ -18,8 +18,10 @@
 			$(BuildDependsOn);
 		</BuildDependsOn>
 	</PropertyGroup>
-
-    <Import Project="$(RtSettingsXml)" />
+	<ImportGroup Condition="Exists($(RtSettingsXml))"> 
+		<Import Project="$(RtSettingsXml)" />
+	</ImportGroup>
+    
     
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RemoveTypescriptStep" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
@@ -53,17 +55,7 @@
 			Text="Reinforced.Typings will not run because it is disabled in its configuration"
 			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
 	</Target>
-    <Target Name="ConditionallyShowNoRtXml" Condition="!Exists('$(RtSettingsXml)')">
-		<Warning
-			File="Reinforced.Typings.settings.xml"
-			Text="Reinforced.Typings will not run because it is disabled in its configuration"
-			Condition="'$(TreatWarningsAsErrors)' != 'true'"/>
-		<Error
-			File="Reinforced.Typings.settings.xml"
-			Text="Reinforced.Typings will not run because it is disabled in its configuration"
-			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
-	</Target>
-	<Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">	     
+    <Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">	     
 		<RtCli 
             BuildDirectory="$(MSBuildThisFileDirectory)"
 			TargetFramework="$(TargetFramework)"
