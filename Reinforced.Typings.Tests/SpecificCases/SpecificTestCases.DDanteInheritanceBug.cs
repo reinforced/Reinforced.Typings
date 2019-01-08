@@ -41,6 +41,11 @@ namespace Reinforced.Typings.Tests.SpecificCases
             }
         }
 
+        public class OtherData<T> : PolluxEntity<T>
+        {
+            public string Something { get; set; }
+        }
+
         #endregion
 
         [Fact]
@@ -63,6 +68,10 @@ module Pollux.Models {
 		OwnerId: string;
 		Phone: string;
 		PhoneConfirmed: boolean;
+	}	
+    export interface IOtherData<T> extends Pollux.Models.IPolluxEntity<T>
+	{
+		Something: string;
 	}
 }";
             AssertConfiguration(config =>
@@ -70,7 +79,7 @@ module Pollux.Models {
                 config.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 var polluxBase = typeof(PolluxEntity<>);
 
-                var types = new[] {polluxBase, typeof(ContactData)};
+                var types = new[] { polluxBase, typeof(ContactData), typeof(OtherData<>) };
                 // stripped to fit the test
 
                 config.ExportAsInterfaces(types, _icb =>

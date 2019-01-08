@@ -71,7 +71,7 @@ namespace Reinforced.Typings
         internal RtImport EnsureImport(Type t, string typeName)
         {
             if (TypesToExport.Contains(t)) return null;
-            if (AllTypesIsSingleFile) return null;
+
             var bp = _context.Project.Blueprint(t);
             if (bp.ThirdParty != null)
             {
@@ -82,6 +82,8 @@ namespace Reinforced.Typings
 
                 return null;
             }
+
+            if (AllTypesIsSingleFile) return null;
 
             var relPath = GetRelativePathForType(t, FileName);
             if (string.IsNullOrEmpty(relPath)) return null;
@@ -117,7 +119,6 @@ namespace Reinforced.Typings
         internal void EnsureReference(Type t)
         {
             if (TypesToExport.Contains(t)) return;
-            if (AllTypesIsSingleFile) return;
             var bp = _context.Project.Blueprint(t);
             if (bp.ThirdParty != null)
             {
@@ -127,7 +128,7 @@ namespace Reinforced.Typings
                 }
                 return;
             }
-
+            if (AllTypesIsSingleFile) return;
             var relPath = GetRelativePathForType(t, FileName);
             var result = new RtReference() { Path = relPath };
             References.AddReference(result);

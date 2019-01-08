@@ -17,7 +17,7 @@ namespace Reinforced.Typings.Generators
     /// <typeparam name="TNode">Resulting node type (RtClass or RtInterface)</typeparam>
     public abstract class ClassAndInterfaceGeneratorBase<TNode> : TsCodeGeneratorBase<Type, TNode> where TNode : RtNode, new()
     {
-       
+
         /// <summary>
         ///     Exports entire class to specified writer
         /// </summary>
@@ -27,7 +27,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="swtch">Pass here type attribute inherited from IAutoexportSwitchAttribute</param>
         protected virtual void Export(ITypeMember result, Type type, TypeResolver resolver, IAutoexportSwitchAttribute swtch)
         {
-            
+
             var bp = Context.Project.Blueprint(type);
             result.Name = bp.GetName();
             result.Order = bp.GetOrder();
@@ -52,27 +52,36 @@ namespace Reinforced.Typings.Generators
                 var baseClassIsExportedAsInterface = false;
                 if (bs != null && bs != typeof(object))
                 {
-                    TsDeclarationAttributeBase attr;
-                    bool baseAsInterface;
+                    bool baseAsInterface = false;
+                    RtTypeName inferredBaseType = null;
                     if (bs._IsGenericType())
                     {
                         var genericBase = bs.GetGenericTypeDefinition();
-                        attr = Context.Project.Blueprint(genericBase).Attr<TsDeclarationAttributeBase>();
-                        baseAsInterface = Context.Project.Blueprint(genericBase).IsExportingAsInterface();
+                        var genericBaseBp = Context.Project.Blueprint(genericBase);
+                        if (genericBaseBp.TypeAttribute != null || genericBaseBp.ThirdParty != null)
+                        {
+                            inferredBaseType = resolver.ResolveTypeName(bs,
+                                MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                            baseAsInterface = Context.Project.Blueprint(genericBase).IsExportingAsInterface();
+                        }
                     }
-                    else
+                    if (inferredBaseType == null || !bs._IsGenericType())
                     {
-                        attr = Context.Project.Blueprint(bs).Attr<TsDeclarationAttributeBase>();
-                        baseAsInterface = Context.Project.Blueprint(bs).IsExportingAsInterface();
+                        var bsBp = Context.Project.Blueprint(bs);
+                        if (bsBp.TypeAttribute != null || bsBp.ThirdParty != null)
+                        {
+                            baseAsInterface = Context.Project.Blueprint(bs).IsExportingAsInterface();
+                            inferredBaseType = resolver.ResolveTypeName(bs,
+                                MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                        }
                     }
 
-                    if (attr != null)
+                    if (inferredBaseType != null)
                     {
                         if (baseAsInterface) baseClassIsExportedAsInterface = true;
                         else
                         {
-                            ((RtClass)result).Extendee = resolver.ResolveTypeName(bs,
-                                MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                            ((RtClass)result).Extendee = inferredBaseType;
                         }
                     }
                 }
@@ -123,20 +132,34 @@ namespace Reinforced.Typings.Generators
 
         }
 
-        private IEnumerable<RtTypeName> ExtractImplementees(Type type, TypeResolver resovler, Dictionary<string, RtTypeName> materializedGenericParameters)
+        private IEnumerable<RtTypeName> ExtractImplementees(Type type, TypeResolver resolver, Dictionary<string, RtTypeName> materializedGenericParameters)
         {
             var ifaces = type._GetInterfaces();
             foreach (var iface in ifaces)
             {
-                var attr = Context.Project.Blueprint(iface).Attr<TsInterfaceAttribute>();
-                if (attr != null) yield return resovler.ResolveTypeName(iface);
-                else if (iface._IsGenericType())
+                
+                RtTypeName inferredBaseType = null;
+                if (iface._IsGenericType())
                 {
-                    var gt = iface.GetGenericTypeDefinition();
-                    attr = Context.Project.Blueprint(gt).Attr<TsInterfaceAttribute>();
-                    if (attr != null) yield return resovler.ResolveTypeName(gt,
-                        MergeMaterializedGenerics(iface, resovler, materializedGenericParameters));
+                    var genericBase = iface.GetGenericTypeDefinition();
+                    var genericBaseBp = Context.Project.Blueprint(genericBase);
+                    if (genericBaseBp.TypeAttribute != null || genericBaseBp.ThirdParty != null)
+                    {
+                        inferredBaseType = resolver.ResolveTypeName(iface, 
+                            MergeMaterializedGenerics(iface, resolver, materializedGenericParameters));
+                    }
                 }
+                if (inferredBaseType == null || !iface._IsGenericType())
+                {
+                    var bsBp = Context.Project.Blueprint(iface);
+                    if (bsBp.TypeAttribute != null || bsBp.ThirdParty != null)
+                    {
+                        inferredBaseType = resolver.ResolveTypeName(iface,
+                            MergeMaterializedGenerics(iface, resolver, materializedGenericParameters));
+                    }
+                }
+
+                if (inferredBaseType != null) yield return inferredBaseType;
             }
         }
 

@@ -33,12 +33,13 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// Specifies set of imports that third-party type will add to each file it is being used in        /// </summary>
+        /// Specifies set of imports that third-party type will add to each file it is being used in
+        /// </summary>
         /// <param name="builder"></param>
         /// <param name="imports">Set of imports</param>
         /// <returns>Fluent</returns>
-        public static T References<T>(this T builder, params RtImport[] imports)
-            where T : TypeExportBuilder
+        public static T Imports<T>(this T builder, params RtImport[] imports)
+            where T : ThirdPartyExportBuilder
         {
             if (imports != null) builder.Blueprint.ThirdPartyImports.AddRange(imports);
             return builder;

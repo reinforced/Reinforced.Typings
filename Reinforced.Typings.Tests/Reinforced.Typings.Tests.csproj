@@ -69,7 +69,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.DaggmanoAutoIBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
-    <Compile Include="SpecificCases\SpecificTestCases.ExportEnumsInDts.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ExportEnumsInDtsWithDeclareKeyword.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening4.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.NewForceNullable.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InferTypeTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart6ByDanielWest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.ThirdParty.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.RluitenConstEnums.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.TsFunctionWorksWithEnum.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.TsFunctionWorks.cs" />
