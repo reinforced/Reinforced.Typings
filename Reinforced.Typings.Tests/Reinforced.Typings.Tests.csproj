@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Reinforced.Typings.Tests.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -101,6 +102,8 @@
     <Compile Include="SpecificCases\SpecificTestCases.EnumStringInitializers.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesProcessor.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.Constructor.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DocumentationForNestedTypes.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.LineAfterTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />

@@ -39,6 +39,13 @@ namespace Reinforced.Typings.Visitors.TypeScript
                     EmptyBody(node.ReturnType);
                 }
             }
+
+            if (!string.IsNullOrEmpty(node.LineAfter))
+            {
+                AppendTabs();
+                Write(node.LineAfter);
+                Br();
+            }
         }
     }
 }

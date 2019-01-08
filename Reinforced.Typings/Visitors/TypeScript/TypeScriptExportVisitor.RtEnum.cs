@@ -22,6 +22,12 @@ namespace Reinforced.Typings.Visitors.TypeScript
             {
                 Visit(arr[i]);
                 if (i != arr.Length - 1) WriteLine(", ");
+                if (!string.IsNullOrEmpty(arr[i].LineAfter))
+                {
+                    AppendTabs();
+                    Write(arr[i].LineAfter);
+                    Br();
+                }
             }
             WriteLine(string.Empty);
             UnTab();

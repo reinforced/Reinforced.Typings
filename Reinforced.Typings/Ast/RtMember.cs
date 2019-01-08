@@ -21,8 +21,20 @@
         public bool IsStatic { get; set; }
 
         /// <summary>
+        /// Gets or sets line that will follow after member
+        /// </summary>
+        public string LineAfter { get; set; }
+
+        /// <summary>
         /// Member order
         /// </summary>
-        public double Order { get; set; }
+        public double Order
+        {
+            get { return _order; }
+            set
+            {
+                _order = value;
+            }
+        }
     }
 }

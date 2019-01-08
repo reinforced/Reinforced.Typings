@@ -24,5 +24,7 @@ namespace Reinforced.Typings.Ast
         /// <param name="visitor">Visitor</param>
         public abstract void Accept<T>(IRtVisitor<T> visitor);
 
+        internal double _order;
+
     }
 }

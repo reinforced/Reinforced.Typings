@@ -7,6 +7,7 @@ namespace Reinforced.Typings.Ast
     /// </summary>
     public class RtRaw : RtNode
     {
+        
         /// <summary>
         /// Constructs new instance of AST node
         /// </summary>
@@ -27,6 +28,15 @@ namespace Reinforced.Typings.Ast
         /// Raw text to be output to resulting file
         /// </summary>
         public string RawContent { get; set; }
+
+        /// <summary>
+        /// Order of RtRaw appearance
+        /// </summary>
+        public double Order
+        {
+            get { return _order; }
+            set { _order = value; }
+        }
 
         /// <inheritdoc />
         public override IEnumerable<RtNode> Children

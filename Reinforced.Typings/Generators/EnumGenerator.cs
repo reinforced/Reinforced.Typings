@@ -76,7 +76,7 @@ namespace Reinforced.Typings.Generators
                     if (valueDoc != null)
                     {
                         RtJsdocNode docNode = new RtJsdocNode();
-                        if (doc.HasSummary()) docNode.Description = valueDoc.Summary.Text;
+                        if (valueDoc.HasSummary()) docNode.Description = valueDoc.Summary.Text;
                         value.Documentation = docNode;
                     }
 

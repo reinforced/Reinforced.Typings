@@ -104,16 +104,27 @@ namespace Reinforced.Typings.Fluent
                 return conf;
             }
 
-            var assemblyDir = Path.GetDirectoryName(assmbly.Location);
-            var file = string.IsNullOrEmpty(documentationFileName)
-                ? Path.GetFileNameWithoutExtension(assmbly.Location) + ".xml"
-                : documentationFileName;
-            var filePath = Path.Combine(assemblyDir, file);
-            if (File.Exists(filePath))
-            {
-                conf.AdditionalDocumentationPathes.Add(filePath);
-            }
+            var locationFilePath = Path.Combine(
+                string.IsNullOrEmpty(assmbly.Location) ? string.Empty : Path.GetDirectoryName(assmbly.Location),
+                string.IsNullOrEmpty(documentationFileName)
+                    ? Path.GetFileNameWithoutExtension(assmbly.Location) + ".xml"
+                    : documentationFileName);
+
+            var codebaseFilePath = Path.Combine(
+                Path.GetDirectoryName(assmbly.GetCodeBase()),
+                string.IsNullOrEmpty(documentationFileName)
+                    ? Path.GetFileNameWithoutExtension(assmbly.CodeBase) + ".xml"
+                    : documentationFileName);
+            if (File.Exists(locationFilePath)) conf.AdditionalDocumentationPathes.Add(locationFilePath);
+            else if (File.Exists(codebaseFilePath)) conf.AdditionalDocumentationPathes.Add(codebaseFilePath);
             return conf;
+        }
+
+        private static string GetCodeBase(this Assembly asmbly)
+        {
+            if (string.IsNullOrEmpty(asmbly.CodeBase)) return string.Empty;
+            return asmbly.CodeBase.Replace("file:///", string.Empty);
+
         }
     }
 }

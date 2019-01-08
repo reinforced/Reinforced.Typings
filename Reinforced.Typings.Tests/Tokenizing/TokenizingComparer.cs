@@ -11,8 +11,8 @@ namespace Reinforced.Typings.Tests.Tokenizing
             {
                 using (var stringReader2 = new StringReader(to))
                 {
-                    var t1 = new SimpleTokenizer(stringReader1);
-                    var t2 = new SimpleTokenizer(stringReader2);
+                    var t1 = new SimpleTokenizer(stringReader1, tokenizeComments);
+                    var t2 = new SimpleTokenizer(stringReader2, tokenizeComments);
 
                     IEnumerator<string> en1 = null;
                     IEnumerator<string> en2 = null;
@@ -33,7 +33,7 @@ namespace Reinforced.Typings.Tests.Tokenizing
                             }
 
                             if (!canNext1) break;
-                            
+
                             var token1 = en1.Current;
                             var token2 = en2.Current;
 

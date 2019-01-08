@@ -160,7 +160,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
                     .Union(rest);
         }
 
-        protected IEnumerable<RtNode> DoSortClassMembers(List<RtNode> nodes)
+        protected IEnumerable<RtNode> DoSortMembers(List<RtNode> nodes)
         {
             if (ReorderMembers)
             {
@@ -168,20 +168,13 @@ namespace Reinforced.Typings.Visitors.TypeScript
             }
             else
             {
-                return nodes.OrderBy(c =>
-                    c is RtConstructor ? int.MinValue : (c is RtMember ? ((RtMember)c).Order : (double?)null));
-            }
-        }
+                if (nodes.Any(d => d._order != 0))
+                    return nodes.OrderBy(c =>
+                        c is RtConstructor
+                            ? int.MinValue
+                            : c._order);
+                return nodes;
 
-        protected IEnumerable<RtNode> DoSortInterfaceMembers(List<RtNode> nodes)
-        {
-            if (ReorderMembers)
-            {
-                return DoNodesOrder(nodes);
-            }
-            else
-            {
-                return nodes.OrderBy(c => c is RtMember ? ((RtMember)c).Order : (double?)null);
             }
         }
     }

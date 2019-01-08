@@ -24,6 +24,12 @@ namespace Reinforced.Typings.Visitors.TypeScript
             }
             Write(";");
             Br();
+            if (!string.IsNullOrEmpty(node.LineAfter))
+            {
+                AppendTabs();
+                Write(node.LineAfter);
+                Br();
+            }
         }
     }
 }

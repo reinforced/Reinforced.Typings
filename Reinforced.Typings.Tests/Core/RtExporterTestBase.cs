@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Tests.Core
 {
     public abstract class RtExporterTestBase : ConfigurationBuilderTestBase
     {
-        protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, string result, bool compareComments = false)
+        protected string AssertConfiguration(Action<ConfigurationBuilder> configuration, string result, bool compareComments = false)
         {
             var data = InitializeSingleFile(configuration);
             var te = data.Exporter;
@@ -18,6 +18,21 @@ namespace Reinforced.Typings.Tests.Core
             Assert.True(mfo.TempRegistryCleared);
             var actual = mfo.ExportedFiles[Sample]; //<--- variable to check in debugger
             Assert.True(actual.TokenizeCompare(result, compareComments)); //<--- best place to put breakpoint
+            return result;
+        }
+
+        protected string AssertConfiguration(Action<ConfigurationBuilder> configuration, string result, Action<TsExporter> expAction, bool compareComments = false)
+        {
+            var data = InitializeSingleFile(configuration);
+            var te = data.Exporter;
+            var mfo = data.Files;
+            te.Export();
+            expAction(te);
+            Assert.True(mfo.DeployCalled);
+            Assert.True(mfo.TempRegistryCleared);
+            var actual = mfo.ExportedFiles[Sample]; //<--- variable to check in debugger
+            Assert.True(actual.TokenizeCompare(result, compareComments)); //<--- best place to put breakpoint
+            return result;
         }
 
         protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, Dictionary<string,string> results, bool compareComments = false)

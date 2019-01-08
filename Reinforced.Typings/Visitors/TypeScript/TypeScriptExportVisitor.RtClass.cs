@@ -30,7 +30,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             Br(); AppendTabs();
             Write("{"); Br();
             Tab();
-            var members = DoSortClassMembers(node.Members);
+            var members = DoSortMembers(node.Members);
             foreach (var rtMember in members)
             {
                 Visit(rtMember);

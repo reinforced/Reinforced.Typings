@@ -8,6 +8,7 @@ namespace Reinforced.Typings.Visitors.Typings
         public override void Visit(RtConstructor node)
         {
             if (node == null) return;
+            Visit(node.Documentation);
             AppendTabs();
             if (Context == WriterContext.Interface)
             {
@@ -19,6 +20,13 @@ namespace Reinforced.Typings.Visitors.Typings
             }
             SequentialVisit(node.Arguments, ", ");
             WriteLine("); ");
+
+            if (!string.IsNullOrEmpty(node.LineAfter))
+            {
+                AppendTabs();
+                Write(node.LineAfter);
+                Br();
+            }
         }
     }
 }

@@ -19,6 +19,12 @@ namespace Reinforced.Typings.Visitors.Typings
             Write(": ");
             Visit(node.Type);
             WriteLine(";");
+            if (!string.IsNullOrEmpty(node.LineAfter))
+            {
+                AppendTabs();
+                Write(node.LineAfter);
+                Br();
+            }
         }
     }
 }

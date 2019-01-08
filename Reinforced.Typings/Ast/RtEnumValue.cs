@@ -22,6 +22,11 @@ namespace Reinforced.Typings.Ast
         /// </summary>
         public string EnumValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets line that will follow after member
+        /// </summary>
+        public string LineAfter { get; set; }
+
         /// <inheritdoc />
         public override IEnumerable<RtNode> Children
         {

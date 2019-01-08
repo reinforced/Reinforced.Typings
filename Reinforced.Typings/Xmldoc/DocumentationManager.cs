@@ -27,7 +27,7 @@ namespace Reinforced.Typings.Xmldoc
             CacheDocumentation(docFilePath, warnings);
         }
 
-        internal DocumentationManager(string[] docFilePath,List<RtWarning> warnings)
+        internal DocumentationManager(string[] docFilePath, List<RtWarning> warnings)
         {
             foreach (var s in docFilePath)
             {
@@ -63,7 +63,7 @@ namespace Reinforced.Typings.Xmldoc
             catch (Exception ex)
             {
                 _isDocumentationExists = false;
-                warnings.Add(ErrorMessages.RTW0006_DocumentationParseringError.Warn(docFilePath,ex.Message));
+                warnings.Add(ErrorMessages.RTW0006_DocumentationParseringError.Warn(docFilePath, ex.Message));
             }
         }
 
@@ -97,7 +97,7 @@ namespace Reinforced.Typings.Xmldoc
         private string GetIdentifierForMethod(MethodBase method, string name)
         {
             var isCtor = name == "#ctor";
-            var sb = new StringBuilder(string.Format("M:{0}.{1}", method.DeclaringType.FullName, name));
+            var sb = new StringBuilder(string.Format("M:{0}.{1}", method.DeclaringType.FullName.Replace('+', '.'), name));
             if (!isCtor)
             {
                 var cnt = method.GetGenericArguments().Length;
@@ -152,14 +152,14 @@ namespace Reinforced.Typings.Xmldoc
         private string GetIdentifierForMember(MemberInfo member)
         {
             if (member is MethodInfo) return GetIdentifierForMethod((MethodBase)member, member.Name);
-            var id = string.Format("{0}:{1}.{2}", GetPrefix(member.MemberType), member.DeclaringType.FullName,
+            var id = string.Format("{0}:{1}.{2}", GetPrefix(member.MemberType), member.DeclaringType.FullName.Replace('+', '.'),
                 member.Name);
             return id;
         }
 
         private string GetIdentifierForType(Type type)
         {
-            return string.Format("T:{0}", type.FullName);
+            return string.Format("T:{0}", type.FullName.Replace('+', '.'));
         }
 
         private string GetIdentifierForConstructor(ConstructorInfo constructor)

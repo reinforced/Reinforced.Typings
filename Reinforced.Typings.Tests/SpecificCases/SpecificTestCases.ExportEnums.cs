@@ -10,7 +10,19 @@ namespace Reinforced.Typings.Tests.SpecificCases
 
     public enum TestEnum2
     {
-        C, D, E
+        /// <summary>
+        /// C Value
+        /// </summary>
+        C,
+
+        /// <summary>
+        /// D Value
+        /// </summary>
+        D,
+        /// <summary>
+        /// E Value
+        /// </summary>
+        E
     }
     public partial class SpecificTestCases
     {

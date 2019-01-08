@@ -9,7 +9,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
         {
             if (node == null) return;
             if (Context == WriterContext.Interface) return;
-
+            Visit(node.Documentation);
             AppendTabs();
             Write("constructor (");
             SequentialVisit(node.Arguments, ", ");
@@ -28,6 +28,13 @@ namespace Reinforced.Typings.Visitors.TypeScript
             else
             {
                 EmptyBody(null);
+            }
+
+            if (!string.IsNullOrEmpty(node.LineAfter))
+            {
+                AppendTabs();
+                Write(node.LineAfter);
+                Br();
             }
         }
     }

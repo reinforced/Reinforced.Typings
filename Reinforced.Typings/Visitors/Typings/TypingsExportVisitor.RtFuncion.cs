@@ -22,6 +22,12 @@ namespace Reinforced.Typings.Visitors.Typings
                 Visit(node.ReturnType);
             }
             WriteLine(";");
+            if (!string.IsNullOrEmpty(node.LineAfter))
+            {
+                AppendTabs();
+                Write(node.LineAfter);
+                Br();
+            }
         }
     }
 }
