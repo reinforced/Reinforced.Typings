@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<Import Project="../version.xml" />
   <PropertyGroup>
-    <TargetFrameworks>net45;net461;netstandard1.5;netstandard2.0;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
-    <!-- <TargetFramework>net461</TargetFramework> -->    	
+    <TargetFrameworks>net461</TargetFrameworks>
     <RootNamespace>Reinforced.Typings</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -17,27 +15,8 @@
 	<AssemblyVersion>1.4.96</AssemblyVersion>
 	<FileVersion>1.4.96</FileVersion>
 	<InformationalVersion>1.4.96</InformationalVersion>
-  </PropertyGroup>  
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.5'">
-    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
-    <NetCore>True</NetCore>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
-    <NetCore>True</NetCore>
-  </PropertyGroup>
-   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">    
-    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
-    <NetCore>True</NetCore>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
-    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
-    <NetCore>True</NetCore>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.2'">    
-    <DefineConstants>$(DefineConstants);NETCORE1;</DefineConstants>
-    <NetCore>True</NetCore>
-  </PropertyGroup>
+	<DefineConstants>$(DefineConstants);$(RtAdditionalConstants);</DefineConstants>
+  </PropertyGroup>    
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -46,9 +25,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
-  <ItemGroup>    
-    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.5'" Include="System.Xml.XmlSerializer" Version="4.3.0" />    
-    <PackageReference Condition="'$(TargetFramework)'=='netstandard2.0'" Include="System.Xml.XmlSerializer" Version="4.3.0" />   
+  <ItemGroup Condition="$(RtNetCore)=='True'">    
+    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />        
   </ItemGroup>
 
 </Project>

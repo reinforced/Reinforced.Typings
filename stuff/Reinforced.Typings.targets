@@ -19,7 +19,7 @@
 		</BuildDependsOn>
 	</PropertyGroup>
 
-    <Import Project="$(RtSettingsXml)" Condition="Exists($(RtSettingsXml))" />
+    <Import Project="$(RtSettingsXml)" />
     
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RemoveTypescriptStep" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
@@ -67,6 +67,7 @@
 		<RtCli 
             BuildDirectory="$(MSBuildThisFileDirectory)"
 			TargetFramework="$(TargetFramework)"
+			RtForceTargetFramework="$(RtForceTargetFramework)"
 			SourceAssembly="@(IntermediateAssembly)"
 			References="@(ReferencePath)"
 			AdditionalSourceAssemblies="@(RtAdditionalAssembly)" 

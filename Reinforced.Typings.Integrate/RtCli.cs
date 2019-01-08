@@ -127,23 +127,21 @@ namespace Reinforced.Typings.Integrate
 
         private string NormalizeFramework()
         {
+            if (!string.IsNullOrEmpty(RtForceTargetFramework)) return RtForceTargetFramework;
             if (string.IsNullOrEmpty(TargetFramework))
-            {
-                if (!string.IsNullOrEmpty(RtForceTargetFramework)) return RtForceTargetFramework;
+#if NETCORE1
+                return "netcoreapp2.0";
+#else
                 return "net45";
-            }
+#endif
+
             if (TargetFramework.StartsWith("netstandard"))
             {
                 var version = int.Parse(TargetFramework.Substring("netstandard".Length)[0].ToString());
                 if (version == 1) return "netcoreapp1.0";
                 return "netcoreapp2.0";
             }
-            if (TargetFramework.StartsWith("netcoreapp"))
-            {
-                var version = int.Parse(TargetFramework.Substring("netcoreapp".Length)[0].ToString());
-                if (version == 1) return "netcoreapp1.0";
-                return TargetFramework;
-            }
+            if (TargetFramework.StartsWith("netcoreapp")) return TargetFramework;
 
             if (TargetFramework.StartsWith("net46")) return "net461";
             return TargetFramework;

@@ -12,6 +12,7 @@ Task("Clean")
 });
 
 const string packageRoot = "../package";
+const string licenseRoot = "../package/license";
 const string toolsPath = "../package/tools";
 const string contentPath = "../package/content";
 const string buildPath = "../package/build";
@@ -24,41 +25,34 @@ const string NETSTANDARD16 = "netstandard1.6";
 const string NETSTANDARD15 = "netstandard1.5";
 const string NETSTANDARD20 = "netstandard2.0";
 const string NETCORE20 = "netcoreapp2.0";
-const string NETCORE1 = "netcoreapp1.0";
+const string NETCORE10 = "netcoreapp1.0";
+const string NETCORE11 = "netcoreapp1.1";
 const string NET461 = "net461";
 const string NET45 = "net45";
 
-var cliFrameworks = new[] {NET45, NET461,NETCORE1,NETCORE20,NETCORE21,NETCORE22};
-var rtFrameworks = new[] {NET45, NET461,NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22};
-var taskFrameworks = new[] {NET45, NETSTANDARD16};
+var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22}; //new[] { NET45, NET461,NETCORE20,NETCORE21,NETCORE22};
+var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NET45, NET461};
+var taskFrameworks = new[] { NET45, NETSTANDARD16};
+
+var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD16,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22});
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
 const string IntegrateProject = "../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj";
+const string tfParameter = "TargetFrameworks";
+string tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>"; 
 
 Task("PackageClean")
   .Description("Cleaning temporary package folder")
   .Does(() =>
 {
   CleanDirectory(packageRoot); EnsureDirectoryExists(packageRoot);
+  CleanDirectory(licenseRoot); EnsureDirectoryExists(licenseRoot);
   CleanDirectory(toolsPath); EnsureDirectoryExists(toolsPath);
   CleanDirectory(contentPath); EnsureDirectoryExists(contentPath);
   CleanDirectory(buildPath); EnsureDirectoryExists(buildPath);
   CleanDirectory(multiTargetPath); EnsureDirectoryExists(multiTargetPath);
   CleanDirectory(libPath); EnsureDirectoryExists(libPath);
-});
-
-
-
-Task("UpdateTargetFrameworks")
-.Description("Updating TargetFramework property according to build settings")
-.Does(()=>{
-  // Update target frameworks 
-  const string tfParameter = "TargetFrameworks";
-  var tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>";
-
-  ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{string.Join(";",cliFrameworks)}</{tfParameter}>");       
-  ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{string.Join(";",rtFrameworks)}</{tfParameter}>");  
 });
 
 Task("UpdateVersions")
@@ -83,6 +77,7 @@ Task("BuildIntegrate")
       Configuration = RELEASE,
       OutputDirectory = System.IO.Path.Combine(buildPath, fw)
     });    
+    
   }  
   
 });
@@ -90,38 +85,62 @@ Task("BuildIntegrate")
 Task("Build")
   .IsDependentOn("Clean")
   .IsDependentOn("PackageClean")
-  .IsDependentOn("UpdateTargetFrameworks")
   .IsDependentOn("UpdateVersions")
   .IsDependentOn("BuildIntegrate")
   .Does(() =>
 {
-  // Build various versions of lib
-  foreach(var fw in rtFrameworks){
-     Information("---------");
-     Information("Building lib for {0}",fw);
-     Information("---------");
-     DotNetCorePublish(RtNetCoreProject, new DotNetCorePublishSettings {  
-        Configuration = RELEASE, 
-        Framework = fw,
-        Verbosity = DotNetCoreVerbosity.Quiet,
-        OutputDirectory = System.IO.Path.Combine(libPath, fw),
-        MSBuildSettings = new DotNetCoreMSBuildSettings()
-          .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml")        
-      });
-  }
-
   // Build various versions of CLI tool
   foreach(var fw in cliFrameworks){
       Information("---------");
       Information("Building CLI for {0}",fw);
       Information("---------");
+
+      ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");       
+      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");  
+
+      DotNetCoreMSBuildSettings mbs = null;
+          
+      if (netCore.Contains(fw)){
+        mbs = new DotNetCoreMSBuildSettings()
+          .WithProperty("RtAdditionalConstants","NETCORE1")
+          .WithProperty("RtNetCore","True");
+      }
       DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
         Configuration = RELEASE, 
+        MSBuildSettings = mbs,
         Framework = fw,
+        Verbosity = DotNetCoreVerbosity.Quiet,
         OutputDirectory = System.IO.Path.Combine(toolsPath, fw)        
       });
   }
 
+
+  // Build various versions of lib
+  foreach(var fw in rtFrameworks){
+      Information("---------");
+      Information("Building lib for {0}",fw);
+      Information("---------");
+
+      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");  
+
+      var mbs = new DotNetCoreMSBuildSettings()
+          .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml");
+
+      if (netCore.Contains(fw)){
+        mbs = mbs
+          .WithProperty("RtAdditionalConstants","NETCORE1")
+          .WithProperty("RtNetCore","True");
+      }
+     DotNetCorePublish(RtNetCoreProject, new DotNetCorePublishSettings {  
+        Configuration = RELEASE,
+        MSBuildSettings = mbs,    
+        Framework = fw,
+        Verbosity = DotNetCoreVerbosity.Quiet,
+        OutputDirectory = System.IO.Path.Combine(libPath, fw)
+      });
+  }
+
+  
   
   Information("---------");
   Information("Copying build stuff");
@@ -136,6 +155,8 @@ Task("Build")
   Information("Writing readme");
   Information("---------");
   
+  CopyFileToDirectory("../stuff/license.txt", licenseRoot);
+
   // Copy readme with actual version of Reinforced.Typings.settings.xml
   CopyFileToDirectory("../stuff/readme.txt", packageRoot);
   using(var tr = System.IO.File.OpenRead("../stuff/Reinforced.Typings.settings.xml"))

@@ -14,7 +14,7 @@
         <copyright>© 2015 Pavel B. Novikov</copyright>
         <language>en-US</language>
         <tags>mvc, web, typescript</tags>		
-        <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
+        <license type="file">license\license.txt</license>
 		<releaseNotes>
 $$RELNOTES$$
 		</releaseNotes>
@@ -54,6 +54,7 @@ $$RELNOTES$$
         <file src="lib\**" target="lib" />
         <file src="tools\**" target="tools" />        
         <file src="readme.txt" target="" />        
+		<file src="license\**" target="license" />          
     </files>
     
 </package>

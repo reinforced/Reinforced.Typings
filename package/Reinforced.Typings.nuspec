@@ -14,9 +14,12 @@
         <copyright>© 2015 Pavel B. Novikov</copyright>
         <language>en-US</language>
         <tags>mvc, web, typescript</tags>		
-        <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
+        <license type="file">license\license.txt</license>
 		<releaseNotes>
 - .NET Core 2.2 support
+- Moved builds to Cake
+- #92 Setting changes are not respected within Visual Studio until restart - fixed
+- For better flexibility added RtForceTargetFramework configuration setting
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />
@@ -54,6 +57,7 @@
         <file src="lib\**" target="lib" />
         <file src="tools\**" target="tools" />        
         <file src="readme.txt" target="" />        
+		<file src="license\**" target="license" />          
     </files>
     
 </package>

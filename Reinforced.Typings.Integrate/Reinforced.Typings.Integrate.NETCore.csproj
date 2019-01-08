@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<Import Project="../version.xml" />
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
     <RootNamespace>Reinforced.Typings.Integrate</RootNamespace>
@@ -15,10 +14,11 @@
 	<AssemblyVersion>1.4.96</AssemblyVersion>
 	<FileVersion>1.4.96</FileVersion>
 	<InformationalVersion>1.4.96</InformationalVersion>
+	<DefineConstants>$(DefineConstants);$(RtAdditionalConstants);</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.6'">
-        <DefineConstants>NETCORE1;NETSTANDARD15</DefineConstants>        
+        <DefineConstants>NETCORE1;</DefineConstants>        
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
