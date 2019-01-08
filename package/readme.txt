@@ -24,8 +24,18 @@ https://github.com/NuGet/Home/wiki/Bringing-back-content-support,-September-24th
 So now please create empty Reinforced.Typings.settings.xml in the root 
 folder of your project and put the following text there:
 
-<?xml version="1.0" encoding="utf-8"?>
-<Project>	
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- 
+		Hi! This is settings file for Reinforced.Typings.
+		Since Reinforced.Typings is not a framework itself but build process extension,
+		therefore settings file is basically piece of MSBuild script.
+		This file is being imported to your .csproj during each build the same way
+		as Reinforced.Typings.targets that is located in its package /build directory.
+		
+		Reinforced.Typings has completely few parameters. So, here we go.
+	-->
+	
 	<PropertyGroup>
 	
 		<!-- 
@@ -85,7 +95,13 @@ folder of your project and put the following text there:
 			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
 			typings generation.
 		-->
-		<RtDisable>false</RtDisable>		
+		<RtDisable>false</RtDisable>
+
+		<!--
+			Forces RT to use specified target framework.
+			Use this parameter if your RT is experiencing some problems with identifying framework version to use
+		-->
+		<!-- <RtForceTargetFramework>nectoreapp2.2</RtForceTargetFramework>	-->	
 		
 	</PropertyGroup>
 	

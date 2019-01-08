@@ -112,7 +112,7 @@ namespace Reinforced.Typings
 
         internal static bool _IsAssignableFrom(this Type t, Type t2)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().IsAssignableFrom(t2);
 #else
             return t.IsAssignableFrom(t2);
@@ -139,7 +139,7 @@ namespace Reinforced.Typings
 
         internal static IEnumerable<Type> _GetInterfaces(this Type t)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetInterfaces();
 #else
             return t.GetInterfaces();
@@ -147,7 +147,7 @@ namespace Reinforced.Typings
         }
         internal static FieldInfo[] _GetFields(this Type t, BindingFlags flags)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetFields(flags);
 #else
             return t.GetFields(flags);
@@ -156,7 +156,7 @@ namespace Reinforced.Typings
 
         internal static FieldInfo[] _GetFields(this Type t)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetFields();
 #else
             return t.GetFields();
@@ -165,7 +165,7 @@ namespace Reinforced.Typings
 
         internal static FieldInfo _GetField(this Type t, string name)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetField(name, MembersFlags);
 #else
             return t.GetField(name, MembersFlags);
@@ -174,7 +174,7 @@ namespace Reinforced.Typings
 
         internal static ConstructorInfo[] _GetConstructors(this Type t, BindingFlags flags)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetConstructors(flags);
 #else
             return t.GetConstructors(flags);
@@ -184,7 +184,7 @@ namespace Reinforced.Typings
 
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetProperties(flags);
 #else
             return t.GetProperties(flags);
@@ -193,7 +193,7 @@ namespace Reinforced.Typings
 
         internal static MethodInfo[] _GetMethods(this Type t, BindingFlags flags)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetMethods(flags);
 #else
             return t.GetMethods(flags);
@@ -202,7 +202,7 @@ namespace Reinforced.Typings
 
         internal static MethodInfo _GetMethod(this Type t, string name)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetMethod(name, MembersFlags);
 #else
             return t.GetMethod(name, MembersFlags);
@@ -210,7 +210,7 @@ namespace Reinforced.Typings
         }
         internal static Type[] _GetGenericArguments(this Type t)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetGenericArguments();
 #else
             return t.GetGenericArguments();
@@ -219,7 +219,7 @@ namespace Reinforced.Typings
 
         internal static PropertyInfo _GetProperty(this Type t, string name)
         {
-#if NETSTANDARD15
+#if NETCORE1
             return t.GetTypeInfo().GetProperty(name, MembersFlags);
 #else
             return t.GetProperty(name, MembersFlags | BindingFlags.GetProperty | BindingFlags.SetProperty);

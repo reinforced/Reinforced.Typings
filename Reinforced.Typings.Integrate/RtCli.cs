@@ -34,8 +34,12 @@ namespace Reinforced.Typings.Integrate
         /// <summary>
         /// Framework version to invoke rtcli
         /// </summary>
-        [Required]
         public string TargetFramework { get; set; }
+
+        /// <summary>
+        /// Forced usage of target framework
+        /// </summary>
+        public string RtForceTargetFramework { get; set; }
 
         /// <summary>
         /// Package's "build" directory
@@ -123,19 +127,21 @@ namespace Reinforced.Typings.Integrate
 
         private string NormalizeFramework()
         {
-            if (string.IsNullOrEmpty(TargetFramework)) return "net45";
+            if (!string.IsNullOrEmpty(RtForceTargetFramework)) return RtForceTargetFramework;
+            if (string.IsNullOrEmpty(TargetFramework))
+#if NETCORE1
+                return "netcoreapp2.0";
+#else
+                return "net45";
+#endif
+
             if (TargetFramework.StartsWith("netstandard"))
             {
                 var version = int.Parse(TargetFramework.Substring("netstandard".Length)[0].ToString());
                 if (version == 1) return "netcoreapp1.0";
                 return "netcoreapp2.0";
             }
-            if (TargetFramework.StartsWith("netcoreapp"))
-            {
-                var version = int.Parse(TargetFramework.Substring("netcoreapp".Length)[0].ToString());
-                if (version == 1) return "netcoreapp1.0";
-                return TargetFramework;
-            }
+            if (TargetFramework.StartsWith("netcoreapp")) return TargetFramework;
 
             if (TargetFramework.StartsWith("net46")) return "net461";
             return TargetFramework;

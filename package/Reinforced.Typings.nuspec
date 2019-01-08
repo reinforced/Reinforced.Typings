@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.5</version>
+        <version>1.4.97</version>
         <title>Reinforced.Typings</title>
-        <authors>Pavel B. Novikov and contributors</authors>
+        <authors>Pavel B. Novikov</authors>
         <owners>Pavel B. Novikov</owners>
         <projectUrl>https://github.com/reinforced/Reinforced.Typings</projectUrl>
         <iconUrl>https://raw.githubusercontent.com/reinforced/Reinforced.Typings/master/icon.png</iconUrl>
@@ -14,9 +14,9 @@
         <copyright>© 2015 Pavel B. Novikov</copyright>
         <language>en-US</language>
         <tags>mvc, web, typescript</tags>		
-        <licenseUrl>https://github.com/reinforced/Reinforced.Typings/blob/master/LICENSE.md</licenseUrl>
+        <license type="file">license\license.txt</license>
 		<releaseNotes>
-- Several bug fixes
+- MSBuild behavior fixes
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />
@@ -54,6 +54,7 @@
         <file src="lib\**" target="lib" />
         <file src="tools\**" target="tools" />        
         <file src="readme.txt" target="" />        
+		<file src="license\**" target="license" />          
     </files>
     
 </package>

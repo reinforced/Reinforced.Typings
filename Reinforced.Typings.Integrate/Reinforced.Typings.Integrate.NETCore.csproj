@@ -1,17 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<Import Project="../version.xml" />
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
-    <AssemblyName>Reinforced.Typings.Integrate</AssemblyName>
     <RootNamespace>Reinforced.Typings.Integrate</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <DebugSymbols Condition="$(Configuration) == 'Release'">false</DebugSymbols>
     <DebugType Condition="$(Configuration) == 'Release'">None</DebugType>
     <Platforms>AnyCPU;x64;x86</Platforms>
+	
+	<AssemblyName>Reinforced.Typings.Integrate</AssemblyName>
+	<Company>Reinforced Software Construction OSS</Company>
+	<Copyright>Pavel B. Novikov 2019</Copyright>
+	<AssemblyTitle>$(AssemblyName)</AssemblyTitle>
+	<AssemblyVersion>1.4.97</AssemblyVersion>
+	<FileVersion>1.4.97</FileVersion>
+	<InformationalVersion>1.4.97</InformationalVersion>
+	<DefineConstants>$(DefineConstants);$(RtAdditionalConstants);</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.6'">
-        <DefineConstants>NETCORE1;NETSTANDARD15</DefineConstants>        
+        <DefineConstants>NETCORE1;</DefineConstants>        
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />

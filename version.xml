@@ -1,6 +1,0 @@
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-		<AssemblyVersion>1.4.95.0</AssemblyVersion>
-        <FileVersion>1.4.95.0</FileVersion>
-	</PropertyGroup>    
-</Project>
