@@ -8,13 +8,18 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> 🎄 Version **1.4.97** released
+> 🎅 Version **1.5** released
 
-* Minor quick update made according to @GreenAirplane's advise. 
+* Reference Processor feature
+* Exported members reordering functionality 
+* `[ThirdParty]` attribute and fluent configuration
+* Fluent configuration refactoring
+* Constructors generation feature
+* ForceNullable behavior revised
+* Lots of bugfixes
 * .NET Core 2.2 support
 * CLI/task/bootstrapper fixes
 * ```RtForceTargetFramework``` parameter added
-* Bigger release is coming
 
 Support policy
 =================
