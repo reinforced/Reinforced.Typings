@@ -8,7 +8,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> 🎅 Version **1.5** released
+> 🎅 Version **1.5.1** released
 
 * Reference Processor feature
 * Exported members reordering functionality 
@@ -20,6 +20,7 @@ News
 * .NET Core 2.2 support
 * CLI/task/bootstrapper fixes
 * ```RtForceTargetFramework``` parameter added
+* Fixes for Linux/MacOS
 
 Support policy
 =================
