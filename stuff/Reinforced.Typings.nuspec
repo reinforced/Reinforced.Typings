@@ -16,7 +16,9 @@
         <tags>mvc, web, typescript</tags>		
         <license type="file">license\license.txt</license>
 		<releaseNotes>
+		
 $$RELNOTES$$
+
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />

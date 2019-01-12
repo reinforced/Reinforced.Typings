@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 #if NETCORE
 using System.Runtime.Loader;
@@ -45,6 +46,15 @@ namespace Reinforced.Typings.Cli
             BuildWarn = buildWarn;
         }
 
+        internal void TurnOffAdditionalResolvation()
+        {
+#if NETCORE
+            AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
+#else
+            AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
+
+#endif
+        }
 
         public Assembly[] GetAssembliesFromArgs()
         {
@@ -63,19 +73,28 @@ namespace Reinforced.Typings.Cli
                 var pathes = LookupPossibleAssemblyPath(assemblyPath);
                 foreach (var path in pathes)
                 {
-                    if (path == assemblyPath)
+                    if (!Path.IsPathRooted(assemblyPath))
                     {
                         BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { assemblyPath });
                     }
+
+                    try
+                    {
 #if NETCORE
-                    var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                        var a = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
 #else
-                    var a = Assembly.LoadFrom(path);
+                        var a = Assembly.LoadFrom(path);
 #endif
-                    _totalLoadedAssemblies++;
-                    assemblies.Add(a);
+                        _totalLoadedAssemblies++;
+                        assemblies.Add(a);
+                    }
+                    catch (Exception ex)
+                    {
+                        BuildWarn("Assembly {0} failed to load: {1}", new object[] { path, ex });
+                    }
                 }
             }
+
 
             return assemblies.ToArray();
         }
@@ -122,14 +141,23 @@ namespace Reinforced.Typings.Cli
             Assembly a = null;
             foreach (var path in paths)
             {
-                if (path != nm.Name) a = context.LoadFromAssemblyPath(path);
-                else BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { nm.Name });
-
-                if (a != null)
+                try
                 {
-                    _alreadyLoaded[assemblyName.FullName] = a;
-                    _totalLoadedAssemblies++;
+                    if (!Path.IsPathRooted(path))
+                    {
+                        BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
+                        continue;
+                    }
+                    a = context.LoadFromAssemblyPath(path);
                 }
+                catch (Exception ex)
+                {
+                    BuildWarn("Assembly {0} from {1} was not loaded: {2}", new object[] { nm.Name, path, ex });
+                    continue;
+                }
+                
+                _alreadyLoaded[assemblyName.FullName] = a;
+                _totalLoadedAssemblies++;
                 
 #if DEBUG
                 Console.WriteLine("{0} additionally resolved", nm);
@@ -149,14 +177,25 @@ namespace Reinforced.Typings.Cli
             Assembly a = null;
             foreach (var path in paths)
             {
-                if (path != nm.Name) a = Assembly.LoadFrom(path);
-                else BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { nm.Name });
-
-                if (a != null)
+                try
                 {
-                    _alreadyLoaded[args.Name] = a;
-                    _totalLoadedAssemblies++;
+                    if (!Path.IsPathRooted(path))
+                    {
+                        BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
+                        continue;
+                    }
+                    
+                    a = Assembly.LoadFrom(path);
                 }
+                catch (Exception ex)
+                {
+                    BuildWarn("Assembly {0} from {1} was not loaded: {2}", new object[] { nm.Name, path, ex });
+                    continue;
+                }
+
+                
+                _alreadyLoaded[args.Name] = a;
+                _totalLoadedAssemblies++;
                 
 #if DEBUG
                 Console.WriteLine("{0} additionally resolved", nm);
@@ -205,6 +244,7 @@ namespace Reinforced.Typings.Cli
                 return possiblePathes;
             }
 
+            List<string> result = new List<string>();
             foreach (var dir in _allAssembliesDirs)
             {
                 var p = Path.Combine(dir, assemblyNameOrFullPath);
@@ -213,9 +253,11 @@ namespace Reinforced.Typings.Cli
 #if DEBUG
                     Console.WriteLine("Assembly {0} found at {1}", assemblyNameOrFullPath, p);
 #endif
-                    return new[] { p };
+                    result.Add(p);
                 }
             }
+
+            if (result.Count > 0) return result.ToArray();
 
 
             return null;

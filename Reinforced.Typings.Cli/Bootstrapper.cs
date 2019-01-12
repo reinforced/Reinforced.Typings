@@ -99,6 +99,7 @@ namespace Reinforced.Typings.Cli
                 ResolveFluentMethod(settings);
                 TsExporter exporter = new TsExporter(settings);
                 exporter.Export();
+                _assemblyManager.TurnOffAdditionalResolvation();
                 foreach (var rtWarning in settings.Warnings)
                 {
                     var msg = VisualStudioFriendlyErrorMessage.Create(rtWarning);

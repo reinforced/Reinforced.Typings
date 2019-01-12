@@ -151,9 +151,10 @@ namespace Reinforced.Typings.Integrate
         {
             get
             {
-                if (string.IsNullOrEmpty(TargetFramework)) return false;
-                if (TargetFramework.StartsWith("netstandard")) return true;
-                if (TargetFramework.StartsWith("netcoreapp")) return true;
+                var fw = NormalizeFramework();
+                if (string.IsNullOrEmpty(fw)) return false;
+                if (fw.StartsWith("netstandard")) return true;
+                if (fw.StartsWith("netcoreapp")) return true;
                 return false;
             }
         }

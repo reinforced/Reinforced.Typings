@@ -1,6 +1,6 @@
 #addin "Cake.FileHelpers"
 var target = Argument("target", "Build");
-const string version = "1.5";
+const string version = "1.5.1";
 
 Task("Clean")
   .Does(() =>
@@ -35,13 +35,15 @@ var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCOR
 var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NET45, NET461};
 var taskFrameworks = new[] { NET46, NETSTANDARD20};
 
-var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD16,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22});
+var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22});
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
 const string IntegrateProject = "../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj";
 const string tfParameter = "TargetFrameworks";
 string tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>"; 
+const string tfSingleParameter = "TargetFramework";
+string tfsRgx = $"<{tfSingleParameter}>[a-zA-Z0-9;.]*</{tfSingleParameter}>"; 
 
 Task("PackageClean")
   .Description("Cleaning temporary package folder")
@@ -72,11 +74,20 @@ Task("BuildIntegrate")
 .Description("Building RT's integration MSBuild task")
 .Does(()=>{
   foreach(var fw in taskFrameworks){
-    DotNetCoreBuild(IntegrateProject, new DotNetCoreBuildSettings
+	  DotNetCoreMSBuildSettings mbs = null;
+          
+      if (netCore.Contains(fw)){
+        mbs = new DotNetCoreMSBuildSettings()
+          .WithProperty("RtAdditionalConstants","NETCORE;" + fw.ToUpperInvariant().Replace(".","_"))
+          .WithProperty("RtNetCore","True");
+      }
+    DotNetCorePublish(IntegrateProject, new DotNetCorePublishSettings
     {
       Verbosity = DotNetCoreVerbosity.Quiet,
-      Configuration = RELEASE,
-      OutputDirectory = System.IO.Path.Combine(buildPath, fw)
+      Configuration = RELEASE,	  
+      MSBuildSettings = mbs,
+      OutputDirectory = System.IO.Path.Combine(buildPath, fw),
+      Framework = fw
     });    
     
   }  
@@ -97,7 +108,9 @@ Task("Build")
       Information("---------");
 
       ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");       
-      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");  
+      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>"); 
+      ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");       
+      ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
 
       DotNetCoreMSBuildSettings mbs = null;
           
@@ -123,7 +136,8 @@ Task("Build")
       Information("---------");
 
       ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");  
-
+      ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
+      
       var mbs = new DotNetCoreMSBuildSettings()
           .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml");
 

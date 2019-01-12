@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Reinforced.Typings</id>
-        <version>1.5</version>
+        <version>1.5.1</version>
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov and contributors</authors>
         <owners>Pavel B. Novikov</owners>
@@ -16,14 +16,9 @@
         <tags>mvc, web, typescript</tags>		
         <license type="file">license\license.txt</license>
 		<releaseNotes>
-- MSBuild behavior fixes
-- ReferenceProcessor
-- ReorderMembers
-- ThirdParty attribute
-- Fluent configuration refactoring
-- Constructors generation
-- ForceNullable behavior revised
-- Lots of bugfixes
+		
+- MacOS/Linux fixes
+
 		</releaseNotes>
         <dependencies>
           <group targetFramework=".NETFramework4.5" />
