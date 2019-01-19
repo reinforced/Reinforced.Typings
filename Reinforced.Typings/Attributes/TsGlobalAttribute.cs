@@ -48,6 +48,11 @@ namespace Reinforced.Typings.Attributes
         public string TabSymbol { get; set; }
 
         /// <summary>
+        /// Specifies string used as the line terminator.
+        /// </summary>
+        public string NewLine { get; set; }
+
+        /// <summary>
         /// Switches RT to using TS modules system (--module tsc.exe parameter) and import references
         /// </summary>
         public bool UseModules { get; set; }
@@ -98,6 +103,7 @@ namespace Reinforced.Typings.Attributes
         {
             WriteWarningComment = true;
             TabSymbol = "\t";
+            NewLine = Environment.NewLine;
         }
     }
 }

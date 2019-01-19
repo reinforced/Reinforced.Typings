@@ -40,6 +40,7 @@ namespace Reinforced.Typings.Tests.Core
             StringBuilder sb = new StringBuilder();
             using (var sw = new StringWriter(sb))
             {
+                sw.NewLine = Context.Global.NewLine;
                 ExportCore(sw, file,refProcessor);
             }
             ExportedFiles[fileName] = sb.ToString();

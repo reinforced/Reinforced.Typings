@@ -58,6 +58,18 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        /// Changes line termination string. Default is <see cref="Environment.NewLine"/>.
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="newLine">String that used as the line terminator.</param>
+        public static GlobalConfigurationBuilder NewLine(this GlobalConfigurationBuilder builder,
+            string newLine) 
+        {
+            builder.Parameters.NewLine = newLine;
+            return builder;
+        }
+
+        /// <summary>
         ///     Specifies root namespace for hierarchical export.
         ///     Helps to avoid creating redundant directories when hierarchical export.
         /// </summary>

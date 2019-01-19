@@ -144,6 +144,17 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
+        /// Specifies string used as the line terminator.
+        /// </summary>
+        public string NewLine {
+            get { return _attr.NewLine; }
+            set {
+                if(_isLocked) return;
+                _attr.NewLine = value;
+            }
+        }
+
+        /// <summary>
         /// Switches RT to using TS modules system (--module) parameter and import references
         /// </summary>
         public bool UseModules
