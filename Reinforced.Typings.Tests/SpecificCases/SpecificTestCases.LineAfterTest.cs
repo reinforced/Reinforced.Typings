@@ -31,8 +31,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
         [Fact]
         public void LineAfterTest()
         {
-            const string result = @"
-module Reinforced.Typings.Tests.SpecificCases {
+            const string result = @"module Reinforced.Typings.Tests.SpecificCases {
 	export enum TestEnum2 { 
 		/** C Value */
 		C = 0, 
@@ -44,7 +43,8 @@ module Reinforced.Typings.Tests.SpecificCases {
 		E = 2		 
 
 	}
-}";
+}
+";
             var str = AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment().GenerateDocumentation());
