@@ -1,3 +1,8 @@
+What is that?
+=================
+
+Reinforced.Typings converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and simply does its job according to configuration. Please check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
+
 Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
 =================
 ```sh
@@ -31,12 +36,8 @@ Please **do not** ask your questions in github issues anymore. Such format is no
 
 GitHub issues are for confirmed bugs/feature requests now. If you've found bug - please write and PR test if you can. If you have feature idea - please describe it from fluent/attribute configuration point of view. Describe how'd you gonna to configure RT for desired result. Thanks in advance!
 
-What is that?
+Best to be used for
 =================
-
-Reinforced.Typings converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and simply does its job according to configuration. Please check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
-
-In a nutshell, you can use Reinforced.Typings for:
 
 Exporting ViewModels
 -----------------
