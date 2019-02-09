@@ -257,10 +257,7 @@ namespace Reinforced.Typings.Cli
                 }
             }
 
-            if (result.Count > 0) return result.ToArray();
-
-
-            return null;
+            return result.ToArray();
         }
 
         private IEnumerable<string> LookupPossibleAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)

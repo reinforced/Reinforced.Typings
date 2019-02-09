@@ -214,5 +214,20 @@ namespace Reinforced.Typings
                 _attr.ReorderMembers = value;
             }
         }
+        /// <summary>
+        /// Gets or sets type of AST visitor that will be used to write code to output.
+        /// Visitor has to be child class of <see cref="Reinforced.Typings.Visitors.TextExportingVisitor"/>
+        /// </summary>
+        public Type VisitorType
+        {
+            get { return _attr.VisitorType; }
+            set
+            {
+                if (_isLocked) return;
+                _attr.VisitorType = value;
+            }
+        }
+
+        
     }
 }

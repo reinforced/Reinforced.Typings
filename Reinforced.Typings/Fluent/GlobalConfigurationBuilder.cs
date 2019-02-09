@@ -1,5 +1,6 @@
 ﻿using System;
 using Reinforced.Typings.ReferencesInspection;
+using Reinforced.Typings.Visitors;
 
 namespace Reinforced.Typings.Fluent
 {
@@ -156,6 +157,18 @@ namespace Reinforced.Typings.Fluent
         public static GlobalConfigurationBuilder ReorderMembers(this GlobalConfigurationBuilder builder, bool reorder = true)
         {
             builder.Parameters.ReorderMembers = reorder;
+            return builder;
+        }
+
+        /// <summary>
+        ///  Sets override of type of AST visitor that will be used to write code to output.
+        /// Warning! This option overrides <see cref="ExportPureTypings"/> configuration!
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        public static GlobalConfigurationBuilder UseVisitor<T>(this GlobalConfigurationBuilder builder)
+            where T:TextExportingVisitor
+        {
+            builder.Parameters.VisitorType = typeof(T);
             return builder;
         }
 

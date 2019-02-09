@@ -8,23 +8,21 @@ using Reinforced.Typings.Ast.TypeNames;
 
 namespace Reinforced.Typings.Visitors.TypeScript
 {
-
+    /// <summary>
+    /// Visitor that generates TypeScript code (.ts) from existing model
+    /// </summary>
     public partial class TypeScriptExportVisitor : TextExportingVisitor
     {
         protected WriterContext Context { get; set; }
 
+        
+
+        
+
         /// <summary>
-        /// Gets whether it is needed to reorder class/interface members alphabetically when exporting
+        /// Writes modifiers for type member
         /// </summary>
-        protected bool ReorderMembers { get; private set; }
-
-        public TypeScriptExportVisitor(TextWriter writer, string tabulation, bool reorderMembers)
-            : base(writer, tabulation)
-        {
-            ReorderMembers = reorderMembers;
-            Context = WriterContext.None;
-        }
-
+        /// <param name="member">Type member</param>
         protected void Modifiers(RtMember member)
         {
             if (member.AccessModifier != null)
@@ -83,7 +81,11 @@ namespace Reinforced.Typings.Visitors.TypeScript
         }
         #endregion
 
-        private void EmptyBody(RtTypeName returnType)
+        /// <summary>
+        /// Writes empty method body of known return type
+        /// </summary>
+        /// <param name="returnType">Method return type</param>
+        protected void EmptyBody(RtTypeName returnType)
         {
             if (returnType == null || returnType.IsVoid())
             {
@@ -95,7 +97,11 @@ namespace Reinforced.Typings.Visitors.TypeScript
             }
         }
 
-        private void CodeBlock(string content)
+        /// <summary>
+        /// Writes code block with correct tabulation
+        /// </summary>
+        /// <param name="content">Code content</param>
+        protected void CodeBlock(string content)
         {
             Br();
             AppendTabs();
@@ -107,7 +113,11 @@ namespace Reinforced.Typings.Visitors.TypeScript
             WriteLine("}");
         }
 
-        private void CodeBlock(RtRaw content)
+        /// <summary>
+        /// Writes AST node as code block with correct tabulation
+        /// </summary>
+        /// <param name="content">Code content</param>
+        protected void CodeBlock(RtRaw content)
         {
             Br();
             AppendTabs();
@@ -119,6 +129,12 @@ namespace Reinforced.Typings.Visitors.TypeScript
             WriteLine("}");
         }
 
+        /// <summary>
+        /// Performs sequential visiting of AST nodes inserting separator in between
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nodes">Nodes to visit</param>
+        /// <param name="separator">Seperator string</param>
         protected void SequentialVisit<T>(IEnumerable<T> nodes, string separator)
             where T : RtNode
         {
@@ -162,7 +178,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
 
         protected IEnumerable<RtNode> DoSortMembers(List<RtNode> nodes)
         {
-            if (ReorderMembers)
+            if (ExportContext.Global.ReorderMembers)
             {
                 return DoNodesOrder(nodes);
             }
@@ -176,6 +192,11 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 return nodes;
 
             }
+        }
+
+        public TypeScriptExportVisitor(TextWriter writer, ExportContext exportContext) : base(writer, exportContext)
+        {
+            Context = WriterContext.None;
         }
     }
 

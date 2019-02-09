@@ -180,7 +180,7 @@ namespace Reinforced.Typings.Cli
                     {
 
                         var pars = constrMethod.GetParameters();
-                        if (pars.Length == 1 && pars[0].ParameterType == typeof(ConfigurationBuilder))
+                        if (pars.Length == 1/* && pars[0].ParameterType == typeof(ConfigurationBuilder)*/)
                         {
                             isFound = true;
                             context.ConfigurationMethod = builder => constrMethod.Invoke(null, new object[] { builder });

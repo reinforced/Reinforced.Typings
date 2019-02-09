@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using Reinforced.Typings.Ast.Dependency;
 
 #pragma warning disable 1591
 
@@ -14,10 +15,16 @@ namespace Reinforced.Typings.Visitors
         private readonly string _tabulation;
         protected TextWriter Writer { get { return _writer; } }
 
-        public TextExportingVisitor(TextWriter writer, string tabulation)
+        /// <summary>
+        /// Gets current export context
+        /// </summary>
+        protected ExportContext ExportContext { get; private set; }
+
+        protected TextExportingVisitor(TextWriter writer, ExportContext exportContext)
         {
             _writer = writer;
-            _tabulation = tabulation;
+            _tabulation = exportContext.Global.TabSymbol;
+            ExportContext = exportContext;
         }
 
         private string TabLine(int count)
@@ -86,6 +93,29 @@ namespace Reinforced.Typings.Visitors
         protected void WriteLine(string text)
         {
             _writer.WriteLine(text);
+        }
+
+        public override void VisitFile(ExportedFile file)
+        {
+            bool hasReferences = false, hasImports = false;
+
+            foreach (var rtReference in file.FinalReferences)
+            {
+                Visit(rtReference);
+                hasReferences = true;
+            }
+
+            foreach (var rtImport in file.FinalImports)
+            {
+                Visit(rtImport);
+                hasImports = true;
+            }
+            if (hasReferences || hasImports) Br();
+
+            foreach (var fileNamespace in file.Namespaces)
+            {
+                Visit(fileNamespace);
+            }
         }
     }
 }

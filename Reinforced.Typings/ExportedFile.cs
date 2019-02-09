@@ -62,6 +62,41 @@ namespace Reinforced.Typings
         /// </summary>
         public string FileName { get; private set; }
 
+        private IEnumerable<RtReference> _refinedReferences;
+        private IEnumerable<RtImport> _refinedImports;
+
+        /// <summary>
+        /// Gets final version of references (after conditional user processing)
+        /// </summary>
+        public IEnumerable<RtReference> FinalReferences
+        {
+            get { return _refinedReferences ?? References.References; }
+        }
+
+        /// <summary>
+        /// Gets final version of references (after conditional user processing)
+        /// </summary>
+        public IEnumerable<RtImport> FinalImports
+        {
+            get { return _refinedImports ?? References.Imports; }
+        }
+
+        internal void ApplyReferenceProcessor(ReferenceProcessorBase refProcessor = null)
+        {
+            if (refProcessor == null) return;
+
+            var references = References.References;
+            references = refProcessor.FilterReferences(references, this);
+            if (references == null) references = new RtReference[0];
+            _refinedReferences = references;
+
+            var imports = References.Imports;
+            imports = refProcessor.FilterImports(imports, this);
+            if (imports == null) imports = new RtImport[0];
+
+            _refinedImports = imports;
+        }
+
         /// <summary>
         /// Ensures that imports for specified type presents in specified file
         /// </summary>

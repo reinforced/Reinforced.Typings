@@ -1,6 +1,7 @@
 ﻿using System;
 using Reinforced.Typings.Fluent;
 
+
 namespace Reinforced.Typings.Attributes
 {
     /// <summary>
@@ -99,5 +100,11 @@ namespace Reinforced.Typings.Attributes
             WriteWarningComment = true;
             TabSymbol = "\t";
         }
+
+        /// <summary>
+        /// Gets or sets type of AST visitor that will be used to write code to output.
+        /// Visitor has to be child class of <see cref="Reinforced.Typings.Visitors.TextExportingVisitor"/>
+        /// </summary>
+        public Type VisitorType { get; set; }
     }
 }

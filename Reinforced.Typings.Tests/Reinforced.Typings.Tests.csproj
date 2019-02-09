@@ -71,6 +71,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportEnumsInDtsWithDeclareKeyword.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.GenericsExport3.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening4.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest1.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.FunctionalNames.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.LineAfterAnotherWay.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.NewForceNullable.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InferTypeTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart6ByDanielWest.cs" />

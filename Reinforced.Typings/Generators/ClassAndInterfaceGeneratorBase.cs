@@ -293,7 +293,7 @@ namespace Reinforced.Typings.Generators
             {
                 var generator = Context.Generators.GeneratorFor(m);
                 var member = generator.Generate(m, resolver);
-                typeMember.Members.Add(member);
+                if (member!=null) typeMember.Members.Add(member);
             }
         }
     }

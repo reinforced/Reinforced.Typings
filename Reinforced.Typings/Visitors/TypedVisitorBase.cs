@@ -53,5 +53,6 @@ namespace Reinforced.Typings.Visitors
         public abstract T Visit(RtReference node);
         
         public abstract T Visit(RtTuple node);
+        public abstract T VisitFile(ExportedFile file);
     }
 }

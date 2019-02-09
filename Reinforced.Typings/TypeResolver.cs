@@ -192,7 +192,7 @@ namespace Reinforced.Typings
             var bp = Context.Project.Blueprint(t, false);
             if (bp != null && bp.ThirdParty != null)
             {
-                var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
+                var result = bp.GetName(bp.IsExportedExplicitly ? null : GetConcreteGenericArguments(t, materializedGenerics));
                 if (Context.Global.UseModules) _file.EnsureImport(t, result.TypeName);
                 _file.EnsureReference(t);
                 return Cache(t, result);
@@ -204,7 +204,7 @@ namespace Reinforced.Typings
                 {
                     var ns = t.Namespace;
                     if (!declaration.IncludeNamespace) ns = string.Empty;
-                    var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
+                    var result = bp.GetName(bp.IsExportedExplicitly ? null : GetConcreteGenericArguments(t, materializedGenerics));
 
                     if (Context.Global.UseModules)
                     {
@@ -281,7 +281,7 @@ namespace Reinforced.Typings
             if (typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType()))
             {
                 var methodInfo = t._GetMethod("Invoke");
-                return Cache(t, ConstructFunctionType(methodInfo));
+                return Cache(t, ConstructFunctionType(methodInfo, materializedGenerics));
             }
 
 
@@ -311,9 +311,9 @@ namespace Reinforced.Typings
             return Cache(t, AnyType);
         }
 
-        private RtDelegateType ConstructFunctionType(MethodInfo methodInfo)
+        private RtDelegateType ConstructFunctionType(MethodInfo methodInfo, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
-            var retType = ResolveTypeName(methodInfo.ReturnType);
+            var retType = ResolveTypeName(methodInfo.ReturnType, materializedGenerics);
             var result = retType;
 
             var argAggreagtor = 0;
@@ -321,7 +321,7 @@ namespace Reinforced.Typings
             foreach (var parameterInfo in methodInfo.GetParameters())
             {
                 var argName = argAggreagtor > 0 ? "arg" + argAggreagtor : "arg";
-                var typeName = ResolveTypeName(parameterInfo.ParameterType);
+                var typeName = ResolveTypeName(parameterInfo.ParameterType, materializedGenerics);
                 arguments.Add(new RtArgument() { Identifier = new RtIdentifier(argName), Type = typeName });
                 argAggreagtor++;
             }

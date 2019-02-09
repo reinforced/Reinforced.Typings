@@ -36,9 +36,15 @@ namespace Reinforced.Typings
             TypeAttribute = Type.GetCustomAttribute<TsEnumAttribute>(false)
                             ?? Type.GetCustomAttribute<TsInterfaceAttribute>(false)
                             ?? (TsDeclarationAttributeBase)Type.GetCustomAttribute<TsClassAttribute>(false);
+            IsExportedExplicitly = TypeAttribute != null;
             _thirdPartyAttribute = Type.GetCustomAttribute<TsThirdPartyAttribute>();
             InitFromAttributes();
         }
+
+        /// <summary>
+        /// Gets whether specified type is exported explicitly
+        /// </summary>
+        public bool IsExportedExplicitly { get; internal set; }
 
         private bool _flattenTouched = false;
         internal void NotifyFlattenTouched()
