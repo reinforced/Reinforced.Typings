@@ -187,10 +187,10 @@ namespace Reinforced.Typings.Fluent
         /// When true unresolved types will be exported as 'unknown', otherwise as 'any'
         /// </summary>
         /// <param name="builder">Conf builder</param>
-        /// <param name="unresolvedToUnkown">True to export unresolved types as 'unknown', false to export as 'any'</param>
-        public static GlobalConfigurationBuilder UnresolvedToUnknown(this GlobalConfigurationBuilder builder, bool unresolvedToUnkown = false)
+        /// <param name="unresolvedToUnknown">True to export unresolved types as 'unknown', false to export as 'any'</param>
+        public static GlobalConfigurationBuilder UnresolvedToUnknown(this GlobalConfigurationBuilder builder, bool unresolvedToUnknown = false)
         {
-            builder.Parameters.UnresolvedToUnknown = unresolvedToUnkown;
+            builder.Parameters.UnresolvedToUnknown = unresolvedToUnknown;
             return builder;
         }
 
