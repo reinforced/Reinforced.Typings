@@ -17,6 +17,7 @@ namespace Reinforced.Typings
         private static readonly RtSimpleTypeName AnyType = new RtSimpleTypeName("any");
         private static readonly RtSimpleTypeName NumberType = new RtSimpleTypeName("number");
         private static readonly RtSimpleTypeName StringType = new RtSimpleTypeName("string");
+        private static readonly RtSimpleTypeName UnknownType = new RtSimpleTypeName("unknown");
 
         /// <summary>
         /// Hash set of all numeric types
@@ -90,6 +91,8 @@ namespace Reinforced.Typings
             {typeof (decimal), NumberType}
         };
 
+        private readonly RtSimpleTypeName _anyOrUnknown;
+
         private ExportContext Context
         {
             get { return _file.Context; }
@@ -103,6 +106,10 @@ namespace Reinforced.Typings
         internal TypeResolver(ExportedFile file)
         {
             _file = file;
+
+            _anyOrUnknown = _file.Context.Global.UnresolvedToUnknown
+                        ? UnknownType
+                        : AnyType;            
         }
 
         private RtTypeName[] GetConcreteGenericArguments(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
@@ -290,7 +297,7 @@ namespace Reinforced.Typings
             {
                 var def = t.GetGenericTypeDefinition();
                 var tsFriendly = ResolveTypeNameInner(def) as RtSimpleTypeName;
-                if (tsFriendly != null && tsFriendly != AnyType)
+                if (tsFriendly != null && tsFriendly != AnyType && tsFriendly != UnknownType)
                 {
                     var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
                         t._GetGenericArguments().Select(c => ResolveTypeNameInner(c, null)).ToArray())
@@ -307,9 +314,9 @@ namespace Reinforced.Typings
                 return Cache(t, NumberType);
             }
 
-            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
+            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName, _anyOrUnknown));
 
-            return Cache(t, AnyType);
+            return Cache(t, _anyOrUnknown);
         }
 
         private RtDelegateType ConstructFunctionType(MethodInfo methodInfo, Dictionary<string, RtTypeName> materializedGenerics = null)
