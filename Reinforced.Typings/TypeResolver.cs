@@ -203,6 +203,7 @@ namespace Reinforced.Typings
                 if (declaration != null)
                 {
                     var ns = t.Namespace;
+                    if (!string.IsNullOrEmpty(declaration.Namespace)) ns = declaration.Namespace;
                     if (!declaration.IncludeNamespace) ns = string.Empty;
                     var result = bp.GetName(bp.IsExportedExplicitly ? null : GetConcreteGenericArguments(t, materializedGenerics));
 
