@@ -13,10 +13,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> ⚙ Version **1.5.2** released
+> 🌴 Version **1.5.3** released
 
-* Visitor overrides
-* Documentation bugfixes
+* Important bugfixes
 
 Support policy
 =================
