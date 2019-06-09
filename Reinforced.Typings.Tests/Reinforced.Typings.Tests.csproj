@@ -107,6 +107,8 @@
     <Compile Include="SpecificCases\SpecificTestCases.DocumentationForNestedTypes.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.LineAfterTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.AutoOptional.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.OverrideNamespaceWithModules.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DtsNoDeclareEnumWithoutAmbientScope.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart4.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart5.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.WeirdInheritanceCase.cs" />
+    <Compile Include="SpecificCases\SpecifiicTestCases.UnresolvedToUnknown.cs" />
     <Compile Include="SpecificCases\TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenizing\SimpleTokenizer.cs" />
