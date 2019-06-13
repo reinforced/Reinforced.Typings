@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Reinforced.Typings.Exceptions;
-using Reinforced.Typings.ReferencesInspection;
+using Reinforced.Typings.Fluent;
 using Reinforced.Typings.Xmldoc;
 // ReSharper disable CheckNamespace
 namespace Reinforced.Typings
@@ -69,6 +69,10 @@ namespace Reinforced.Typings
         public ProjectBlueprint Project { get; private set; }
 
        
+        /// <summary>
+        /// Custom code builders
+        /// </summary>
+        internal List<CustomExportBuilder> CustomBuilders { get; private set; }
 
     }
 }

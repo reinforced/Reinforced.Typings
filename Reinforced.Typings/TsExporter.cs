@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Reinforced.Typings.Ast;
-using Reinforced.Typings.Fluent;
 using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings
@@ -99,12 +98,11 @@ namespace Reinforced.Typings
             }
             else
             {
-                foreach (var kv in _context.TypesToFilesMap)
+                foreach (var fileName in _context.TypesToFilesMap.Keys.Union(_context.CustomGeneratorsToFilesMap.Keys).Distinct())
                 {
-                    var path = kv.Key;
-                    var file = ExportTypes(kv.Key);
+                    var file = ExportTypes(fileName);
                     file.ApplyReferenceProcessor(refProc);
-                    _context.FileOperations.Export(path, file);
+                    _context.FileOperations.Export(fileName, file);
                 }
             }
 

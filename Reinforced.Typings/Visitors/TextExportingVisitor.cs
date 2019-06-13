@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
-using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Ast;
 
 #pragma warning disable 1591
 
@@ -115,6 +117,11 @@ namespace Reinforced.Typings.Visitors
             foreach (var fileNamespace in file.Namespaces)
             {
                 Visit(fileNamespace);
+            }
+
+            foreach (var rtNode in file.CustomGenerators.SelectMany(g => g.Generate() ?? new List<RtNode>()))
+            {
+                Visit(rtNode);
             }
         }
     }
