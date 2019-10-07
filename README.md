@@ -13,9 +13,15 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> 🌴 Version **1.5.3** released
+> :gift: Version **1.5.4** released
 
-* Important bugfixes
+* .NET Core 3.0 version
+* Bugfixes
+* Finally I have made detailed [code generators and customization guide](https://github.com/reinforced/Reinforced.Typings/wiki/Code-Generators). Check it!
+
+Job needed
+=================
+The power of community, please help me. I'm looking for remote job as C#/.NET Fullstack Engineer. I have almost 10 years of remote experience, here is my [UpWork Profile](https://www.upwork.com/o/profiles/users/_~01d070a561f288ffe7/) covering last 5 years. My code is... well... can be found at least within this repo. Price is negotiable. Contact me (or tell your manager to) [by email](mailto:pavel.b.novikov@gmail.com) or [by skype](skype:nsu_the_cjay). Thanks for attention!
 
 Support policy
 =================
