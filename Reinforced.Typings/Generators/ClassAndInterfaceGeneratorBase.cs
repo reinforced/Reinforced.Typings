@@ -49,7 +49,6 @@ namespace Reinforced.Typings.Generators
             if (!bp.IsFlatten())
             {
                 var baseType = type._BaseType();
-                var baseClassIsExportedAsInterface = false;
                 var implementees = ExtractImplementees(type, resolver, materializedGenericParameters).ToList();
 
                 if (baseType != null && baseType != typeof(object))
