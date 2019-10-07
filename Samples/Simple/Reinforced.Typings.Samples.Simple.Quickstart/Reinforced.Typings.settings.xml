@@ -11,14 +11,13 @@
 	-->
 	
 	<PropertyGroup>
-		<TargetFramework>net45</TargetFramework>
-		<PublishPipelineCollectFilesCore>Stub</PublishPipelineCollectFilesCore>
+	
 		<!-- 
 			This property points target file where to put generated sources. 
 			It is not used if RtDivideTypesAmongFiles='true' specified.
 			Important! Do not forget to include generated file to solution.
 		-->
-		<RtTargetFile>$(ProjectDir)Scripts\app\Server.ts</RtTargetFile>
+    <RtTargetFile>$(ProjectDir)Scripts\app\Server1.ts</RtTargetFile>
 		
 		<!--
 			This property sets RT configuration method for fluent configuration.
@@ -64,13 +63,21 @@
 			to fix it, but TypeScript compilation fails and failing project build. This option will temporary 
 			disable typescripts build.
 		-->
-		<RtBypassTypeScriptCompilation>true</RtBypassTypeScriptCompilation>				
+		<RtBypassTypeScriptCompilation>false</RtBypassTypeScriptCompilation>				
 		
 		<!--
 			Disables Reinforced.Typings generation on build. Use it when it is necessary to temporary disable 
 			typings generation.
 		-->
-		<RtDisable>false</RtDisable>		
+		<RtDisable>false</RtDisable>
+
+		<!--
+			Forces RT to use specified target framework.
+			Use this parameter if your RT is experiencing some problems with identifying framework version to use.
+			Available values: 
+				net45, net461, netcoreapp1.0, netcoreapp1.1, netcoreapp2.0, netcoreapp2.1, netcoreapp2.2
+		-->
+		<!-- <RtForceTargetFramework>netcoreapp2.2</RtForceTargetFramework>	-->	
 		
 	</PropertyGroup>
 	

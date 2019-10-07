@@ -184,7 +184,7 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
-        /// When true unresolved types will be exported as 'unknown', otherwise as 'any'
+        /// Makes RT to export unresolved types as 'unknown' instead of 'any'
         /// </summary>
         /// <param name="builder">Conf builder</param>
         /// <param name="unresolvedToUnknown">True to export unresolved types as 'unknown', false to export as 'any'</param>

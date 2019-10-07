@@ -229,7 +229,7 @@ namespace Reinforced.Typings
         }
 
         /// <summary>
-        /// When true unresolved types will be exported as 'unknown', otherwise as 'any'
+        /// Gets or sets whether unresolved types must be exported as 'unknown' instead of 'any'
         /// </summary>
         public bool UnresolvedToUnknown
         {
