@@ -1,6 +1,6 @@
 #addin "Cake.FileHelpers"
 var target = Argument("target", "Build");
-const string version = "1.5.4";
+const string version = "1.5.5";
 
 Task("Clean")
   .Does(() =>
@@ -37,6 +37,7 @@ var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NE
 var taskFrameworks = new[] { NET46, NETSTANDARD20};
 
 var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22,NETCORE30});
+var netCoreApp = new HashSet<string>(new[]{NETCORE20,NETCORE21,NETCORE22,NETCORE30});
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
@@ -78,8 +79,10 @@ Task("BuildIntegrate")
 	  DotNetCoreMSBuildSettings mbs = null;
           
       if (netCore.Contains(fw)){
+		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
+		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
         mbs = new DotNetCoreMSBuildSettings()
-          .WithProperty("RtAdditionalConstants","NETCORE;" + fw.ToUpperInvariant().Replace(".","_"))
+          .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
     DotNetCorePublish(IntegrateProject, new DotNetCorePublishSettings
@@ -116,8 +119,10 @@ Task("Build")
       DotNetCoreMSBuildSettings mbs = null;
           
       if (netCore.Contains(fw)){
+		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
+		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
         mbs = new DotNetCoreMSBuildSettings()
-          .WithProperty("RtAdditionalConstants","NETCORE;" + fw.ToUpperInvariant().Replace(".","_"))
+          .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
       DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
@@ -143,8 +148,10 @@ Task("Build")
           .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml");
 
       if (netCore.Contains(fw)){
+		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
+		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
         mbs = mbs
-          .WithProperty("RtAdditionalConstants","NETCORE;" + fw.ToUpperInvariant().Replace(".","_"))
+          .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
      DotNetCorePublish(RtNetCoreProject, new DotNetCorePublishSettings {  

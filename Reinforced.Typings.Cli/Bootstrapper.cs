@@ -135,6 +135,7 @@ namespace Reinforced.Typings.Cli
                         Console.WriteLine(elo.StackTrace);
                     }
                 }
+                
                 Environment.Exit(1);
             }
             catch (Exception ex)

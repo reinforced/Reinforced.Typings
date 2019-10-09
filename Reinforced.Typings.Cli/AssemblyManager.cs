@@ -38,6 +38,22 @@ namespace Reinforced.Typings.Cli
         private readonly List<AssemblyLocation> _referencesCache = new List<AssemblyLocation>();
         private readonly Action<string, object[]> BuildWarn;
 
+#if NETCORE_APP
+        private static readonly string _targetingPacksFolder = null;
+        private static readonly string _sharedDir = null;
+
+        static AssemblyManager()
+        {
+            var a = new FileInfo(typeof(object).Assembly.Location);
+            var version = a.Directory; //.net core version dir
+            var fwDir = version.Parent; // Microsoft.NETCore.App
+            var sharedDir = fwDir.Parent; // shared
+            _sharedDir = sharedDir.FullName;
+            var dotnetDir = sharedDir.Parent; //dotnet core dir
+            _targetingPacksFolder = Path.Combine(dotnetDir.FullName, "packs"); //targeting packs folder to check against
+            Console.WriteLine($"Targeting packs fix active: {_targetingPacksFolder}");
+        }
+#endif
         public AssemblyManager(string[] sourceAssemblies, TextReader profileReader, string referencesTmpFilePath, Action<string, object[]> buildWarn)
         {
             _sourceAssemblies = sourceAssemblies;
@@ -131,14 +147,17 @@ namespace Reinforced.Typings.Cli
         }
 
 #if NETCORE
+
         private Assembly CurrentDomainOnAssemblyResolve(AssemblyLoadContext context, AssemblyName assemblyName)
         {
             //AssemblyLoadContext.Default.Resolving -= CurrentDomainOnAssemblyResolve;
+            
             if (assemblyName.Name.StartsWith("Reinforced.Typings.XmlSerializers")) return Assembly.GetEntryAssembly();
             if (_alreadyLoaded.ContainsKey(assemblyName.FullName)) return _alreadyLoaded[assemblyName.FullName];
             AssemblyName nm = new AssemblyName(assemblyName.Name);
             var paths = LookupPossibleAssemblyPath(nm.Name, false);
             Assembly a = null;
+            
             foreach (var path in paths)
             {
                 try
@@ -148,17 +167,18 @@ namespace Reinforced.Typings.Cli
                         BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
                         continue;
                     }
+                    
                     a = context.LoadFromAssemblyPath(path);
                 }
                 catch (Exception ex)
                 {
-                    BuildWarn("Assembly {0} from {1} was not loaded: {2}", new object[] { nm.Name, path, ex });
+                    BuildWarn("Assembly {0} from {1} was not loaded: {2}. Trying to load by name...", new object[] { nm.Name, path, ex });
                     continue;
                 }
                 
                 _alreadyLoaded[assemblyName.FullName] = a;
                 _totalLoadedAssemblies++;
-                
+                break;
 #if DEBUG
                 Console.WriteLine("{0} additionally resolved", nm);
 #endif
@@ -260,6 +280,25 @@ namespace Reinforced.Typings.Cli
             return result.ToArray();
         }
 
+        private string FixPackReferencePath(string path)
+        {
+#if NETCORE_APP
+            if (path.StartsWith(_targetingPacksFolder))
+            {
+                var relPath = Path.GetRelativePath(_targetingPacksFolder, path).Replace(".Ref", string.Empty);
+                var netcoreappDir = Path.GetDirectoryName(relPath); //netcoreapp3.0
+                var refDir = Path.GetDirectoryName(netcoreappDir); // ref
+                var baseDir = Path.GetDirectoryName(refDir); // version
+
+                var file = Path.GetFileName(path); // dll name
+                var sharedDllRef = Path.Combine(baseDir, file);
+                var fullSharedDir = Path.Combine(_sharedDir, sharedDllRef);
+                return fullSharedDir;
+            }
+#endif
+            return path;
+        }
+
         private IEnumerable<string> LookupPossibleAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
             string[] checkResult;
@@ -268,20 +307,20 @@ namespace Reinforced.Typings.Cli
                 var check = assemblyNameOrFullPath + ".dll";
                 checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
 
-                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d));
+                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d)).Select(FixPackReferencePath);
 
                 check = assemblyNameOrFullPath + ".exe";
                 checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
 
-                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d));
+                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d)).Select(FixPackReferencePath);
             }
 
             var p = assemblyNameOrFullPath;
             checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
-            if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d));
+            if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d)).Select(FixPackReferencePath);
 
 
-            return new[] { assemblyNameOrFullPath };
+            return new[] { assemblyNameOrFullPath }.Select(FixPackReferencePath);
         }
     }
 }
