@@ -13,9 +13,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :gift: Version **1.5.4** released
+> :rocket: Version **1.5.5** released
 
-* .NET Core 3.0 version
+* .NET Core 3.0 version *(incl. targeting packs crutch)*
 * Bugfixes
 * Finally I have made detailed [code generators and customization guide](https://github.com/reinforced/Reinforced.Typings/wiki/Code-Generators). Check it!
 
