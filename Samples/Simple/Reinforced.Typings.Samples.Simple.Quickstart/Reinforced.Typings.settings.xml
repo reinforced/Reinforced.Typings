@@ -21,7 +21,7 @@
 		
 		<!--
 			This property sets RT configuration method for fluent configuration.
-			If you dont want to use attributes for some reason then here you can
+			If you don't want to use attributes for some reason then here you can
 			specify full-qualified configuration method name (including namespace, 
 			type and method name, e.g. My.Assembly.Configuration.ConfigureTypings) 
 			of method that consumes Reinforce.Typings.Fluent.ConfigurationBuilder type
@@ -38,7 +38,7 @@
 		
 		<!--
 			By default all of your typings will be located in single file specified by RtTargetFile.
-			It may be heavy for large projects because you will get single large file containing signinficant
+			It may be heavy for large projects because you will get single large file containing significant
 			part of TS sources. It could lead to various problems (e.g. monstrous SCM merges). 
 			So here we have RtDivideTypesAmongFiles parameter that will make Reinforced.Typings 
 			generate TS sources in C#/Java/somewhat-OO-language-manner (class per file) when set to true.
