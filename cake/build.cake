@@ -24,6 +24,7 @@ const string NETCORE21 = "netcoreapp2.1";
 const string NETSTANDARD16 = "netstandard1.6";
 const string NETSTANDARD15 = "netstandard1.5";
 const string NETSTANDARD20 = "netstandard2.0";
+const string NETCORE31 = "netcoreapp3.1";
 const string NETCORE30 = "netcoreapp3.0";
 const string NETCORE20 = "netcoreapp2.0";
 const string NETCORE10 = "netcoreapp1.0";
@@ -32,12 +33,12 @@ const string NET461 = "net461";
 const string NET46 = "net46";
 const string NET45 = "net45";
 
-var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30}; 
-var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NET45, NET461};
+var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31}; 
+var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET45, NET461};
 var taskFrameworks = new[] { NET46, NETSTANDARD20};
 
-var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22,NETCORE30});
-var netCoreApp = new HashSet<string>(new[]{NETCORE20,NETCORE21,NETCORE22,NETCORE30});
+var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31});
+var netCoreApp = new HashSet<string>(new[]{NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31});
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
