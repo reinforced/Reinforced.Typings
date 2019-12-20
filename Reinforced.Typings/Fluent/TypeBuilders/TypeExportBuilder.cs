@@ -26,6 +26,7 @@ namespace Reinforced.Typings.Fluent
         internal TypeExportBuilder(TypeBlueprint blueprint)
         {
             Blueprint = blueprint;
+            blueprint.IsExportedExplicitly = true;
         }
 
         /// <summary>

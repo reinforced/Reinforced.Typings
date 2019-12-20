@@ -28,7 +28,6 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="fileName">File name</param>
         /// <param name="file">File to be exported</param>
-        /// <param name="refProcessor">References processor instance</param>
-        void Export(string fileName, ExportedFile file, ReferenceProcessorBase refProcessor = null);
+        void Export(string fileName, ExportedFile file);
     }
 }

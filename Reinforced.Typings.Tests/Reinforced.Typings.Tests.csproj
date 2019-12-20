@@ -71,6 +71,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportEnumsInDtsWithDeclareKeyword.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.GenericsExport3.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening4.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.FunctionalNames.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.NewLineTest.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.LineAfterAnotherWay.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.NewForceNullable.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InferTypeTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart6ByDanielWest.cs" />
@@ -106,6 +108,10 @@
     <Compile Include="SpecificCases\SpecificTestCases.DocumentationForNestedTypes.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.LineAfterTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.AutoOptional.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.OverrideNamespaceWithModules.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.DtsNoDeclareEnumWithoutAmbientScope.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.KpKozakIssueWithInheritance.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.NvirthMultilineString.cs" />
     <Compile Include="SpecificCases\SpecificTestCases._CopyMe_.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.JonsaEnumWithouNamespaceTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.PandaWoodCamelCase.cs" />
@@ -116,6 +122,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart4.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ReferencesPart5.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.WeirdInheritanceCase.cs" />
+    <Compile Include="SpecificCases\SpecifiicTestCases.UnresolvedToUnknown.cs" />
     <Compile Include="SpecificCases\TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenizing\SimpleTokenizer.cs" />

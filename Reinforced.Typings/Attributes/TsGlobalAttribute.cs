@@ -1,6 +1,7 @@
 ﻿using System;
 using Reinforced.Typings.Fluent;
 
+
 namespace Reinforced.Typings.Attributes
 {
     /// <summary>
@@ -97,6 +98,11 @@ namespace Reinforced.Typings.Attributes
         public bool AutoOptionalProperties { get; set; }
 
         /// <summary>
+        /// Gets or sets whether unresolved types must be exported as 'unknown' instead of 'any'
+        /// </summary>
+        public bool UnresolvedToUnknown { get; set; }
+
+        /// <summary>
         /// Default constructor for TsGlobal attribute
         /// </summary>
         public TsGlobalAttribute()
@@ -105,5 +111,11 @@ namespace Reinforced.Typings.Attributes
             TabSymbol = "\t";
             NewLine = Environment.NewLine;
         }
+
+        /// <summary>
+        /// Gets or sets type of AST visitor that will be used to write code to output.
+        /// Visitor has to be child class of <see cref="Reinforced.Typings.Visitors.TextExportingVisitor"/>
+        /// </summary>
+        public Type VisitorType { get; set; }
     }
 }

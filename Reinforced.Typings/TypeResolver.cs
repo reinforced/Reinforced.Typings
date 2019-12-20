@@ -17,6 +17,7 @@ namespace Reinforced.Typings
         private static readonly RtSimpleTypeName AnyType = new RtSimpleTypeName("any");
         private static readonly RtSimpleTypeName NumberType = new RtSimpleTypeName("number");
         private static readonly RtSimpleTypeName StringType = new RtSimpleTypeName("string");
+        private static readonly RtSimpleTypeName UnknownType = new RtSimpleTypeName("unknown");
 
         /// <summary>
         /// Hash set of all numeric types
@@ -90,6 +91,8 @@ namespace Reinforced.Typings
             {typeof (decimal), NumberType}
         };
 
+        private readonly RtSimpleTypeName _anyOrUnknown;
+
         private ExportContext Context
         {
             get { return _file.Context; }
@@ -103,6 +106,10 @@ namespace Reinforced.Typings
         internal TypeResolver(ExportedFile file)
         {
             _file = file;
+
+            _anyOrUnknown = _file.Context.Global.UnresolvedToUnknown
+                        ? UnknownType
+                        : AnyType;            
         }
 
         private RtTypeName[] GetConcreteGenericArguments(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
@@ -192,7 +199,7 @@ namespace Reinforced.Typings
             var bp = Context.Project.Blueprint(t, false);
             if (bp != null && bp.ThirdParty != null)
             {
-                var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
+                var result = bp.GetName(bp.IsExportedExplicitly ? null : GetConcreteGenericArguments(t, materializedGenerics));
                 if (Context.Global.UseModules) _file.EnsureImport(t, result.TypeName);
                 _file.EnsureReference(t);
                 return Cache(t, result);
@@ -203,8 +210,9 @@ namespace Reinforced.Typings
                 if (declaration != null)
                 {
                     var ns = t.Namespace;
+                    if (!string.IsNullOrEmpty(declaration.Namespace)) ns = declaration.Namespace;
                     if (!declaration.IncludeNamespace) ns = string.Empty;
-                    var result = bp.GetName(GetConcreteGenericArguments(t, materializedGenerics));
+                    var result = bp.GetName(bp.IsExportedExplicitly ? null : GetConcreteGenericArguments(t, materializedGenerics));
 
                     if (Context.Global.UseModules)
                     {
@@ -281,7 +289,7 @@ namespace Reinforced.Typings
             if (typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType()))
             {
                 var methodInfo = t._GetMethod("Invoke");
-                return Cache(t, ConstructFunctionType(methodInfo));
+                return Cache(t, ConstructFunctionType(methodInfo, materializedGenerics));
             }
 
 
@@ -289,7 +297,7 @@ namespace Reinforced.Typings
             {
                 var def = t.GetGenericTypeDefinition();
                 var tsFriendly = ResolveTypeNameInner(def) as RtSimpleTypeName;
-                if (tsFriendly != null && tsFriendly != AnyType)
+                if (tsFriendly != null && tsFriendly != AnyType && tsFriendly != UnknownType)
                 {
                     var parametrized = new RtSimpleTypeName(tsFriendly.TypeName,
                         t._GetGenericArguments().Select(c => ResolveTypeNameInner(c, null)).ToArray())
@@ -306,14 +314,14 @@ namespace Reinforced.Typings
                 return Cache(t, NumberType);
             }
 
-            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName));
+            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName, _anyOrUnknown));
 
-            return Cache(t, AnyType);
+            return Cache(t, _anyOrUnknown);
         }
 
-        private RtDelegateType ConstructFunctionType(MethodInfo methodInfo)
+        private RtDelegateType ConstructFunctionType(MethodInfo methodInfo, Dictionary<string, RtTypeName> materializedGenerics = null)
         {
-            var retType = ResolveTypeName(methodInfo.ReturnType);
+            var retType = ResolveTypeName(methodInfo.ReturnType, materializedGenerics);
             var result = retType;
 
             var argAggreagtor = 0;
@@ -321,7 +329,7 @@ namespace Reinforced.Typings
             foreach (var parameterInfo in methodInfo.GetParameters())
             {
                 var argName = argAggreagtor > 0 ? "arg" + argAggreagtor : "arg";
-                var typeName = ResolveTypeName(parameterInfo.ParameterType);
+                var typeName = ResolveTypeName(parameterInfo.ParameterType, materializedGenerics);
                 arguments.Add(new RtArgument() { Identifier = new RtIdentifier(argName), Type = typeName });
                 argAggreagtor++;
             }

@@ -94,7 +94,8 @@ namespace Reinforced.Typings
             if (!_context.Hierarchical)
             {
                 var file = ExportTypes();
-                _context.FileOperations.Export(_context.TargetFile, file, refProc);
+                file.ApplyReferenceProcessor(refProc);
+                _context.FileOperations.Export(_context.TargetFile, file);
             }
             else
             {
@@ -102,7 +103,8 @@ namespace Reinforced.Typings
                 {
                     var path = kv.Key;
                     var file = ExportTypes(kv.Key);
-                    _context.FileOperations.Export(path, file, refProc);
+                    file.ApplyReferenceProcessor(refProc);
+                    _context.FileOperations.Export(path, file);
                 }
             }
 

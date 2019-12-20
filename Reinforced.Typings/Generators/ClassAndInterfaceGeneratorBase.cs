@@ -48,49 +48,48 @@ namespace Reinforced.Typings.Generators
 
             if (!bp.IsFlatten())
             {
-                var bs = type._BaseType();
-                var baseClassIsExportedAsInterface = false;
-                if (bs != null && bs != typeof(object))
+                var baseType = type._BaseType();
+                var implementees = ExtractImplementees(type, resolver, materializedGenericParameters).ToList();
+
+                if (baseType != null && baseType != typeof(object))
                 {
                     bool baseAsInterface = false;
                     RtTypeName inferredBaseType = null;
-                    if (bs._IsGenericType())
+                    if (baseType._IsGenericType())
                     {
-                        var genericBase = bs.GetGenericTypeDefinition();
+                        var genericBase = baseType.GetGenericTypeDefinition();
                         var genericBaseBp = Context.Project.Blueprint(genericBase);
                         if (genericBaseBp.TypeAttribute != null || genericBaseBp.ThirdParty != null)
                         {
-                            inferredBaseType = resolver.ResolveTypeName(bs,
-                                MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                            inferredBaseType = resolver.ResolveTypeName(baseType,
+                                MergeMaterializedGenerics(baseType, resolver, materializedGenericParameters));
                             baseAsInterface = Context.Project.Blueprint(genericBase).IsExportingAsInterface();
                         }
                     }
-                    if (inferredBaseType == null || !bs._IsGenericType())
+                    if (inferredBaseType == null || !baseType._IsGenericType())
                     {
-                        var bsBp = Context.Project.Blueprint(bs);
+                        var bsBp = Context.Project.Blueprint(baseType);
                         if (bsBp.TypeAttribute != null || bsBp.ThirdParty != null)
                         {
-                            baseAsInterface = Context.Project.Blueprint(bs).IsExportingAsInterface();
-                            inferredBaseType = resolver.ResolveTypeName(bs,
-                                MergeMaterializedGenerics(bs, resolver, materializedGenericParameters));
+                            baseAsInterface = Context.Project.Blueprint(baseType).IsExportingAsInterface();
+                            inferredBaseType = resolver.ResolveTypeName(baseType,
+                                MergeMaterializedGenerics(baseType, resolver, materializedGenericParameters));
                         }
                     }
 
                     if (inferredBaseType != null)
                     {
-                        if (baseAsInterface) baseClassIsExportedAsInterface = true;
+                        if (baseAsInterface)
+                        {
+                            implementees.Add(inferredBaseType);
+                        }
                         else
                         {
                             ((RtClass)result).Extendee = inferredBaseType;
                         }
                     }
                 }
-                var implementees = ExtractImplementees(type, resolver, materializedGenericParameters).ToList();
 
-                if (baseClassIsExportedAsInterface)
-                {
-                    implementees.Add(resolver.ResolveTypeName(bs, materializedGenericParameters));
-                }
                 result.Implementees.AddRange(implementees.OfType<RtSimpleTypeName>());
             }
 
@@ -137,7 +136,7 @@ namespace Reinforced.Typings.Generators
             var ifaces = type._GetInterfaces();
             foreach (var iface in ifaces)
             {
-                
+
                 RtTypeName inferredBaseType = null;
                 if (iface._IsGenericType())
                 {
@@ -145,7 +144,7 @@ namespace Reinforced.Typings.Generators
                     var genericBaseBp = Context.Project.Blueprint(genericBase);
                     if (genericBaseBp.TypeAttribute != null || genericBaseBp.ThirdParty != null)
                     {
-                        inferredBaseType = resolver.ResolveTypeName(iface, 
+                        inferredBaseType = resolver.ResolveTypeName(iface,
                             MergeMaterializedGenerics(iface, resolver, materializedGenericParameters));
                     }
                 }
@@ -191,9 +190,14 @@ namespace Reinforced.Typings.Generators
         {
             if (element._BaseType() != null)
             {
-                var baseBp = Context.Project.Blueprint(element._BaseType());
+                var baseBp = Context.Project.Blueprint(element._BaseType(), false);
                 var bp = Context.Project.Blueprint(element);
-                if (baseBp.IsExportingAsInterface() && !bp.IsExportingAsInterface())
+
+                //if we cannot determine what is being exported - then.. well. okay
+                if (baseBp == null) return;
+                if (bp == null) return;
+
+                if ((!bp.IsExportingAsInterface()) && baseBp.IsExportingAsInterface())
                 {
                     // well.. bad but often case. 
                     // Here we should export members also for base class
@@ -293,7 +297,7 @@ namespace Reinforced.Typings.Generators
             {
                 var generator = Context.Generators.GeneratorFor(m);
                 var member = generator.Generate(m, resolver);
-                typeMember.Members.Add(member);
+                if (member != null) typeMember.Members.Add(member);
             }
         }
     }

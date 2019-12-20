@@ -13,7 +13,11 @@ namespace Reinforced.Typings.Visitors.Typings
             var prev = Context;
             Context = WriterContext.Enum;
             AppendTabs();
-            if (node.Export) Write("declare ");
+            if (node.Export)
+            {
+                if (prev == WriterContext.Module) Write("export ");
+                else Write("declare ");
+            }
             if (node.IsConst) Write("const ");
             Write("enum ");
             Visit(node.EnumName);

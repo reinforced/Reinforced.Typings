@@ -1,5 +1,6 @@
 ﻿using System;
 using Reinforced.Typings.ReferencesInspection;
+using Reinforced.Typings.Visitors;
 
 namespace Reinforced.Typings.Fluent
 {
@@ -172,6 +173,18 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        ///  Sets override of type of AST visitor that will be used to write code to output.
+        /// Warning! This option overrides <see cref="ExportPureTypings"/> configuration!
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        public static GlobalConfigurationBuilder UseVisitor<T>(this GlobalConfigurationBuilder builder)
+            where T:TextExportingVisitor
+        {
+            builder.Parameters.VisitorType = typeof(T);
+            return builder;
+        }
+
+        /// <summary>
         ///  Tells RT to make all nullable value-type properties optional automatically
         /// </summary>
         /// <param name="builder">Conf builder</param>
@@ -179,6 +192,17 @@ namespace Reinforced.Typings.Fluent
         public static GlobalConfigurationBuilder AutoOptionalProperties(this GlobalConfigurationBuilder builder, bool autoOptional = true)
         {
             builder.Parameters.AutoOptionalProperties = autoOptional;
+            return builder;
+        }
+
+        /// <summary>
+        /// Makes RT to export unresolved types as 'unknown' instead of 'any'
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="unresolvedToUnknown">True to export unresolved types as 'unknown', false to export as 'any'</param>
+        public static GlobalConfigurationBuilder UnresolvedToUnknown(this GlobalConfigurationBuilder builder, bool unresolvedToUnknown = false)
+        {
+            builder.Parameters.UnresolvedToUnknown = unresolvedToUnknown;
             return builder;
         }
 

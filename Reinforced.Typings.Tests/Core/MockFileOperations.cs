@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Reinforced.Typings.Ast.Dependency;
 using Reinforced.Typings.ReferencesInspection;
+using Reinforced.Typings.Visitors;
 using Reinforced.Typings.Visitors.TypeScript;
 using Reinforced.Typings.Visitors.Typings;
 
@@ -35,54 +36,28 @@ namespace Reinforced.Typings.Tests.Core
             TempRegistryCleared = true;
         }
 
-        public void Export(string fileName, ExportedFile file, ReferenceProcessorBase refProcessor = null)
+        public void Export(string fileName, ExportedFile file)
         {
             StringBuilder sb = new StringBuilder();
             using (var sw = new StringWriter(sb))
             {
                 sw.NewLine = Context.Global.NewLine;
-                ExportCore(sw, file,refProcessor);
+                ExportCore(sw, file);
             }
             ExportedFiles[fileName] = sb.ToString();
         }
 
-        protected virtual void ExportCore(TextWriter tw, ExportedFile file, ReferenceProcessorBase refProcessor = null)
+        protected virtual void ExportCore(TextWriter tw, ExportedFile file)
         {
-            var visitor = Context.Global.ExportPureTypings 
-                ? new TypingsExportVisitor(tw, Context.Global.TabSymbol, Context.Global.ReorderMembers) 
-                : new TypeScriptExportVisitor(tw, Context.Global.TabSymbol, Context.Global.ReorderMembers);
+            var visitor =
+                Context.Global.VisitorType == null
+                    ? Context.Global.ExportPureTypings
+                        ? new TypingsExportVisitor(tw, Context)
+                        : new TypeScriptExportVisitor(tw, Context)
+                    : (TextExportingVisitor)Activator.CreateInstance(Context.Global.VisitorType, new object[] { tw, Context });
             WriteWarning(tw);
 
-            var references = file.References.References;
-            if (refProcessor != null)
-            {
-                references = refProcessor.FilterReferences(references,file);
-                if (references == null) references = new RtReference[0];
-            }
-            bool hasReferences = false;
-            foreach (var rtReference in references)
-            {
-                visitor.Visit(rtReference);
-                hasReferences = true;
-            }
-
-            var imports = file.References.Imports;
-            if (refProcessor != null)
-            {
-                imports = refProcessor.FilterImports(imports, file);
-                if (imports == null) imports = new RtImport[0];
-            }
-            bool hasImports = false;
-            foreach (var rtImport in imports)
-            {
-                visitor.Visit(rtImport);
-                hasImports = true;
-            }
-            if (hasReferences || hasImports) tw.WriteLine();
-            foreach (var fileNamespace in file.Namespaces)
-            {
-                visitor.Visit(fileNamespace);
-            }
+            visitor.VisitFile(file);
         }
 
         private void WriteWarning(TextWriter tw)

@@ -1,3 +1,12 @@
+What is that?
+=================
+You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
+
+It converts .NET classes into TypeScript code. Suffering has ended - you don't need to write and maintain boring TypeScript glue code for your DTOs/ViewModels/APIs anymore - RT can generate it from C# app. 
+Moreover, it integrates with VisualStudio build process and (re)generates glue code every time you rebuild .NET backend. So you get immediately notified when backend's API/DTOs changed and frontend is broken.
+
+Check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
+
 Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
 =================
 ```sh
@@ -8,35 +17,27 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> 🎅 Version **1.5.1** released
+> :rocket: Version **1.5.5** released
 
-* Reference Processor feature
-* Exported members reordering functionality 
-* `[ThirdParty]` attribute and fluent configuration
-* Fluent configuration refactoring
-* Constructors generation feature
-* ForceNullable behavior revised
-* Lots of bugfixes
-* .NET Core 2.2 support
-* CLI/task/bootstrapper fixes
-* ```RtForceTargetFramework``` parameter added
-* Fixes for Linux/MacOS
+* .NET Core 3.0 version *(incl. targeting packs crutch)*
+* Bugfixes
+* Finally I have made detailed [code generators and customization guide](https://github.com/reinforced/Reinforced.Typings/wiki/Code-Generators). Check it!
+
+Job needed
+=================
+The power of community, please help me. I'm looking for remote job as C#/.NET Fullstack Engineer. I have almost 10 years of remote experience, here is my [UpWork Profile](https://www.upwork.com/o/profiles/users/_~01d070a561f288ffe7/) covering last 5 years. My code is... well... can be found at least within this repo. Price is negotiable. Contact me (or tell your manager to) [by email](mailto:pavel.b.novikov@gmail.com) or by skype (nsu_the_cjay). Thanks for attention!
 
 Support policy
 =================
 
 Please **do not** ask your questions in github issues anymore. Such format is not suitable for storing FAQ. If you have question - please go to StackOverflow and ask it there. Tag your question with [reinforced-typings](https://stackoverflow.com/questions/tagged/reinforced-typings) tag. I watch full list of questions and will answer ASAP. Make experience that you've got available for other users! 
 
-**UPD**: You can notify me about question by sending link via Twitter ([@MurcielagoCat](https://twitter.com/MurcielagoCat)) to get answer faster.
+**UPD**: You can notify me about question by sending link via Twitter ([@reinforced_sc](https://twitter.com/reinforced_sc)) to get answer faster.
 
 GitHub issues are for confirmed bugs/feature requests now. If you've found bug - please write and PR test if you can. If you have feature idea - please describe it from fluent/attribute configuration point of view. Describe how'd you gonna to configure RT for desired result. Thanks in advance!
 
-What is that?
+Best to be used for
 =================
-
-Reinforced.Typings converts your .NET assemblies to TypeScript code. It integrates to VisualStudio build process and simply does its job according to configuration. Please check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
-
-In a nutshell, you can use Reinforced.Typings for:
 
 Exporting ViewModels
 -----------------

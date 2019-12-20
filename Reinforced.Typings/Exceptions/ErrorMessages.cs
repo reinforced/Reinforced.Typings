@@ -114,7 +114,7 @@ namespace Reinforced.Typings.Exceptions
         /// <summary>
         /// Could not find suitable TypeScript type for {0}. 'any' assumed.
         /// </summary>
-        public static readonly ErrorMessage RTW0003_TypeUnknown = new ErrorMessage(0003, "Could not find suitable TypeScript type for {0}. 'any' assumed.", "Type resolvation");
+        public static readonly ErrorMessage RTW0003_TypeUnknown = new ErrorMessage(0003, "Could not find suitable TypeScript type for {0}. '{1}' assumed.", "Type resolvation");
 
         /// <summary>
         /// No suitable base constructor found for {0}. Generating 'super' call with all nulls.

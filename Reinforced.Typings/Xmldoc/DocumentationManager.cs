@@ -151,10 +151,18 @@ namespace Reinforced.Typings.Xmldoc
 
         private string GetIdentifierForMember(MemberInfo member)
         {
+
             if (member is MethodInfo) return GetIdentifierForMethod((MethodBase)member, member.Name);
-            var id = string.Format("{0}:{1}.{2}", GetPrefix(member.MemberType), member.DeclaringType.FullName.Replace('+', '.'),
+            var path = member.DeclaringType.FullName;
+            if (string.IsNullOrEmpty(path))
+            {
+                path = member.DeclaringType.Namespace + "." + member.DeclaringType.Name;
+            }
+            var id = string.Format("{0}:{1}.{2}", GetPrefix(member.MemberType),
+                path.Replace('+', '.'),
                 member.Name);
             return id;
+
         }
 
         private string GetIdentifierForType(Type type)

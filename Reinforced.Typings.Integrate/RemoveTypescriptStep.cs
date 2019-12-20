@@ -27,7 +27,8 @@ namespace Reinforced.Typings.Integrate
                 string v = s.Trim();
                 bool isCompileTs = (v == "CompileTypeScript");
                 bool isCompileTsConfig = (v == "CompileTypeScriptWithTSConfig");
-                if ((!isCompileTs) && (!isCompileTsConfig))
+                bool isGetTypeScriptOutputForPublishing = (v == "GetTypeScriptOutputForPublishing");
+                if ((!isCompileTs) && (!isCompileTsConfig) && (!isGetTypeScriptOutputForPublishing))
                 {
                     result.Add(v);
                 }

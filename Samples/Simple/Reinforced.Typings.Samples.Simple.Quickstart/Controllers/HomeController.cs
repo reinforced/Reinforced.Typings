@@ -10,6 +10,7 @@ namespace Reinforced.Typings.Samples.Simple.Quickstart.Controllers
     public class HomeController : Controller
     {
         // GET: Home
+
         public ActionResult Index()
         {
             return View();

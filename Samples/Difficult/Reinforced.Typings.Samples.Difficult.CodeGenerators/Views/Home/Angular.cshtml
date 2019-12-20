@@ -2,9 +2,9 @@
     ViewBag.Title = "Angular Demo";
 }
 
-<div ng-app="app" ng-controller="AngularDemoController as ctl">
+<div ng-app="app" ng-controller="AngularDemoController as ctl" class="mt-2">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-6">
             <h2>Simple</h2>
             <p>
                 This method returns random value. <br />
@@ -14,7 +14,7 @@
                 <button class="btn btn-primary" id="btnSimpleInt" ng-click="ctl.refreshRandomValue()">Do that!</button>
             </p>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
             <h2>Parametrized</h2>
             <p>
                 Simple method that is called with random parameters and returns them concatenated. <br />
@@ -52,7 +52,7 @@
 
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-6">
             <h2>Returning objects</h2>
             <p>
                 Method that returns complex JSONed object. <br />
@@ -67,7 +67,7 @@
                 <button class="btn btn-primary" id="btnReturningObject" ng-click="ctl.retrieveComplex()">Invoke!</button>
             </p>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
             <h2>Parametrized objects</h2>
             <p>
                 Returns JSONed object, invoked with parameters. Done simple.
@@ -96,10 +96,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-6">
             <h2>Void</h2>
             <p>
-                Invoke void method that does not return anything <br/>
+                Invoke void method that does not return anything <br />
                 Void method was called <b>{{ctl.voidMethodCalledCount}}</b> times
             </p>
             <p class="text-center">

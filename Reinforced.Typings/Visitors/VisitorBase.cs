@@ -54,5 +54,6 @@ namespace Reinforced.Typings.Visitors
         public abstract void Visit(RtDecorator node);
         public abstract void Visit(RtReference node);
         public abstract void Visit(RtTuple node);
+        public abstract void VisitFile(ExportedFile file);
     }
 }

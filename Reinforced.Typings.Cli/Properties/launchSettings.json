@@ -2,7 +2,7 @@
   "profiles": {
     "Reinforced.Typings.Cli.NETCore": {
       "commandName": "Project",
-      "commandLineArgs": "profile \"I:\\Work\\Reinforced\\net45test.tmp\""
+      "commandLineArgs": "profile \"w:\\Work\\Reinforced\\Typings\\testfile.txt\""
     }
   }
 }
