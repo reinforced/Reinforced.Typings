@@ -41,7 +41,9 @@ $$RELNOTES$$
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />            
           </group>
-        </dependencies>   
+          <group targetFramework=".NETCoreApp3.0" />
+          <group targetFramework=".NETCoreApp3.1" />
+        </dependencies>
         <frameworkAssemblies>
             <frameworkAssembly assemblyName="Microsoft.Build" targetFramework=".NETFramework4.5" />
             <frameworkAssembly assemblyName="Microsoft.Build.Framework" targetFramework=".NETFramework4.5" />
