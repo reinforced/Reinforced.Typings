@@ -1,6 +1,6 @@
 #addin "Cake.FileHelpers"
 var target = Argument("target", "Build");
-const string version = "1.5.5";
+const string version = "1.5.6";
 
 Task("Clean")
   .Does(() =>
@@ -91,7 +91,7 @@ Task("BuildIntegrate")
       Verbosity = DotNetCoreVerbosity.Quiet,
       Configuration = RELEASE,	  
       MSBuildSettings = mbs,
-      OutputDirectory = System.IO.Path.Combine(buildPath, fw),
+      OutputDirectory = System.IO.Path.Combine(buildPath, fw),      
       Framework = fw
     });    
     
@@ -183,6 +183,7 @@ Task("Build")
 
   // Copy readme with actual version of Reinforced.Typings.settings.xml
   CopyFileToDirectory("../stuff/readme.txt", packageRoot);
+  CopyFileToDirectory("../icon.png", packageRoot);
   using(var tr = System.IO.File.OpenRead("../stuff/Reinforced.Typings.settings.xml"))
   using(var tw = new System.IO.FileStream(System.IO.Path.Combine(packageRoot,"readme.txt"),FileMode.Append))
   {

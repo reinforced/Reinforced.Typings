@@ -11,9 +11,9 @@
 	<Company>Reinforced Software Construction OSS</Company>
 	<Copyright>Pavel B. Novikov 2019</Copyright>
 	<AssemblyTitle>$(AssemblyName)</AssemblyTitle>
-	<AssemblyVersion>1.5.5</AssemblyVersion>
-	<FileVersion>1.5.5</FileVersion>
-	<InformationalVersion>1.5.5</InformationalVersion>
+	<AssemblyVersion>1.5.6</AssemblyVersion>
+	<FileVersion>1.5.6</FileVersion>
+	<InformationalVersion>1.5.6</InformationalVersion>
 	<DefineConstants>$(DefineConstants);$(RtAdditionalConstants);</DefineConstants>
   </PropertyGroup>
   
