@@ -23,7 +23,7 @@ News
 
 Job. Still. Needed
 =================
-I'm now near Europe, so if you have any open positions - I'm ready to re-locate. pavel.b.novikov@gmail.com, Skype: nsu_the_cjay
+Now I'm near Europe, so if you have any open positions - I'm ready to re-locate. pavel.b.novikov@gmail.com, Skype: nsu_the_cjay
 
 Support policy
 =================
