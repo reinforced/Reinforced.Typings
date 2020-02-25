@@ -64,6 +64,7 @@
 			References="@(ReferencePath)"
 			AdditionalSourceAssemblies="@(RtAdditionalAssembly)" 
 			ProjectRoot="$(ProjectDir)"
+			AssemblyRegex="$(RtAssemblyReplacements)"
 			
 			TargetFile="$(RtTargetFile)" 	
 			Hierarchical="$(RtDivideTypesAmongFiles)"			

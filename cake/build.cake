@@ -1,6 +1,6 @@
 #addin "Cake.FileHelpers"
 var target = Argument("target", "Build");
-const string version = "1.5.6";
+const string version = "1.5.7";
 
 Task("Clean")
   .Does(() =>
@@ -47,6 +47,18 @@ const string tfParameter = "TargetFrameworks";
 string tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>"; 
 const string tfSingleParameter = "TargetFramework";
 string tfsRgx = $"<{tfSingleParameter}>[a-zA-Z0-9;.]*</{tfSingleParameter}>"; 
+
+Task("Reset")
+  .IsDependentOn("UpdateVersions")
+  .Description("Resets target frameworks")
+  .Does(() =>
+{
+	var fw = NET461;
+	ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");       
+    ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>"); 
+    ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");       
+    ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
+});
 
 Task("PackageClean")
   .Description("Cleaning temporary package folder")

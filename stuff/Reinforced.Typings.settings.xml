@@ -98,4 +98,23 @@
 		<RtAdditionalAssembly Include="$(SolutionDir)\AnotherProject\bin\Debug\AnotherProject.dll"/>
 	</ItemGroup>
 	-->
+	
+	<!--
+		Set of assembly path replacement hooks.
+		Use it if you have problems with loading system assemblies (especially with .net core 3.0-3.1.x)
+		Supports standart .NET Regex syntax + additional patterns
+		- {path} = [a-zA-Z0-9\:\\\s\.\/]+
+		- {/} = [\\\/]+
+		- {ver} = [0-9\.]+
+		- {a} = [a-zA-Z0-9\.]+
+		
+	<PropertyGroup>
+		<RtAssemblyReplacements>
+		  <Regex>
+			<Pattern>({path}){/}packs{/}({a}).Ref{/}{path}{/}({a}.dll)</Pattern>
+			<Replace>$1\shared\$2\3.1.2\$3</Replace>
+		  </Regex>
+		</RtAssemblyReplacements>
+	</PropertyGroup>
+	-->
 </Project>

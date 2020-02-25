@@ -49,6 +49,7 @@ namespace Reinforced.Typings.Xmldoc
             try
             {
                 var ser = new XmlSerializer(typeof(Documentation));
+                
                 Documentation documentation;
                 using (var fs = File.OpenRead(docFilePath))
                 {

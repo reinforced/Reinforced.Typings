@@ -195,7 +195,7 @@ namespace Reinforced.Typings.Cli
 
         public static ExportContext InstantiateExportContext()
         {
-            _assemblyManager = new AssemblyManager(_parameters.SourceAssemblies,_profileReader,_parameters.ReferencesTmpFilePath,BuildWarn);
+            _assemblyManager = new AssemblyManager(_parameters.SourceAssemblies,_profileReader,_parameters.ReferencesTmpFilePath,BuildWarn,_parameters.AssemblyRegex);
 
             var srcAssemblies = _assemblyManager.GetAssembliesFromArgs();
             ExportContext context = new ExportContext(srcAssemblies)
