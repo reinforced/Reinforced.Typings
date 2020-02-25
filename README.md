@@ -19,7 +19,7 @@ News
 =================
 > :hammer: Version **1.5.7** released
 
-* Crutch for .NET 3.x.x and upcoming versions. Now it is possible to set up Regex that can identify referenced `packs` assemblies and replace them with corresponding assemblies from `shared` directory. See example in `Reinforced.Typings.settings.xml`
+* Crutch for .NET 3.x.x and upcoming versions. Now it is possible to configure set of Regexes that can identify referenced `packs` assemblies and replace them with corresponding assemblies from `shared` directory. See example in `Reinforced.Typings.settings.xml`
 * This release is made especially for *Yehonatan Chen* 
 
 Support policy
