@@ -17,13 +17,10 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :santa: Version **1.5.6** released
+> :hammer: Version **1.5.7** released
 
-* .NET Core 3.1 support
-
-Job. Still. Needed
-=================
-Now I'm near Europe, so if you have any open positions - I'm ready to re-locate. pavel.b.novikov@gmail.com, Skype: nsu_the_cjay
+* Crutch for .NET 3.x.x and upcoming versions. Now it is possible to set up Regex that can identify referenced `packs` assemblies and replace them with corresponding assemblies from `shared` directory. See example in `Reinforced.Typings.settings.xml`
+* This release is made especially for *Yehonatan Chen* 
 
 Support policy
 =================
