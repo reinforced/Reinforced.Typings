@@ -159,7 +159,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
         {
             if (n is RtConstructor) return true;
             if (n is RtField) return true;
-            if (n is RtFuncion) return true;
+            if (n is RtFunction) return true;
             return false;
         }
 
@@ -167,7 +167,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
         {
             var constructors = nodes.Where(d => d is RtConstructor).OfType<RtConstructor>();
             var fields = nodes.Where(d => d is RtField).OfType<RtField>().OrderBy(d => d.Identifier.IdentifierName);
-            var methods = nodes.Where(d => d is RtFuncion).OfType<RtFuncion>().OrderBy(d => d.Identifier.IdentifierName);
+            var methods = nodes.Where(d => d is RtFunction).OfType<RtFunction>().OrderBy(d => d.Identifier.IdentifierName);
             var rest = nodes.Where(d => !IsKnownMember(d));
 
             return constructors.Cast<RtNode>()

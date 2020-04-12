@@ -13,7 +13,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
     /// </summary>
     public class AngularActionCallGenerator : MethodCodeGenerator
     {
-        public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
+        public override RtFunction GenerateNode(MethodInfo element, RtFunction result, TypeResolver resolver)
         {
 
             result = base.GenerateNode(element, result, resolver);

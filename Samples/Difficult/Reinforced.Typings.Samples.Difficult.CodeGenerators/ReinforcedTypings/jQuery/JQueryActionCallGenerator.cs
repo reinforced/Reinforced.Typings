@@ -27,7 +27,7 @@ namespace Reinforced.Typings.Samples.Difficult.CodeGenerators.ReinforcedTypings.
         /// TypeResolver object that we will use to safely convert CLR types to TypeScript types names
         /// </param>
         /// <returns>AST node for method declaration</returns>
-        public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
+        public override RtFunction GenerateNode(MethodInfo element, RtFunction result, TypeResolver resolver)
         {
             // Here we get default result of method export
             result =  base.GenerateNode(element, result, resolver);

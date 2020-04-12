@@ -10,7 +10,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default typescript code generator for method
     /// </summary>
-    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo, RtFuncion>
+    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo, RtFunction>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
+        public override RtFunction GenerateNode(MethodInfo element, RtFunction result, TypeResolver resolver)
         {
             if (Context.CurrentBlueprint.IsIgnored(element)) return null;
 

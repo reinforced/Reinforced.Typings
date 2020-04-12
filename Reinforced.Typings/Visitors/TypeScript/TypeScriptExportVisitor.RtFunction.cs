@@ -4,7 +4,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
 {
     partial class TypeScriptExportVisitor
     {
-        public override void Visit(RtFuncion node)
+        public override void Visit(RtFunction node)
         {
             if (node == null) return;
             Visit(node.Documentation);

@@ -13,7 +13,7 @@ namespace Reinforced.Typings.Ast
         T Visit(RtNode node);
         T Visit(RtField node);
         T Visit(RtInterface node);
-        T Visit(RtFuncion node);
+        T Visit(RtFunction node);
         T Visit(RtArgument node);
         T Visit(RtClass node);
         T Visit(RtIdentifier node);
@@ -41,7 +41,7 @@ namespace Reinforced.Typings.Ast
         void Visit(RtNode node);
         void Visit(RtField node);
         void Visit(RtInterface node);
-        void Visit(RtFuncion node);
+        void Visit(RtFunction node);
         void Visit(RtArgument node);
         void Visit(RtClass node);
         void Visit(RtIdentifier node);
