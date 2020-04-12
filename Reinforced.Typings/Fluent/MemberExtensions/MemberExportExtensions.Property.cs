@@ -21,6 +21,16 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
+        public static PropertyExportBuilder WithCodeGenerator<T>(this PropertyExportBuilder conf, T codeGeneratorInstance)
+            where T : ITsCodeGenerator<PropertyInfo>, ITsCodeGenerator<FieldInfo>
+        {
+            conf.Attr.CodeGeneratorInstance = codeGeneratorInstance;
+            return conf;
+        }
+
+        /// <summary>
+        ///     Specifies code generator for member
+        /// </summary>
         public static PropertyExportBuilder WithFieldCodeGenerator<T>(this PropertyExportBuilder conf)
             where T : ITsCodeGenerator<FieldInfo>
         {

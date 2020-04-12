@@ -17,6 +17,16 @@ namespace Reinforced.Typings.Fluent
         }
 
         /// <summary>
+        ///     Specifies code generator for member
+        /// </summary>
+        public static EnumExportBuilder WithCodeGenerator<T>(this EnumExportBuilder conf, T codeGeneratorInstance)
+            where T : ITsCodeGenerator<Type>
+        {
+            conf.Attr.CodeGeneratorInstance = codeGeneratorInstance;
+            return conf;
+        }
+
+        /// <summary>
         /// Turns enum to constant enum
         /// </summary>
         /// <typeparam name="T"></typeparam>

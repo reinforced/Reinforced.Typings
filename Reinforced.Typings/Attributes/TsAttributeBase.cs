@@ -12,5 +12,7 @@ namespace Reinforced.Typings.Attributes
         ///     If empty then it's being generated empty/return null body.
         /// </summary>
         public virtual Type CodeGeneratorType { get; set; }
+
+        public object CodeGeneratorInstance { get; set; }
     }
 }

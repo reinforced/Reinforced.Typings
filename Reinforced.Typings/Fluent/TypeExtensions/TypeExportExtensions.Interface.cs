@@ -16,6 +16,16 @@ namespace Reinforced.Typings.Fluent
             return conf;
         }
 
+        /// <summary>
+        ///     Specifies code generator for member
+        /// </summary>
+        public static InterfaceExportBuilder WithCodeGenerator<T>(this InterfaceExportBuilder conf, T codeGeneratorInstance)
+            where T : ITsCodeGenerator<Type>
+        {
+            conf.Attr.CodeGeneratorInstance = codeGeneratorInstance;
+            return conf;
+        }
+
 
         /// <summary>
         ///     Forces exporter to add I letter as interface prefix.
