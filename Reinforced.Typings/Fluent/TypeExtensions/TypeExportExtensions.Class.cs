@@ -18,6 +18,13 @@ namespace Reinforced.Typings.Fluent
             return conf;
         }
 
+        public static ClassExportBuilder WithCodeGenerator<T>(this ClassExportBuilder conf, T codeGeneratorInstance)
+            where T : ITsCodeGenerator<Type>
+        {
+            conf.Attr.CodeGeneratorInstance = codeGeneratorInstance;
+            return conf;
+        }
+
         /// <summary>
         ///   Configures class to be exported as abstract or not.
         ///   Pass null value to identify automatically

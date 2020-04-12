@@ -114,6 +114,12 @@ namespace Reinforced.Typings
             {
                 var t = attr.CodeGeneratorType;
                 if (t != null) return LazilyInstantiateGenerator<T>(t);
+
+                if (attr.CodeGeneratorInstance is ITsCodeGenerator<T> instance)
+                {
+                    instance.Context = _context;
+                    return instance;
+                }
             }
             return null;
         }

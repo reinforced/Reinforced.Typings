@@ -28,5 +28,15 @@ namespace Reinforced.Typings.Fluent
             return conf;
         }
 
+        /// <summary>
+        ///     Specifies code generator for member
+        /// </summary>
+        public static ParameterExportBuilder WithCodeGenerator<T>(this ParameterExportBuilder conf, T codeGeneratorInstance)
+            where T : TsCodeGeneratorBase<ParameterInfo, RtArgument>
+        {
+            conf.Attr.CodeGeneratorInstance = codeGeneratorInstance;
+            return conf;
+        }
+
     }
 }
