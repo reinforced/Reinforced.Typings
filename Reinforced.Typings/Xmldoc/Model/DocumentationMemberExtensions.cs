@@ -16,6 +16,11 @@
             return DocumentationMemberType.Unknown;
         }
 
+        public static bool HasInheritDoc(this DocumentationMember dm)
+        {
+            return dm.InheritDoc != null;
+        }
+
         public static bool HasSummary(this DocumentationMember dm)
         {
             return dm.Summary != null && !string.IsNullOrEmpty(dm.Summary.Text);

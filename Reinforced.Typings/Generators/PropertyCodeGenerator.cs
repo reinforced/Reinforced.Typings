@@ -4,6 +4,7 @@ using System.Reflection;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
+using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
 {
@@ -44,7 +45,9 @@ namespace Reinforced.Typings.Generators
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
-                RtJsdocNode jsdoc = new RtJsdocNode { Description = doc.Summary.Text };
+                RtJsdocNode jsdoc = new RtJsdocNode();
+                if (doc.HasInheritDoc()) jsdoc.AddTag(DocTag.Inheritdoc);
+                if (doc.HasSummary()) jsdoc.Description = doc.Summary.Text;
                 result.Documentation = jsdoc;
             }
 

@@ -192,7 +192,7 @@ namespace Reinforced.Typings.Xmldoc
                 return GetDocumentationMember(info);
             }
             var doc = _documentationCache[id];
-            if (!doc.HasSummary()) return null;
+            if (!doc.HasInheritDoc() && !doc.HasSummary()) return null;
             return doc;
         }
 
@@ -209,7 +209,7 @@ namespace Reinforced.Typings.Xmldoc
             if (!_documentationCache.ContainsKey(id)) return null;
             var doc = _documentationCache[id];
 
-            if ((!doc.HasSummary()) && (!doc.HasParameters()) && (!doc.HasReturns())) return null;
+            if (!doc.HasInheritDoc() && !doc.HasSummary() && !doc.HasParameters() && !doc.HasReturns()) return null;
             return doc;
         }
 
@@ -224,7 +224,7 @@ namespace Reinforced.Typings.Xmldoc
             var id = GetIdentifierForConstructor(constructor);
             if (!_documentationCache.ContainsKey(id)) return null;
             var doc = _documentationCache[id];
-            if ((!doc.HasSummary()) && (!doc.HasParameters())) return null;
+            if (!doc.HasInheritDoc() && !doc.HasSummary() && !doc.HasParameters()) return null;
             return doc;
         }
 
@@ -240,7 +240,7 @@ namespace Reinforced.Typings.Xmldoc
             var id = GetIdentifierForType(type);
             if (!_documentationCache.ContainsKey(id)) return null;
             var typeDoc = _documentationCache[id];
-            if (!typeDoc.HasSummary()) return null;
+            if (!typeDoc.HasInheritDoc() && !typeDoc.HasSummary()) return null;
             return typeDoc;
         }
     }

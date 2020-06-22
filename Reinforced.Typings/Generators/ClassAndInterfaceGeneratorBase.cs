@@ -36,6 +36,7 @@ namespace Reinforced.Typings.Generators
             if (doc != null)
             {
                 RtJsdocNode docNode = new RtJsdocNode();
+                if (doc.HasInheritDoc()) docNode.AddTag(DocTag.Inheritdoc);
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
             }
@@ -205,8 +206,8 @@ namespace Reinforced.Typings.Generators
                     // but still. It is better thatn nothing
 
                     if (sw.Documentation == null) sw.Documentation = new RtJsdocNode();
-                    sw.Documentation.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Todo,
-                        string.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element._BaseType()))));
+                    sw.Documentation.AddTag(DocTag.Todo,
+                        string.Format("Automatically implemented from {0}", resolver.ResolveTypeName(element._BaseType())));
 
                     var baseBlueprint = Context.Project.Blueprint(element._BaseType());
                     var basExSwtch = baseBlueprint.Attr<TsInterfaceAttribute>();

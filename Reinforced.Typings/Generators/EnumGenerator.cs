@@ -33,6 +33,7 @@ namespace Reinforced.Typings.Generators
             if (doc != null)
             {
                 RtJsdocNode docNode = new RtJsdocNode();
+                if (doc.HasInheritDoc()) docNode.AddTag(DocTag.Inheritdoc);
                 if (doc.HasSummary()) docNode.Description = doc.Summary.Text;
                 result.Documentation = docNode;
             }
@@ -76,6 +77,7 @@ namespace Reinforced.Typings.Generators
                     if (valueDoc != null)
                     {
                         RtJsdocNode docNode = new RtJsdocNode();
+                        if (valueDoc.HasInheritDoc()) docNode.AddTag(DocTag.Inheritdoc);
                         if (valueDoc.HasSummary()) docNode.Description = valueDoc.Summary.Text;
                         value.Documentation = docNode;
                     }

@@ -33,19 +33,20 @@ namespace Reinforced.Typings.Generators
             var doc = Context.Documentation.GetDocumentationMember(element);
             if (doc != null)
             {
-                RtJsdocNode jsdoc = new RtJsdocNode { Description = doc.Summary.Text };
+                RtJsdocNode jsdoc = new RtJsdocNode();
+                if (doc.HasInheritDoc()) jsdoc.AddTag(DocTag.Inheritdoc);
+                if (doc.HasSummary()) jsdoc.Description = doc.Summary.Text;
                 if (doc.Parameters != null)
                 {
                     foreach (var documentationParameter in doc.Parameters)
                     {
-                        jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Param,
-                            documentationParameter.Name + " " + documentationParameter.Description));
+                        jsdoc.AddTag(DocTag.Param, documentationParameter.Name + " " + documentationParameter.Description);
                     }
                 }
 
                 if (doc.HasReturns())
                 {
-                    jsdoc.TagToDescription.Add(new Tuple<DocTag, string>(DocTag.Returns, doc.Returns.Text));
+                    jsdoc.AddTag(DocTag.Returns, doc.Returns.Text);
                 }
                 result.Documentation = jsdoc;
             }
