@@ -51,6 +51,11 @@ namespace Reinforced.Typings.Ast.TypeNames
         public string Prefix { get; set; }
 
         /// <summary>
+        /// <c>true</c> if the <see cref="Prefix"/> is not empty.
+        /// </summary>
+        public bool HasPrefix => !string.IsNullOrEmpty(Prefix);
+
+        /// <summary>
         /// Type name
         /// </summary>
         public string TypeName { get; private set; }
@@ -86,7 +91,7 @@ namespace Reinforced.Typings.Ast.TypeNames
         {
             string generics = _genericArguments.Length > 0 ? "<" + String.Join(",", _genericArguments.AsEnumerable()) + ">" : null;
             var result = String.Concat(TypeName, generics);
-            if (!string.IsNullOrEmpty(Prefix))
+            if (HasPrefix)
             {
                 result =  Prefix + "." + result;
             }
