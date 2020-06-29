@@ -89,11 +89,6 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
         public string ConfigurationMethod { get; set; }
 
         /// <summary>
-        /// Gets collection of assembly patterns match/replacements Regex
-        /// </summary>
-        public List<AssemblyRegex> AssemblyRegex { get; private set; } = new List<AssemblyRegex>();
-
-        /// <summary>
         /// Validates input parameters
         /// </summary>
         public void Validate()
@@ -127,20 +122,6 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
             {
                 result.SourceAssemblies[i] = tr.ReadLine();
             }
-
-            var lc = tr.ReadLine();
-            if (lc != null)
-            {
-                var regexCount = int.Parse(lc);
-                for (int i = 0; i < regexCount; i++)
-                {
-                    result.AssemblyRegex.Add(new AssemblyRegex()
-                    {
-                        Pattern = tr.ReadLine(),
-                        Replace = tr.ReadLine()
-                    });
-                }
-            }
             return result;
         }
 
@@ -156,12 +137,6 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
             foreach (var sourceAssembly in SourceAssemblies)
             {
                 tw.WriteLine(sourceAssembly);
-            }
-            tw.WriteLine(AssemblyRegex.Count);
-            foreach (var ar in AssemblyRegex)
-            {
-                tw.WriteLine(ar.Pattern);
-                tw.WriteLine(ar.Replace);
             }
         }
 

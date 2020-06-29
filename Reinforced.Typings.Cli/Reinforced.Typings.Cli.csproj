@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyManager.cs" />
-    <Compile Include="AssemblyRegex.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConsoleHelpAttribute.cs" />
     <Compile Include="VisualStudioFriendlyMessageType.cs" />
