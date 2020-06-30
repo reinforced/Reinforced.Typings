@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Xml.Serialization;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Reinforced.Typings.Cli;
@@ -32,7 +31,6 @@ namespace Reinforced.Typings.Integrate
     /// </summary>
     public class RtCli : ToolTask
     {
-
         /// <summary>
         /// Framework version to invoke rtcli
         /// </summary>
@@ -80,11 +78,6 @@ namespace Reinforced.Typings.Integrate
         /// Additional source assemblies to import
         /// </summary>
         public ITaskItem[] AdditionalSourceAssemblies { get; set; }
-
-        /// <summary>
-        /// Assembly regex
-        /// </summary>
-        public string AssemblyRegex { get; set; }
 
         /// <summary>
         /// ProjectDir variable
@@ -206,7 +199,7 @@ namespace Reinforced.Typings.Integrate
                 ) ? DocumentationFilePath : String.Empty,
                 ConfigurationMethod = ConfigurationMethod
             };
-            ExtractRegexes(consoleParams);
+
             var tmpFile = Path.GetTempFileName();
             using (var fs = File.OpenWrite(tmpFile))
             {
@@ -250,26 +243,6 @@ namespace Reinforced.Typings.Integrate
 
         }
 
-        private void ExtractRegexes(ExporterConsoleParameters pars)
-        {
-            if (AssemblyRegex != null && !string.IsNullOrEmpty(AssemblyRegex))
-            {
-                string str = $"<Regexes><Items>{AssemblyRegex}</Items></Regexes>";
-                Regexes rxs = null;
-                var xmlSer = new XmlSerializer(typeof(Regexes));
-                using (var sr = new StringReader(str))
-                {
-                    using (var tr = new NamespaceIgnorantXmlTextReader(sr))
-                    {
-                        rxs = (Regexes)xmlSer.Deserialize(tr);
-                    }
-
-                }
-                pars.AssemblyRegex.AddRange(rxs.Items);
-            }
-            
-        }
-
         private string[] ExtractSourceAssemblies()
         {
             List<string> srcAssemblies = new List<string>();
@@ -279,7 +252,6 @@ namespace Reinforced.Typings.Integrate
             }
             if (SourceAssembly != null)
             {
-                
                 srcAssemblies.AddRange(SourceAssembly.Select(c => Path.Combine(ProjectRoot, c.ItemSpec)));
             }
             return srcAssemblies.ToArray();

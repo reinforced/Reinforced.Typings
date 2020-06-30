@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.RegularExpressions;
-
 #if NETCORE
 using System.Runtime.Loader;
 #endif
@@ -39,54 +37,13 @@ namespace Reinforced.Typings.Cli
         private readonly Dictionary<string, Assembly> _alreadyLoaded = new Dictionary<string, Assembly>();
         private readonly List<AssemblyLocation> _referencesCache = new List<AssemblyLocation>();
         private readonly Action<string, object[]> BuildWarn;
-        private Tuple<Regex, string>[] _regexes;
 
-#if NETCORE_APP
-        private static readonly string _targetingPacksFolder = null;
-        private static readonly string _sharedDir = null;
-
-        static AssemblyManager()
-        {
-            var a = new FileInfo(typeof(object).Assembly.Location);
-            var version = a.Directory; //.net core version dir
-            var fwDir = version.Parent; // Microsoft.NETCore.App
-            var sharedDir = fwDir.Parent; // shared
-            _sharedDir = sharedDir.FullName;
-            var dotnetDir = sharedDir.Parent; //dotnet core dir
-            _targetingPacksFolder = Path.Combine(dotnetDir.FullName, "packs"); //targeting packs folder to check against
-            Console.WriteLine($"Targeting packs fix active: {_targetingPacksFolder}");
-        }
-#endif
-        public AssemblyManager(string[] sourceAssemblies,
-            TextReader profileReader,
-            string referencesTmpFilePath,
-            Action<string, object[]> buildWarn, IEnumerable<AssemblyRegex> regexes)
+        public AssemblyManager(string[] sourceAssemblies, TextReader profileReader, string referencesTmpFilePath, Action<string, object[]> buildWarn)
         {
             _sourceAssemblies = sourceAssemblies;
             _profileReader = profileReader;
             _referencesTmpFilePath = referencesTmpFilePath;
             BuildWarn = buildWarn;
-            _regexes = ExtendRegex(regexes);
-        }
-
-        private static Tuple<Regex, string>[] ExtendRegex(IEnumerable<AssemblyRegex> regexes)
-        {
-            var result = new List<Tuple<Regex, string>>();
-            foreach (var assemblyRegex in regexes)
-            {
-                var rex = assemblyRegex.Pattern
-                    .Replace("{path}", @"[a-zA-Z0-9\:\\\s\.\/]+")
-                    .Replace("{/}", @"[\\/]+")
-                    .Replace("{ver}", @"[0-9\.]+")
-                    .Replace("{a}", @"[a-zA-Z0-9\.]+");
-
-                result.Add(new Tuple<Regex, string>(new Regex(rex), assemblyRegex.Replace));
-            }
-
-            return result.ToArray();
-
-
-
         }
 
         internal void TurnOffAdditionalResolvation()
@@ -231,7 +188,7 @@ namespace Reinforced.Typings.Cli
                         BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
                         continue;
                     }
-
+                    
                     a = Assembly.LoadFrom(path);
                 }
                 catch (Exception ex)
@@ -240,10 +197,10 @@ namespace Reinforced.Typings.Cli
                     continue;
                 }
 
-
+                
                 _alreadyLoaded[args.Name] = a;
                 _totalLoadedAssemblies++;
-
+                
 #if DEBUG
                 Console.WriteLine("{0} additionally resolved", nm);
 #endif
@@ -307,59 +264,28 @@ namespace Reinforced.Typings.Cli
             return result.ToArray();
         }
 
-        private string FixPackReferencePath(string path)
-        {
-#if NETCORE_APP
-            if (path.StartsWith(_targetingPacksFolder))
-            {
-                var relPath = Path.GetRelativePath(_targetingPacksFolder, path).Replace(".Ref", string.Empty);
-                var netcoreappDir = Path.GetDirectoryName(relPath); //netcoreapp3.0
-                var refDir = Path.GetDirectoryName(netcoreappDir); // ref
-                var baseDir = Path.GetDirectoryName(refDir); // version
-
-                var file = Path.GetFileName(path); // dll name
-                var sharedDllRef = Path.Combine(baseDir, file);
-                var fullSharedDir = Path.Combine(_sharedDir, sharedDllRef);
-                return fullSharedDir;
-            }
-#endif
-            return path;
-        }
-
         private IEnumerable<string> LookupPossibleAssemblyPath(string assemblyNameOrFullPath, bool storeIfFullName = true)
         {
-
-            Console.WriteLine("Looking into " + assemblyNameOrFullPath);
-            foreach (var x in _regexes)
-            {
-                if (x.Item1.IsMatch(assemblyNameOrFullPath))
-                {
-                    var reslt = x.Item1.Replace(assemblyNameOrFullPath, x.Item2);
-                    BuildWarn("Assembly {0} -> {1}", new[] { assemblyNameOrFullPath, reslt});
-                    return new[] { reslt };
-                }
-            }
-
             string[] checkResult;
             if (!assemblyNameOrFullPath.EndsWith(".dll") && !assemblyNameOrFullPath.EndsWith(".exe"))
             {
                 var check = assemblyNameOrFullPath + ".dll";
                 checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
 
-                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d)).Select(FixPackReferencePath);
+                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d));
 
                 check = assemblyNameOrFullPath + ".exe";
                 checkResult = LookupAssemblyPathInternal(check, storeIfFullName);
 
-                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d)).Select(FixPackReferencePath);
+                if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d));
             }
 
             var p = assemblyNameOrFullPath;
             checkResult = LookupAssemblyPathInternal(p, storeIfFullName);
-            if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d)).Select(FixPackReferencePath);
+            if (checkResult.Length > 0 && checkResult.Any(d => !string.IsNullOrEmpty(d))) return checkResult.Where(d => !string.IsNullOrEmpty(d));
 
 
-            return new[] { assemblyNameOrFullPath }.Select(FixPackReferencePath);
+            return new[] { assemblyNameOrFullPath };
         }
     }
 }
