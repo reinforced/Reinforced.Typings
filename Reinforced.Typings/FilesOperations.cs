@@ -10,7 +10,7 @@ using Reinforced.Typings.Visitors.Typings;
 
 namespace Reinforced.Typings
 {
-    internal class FilesOperations : IFilesOperations
+    public class FilesOperations : IFilesOperations
     {
         private readonly List<string> _tmpFiles = new List<string>();
 
