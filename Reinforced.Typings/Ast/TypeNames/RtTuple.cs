@@ -61,5 +61,11 @@ namespace Reinforced.Typings.Ast.TypeNames
         {
             visitor.Visit(this);
         }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"[{string.Join(", ", TupleTypes)}]";
+        }
     }
 }
