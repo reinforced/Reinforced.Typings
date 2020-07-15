@@ -8,7 +8,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
 
         public override void Visit(RtSimpleTypeName node)
         {
-            if (!string.IsNullOrEmpty(node.Prefix))
+            if (node.HasPrefix)
             {
                 Write(node.Prefix);
                 Write(".");

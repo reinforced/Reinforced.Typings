@@ -43,5 +43,11 @@ namespace Reinforced.Typings.Ast
         {
             visitor.Visit(this);
         }
+
+        /// <summary>
+        /// Adds an additional JSDOC documentation tag.
+        /// </summary>
+        public void AddTag(DocTag tag, string value = null) =>
+            TagToDescription.Add(new Tuple<DocTag, string>(tag, value));
     }
 }

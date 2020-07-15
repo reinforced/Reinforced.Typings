@@ -20,7 +20,7 @@ namespace Reinforced.Typings.Tests
         private bool CompareSimple(RtSimpleTypeName x, RtSimpleTypeName y)
         {
             if (x.TypeName != y.TypeName) return false;
-            if (x.Prefix != y.Prefix) return false;
+            if ((x.HasPrefix || y.HasPrefix) && x.Prefix != y.Prefix) return false;
             if (x.GenericArguments.Length != y.GenericArguments.Length) return false;
 
             for (int i = 0; i < x.GenericArguments.Length; i++)

@@ -76,6 +76,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening4.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.InheritDoc.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InvalidFlattenOrder.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening3.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.HierarchyFlattening2.cs" />

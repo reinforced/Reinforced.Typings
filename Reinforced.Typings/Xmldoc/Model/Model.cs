@@ -1,5 +1,7 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using System.Xml.Serialization;
+using Reinforced.Typings.Ast;
 
 #pragma warning disable 1591
 
@@ -36,6 +38,9 @@ namespace Reinforced.Typings.Xmldoc.Model
 
         [XmlElement(ElementName = "summary")]
         public DocumentationSummary Summary { get; set; }
+
+        [XmlElement(ElementName = "inheritdoc")]
+        public DocumentationInheritDoc InheritDoc { get; set; }
 
         [XmlElement(ElementName = "param")]
         public DocumentationParameter[] Parameters { get; set; }
@@ -84,6 +89,24 @@ namespace Reinforced.Typings.Xmldoc.Model
         {
             Cref = reader.GetAttribute("cref");
             Text = reader.ReadInnerXml().Trim();
+        }
+    }
+
+    public class DocumentationInheritDoc : XmlIgnoreInner
+    {
+        /// <summary>
+        /// TODO: Find a type by this cref and get its documentation?
+        /// </summary>
+        public string Cref { get; set; }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            Cref = reader.GetAttribute("cref");
         }
     }
 
