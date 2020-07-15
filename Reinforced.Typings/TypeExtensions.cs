@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Exceptions;
@@ -590,6 +591,17 @@ namespace Reinforced.Typings
             if (methodInfo.IsPrivate) return AccessModifier.Private;
             if (methodInfo.IsFamily) return AccessModifier.Protected;
             return AccessModifier.Public;
+        }
+
+        /// <summary>
+        ///     Returns access modifier for specified method
+        /// </summary>
+        /// <param name="methodInfo">Method</param>
+        /// <returns>Access modifier string</returns>
+        public static bool IsAsync(this MethodInfo methodInfo)
+        {
+            var ret = methodInfo.ReturnType;
+            return typeof(Task).IsAssignableFrom(ret);
         }
 
         /// <summary>

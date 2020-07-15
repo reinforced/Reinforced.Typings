@@ -81,5 +81,20 @@ namespace Reinforced.Typings.Fluent
             conf.Attr.StrongType = type;
             return conf;
         }
+
+        /// <summary>
+        ///     Specifies whether exported method must be considered async.
+        ///     If this value is specified explicitly then exported method will be considered async based on
+        ///     this value. If the value is null then RT will automatically decide whether method must be async
+        ///     based on its return type (Task`N).
+        /// </summary>
+        /// <param name="conf">Configurator</param>
+        /// <param name="isAsync">True to make method async, false otherwise</param>
+        /// <returns></returns>
+        public static MethodExportBuilder ForceAsync(this MethodExportBuilder conf, bool? isAsync)
+        {
+            conf.Attr.ForceAsync = isAsync;
+            return conf;
+        }
     }
 }

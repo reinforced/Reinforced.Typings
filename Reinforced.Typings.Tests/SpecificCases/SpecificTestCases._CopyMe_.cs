@@ -1,8 +1,10 @@
-﻿using Reinforced.Typings.Fluent;
+﻿using System.Threading.Tasks;
+using Reinforced.Typings.Fluent;
 using Xunit;
 
 namespace Reinforced.Typings.Tests.SpecificCases
 {
+    
     public partial class SpecificTestCases
     {
         [Fact]
@@ -19,7 +21,7 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-                s.ExportAsInterface<ITestInterface>().WithPublicProperties();
+                s.ExportAsClass<ITestInterface>().WithPublicMethods();
             }, result);
         }
     }

@@ -25,7 +25,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
             var r = base.GenerateNode(element, result, resolver);
             foreach (var rMember in r.Members)
             {
-                var m = rMember as RtFuncion;
+                var m = rMember as RtFunction;
                 if (m != null)
                 {
                     m.AccessModifier = null;

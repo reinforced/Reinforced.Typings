@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.TypeNames;
+using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Xmldoc.Model;
 
 namespace Reinforced.Typings.Generators
@@ -10,7 +12,7 @@ namespace Reinforced.Typings.Generators
     /// <summary>
     ///     Default typescript code generator for method
     /// </summary>
-    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo, RtFuncion>
+    public class MethodCodeGenerator : TsCodeGeneratorBase<MethodInfo, RtFunction>
     {
         /// <summary>
         ///     Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
@@ -19,7 +21,7 @@ namespace Reinforced.Typings.Generators
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
+        public override RtFunction GenerateNode(MethodInfo element, RtFunction result, TypeResolver resolver)
         {
             if (Context.CurrentBlueprint.IsIgnored(element)) return null;
 
@@ -51,6 +53,7 @@ namespace Reinforced.Typings.Generators
             }
             result.Order = Context.CurrentBlueprint.GetOrder(element);
 
+
             result.AccessModifier = element.GetModifier();
             if (Context.SpecialCase) result.AccessModifier = AccessModifier.Public;
             result.Identifier = new RtIdentifier(name);
@@ -65,12 +68,41 @@ namespace Reinforced.Typings.Generators
                 result.Arguments.Add((RtArgument)argument);
             }
             var fa = Context.CurrentBlueprint.ForMember(element);
+
             if (fa != null && !string.IsNullOrEmpty(fa.Implementation))
             {
                 result.Body = new RtRaw(fa.Implementation);
             }
+            if (fa != null && fa.ForceAsync != null)
+            {
+                result.IsAsync = (bool)fa.ForceAsync;
+            }
+            else
+            {
+                if (Context.Global.AutoAsync)
+                {
+                    result.IsAsync = element.IsAsync();
+                }
+            }
+
             AddDecorators(result, Context.CurrentBlueprint.DecoratorsFor(element));
             return result;
+        }
+
+        protected RtTypeName ResolveAsyncReturnType(TsFunctionAttribute fa, MethodInfo element, TypeResolver resolver)
+        {
+            bool needAsync = (fa != null && fa.ForceAsync == true) || (Context.Global.AutoAsync && element.IsAsync());
+            if (!needAsync)
+            {
+                return resolver.ResolveTypeName(element.ReturnType);
+            }
+
+            if (typeof(Task) == element.ReturnType) return new RtSimpleTypeName("void");
+            if (element.ReturnType._IsGenericType())
+            {
+                return resolver.ResolveTypeName(element.ReturnType.GetArg());
+            }
+            return resolver.ResolveTypeName(element.ReturnType);
         }
 
         /// <summary>
@@ -96,12 +128,16 @@ namespace Reinforced.Typings.Generators
 
                 if (!string.IsNullOrEmpty(fa.Type)) type = new RtSimpleTypeName(fa.Type);
                 else if (fa.StrongType != null) type = resolver.ResolveTypeName(fa.StrongType);
-                else type = resolver.ResolveTypeName(element.ReturnType);
+                else
+                {
+
+                    type = ResolveAsyncReturnType(fa, element, resolver);
+                }
                 type = fa.TypeInferers.Infer(element, resolver) ?? type;
             }
             else
             {
-                type = resolver.ResolveTypeName(element.ReturnType);
+                type = ResolveAsyncReturnType(null, element, resolver);
             }
 
             if (!isNameOverridden)

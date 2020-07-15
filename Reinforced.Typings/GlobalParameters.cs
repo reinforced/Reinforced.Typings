@@ -240,5 +240,18 @@ namespace Reinforced.Typings
                 _attr.UnresolvedToUnknown = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets whether RT must automatically treat methods returning Task as async methods
+        /// </summary>
+        public bool AutoAsync
+        {
+            get { return _attr.AutoAsync; }
+            set
+            {
+                if (_isLocked) return;
+                _attr.AutoAsync = value;
+            }
+        }
     }
 }

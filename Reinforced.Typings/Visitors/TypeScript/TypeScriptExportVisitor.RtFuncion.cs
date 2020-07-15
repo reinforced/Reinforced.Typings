@@ -4,7 +4,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
 {
     partial class TypeScriptExportVisitor
     {
-        public override void Visit(RtFuncion node)
+        public override void Visit(RtFunction node)
         {
             if (node == null) return;
             Visit(node.Documentation);
@@ -13,6 +13,10 @@ namespace Reinforced.Typings.Visitors.TypeScript
             {
                 Decorators(node);
                 Modifiers(node);
+                if (node.IsAsync)
+                {
+                    Write("async ");
+                }
             }
             Visit(node.Identifier);
             Write("(");
@@ -21,7 +25,15 @@ namespace Reinforced.Typings.Visitors.TypeScript
             if (node.ReturnType != null)
             {
                 Write(": ");
+                if (node.IsAsync)
+                {
+                    Write("Promise<");
+                }
                 Visit(node.ReturnType);
+                if (node.IsAsync)
+                {
+                    Write(">");
+                }
             }
 
             if (Context == WriterContext.Interface)

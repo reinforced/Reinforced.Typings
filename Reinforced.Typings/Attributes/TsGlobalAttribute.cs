@@ -111,5 +111,10 @@ namespace Reinforced.Typings.Attributes
         /// Visitor has to be child class of <see cref="Reinforced.Typings.Visitors.TextExportingVisitor"/>
         /// </summary>
         public Type VisitorType { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether RT must automatically treat methods returning Task as async methods
+        /// </summary>
+        public bool AutoAsync { get; set; }
     }
 }

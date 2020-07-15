@@ -22,6 +22,11 @@ namespace Reinforced.Typings.Attributes
         public string Implementation { get; set; }
 
         /// <summary>
+        /// Gets or sets whether function forcibly should be made async/left as usual function
+        /// </summary>
+        public bool? ForceAsync { get; set; }
+
+        /// <summary>
         /// Type inferers set instance
         /// </summary>
         public InlineTypeInferers<MethodInfo> TypeInferers

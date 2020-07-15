@@ -47,7 +47,7 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="mscorlib" /> 
+    <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -74,7 +74,7 @@
     <Compile Include="Ast\RtEnum.cs" />
     <Compile Include="Ast\RtEnumValue.cs" />
     <Compile Include="Ast\RtField.cs" />
-    <Compile Include="Ast\RtFuncion.cs" />
+    <Compile Include="Ast\RtFunction.cs" />
     <Compile Include="Ast\RtIdentifier.cs" />
     <Compile Include="Ast\Dependency\RtImport.cs" />
     <Compile Include="Ast\RtInterface.cs" />

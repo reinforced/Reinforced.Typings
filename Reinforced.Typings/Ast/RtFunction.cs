@@ -6,16 +6,21 @@ namespace Reinforced.Typings.Ast
     /// <summary>
     /// AST node for TypeScript member function
     /// </summary>
-    public class RtFuncion : RtMember, IDecoratable
+    public class RtFunction : RtMember, IDecoratable
     {
         /// <summary>
         /// Constructs new instance of AST node
         /// </summary>
-        public RtFuncion()
+        public RtFunction()
         {
             Arguments = new List<RtArgument>();
             Decorators = new List<RtDecorator>();
         }
+
+        /// <summary>
+        /// Gets or sets whether function is async
+        /// </summary>
+        public bool IsAsync { get; set; }
 
         /// <summary>
         /// Function name

@@ -194,6 +194,18 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+        /// <summary>
+        ///     Makes RT automatically to turn methods returning Task into async ones
+        /// </summary>
+        /// <param name="builder">Conf builder</param>
+        /// <param name="value">True to enable the feature</param>
+        public static GlobalConfigurationBuilder AutoAsync(this GlobalConfigurationBuilder builder,
+            bool value = true)
+        {
+            builder.Parameters.AutoAsync = value;
+            return builder;
+        }
+
         //{
         //    bool strict = true)
         //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,

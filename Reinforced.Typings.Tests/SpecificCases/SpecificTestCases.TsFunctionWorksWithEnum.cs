@@ -93,7 +93,7 @@ enum TestEnum {
         /// <param name="element">Element code to be generated to output</param>
         /// <param name="result">Resulting node</param>
         /// <param name="resolver">Type resolver</param>
-        public override RtFuncion GenerateNode(MethodInfo element, RtFuncion result, TypeResolver resolver)
+        public override RtFunction GenerateNode(MethodInfo element, RtFunction result, TypeResolver resolver)
         {
             var b = base.GenerateNode(element, result, resolver);
             if (b == null) return null;

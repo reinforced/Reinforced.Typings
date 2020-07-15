@@ -1,6 +1,6 @@
 #addin "Cake.FileHelpers"
 var target = Argument("target", "Build");
-const string version = "1.5.7";
+const string version = "1.5.8";
 
 Task("Clean")
   .Does(() =>

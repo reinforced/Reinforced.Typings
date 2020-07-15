@@ -12,7 +12,7 @@ namespace Reinforced.Typings.Visitors
             if (node == null) return;
             if (node is RtField) { Visit((RtField)node); return; }
             if (node is RtInterface) { Visit((RtInterface)node); return; }
-            if (node is RtFuncion) { Visit((RtFuncion)node); return; }
+            if (node is RtFunction) { Visit((RtFunction)node); return; }
             if (node is RtArgument) { Visit((RtArgument)node); return; }
             if (node is RtClass) { Visit((RtClass)node); return; }
             if (node is RtIdentifier) { Visit((RtIdentifier)node); return; }
@@ -36,7 +36,7 @@ namespace Reinforced.Typings.Visitors
 
         public abstract void Visit(RtField node);
         public abstract void Visit(RtInterface node);
-        public abstract void Visit(RtFuncion node);
+        public abstract void Visit(RtFunction node);
         public abstract void Visit(RtArgument node);
         public abstract void Visit(RtClass node);
         public abstract void Visit(RtIdentifier node);
