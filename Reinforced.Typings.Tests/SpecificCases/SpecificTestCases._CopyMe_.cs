@@ -21,7 +21,7 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.Global(a => a.DontWriteWarningComment());
-                s.ExportAsClass<ITestInterface>().WithPublicMethods();
+                s.ExportAsInterface<ITestInterface>().WithPublicProperties();
             }, result);
         }
     }
