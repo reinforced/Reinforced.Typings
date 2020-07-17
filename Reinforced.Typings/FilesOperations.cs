@@ -10,12 +10,21 @@ using Reinforced.Typings.Visitors.Typings;
 
 namespace Reinforced.Typings
 {
+    /// <summary>
+    /// Implementation of file operations abstraction
+    /// </summary>
     public class FilesOperations : IFilesOperations
     {
         private readonly List<string> _tmpFiles = new List<string>();
 
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
         public ExportContext Context { get; set; }
 
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
         public void DeployTempFiles()
         {
             foreach (var tmpFile in _tmpFiles)
@@ -38,6 +47,11 @@ namespace Reinforced.Typings
             }
         }
 
+        /// <summary>
+        /// Internal implementation of file Export operation
+        /// </summary>
+        /// <param name="tw">Target stream</param>
+        /// <param name="file">Exported file</param>
         protected virtual void ExportCore(StreamWriter tw, ExportedFile file)
         {
 
@@ -53,6 +67,9 @@ namespace Reinforced.Typings
             visitor.VisitFile(file);
         }
 
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
         public void Export(string fileName, ExportedFile file)
         {
             using (var fs = GetTmpFile(fileName))
@@ -100,7 +117,9 @@ namespace Reinforced.Typings
             return File.OpenWrite(fileName);
         }
 
-
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
         public void ClearTempRegistry()
         {
             _tmpFiles.Clear();
