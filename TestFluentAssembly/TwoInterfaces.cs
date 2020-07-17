@@ -1,4 +1,6 @@
-﻿namespace TestFluentAssembly.TwoInterfaces
+﻿using System.IO;
+
+namespace TestFluentAssembly.TwoInterfaces
 {
     public interface IInterface1
     {
