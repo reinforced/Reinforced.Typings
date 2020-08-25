@@ -92,18 +92,39 @@ namespace Reinforced.Typings.Generators
 
         protected RtTypeName ResolveAsyncReturnType(TsFunctionAttribute fa, MethodInfo element, TypeResolver resolver)
         {
-            bool needAsync = (fa != null && fa.ForceAsync == true) || (Context.Global.AutoAsync && element.IsAsync());
+            bool needAsync = (fa != null && fa.ForceAsync == true) || (Context.Global.AutoAsync && element.IsAsync())
+                || (Context.Global.AutoAsync && typeof(Task) == element.ReturnType.BaseType);
+
+            // add support for substitutions of this type, too, as it is not passed to type resolver in full
+            var substitution =
+                Context.Project.Substitute(element.ReturnType, resolver) ??
+                Context.CurrentBlueprint?.Substitute(element.ReturnType, resolver);
+
+            if (substitution != null) return substitution; // order important!
+
             if (!needAsync)
             {
-                return resolver.ResolveTypeName(element.ReturnType);
+                // convert the async value "Task" to a non async value
+                if (typeof(Task) == element.ReturnType.BaseType && element.ReturnType._IsGenericType())
+                {
+                    return resolver.ResolveTypeName(element.ReturnType.GetArg());
+                }
+                else if (typeof(Task) == element.ReturnType)
+                {
+                    return resolver.ResolveTypeName(typeof(void));
+                }
+                else
+                {
+                    return resolver.ResolveTypeName(element.ReturnType);
+                }
             }
 
-            if (typeof(Task) == element.ReturnType) return new RtSimpleTypeName("void");
+            if (typeof(Task) == element.ReturnType) return new RtAsyncType();
             if (element.ReturnType._IsGenericType())
             {
-                return resolver.ResolveTypeName(element.ReturnType.GetArg());
+                return new RtAsyncType(resolver.ResolveTypeName(element.ReturnType.GetArg()));
             }
-            return resolver.ResolveTypeName(element.ReturnType);
+            return new RtAsyncType(resolver.ResolveTypeName(element.ReturnType));
         }
 
         /// <summary>

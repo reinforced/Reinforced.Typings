@@ -82,8 +82,24 @@ namespace Reinforced.Typings.Visitors.TypeScript
         /// Writes empty method body of known return type
         /// </summary>
         /// <param name="returnType">Method return type</param>
-        protected void EmptyBody(RtTypeName returnType)
+        /// <param name="isAsyncMethod">Whether the method is tagged as "async", then no Promise need to be created
+        /// directly. TypeScript compiler does it for us.</param>
+        protected void EmptyBody(RtTypeName returnType, bool isAsyncMethod = false)
         {
+            // unfold the Promise return value
+            if (returnType is RtAsyncType)
+            {
+                if (isAsyncMethod)
+                {
+                    returnType = ((RtAsyncType) returnType).TypeNameOfAsync;
+                }
+                else
+                {
+                    CodeBlock("return Promise.resolve(null);");
+                    return;
+                }
+            }
+
             if (returnType == null || returnType.IsVoid())
             {
                 WriteLine(" { } ");

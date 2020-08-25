@@ -29,6 +29,14 @@ namespace Reinforced.Typings.Tests.SpecificCases
             return "aaa";
         }
     }
+
+    interface ITestAsync
+    {
+        Task DoVoid();
+
+        Task<string> DoArgument();
+    }
+
     public partial class SpecificTestCases
     {
         [Fact]
@@ -55,6 +63,41 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.Global(a => a.DontWriteWarningComment().AutoAsync());
                 s.ExportAsClass<TestAsync>().WithPublicMethods();
                 s.ExportAsInterface<TestAsync2>().WithPublicMethods();
+            }, result);
+        }
+
+        [Fact]
+        public void AutoAsyncInterfaceWorks()
+        {
+            const string result = @"
+module Reinforced.Typings.Tests.SpecificCases {
+	export interface ITestAsync
+	{
+		DoVoid() : Promise<void>;
+		DoArgument() : Promise<string>;
+	}
+}";
+            AssertConfiguration(s =>
+            {
+                s.Global(a => a.DontWriteWarningComment().AutoAsync());
+                s.ExportAsInterface<ITestAsync>().WithPublicMethods();
+            }, result);
+        }
+
+        [Fact]
+        public void NoAutoAsyncInterfaceWorks()
+        {
+            const string result = @"
+module Reinforced.Typings.Tests.SpecificCases {
+	export interface ITestAsync
+	{
+		DoVoid() : void;
+		DoArgument() : string;
+	}
+}";
+            AssertConfiguration(s =>
+            {
+                s.ExportAsInterface<ITestAsync>().WithPublicMethods();
             }, result);
         }
     }

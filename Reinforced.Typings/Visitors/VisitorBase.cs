@@ -30,6 +30,7 @@ namespace Reinforced.Typings.Visitors
             if (node is RtDecorator) { Visit((RtDecorator)node); return; }
             if (node is RtReference) { Visit((RtReference)node); return; }
             if (node is RtTuple) { Visit((RtTuple)node); return; }
+            if (node is RtAsyncType) { Visit((RtAsyncType)node); return; }
 
             throw new Exception("Unknown node passed");
         }
@@ -54,6 +55,7 @@ namespace Reinforced.Typings.Visitors
         public abstract void Visit(RtDecorator node);
         public abstract void Visit(RtReference node);
         public abstract void Visit(RtTuple node);
+        public abstract void Visit(RtAsyncType node);
         public abstract void VisitFile(ExportedFile file);
     }
 }
