@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Attributes;
@@ -161,9 +162,26 @@ namespace Reinforced.Typings
         /// <returns>Typescript-friendly type name</returns>
         public RtTypeName ResolveTypeName(Type t)
         {
+            return ResolveTypeName(t, true);
+        }
+
+
+        /// <summary>
+        ///     Returns typescript-friendly type name node for specified type.
+        ///     This method successfully handles dictionaries, IEnumerables, arrays, another TsExport-ed types, void, delegates,
+        ///     most of CLR built-in types, parametrized types etc.
+        ///     It also considers Ts*-attributes while resolving type names
+        ///     If it cannot handle anything then it will return "any"
+        /// </summary>
+        /// <param name="t">Specified type</param>
+        /// <param name="usePromiseType">if true, then async types like "Task" are supported and translated to "Promise".
+        /// Otherwise the generics value of "Task" is used or "void".</param>
+        /// <returns>Typescript-friendly type name</returns>
+        public RtTypeName ResolveTypeName(Type t, bool usePromiseType)
+        {
             try
             {
-                return ResolveTypeNameInner(t);
+                return ResolveTypeNameInner(t, null, usePromiseType);
             }
             catch (Exception ex)
             {
@@ -173,7 +191,7 @@ namespace Reinforced.Typings
         }
 
 
-        internal RtTypeName ResolveTypeNameInner(Type t, Dictionary<string, RtTypeName> materializedGenerics = null)
+        internal RtTypeName ResolveTypeNameInner(Type t, Dictionary<string, RtTypeName> materializedGenerics = null, bool usePromiseType = true)
         {
             var substitution = Context.Project.Substitute(t, this);
             if (substitution != null) return substitution; // order important!
@@ -284,6 +302,22 @@ namespace Reinforced.Typings
                 }
                 if (enumerable == null) return Cache(t, new RtArrayType(AnyType));
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
+            }
+            if (t.IsTask())
+            {
+                var deliveredTypeOfTask =
+                    t._IsGenericType() ? ResolveTypeName(t.GetArg(), usePromiseType) : ResolveTypeName(typeof(void));
+
+                if (usePromiseType || Context.Global.AutoAsync)
+                {
+                    return Cache(t, new RtAsyncType(deliveredTypeOfTask));
+                }
+                else
+                {
+                    // Unfold the generics value of the task but do NOT cache. Caching would interfere with
+                    // parameter resolving, which always uses promise type.
+                    return deliveredTypeOfTask;
+                }
             }
 
             if (typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType()))

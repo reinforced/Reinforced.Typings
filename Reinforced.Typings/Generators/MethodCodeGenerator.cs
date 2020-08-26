@@ -92,50 +92,10 @@ namespace Reinforced.Typings.Generators
 
         protected RtTypeName ResolveAsyncReturnType(TsFunctionAttribute fa, MethodInfo element, TypeResolver resolver)
         {
-            bool isTaskType = element.ReturnType._IsAssignableFrom(typeof(Task)) || (
-                element.ReturnType._IsGenericType()
-                && element.ReturnType.BaseType._IsAssignableFrom(typeof(Task))
-
-                // exclude "object" as "Task" is assignable to it, too
-                && !element.ReturnType.BaseType._IsAssignableFrom(typeof(Object))
-            );
-
             bool needAsync = (fa != null && fa.ForceAsync == true) || (Context.Global.AutoAsync && element.IsAsync())
-                || (Context.Global.AutoAsync && isTaskType);
+                || (Context.Global.AutoAsync && element.ReturnType.IsTask());
 
-            // add support for substitutions of this type, too, as it is not passed to type resolver in full
-            var substitution =
-                Context.Project.Substitute(element.ReturnType, resolver) ??
-                Context.CurrentBlueprint?.Substitute(element.ReturnType, resolver);
-
-            if (substitution != null) return substitution; // order important!
-
-            if (!needAsync)
-            {
-                // convert the async value "Task" to a non async value
-                if (isTaskType && element.ReturnType._IsGenericType())
-                {
-                    return resolver.ResolveTypeName(element.ReturnType.GetArg());
-                }
-                else if (isTaskType)
-                {
-                    return resolver.ResolveTypeName(typeof(void));
-                }
-                else
-                {
-                    return resolver.ResolveTypeName(element.ReturnType);
-                }
-            }
-
-            if (element.ReturnType._IsGenericType())
-            {
-                return new RtAsyncType(resolver.ResolveTypeName(element.ReturnType.GetArg()));
-            }
-            else if (isTaskType)
-            {
-                return new RtAsyncType();
-            }
-            return new RtAsyncType(resolver.ResolveTypeName(element.ReturnType));
+            return resolver.ResolveTypeName(element.ReturnType, needAsync);
         }
 
         /// <summary>
