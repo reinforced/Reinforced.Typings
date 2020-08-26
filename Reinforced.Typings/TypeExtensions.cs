@@ -570,7 +570,7 @@ namespace Reinforced.Typings
         /// </summary>
         /// <param name="t">Type to check</param>
         /// <returns>True when type is tuple, false otherwise</returns>
-        public static bool IsTask(this Type t)
+        public static bool _IsAsyncType(this Type t)
         {
             return t._IsAssignableFrom(typeof(Task)) || (
                 t._IsGenericType()

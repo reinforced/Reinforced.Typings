@@ -303,7 +303,7 @@ namespace Reinforced.Typings
                 if (enumerable == null) return Cache(t, new RtArrayType(AnyType));
                 return Cache(t, new RtArrayType(ResolveTypeName(enumerable.GetArg())));
             }
-            if (t.IsTask())
+            if (t._IsAsyncType())
             {
                 var deliveredTypeOfTask =
                     t._IsGenericType() ? ResolveTypeName(t.GetArg(), usePromiseType) : ResolveTypeName(typeof(void));
