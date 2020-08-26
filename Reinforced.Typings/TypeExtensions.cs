@@ -618,7 +618,7 @@ namespace Reinforced.Typings
         public static bool IsAsync(this MethodInfo methodInfo)
         {
             var ret = methodInfo.ReturnType;
-            return typeof(Task)._IsAssignableFrom(ret);
+            return ret._IsAsyncType();
         }
 
         /// <summary>
