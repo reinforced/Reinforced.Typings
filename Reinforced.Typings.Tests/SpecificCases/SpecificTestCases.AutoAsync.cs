@@ -37,6 +37,11 @@ namespace Reinforced.Typings.Tests.SpecificCases
         Task<string> DoArgument();
     }
 
+    interface ITestAsyncParameter
+    {
+        Task<string> EvaluatePromise(Task<string> taskParameter);
+    }
+
     public partial class SpecificTestCases
     {
         [Fact]
@@ -98,6 +103,22 @@ module Reinforced.Typings.Tests.SpecificCases {
             AssertConfiguration(s =>
             {
                 s.ExportAsInterface<ITestAsync>().WithPublicMethods();
+            }, result);
+        }
+
+        [Fact]
+        public void PromiseTaskInParamterIsMaintained()
+        {
+            const string result = @"
+module Reinforced.Typings.Tests.SpecificCases {
+	export interface ITestAsyncParameter
+	{
+		EvaluatePromise(taskParameter: Promise<string>) : string;
+	}
+}";
+            AssertConfiguration(s =>
+            {
+                s.ExportAsInterface<ITestAsyncParameter>().WithPublicMethods();
             }, result);
         }
     }
