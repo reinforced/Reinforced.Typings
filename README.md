@@ -17,10 +17,15 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :hammer: Version **1.5.7** released
+> :suspect: Version **1.5.8** released
 
-* Crutch for .NET 3.x.x and upcoming versions. Now it is possible to configure set of Regexes that can identify referenced `packs` assemblies and replace them with corresponding assemblies from `shared` directory. See example in `Reinforced.Typings.settings.xml`
-* This release is made especially for *Yehonatan Chen* 
+* PR #178
+* PR #177
+* PR #176
+* PR #164
+* Fix typo in "RtFuncion"
+* AutoAsync feature
+* Yes, now it must correctly resolve `Microsoft.AspNetCore` dlls. Much thanks goes to @zivillian for [his pull request](https://github.com/reinforced/Reinforced.Typings/pull/176)
 
 Support policy
 =================
