@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if CUSTOM_FLAG_NULLABLE_AVAILABLE
+using System;
 using System.Collections.Generic;
 using Reinforced.Typings.Fluent;
 using Xunit;
@@ -82,3 +83,5 @@ module Reinforced.Typings.Tests.SpecificCases {
         }
     }
 }
+
+#endif
