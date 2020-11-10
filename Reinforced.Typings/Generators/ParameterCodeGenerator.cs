@@ -35,7 +35,7 @@ namespace Reinforced.Typings.Generators
                 else if (fa.StrongType != null)
                 {
                     type = resolver.ResolveTypeName(fa.StrongType);
-                    isNullable = element.IsOptional;
+                    isNullable = element.IsOptional || element.IsReferenceForcedNullable();
                 }
                 else type = resolver.ResolveTypeName(element.ParameterType);
                 type = fa.TypeInferers.Infer(element, resolver) ?? type;
@@ -43,7 +43,7 @@ namespace Reinforced.Typings.Generators
             else
             {
                 type = resolver.ResolveTypeName(element.ParameterType);
-                isNullable = element.IsOptional;
+                isNullable = element.IsOptional || element.IsReferenceForcedNullable();
             }
             if (element.GetCustomAttribute<ParamArrayAttribute>() != null)
             {

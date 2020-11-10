@@ -88,6 +88,45 @@ namespace Reinforced.Typings
             return CustomAttributeExtensions.GetCustomAttributes<T>(t.GetTypeInfo(), inherit);
         }
 #endif
+        
+        public static bool IsReferenceForcedNullable(this MemberInfo member)
+        {
+            // non reference types will be converted to Nullable<> if they are nullable.
+            // C# 8.0 nullable flag just changes the way reference types are handled. If enabled, then they are
+            // not implicitly nullable anymore!
+            Type memberType = member is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (
+                member is FieldInfo fieldInfo ? fieldInfo.FieldType : null
+            );
+
+            if (memberType != null && memberType._IsReferenceType())
+            {
+                byte[] nullableFlag = GetNullableAttributeValue(member, false) ??
+                                      GetNullableAttributeValue(member.DeclaringType, true);
+
+                return nullableFlag != null && nullableFlag.Length > 0 && nullableFlag[0] == 2;
+            }
+
+            return false;
+        }
+
+        public static bool IsReferenceForcedNullable(this ParameterInfo member)
+        {
+            // non reference types will be converted to Nullable<> if they are nullable.
+            // C# 8.0 nullable flag just changes the way reference types are handled. If enabled, then they are
+            // not implicitly nullable anymore!
+            Type memberType = member.ParameterType;
+            if (member.ParameterType._IsReferenceType())
+            {
+                byte[] nullableFlag = GetNullableAttributeValue(member, false) ??
+                                      GetNullableAttributeValue(member.Member, true) ??
+                                      GetNullableAttributeValue(member.Member.DeclaringType, true);
+
+                return nullableFlag != null && nullableFlag.Length > 0 && nullableFlag[0] == 2;
+            }
+
+            return false;
+        }
+
         internal static bool _IsGenericType(this Type t)
         {
 #if NETCORE
@@ -155,6 +194,20 @@ namespace Reinforced.Typings
 #else
             return t.IsInterface;
 #endif
+        }
+
+        internal static bool _IsArray(this Type t)
+        {
+#if NETCORE
+            return t.GetTypeInfo().IsArray;
+#else
+            return t.IsArray;
+#endif
+        }
+
+        internal static bool _IsReferenceType(this Type t)
+        {
+            return t._IsClass() || t._IsInterface() || t._IsArray() || typeof(string)._IsAssignableFrom(t);
         }
 
         internal static IEnumerable<Type> _GetInterfaces(this Type t)
@@ -773,7 +826,46 @@ namespace Reinforced.Typings
 
 #endregion
 
+        private static byte[] GetNullableAttributeValue(this ICustomAttributeProvider member, bool fromParent = false)
+        {
+            // need to retrieve all attributes and find by class name.
+            // see: http://code.fitness/post/2019/02/nullableattribute.html
+            // https://github.com/dotnet/roslyn/blob/master/docs/features/nullable-metadata.md
+            foreach(var customAttribute in member.GetCustomAttributes(true))
+            {
+                if (customAttribute is Attribute nullableAttribute) 
+                {
+                    bool isNullableAttribute = string.Equals(
+                        customAttribute.GetType().FullName, 
+                        "System.Runtime.CompilerServices.NullableAttribute",
+                        StringComparison.InvariantCulture
+                    ); 
 
+                    bool isNullableContextAttribute = fromParent && !isNullableAttribute && string.Equals(
+                       customAttribute.GetType().FullName, 
+                       "System.Runtime.CompilerServices.NullableContextAttribute",
+                       StringComparison.InvariantCulture
+                    );
 
+                    if (!isNullableAttribute && !isNullableContextAttribute)
+                    {
+                        continue;
+                    }
+
+                    FieldInfo flagField = isNullableAttribute
+                        ? nullableAttribute.GetType().GetRuntimeField("NullableFlags")
+                        : nullableAttribute.GetType().GetRuntimeField("Flag");
+                        
+                    object flagsData = flagField?.GetValue(nullableAttribute);
+                    byte[] flags = flagsData is byte[] flagsDataBytes ? flagsDataBytes : null;
+                    flags = flags is null && flagsData is byte flagsDataSingleByte ?
+                        new byte[] {flagsDataSingleByte} : flags;
+
+                    return flags != null && flags.Length > 0 ? flags : null;
+                }
+            }
+
+            return null;
+        }
     }
 }
