@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
 using Xunit;
@@ -36,20 +37,20 @@ namespace Reinforced.Typings.Tests.SpecificCases
             Dictionary<string,string> results = new Dictionary<string, string>()
             {
                 {
-"targetDir\\TestComponentViewModel.ts",
+"targetDir" + Path.DirectorySeparatorChar + "TestComponentViewModel.ts",
 @"export interface TestComponentViewModel
 {
 }"
                 },
                 {
-"targetDir\\ComponentProps_1.ts",
+"targetDir" + Path.DirectorySeparatorChar + "ComponentProps_1.ts",
 @"export interface ComponentProps<T>
 {
 	model: T;
 }"
                 },
                 {
-"targetDir\\AnotherComponentProps.ts",
+"targetDir" + Path.DirectorySeparatorChar + "AnotherComponentProps.ts",
 @"import { TestComponentViewModel } from './TestComponentViewModel';
 import { ComponentProps } from './ComponentProps_1';
 
@@ -58,7 +59,7 @@ export interface AnotherComponentProps extends ComponentProps<TestComponentViewM
 }"
                 },
                 {
-"targetDir\\TestComponentProps.ts",
+"targetDir" + Path.DirectorySeparatorChar + "TestComponentProps.ts",
 @"import { TestComponentViewModel } from './TestComponentViewModel';
 import { ComponentProps } from './ComponentProps_1';
 
