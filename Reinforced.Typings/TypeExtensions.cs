@@ -831,7 +831,7 @@ namespace Reinforced.Typings
             // need to retrieve all attributes and find by class name.
             // see: http://code.fitness/post/2019/02/nullableattribute.html
             // https://github.com/dotnet/roslyn/blob/master/docs/features/nullable-metadata.md
-            foreach(var customAttribute in member.GetCustomAttributes(true))
+            foreach(var customAttribute in member?.GetCustomAttributes(true) ?? Array.Empty<object>())
             {
                 if (customAttribute is Attribute nullableAttribute) 
                 {
