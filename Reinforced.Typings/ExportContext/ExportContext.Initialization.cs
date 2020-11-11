@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Reinforced.Typings.Attributes;
 using Reinforced.Typings.Fluent;
+using Reinforced.Typings.Generators;
 using Reinforced.Typings.ReferencesInspection;
 using Reinforced.Typings.Xmldoc;
 // ReSharper disable CheckNamespace
@@ -90,11 +92,24 @@ namespace Reinforced.Typings
                     Project.AddFileSeparationSettings(type);
                 }
             }
-            if (!Hierarchical) TypesToFilesMap = new Dictionary<string, IEnumerable<Type>>();
-            else TypesToFilesMap =
-                allTypes.Where(d => Project.Blueprint(d).ThirdParty == null)
-                    .GroupBy(c => GetPathForType(c, stripExtension: false))
-                    .ToDictionary(c => c.Key, c => c.AsEnumerable());
+
+            if (!Hierarchical)
+            {
+                TypesToFilesMap = new Dictionary<string, IEnumerable<Type>>();
+                CustomGeneratorsToFilesMap = new Dictionary<string, IEnumerable<ICustomCodeGenerator>>();
+            }
+            else 
+            {
+                TypesToFilesMap =
+                    allTypes
+                        .Where(d => Project.Blueprint(d).ThirdParty == null)
+                        .GroupBy(c => GetPathForType(c, stripExtension: false))
+                        .ToDictionary(c => c.Key, c => c.AsEnumerable());
+                CustomGeneratorsToFilesMap =
+                    CustomBuilders
+                        .GroupBy(b => Path.Combine(TargetDirectory,b.FileName))
+                        .ToDictionary(g => g.Key, g => g.Select(b => b.Generator));
+            }
 
 
         }

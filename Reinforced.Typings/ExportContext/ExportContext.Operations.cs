@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Reinforced.Typings.Generators;
 
 // ReSharper disable CheckNamespace
 namespace Reinforced.Typings
@@ -79,24 +80,35 @@ namespace Reinforced.Typings
         public ExportedFile CreateExportedFile(string fileName = null)
         {
             if (!Hierarchical && fileName == TargetFile) fileName = null;
-            IEnumerable<Type> types = null;
+            IEnumerable<Type> types = new List<Type>();
+            List<ICustomCodeGenerator> customCodeGenerators = new List<ICustomCodeGenerator>();
             if (!string.IsNullOrEmpty(fileName))
             {
-                if (!TypesToFilesMap.ContainsKey(fileName))
+                if (TypesToFilesMap.ContainsKey(fileName))
                 {
-                    var allFiles = string.Join(", ", TypesToFilesMap.Keys);
-                    throw new Exception("Current configuration does not contain file " + fileName + ", only " + allFiles);
+                    types = new HashSet<Type>(TypesToFilesMap[fileName]);
                 }
-
-                types = new HashSet<Type>(TypesToFilesMap[fileName]);
+                
+                if (CustomGeneratorsToFilesMap.ContainsKey(fileName))
+                {
+                    customCodeGenerators = CustomGeneratorsToFilesMap[fileName].ToList();
+                }
+                
+                if (!TypesToFilesMap.ContainsKey(fileName) && !CustomGeneratorsToFilesMap.ContainsKey(fileName))
+                {
+                    var allFiles = string.Join(", ", TypesToFilesMap.Keys.Union(CustomGeneratorsToFilesMap.Keys).Distinct());
+                    throw new Exception($"Current configuration does not contain file {fileName}, only {allFiles}");
+                }
             }
             else
             {
                 types = _allTypesHash;
+                customCodeGenerators = CustomBuilders.Select(b => b.Generator).ToList();
             }
+            
             var typesHash = new HashSet<Type>(types.Where(d => Project.Blueprint(d).ThirdParty == null));
 
-            ExportedFile ef = new ExportedFile(typesHash, fileName, _globalReferences.Duplicate(), this);
+            ExportedFile ef = new ExportedFile(typesHash, customCodeGenerators, fileName, _globalReferences.Duplicate(), this);
             return ef;
         }
     }

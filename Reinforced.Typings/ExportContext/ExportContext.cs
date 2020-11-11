@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Reinforced.Typings.Exceptions;
+using Reinforced.Typings.Fluent;
+using Reinforced.Typings.Generators;
 
 namespace Reinforced.Typings
 {
@@ -25,6 +27,8 @@ namespace Reinforced.Typings
             SourceAssemblies = sourceAssemblies;
             Location = new Location(this);
             Project = new ProjectBlueprint();
+            CustomBuilders = new List<CustomExportBuilder>();
+            CustomGeneratorsToFilesMap = new Dictionary<string, IEnumerable<ICustomCodeGenerator>>();
         }
 
         /// <summary>
@@ -34,5 +38,6 @@ namespace Reinforced.Typings
         internal bool SpecialCase { get; set; }
 
         internal Dictionary<string, IEnumerable<Type>> TypesToFilesMap { get; private set; }
+        internal Dictionary<string, IEnumerable<ICustomCodeGenerator>> CustomGeneratorsToFilesMap { get; private set; }
     }
 }

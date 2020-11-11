@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
+using Reinforced.Typings.Generators;
 using Reinforced.Typings.ReferencesInspection;
 
 namespace Reinforced.Typings
@@ -21,10 +22,11 @@ namespace Reinforced.Typings
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        internal ExportedFile(HashSet<Type> typesToExport, string fileName, InspectedReferences references, ExportContext context)
+        internal ExportedFile(HashSet<Type> typesToExport, List<ICustomCodeGenerator> customCodeGenerators, string fileName, InspectedReferences references, ExportContext context)
         {
             _context = context;
             TypesToExport = typesToExport;
+            CustomGenerators = customCodeGenerators;
             FileName = fileName;
             AllTypesIsSingleFile = !_context.Hierarchical;
             References = references;
@@ -80,6 +82,11 @@ namespace Reinforced.Typings
         {
             get { return _refinedImports ?? References.Imports; }
         }
+
+        /// <summary>
+        /// List of custom code generators
+        /// </summary>
+        public List<ICustomCodeGenerator> CustomGenerators { get; set; }
 
         internal void ApplyReferenceProcessor(ReferenceProcessorBase refProcessor = null)
         {

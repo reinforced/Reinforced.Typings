@@ -31,6 +31,7 @@ namespace Reinforced.Typings.Ast
         T Visit(RtDecorator node);
         T Visit(RtReference node);
         T Visit(RtTuple node);
+        T Visit(RtContainer node);
     }
 
     /// <summary>
@@ -59,5 +60,6 @@ namespace Reinforced.Typings.Ast
         void Visit(RtDecorator node);
         void Visit(RtReference node);
         void Visit(RtTuple node);
+        void Visit(RtContainer node);
     }
 }
