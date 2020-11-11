@@ -91,40 +91,14 @@ namespace Reinforced.Typings
         
         public static bool IsReferenceForcedNullable(this MemberInfo member)
         {
-            // non reference types will be converted to Nullable<> if they are nullable.
-            // C# 8.0 nullable flag just changes the way reference types are handled. If enabled, then they are
-            // not implicitly nullable anymore!
-            Type memberType = member is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (
-                member is FieldInfo fieldInfo ? fieldInfo.FieldType : null
-            );
-
-            if (memberType != null && memberType._IsReferenceType())
-            {
-                byte[] nullableFlag = GetNullableAttributeValue(member, false) ??
-                                      GetNullableAttributeValue(member.DeclaringType, true);
-
-                return nullableFlag != null && nullableFlag.Length > 0 && nullableFlag[0] == 2;
-            }
-
-            return false;
+            byte[] nullableFlag = GetNullableAttributeValue(member);
+            return nullableFlag != null && nullableFlag.Length > 0 && nullableFlag[0] == 2;
         }
 
         public static bool IsReferenceForcedNullable(this ParameterInfo member)
         {
-            // non reference types will be converted to Nullable<> if they are nullable.
-            // C# 8.0 nullable flag just changes the way reference types are handled. If enabled, then they are
-            // not implicitly nullable anymore!
-            Type memberType = member.ParameterType;
-            if (member.ParameterType._IsReferenceType())
-            {
-                byte[] nullableFlag = GetNullableAttributeValue(member, false) ??
-                                      GetNullableAttributeValue(member.Member, true) ??
-                                      GetNullableAttributeValue(member.Member.DeclaringType, true);
-
-                return nullableFlag != null && nullableFlag.Length > 0 && nullableFlag[0] == 2;
-            }
-
-            return false;
+            byte[] nullableFlag = GetNullableAttributeValue(member);
+            return nullableFlag != null && nullableFlag.Length > 0 && nullableFlag[0] == 2;
         }
 
         internal static bool _IsGenericType(this Type t)
@@ -826,7 +800,47 @@ namespace Reinforced.Typings
 
 #endregion
 
-        private static byte[] GetNullableAttributeValue(this ICustomAttributeProvider member, bool fromParent = false)
+        /// <summary>
+        /// Reads the new compiler specific nullable attribute of the parameter or its parent scopes.
+        /// </summary>
+        /// <param name="member">The parameter to check for the availability of a nullable attribute.</param>
+        /// <returns>the value of the first attribute to find or <c>null</c> if none is available.</returns>
+        public static byte[] GetNullableAttributeValue(this ParameterInfo member)
+        {
+            // non reference types will be converted to Nullable<> if they are nullable.
+            // C# 8.0 nullable flag just changes the way reference types are handled. If enabled, then they are
+            // not implicitly nullable anymore!
+            if (member?.ParameterType == null || !member.ParameterType._IsReferenceType())
+            {
+                return null;
+            }
+
+            return GetNullableAttributeValue(member, false) ??
+                   GetNullableAttributeValue(member.Member, true) ??
+                   GetNullableAttributeValue(member.Member.DeclaringType, true);
+        }
+
+        /// <summary>
+        /// Reads the new compiler specific nullable attribute of a property or field or their parent scopes.
+        /// </summary>
+        /// <param name="member">The property or field to check for the availability of a nullable attribute.</param>
+        /// <returns>the value of the first attribute to find or <c>null</c> if none is available.</returns>
+        public static byte[] GetNullableAttributeValue(this MemberInfo member)
+        {
+            Type memberType = member is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (
+                member is FieldInfo fieldInfo ? fieldInfo.FieldType : null
+            );
+
+            if (memberType == null || !memberType._IsReferenceType())
+            {
+                return null;
+            }
+
+            return GetNullableAttributeValue(member, false) ??
+                   GetNullableAttributeValue(member.DeclaringType, true);
+        }
+
+        private static byte[] GetNullableAttributeValue(this ICustomAttributeProvider member, bool fromParent)
         {
             // need to retrieve all attributes and find by class name.
             // see: http://code.fitness/post/2019/02/nullableattribute.html
