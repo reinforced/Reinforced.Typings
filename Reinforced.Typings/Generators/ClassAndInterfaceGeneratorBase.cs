@@ -80,7 +80,7 @@ namespace Reinforced.Typings.Generators
 
                     if (inferredBaseType != null)
                     {
-                        if (baseAsInterface)
+                        if (baseAsInterface || result is RtInterface)
                         {
                             implementees.Add(inferredBaseType);
                         }
