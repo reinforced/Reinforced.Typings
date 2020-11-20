@@ -79,7 +79,8 @@ namespace Reinforced.Typings.Generators
             
             if (!Context.SpecialCase)
             {
-                propName.IsNullable = HasToBeNullable(tp, t);
+                propName.IsNullable = HasToBeNullable(tp, t) 
+                                      || Context.Global.AutoOptionalProperties && element.IsReferenceForcedNullable();
             }
 
             if (type == null) type = resolver.ResolveTypeName(t);
