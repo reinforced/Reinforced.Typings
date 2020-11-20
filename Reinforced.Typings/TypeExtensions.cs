@@ -88,7 +88,17 @@ namespace Reinforced.Typings
             return CustomAttributeExtensions.GetCustomAttributes<T>(t.GetTypeInfo(), inherit);
         }
 #endif
-        
+
+        internal static IEnumerable<object> _GetCustomAttributes(this Type t, bool inherit = true)
+        {
+#if NETCORE
+            return t.GetTypeInfo().GetCustomAttributes(inherit);
+#else
+            return t.GetCustomAttributes(inherit);
+#endif
+            
+        }
+
         public static bool IsReferenceForcedNullable(this MemberInfo member)
         {
             byte[] nullableFlag = GetNullableAttributeValue(member);
@@ -601,11 +611,11 @@ namespace Reinforced.Typings
         {
             return t._IsAssignableFrom(typeof(Task)) || (
                 t._IsGenericType()
-                && t.BaseType != null
-                && t.BaseType._IsAssignableFrom(typeof(Task))
+                && t._BaseType() != null
+                && t._BaseType()._IsAssignableFrom(typeof(Task))
 
                 // exclude "object" as "Task" is assignable to it, too
-                && !t.BaseType._IsAssignableFrom(typeof(Object))
+                && !t._BaseType()._IsAssignableFrom(typeof(Object))
             );
         }
 
@@ -832,10 +842,11 @@ namespace Reinforced.Typings
                 return null;
             }
 
-            return GetNullableAttributeValue(member, false) ??
-                   GetNullableAttributeValue(member.Member, true) ??
-                   GetNullableAttributeValue(member.Member.DeclaringType, true);
+            return GetNullableAttributeValue(member.GetCustomAttributes(), false) ??
+                   GetNullableAttributeValue(member.Member.GetCustomAttributes(), true) ??
+                   GetNullableAttributeValue(member.Member.DeclaringType._GetCustomAttributes(true), true);
         }
+
 
         /// <summary>
         /// Reads the new compiler specific nullable attribute of a property or field or their parent scopes.
@@ -853,29 +864,31 @@ namespace Reinforced.Typings
                 return null;
             }
 
-            return GetNullableAttributeValue(member, false) ??
-                   GetNullableAttributeValue(member.DeclaringType, true);
+            return GetNullableAttributeValue(member.GetCustomAttributes(true), false) 
+                   ?? GetNullableAttributeValue(member.DeclaringType._GetCustomAttributes(true), true);
         }
 
-        private static byte[] GetNullableAttributeValue(this ICustomAttributeProvider member, bool fromParent)
+        private static byte[] GetNullableAttributeValue(IEnumerable<object> attributes, bool fromParent)
         {
+            if (attributes == null) return null;
+
             // need to retrieve all attributes and find by class name.
             // see: http://code.fitness/post/2019/02/nullableattribute.html
             // https://github.com/dotnet/roslyn/blob/master/docs/features/nullable-metadata.md
-            foreach(var customAttribute in member?.GetCustomAttributes(true) ?? Array.Empty<object>())
+            foreach(var customAttribute in attributes)
             {
                 if (customAttribute is Attribute nullableAttribute) 
                 {
                     bool isNullableAttribute = string.Equals(
                         customAttribute.GetType().FullName, 
                         "System.Runtime.CompilerServices.NullableAttribute",
-                        StringComparison.InvariantCulture
+                        StringComparison.OrdinalIgnoreCase
                     ); 
 
                     bool isNullableContextAttribute = fromParent && !isNullableAttribute && string.Equals(
                        customAttribute.GetType().FullName, 
                        "System.Runtime.CompilerServices.NullableContextAttribute",
-                       StringComparison.InvariantCulture
+                       StringComparison.OrdinalIgnoreCase
                     );
 
                     if (!isNullableAttribute && !isNullableContextAttribute)
