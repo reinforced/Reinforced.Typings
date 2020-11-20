@@ -592,6 +592,23 @@ namespace Reinforced.Typings
             return typeof(MulticastDelegate)._IsAssignableFrom(t._BaseType());
         }
 
+        /// <summary>
+        /// Determines if type is one of System.Tuple types set
+        /// </summary>
+        /// <param name="t">Type to check</param>
+        /// <returns>True when type is tuple, false otherwise</returns>
+        public static bool _IsAsyncType(this Type t)
+        {
+            return t._IsAssignableFrom(typeof(Task)) || (
+                t._IsGenericType()
+                && t.BaseType != null
+                && t.BaseType._IsAssignableFrom(typeof(Task))
+
+                // exclude "object" as "Task" is assignable to it, too
+                && !t.BaseType._IsAssignableFrom(typeof(Object))
+            );
+        }
+
 #endregion
 
 #region Modifiers
@@ -628,7 +645,7 @@ namespace Reinforced.Typings
         public static bool IsAsync(this MethodInfo methodInfo)
         {
             var ret = methodInfo.ReturnType;
-            return typeof(Task)._IsAssignableFrom(ret);
+            return ret._IsAsyncType();
         }
 
         /// <summary>

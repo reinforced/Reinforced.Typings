@@ -25,15 +25,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
             if (node.ReturnType != null)
             {
                 Write(": ");
-                if (node.IsAsync)
-                {
-                    Write("Promise<");
-                }
                 Visit(node.ReturnType);
-                if (node.IsAsync)
-                {
-                    Write(">");
-                }
             }
 
             if (Context == WriterContext.Interface)
@@ -48,7 +40,7 @@ namespace Reinforced.Typings.Visitors.TypeScript
                 }
                 else
                 {
-                    EmptyBody(node.ReturnType);
+                    EmptyBody(node.ReturnType, node.IsAsync);
                 }
             }
 

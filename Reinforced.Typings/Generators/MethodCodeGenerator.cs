@@ -93,17 +93,7 @@ namespace Reinforced.Typings.Generators
         protected RtTypeName ResolveAsyncReturnType(TsFunctionAttribute fa, MethodInfo element, TypeResolver resolver)
         {
             bool needAsync = (fa != null && fa.ForceAsync == true) || (Context.Global.AutoAsync && element.IsAsync());
-            if (!needAsync)
-            {
-                return resolver.ResolveTypeName(element.ReturnType);
-            }
-
-            if (typeof(Task) == element.ReturnType) return new RtSimpleTypeName("void");
-            if (element.ReturnType._IsGenericType())
-            {
-                return resolver.ResolveTypeName(element.ReturnType.GetArg());
-            }
-            return resolver.ResolveTypeName(element.ReturnType);
+            return resolver.ResolveTypeName(element.ReturnType, needAsync);
         }
 
         /// <summary>
