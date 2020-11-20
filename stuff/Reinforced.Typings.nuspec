@@ -66,6 +66,7 @@ $$RELNOTES$$
 			<dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />  
 		  </group>          
+		  <group targetFramework=".NETFramework5.0" />
         </dependencies>
         <frameworkAssemblies>
             <frameworkAssembly assemblyName="Microsoft.Build" targetFramework=".NETFramework4.5" />

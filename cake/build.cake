@@ -218,11 +218,19 @@ Task("Build")
 
   Information("---------");
   Information("Packaging");
-  Information("---------");
-  NuGetPack("../package/Reinforced.Typings.nuspec", new NuGetPackSettings {
-    BasePath = "../package",
-    OutputDirectory = "../"
-  });
+  Information("---------");  
+
+  var nugetSettings = new ProcessSettings
+    {     
+      Arguments = "pack ../package/Reinforced.Typings.nuspec -OutputDirectory \"../\"" 
+    };
+
+  using(var process = StartAndReturnProcess("nuget", nugetSettings))
+  {
+      process.WaitForExit();      
+  }
+
+  
 
   Information("Build complete");
 });
