@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Reinforced.Typings</RootNamespace>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <DebugSymbols Condition="$(Configuration) == 'Release'">false</DebugSymbols>
+    <DebugType Condition="$(Configuration) == 'Release'">None</DebugType>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+	
+	<AssemblyName>Reinforced.Typings</AssemblyName>
+	<Company>Reinforced Software Construction OSS</Company>
+	<Copyright>Pavel B. Novikov 2019</Copyright>
+	<AssemblyTitle>$(AssemblyName)</AssemblyTitle>
+	<AssemblyVersion>1.5.9</AssemblyVersion>
+	<FileVersion>1.5.9</FileVersion>
+	<InformationalVersion>1.5.9</InformationalVersion>
+	<DefineConstants>$(DefineConstants);NETCORE;</DefineConstants>
+  </PropertyGroup>    
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

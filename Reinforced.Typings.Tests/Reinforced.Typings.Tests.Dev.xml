@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Reinforced.Typings.Tests.Dev</name>
+    </assembly>
+    <members>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.ClassWithParametersConstructor.#ctor(System.Int32,System.String,System.Boolean)">
+            <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.SomeReallyNestedClass">
+            <summary>
+            Some documentation for nested class
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.SomeReallyNestedClass.#ctor(System.Int32)">
+            <summary>Ctor comment</summary>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.LineAfterAddingGenerator.GenerateNode(System.Type,Reinforced.Typings.Ast.RtEnum,Reinforced.Typings.TypeResolver)">
+            <summary>
+                Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
+                WriterWrapper (3rd argument) using TypeResolver if necessary
+            </summary>
+            <param name="element">Element code to be generated to output</param>
+            <param name="result">Resulting node</param>
+            <param name="resolver">Type resolver</param>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.MyRefProcessor">
+            <summary>
+            Example of implementation of custom reference processor
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.MyRefProcessor.FilterImports(System.Collections.Generic.IEnumerable{Reinforced.Typings.Ast.Dependency.RtImport},Reinforced.Typings.ExportedFile)">
+            <summary>
+            Returns refiltered and reordered import directives that must appear in resulting file.
+            Return null to remain references list untouched
+            </summary>
+            <param name="imports">Set on initially computed imports</param>
+            <param name="file">File that is being exported currently</param>
+            <returns>Set of refiltered/reordered imports</returns>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SpecificTestCases.MyRefProcessor.FilterReferences(System.Collections.Generic.IEnumerable{Reinforced.Typings.Ast.Dependency.RtReference},Reinforced.Typings.ExportedFile)">
+            <summary>
+            Returns refiltered and reordered reference directives that must appear in resulting file
+            Return null to remain imports list untouched
+            </summary>
+            <param name="references">Set on initially computed references</param>
+            <param name="file">File that is being exported currently</param>
+            <returns>Set of refiltered/reordered references</returns>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.FSharpMap`2">
+            <summary>
+            Simulate F# map
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Tests.SpecificCases.TestEnum2.C">
+            <summary>
+            C Value
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Tests.SpecificCases.TestEnum2.D">
+            <summary>
+            D Value
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Tests.SpecificCases.TestEnum2.E">
+            <summary>
+            E Value
+            </summary>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.ISomeInterfaceWithDocs">
+            <summary>
+            Some documentation for interface.
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Tests.SpecificCases.ISomeInterfaceWithDocs.InterfaceProp">
+            <summary>
+            Some documentation for interface property.
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.ISomeInterfaceWithDocs.InterfaceMethod">
+            <summary>
+            Some documentation for interface method.
+            </summary>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.ISomeInterfaceWithInheritDoc">
+            <inheritdoc/>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInterfaceInheritDoc">
+            <inheritdoc/>
+        </member>
+        <member name="P:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInterfaceInheritDoc.InterfaceProp">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInterfaceInheritDoc.InterfaceMethod">
+            <inheritdoc/>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs">
+            <summary>
+            Some documentation for class.
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs.#ctor">
+            <summary>
+            Some documentation for constructor.
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs.SomeProp">
+            <summary>
+            Some documentation for property.
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs.SomeMethod">
+            <summary>
+            Some documentation for method.
+            </summary>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDoc">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDoc.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="P:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDoc.SomeProp">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDoc.SomeMethod">
+            <inheritdoc/>
+        </member>
+        <member name="T:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDocCref">
+            <inheritdoc cref="T:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs"/>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDocCref.#ctor">
+            <inheritdoc cref="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs.#ctor"/>
+        </member>
+        <member name="P:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDocCref.AnotherProp">
+            <inheritdoc cref="P:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs.SomeProp"/>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithInheritDocCref.AnotherMethod">
+            <inheritdoc cref="M:Reinforced.Typings.Tests.SpecificCases.SomeClassWithDocs.SomeMethod"/>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.TestFunctionGenerator.GenerateNode(System.Reflection.MethodInfo,Reinforced.Typings.Ast.RtFunction,Reinforced.Typings.TypeResolver)">
+            <summary>
+                Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
+                WriterWrapper (3rd argument) using TypeResolver if necessary
+            </summary>
+            <param name="element">Element code to be generated to output</param>
+            <param name="result">Resulting node</param>
+            <param name="resolver">Type resolver</param>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.TestFunctionWithEnumGenerator.GenerateNode(System.Reflection.MethodInfo,Reinforced.Typings.Ast.RtFunction,Reinforced.Typings.TypeResolver)">
+            <summary>
+                Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
+                WriterWrapper (3rd argument) using TypeResolver if necessary
+            </summary>
+            <param name="element">Element code to be generated to output</param>
+            <param name="result">Resulting node</param>
+            <param name="resolver">Type resolver</param>
+        </member>
+        <member name="M:Reinforced.Typings.Tests.SpecificCases.LegacyPropertyDuplicator.GenerateNode(System.Reflection.MemberInfo,Reinforced.Typings.Ast.RtField,Reinforced.Typings.TypeResolver)">
+            <summary>
+                Main code generator method. This method should write corresponding TypeScript code for element (1st argument) to
+                WriterWrapper (3rd argument) using TypeResolver if necessary
+            </summary>
+            <param name="element">Element code to be generated to output</param>
+            <param name="result">Resulting node</param>
+            <param name="resolver">Type resolver</param>
+        </member>
+    </members>
+</doc>
