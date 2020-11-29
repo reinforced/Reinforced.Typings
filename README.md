@@ -19,7 +19,7 @@ News
 =================
 > :metal: Version **1.5.9** released
 
-- PR #188 - Support of .NET 5 :five:
+- PR #188 - Support of .NET 5 :star:
 - PR #187 - Support of C#8 nullables
 - PR #183 - RtAsync and more efficiend promists handling
 - build fixes
