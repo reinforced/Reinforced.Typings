@@ -17,15 +17,12 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :suspect: Version **1.5.8** released
+> :metal: Version **1.5.9** released
 
-* PR #178
-* PR #177
-* PR #176
-* PR #164
-* Fix typo in "RtFuncion"
-* AutoAsync feature
-* Yes, now it must correctly resolve `Microsoft.AspNetCore` dlls. Much thanks goes to @zivillian for [his pull request](https://github.com/reinforced/Reinforced.Typings/pull/176)
+- PR #188 - Support of .NET 5 :five:
+- PR #187 - Support of C#8 nullables
+- PR #183 - RtAsync and more efficiend promists handling
+- build fixes
 
 Support policy
 =================
