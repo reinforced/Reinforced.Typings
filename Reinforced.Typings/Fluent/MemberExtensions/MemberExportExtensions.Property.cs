@@ -21,7 +21,7 @@ namespace Reinforced.Typings.Fluent
         /// <summary>
         ///     Specifies code generator for member
         /// </summary>
-        public static PropertyExportBuilder WithFieldCodeGenerator<T>(this PropertyExportBuilder conf)
+        public static FieldExportBuilder WithFieldCodeGenerator<T>(this FieldExportBuilder conf)
             where T : ITsCodeGenerator<FieldInfo>
         {
             conf.Attr.CodeGeneratorType = typeof(T);

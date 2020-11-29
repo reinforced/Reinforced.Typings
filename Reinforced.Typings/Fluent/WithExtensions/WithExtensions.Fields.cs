@@ -19,12 +19,12 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="field">Field to include</param>
         /// <returns>Fluent</returns>
-        public static PropertyExportBuilder WithField<T, TData>(this ITypedExportBuilder<T> tc,
+        public static FieldExportBuilder WithField<T, TData>(this ITypedExportBuilder<T> tc,
             Expression<Func<T, TData>> field)
         {
             var prop = LambdaHelpers.ParseFieldLambda(field);
             ClassOrInterfaceExportBuilder tcb = tc as ClassOrInterfaceExportBuilder;
-            return new PropertyExportBuilder(tcb.Blueprint, prop);
+            return new FieldExportBuilder(tcb.Blueprint, prop);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="fieldName">Name of field to include</param>
         /// <param name="configuration">Configuration to be applied to selected field</param>
         /// <returns>Fluent</returns>
-        public static T WithField<T>(this T tc, string fieldName, Action<PropertyExportBuilder> configuration)
+        public static T WithField<T>(this T tc, string fieldName, Action<FieldExportBuilder> configuration)
             where T : ClassOrInterfaceExportBuilder
         {
             var field = tc.Blueprint.Type._GetField(fieldName);
@@ -56,7 +56,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, Func<FieldInfo, bool> predicate,
-            Action<PropertyExportBuilder> configuration = null) where T : ClassOrInterfaceExportBuilder
+            Action<FieldExportBuilder> configuration = null) where T : ClassOrInterfaceExportBuilder
         {
             var prop = tc.Blueprint.GetExportingMembers((t, b) => t._GetFields(b))
                 .Where(predicate);
@@ -70,7 +70,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
-        public static T WithAllFields<T>(this T tc, Action<PropertyExportBuilder> configuration = null)
+        public static T WithAllFields<T>(this T tc, Action<FieldExportBuilder> configuration = null)
             where T : ClassOrInterfaceExportBuilder
         {
             var prop = tc.Blueprint.GetExportingMembers((t, b) => t._GetFields(b));
@@ -84,7 +84,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="tc">Configuration builder</param>
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
-        public static T WithPublicFields<T>(this T tc, Action<PropertyExportBuilder> configuration = null)
+        public static T WithPublicFields<T>(this T tc, Action<FieldExportBuilder> configuration = null)
             where T : ClassOrInterfaceExportBuilder
         {
             var prop =
@@ -102,7 +102,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
         public static T WithFields<T>(this T tc, BindingFlags bindingFlags,
-            Action<PropertyExportBuilder> configuration = null) where T : ClassOrInterfaceExportBuilder
+            Action<FieldExportBuilder> configuration = null) where T : ClassOrInterfaceExportBuilder
         {
             var prop = tc.Blueprint.Type._GetFields(bindingFlags);
             tc.WithFields(prop, configuration);

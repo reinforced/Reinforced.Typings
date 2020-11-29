@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Fluent
         /// <param name="fields">Fields to include</param>
         /// <param name="configuration">Configuration to be applied to each field</param>
         /// <returns>Fluent</returns>
-        public void WithFields(IEnumerable<FieldInfo> fields, Action<PropertyExportBuilder> configuration = null)
+        public void WithFields(IEnumerable<FieldInfo> fields, Action<FieldExportBuilder> configuration = null)
         {
             ApplyMembersConfiguration(fields, configuration);
         }
