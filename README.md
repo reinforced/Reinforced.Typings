@@ -21,7 +21,7 @@ News
 
 - PR #188 - Support of .NET 5 :star:
 - PR #187 - Support of C#8 nullables
-- PR #183 - RtAsync and more efficiend promists handling
+- PR #183 - RtAsync and more efficient promises handling
 - build fixes
 
 Support policy
