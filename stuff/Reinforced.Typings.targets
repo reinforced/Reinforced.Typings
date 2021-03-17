@@ -1,8 +1,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(RtSettingsXml)' == ''">
 		<RtSettingsXml Condition="HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)Reinforced.Typings.settings.xml</RtSettingsXml>
 		<RtSettingsXml Condition="!HasTrailingSlash('$(ProjectDir)')">$(ProjectDir)\Reinforced.Typings.settings.xml</RtSettingsXml>
+	</PropertyGroup>
 
+    <PropertyGroup>
 		<RtTargetsPath Condition=" '$(MSBuildRuntimeType)' == 'Core'">netstandard2.0</RtTargetsPath>
 		<RtTargetsPath Condition=" '$(MSBuildRuntimeType)' != 'Core'">net46</RtTargetsPath>
 	</PropertyGroup>
