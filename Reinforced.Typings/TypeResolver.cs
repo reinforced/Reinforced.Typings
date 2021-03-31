@@ -276,7 +276,7 @@ namespace Reinforced.Typings
                 var gargs = t._GetGenericArguments();
                 bool isKeyEnum = gargs[0]._IsEnum();
                 var key = ResolveTypeName(gargs[0]);
-                if (key != NumberType && key != StringType && !isKeyEnum)
+                if (key.GetType() != NumberType.GetType() && key.GetType() != StringType.GetType() && !isKeyEnum)
                 {
                     Context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, t));
                 }
