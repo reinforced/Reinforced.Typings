@@ -21,13 +21,13 @@ namespace Reinforced.Typings.Visitors.Typings
             if (node.IsConst) Write("const ");
             Write("enum ");
             Visit(node.EnumName);
-            WriteLine(" { ");
+            WriteLine(" {");
             Tab();
             var arr = node.Values.ToArray();
             for (int i = 0; i < arr.Length; i++)
             {
                 Visit(arr[i]);
-                if (i != arr.Length - 1) WriteLine(", ");
+                if (i != arr.Length - 1) WriteLine(",");
                 if (!string.IsNullOrEmpty(arr[i].LineAfter))
                 {
                     AppendTabs();

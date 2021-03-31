@@ -19,7 +19,7 @@ namespace Reinforced.Typings.Visitors.Typings
                 Write("constructor (");
             }
             SequentialVisit(node.Arguments, ", ");
-            WriteLine("); ");
+            WriteLine(");");
 
             if (!string.IsNullOrEmpty(node.LineAfter))
             {
