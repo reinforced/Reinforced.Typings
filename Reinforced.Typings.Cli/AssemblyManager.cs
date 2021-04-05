@@ -75,7 +75,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!Path.IsPathRooted(assemblyPath))
                     {
-                        BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { assemblyPath });
+                        Console.WriteLine("Assembly {0} may be resolved incorrectly", new object[] { assemblyPath });
                     }
 
                     try
@@ -148,7 +148,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!Path.IsPathRooted(path))
                     {
-                        BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
+                        Console.WriteLine("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
                         continue;
                     }
                     
@@ -185,7 +185,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!Path.IsPathRooted(path))
                     {
-                        BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
+                        Console.WriteLine("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
                         continue;
                     }
                     
