@@ -348,7 +348,10 @@ namespace Reinforced.Typings
                 return Cache(t, NumberType);
             }
 
-            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName, _anyOrUnknown));
+            if (!Context.Global.DisableTypeUnknownWarning)
+            {
+                Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName, _anyOrUnknown));
+            }
 
             return Cache(t, _anyOrUnknown);
         }

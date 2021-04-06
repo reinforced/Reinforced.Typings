@@ -206,6 +206,13 @@ namespace Reinforced.Typings.Fluent
             return builder;
         }
 
+        public static GlobalConfigurationBuilder DisableTypeUnknownWarning(this GlobalConfigurationBuilder builder,
+            bool value = true)
+        {
+            builder.Parameters.DisableTypeUnknownWarning = value;
+            return builder;
+        }
+
         //{
         //    bool strict = true)
         //public static GlobalConfigurationBuilder StrictNullChecks(this GlobalConfigurationBuilder builder,

@@ -253,5 +253,19 @@ namespace Reinforced.Typings
                 _attr.AutoAsync = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets whether RT should show warnings about unknown types
+        /// </summary>
+        public bool DisableTypeUnknownWarning
+        {
+            get { return _attr.DisableTypeUnknownWarning; }
+            set
+            {
+                if (_isLocked) return;
+                _attr.DisableTypeUnknownWarning = value;
+            }
+        }
+
     }
 }

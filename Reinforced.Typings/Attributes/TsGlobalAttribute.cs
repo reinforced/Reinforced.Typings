@@ -116,5 +116,10 @@ namespace Reinforced.Typings.Attributes
         /// Gets or sets whether RT must automatically treat methods returning Task as async methods
         /// </summary>
         public bool AutoAsync { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether RT should show warnings about unknown types
+        /// </summary>
+        public bool DisableTypeUnknownWarning { get; set; }
     }
 }
