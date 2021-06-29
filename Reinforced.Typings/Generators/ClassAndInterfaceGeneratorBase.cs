@@ -216,7 +216,7 @@ namespace Reinforced.Typings.Generators
                     ExportProperties(sw, element._BaseType(), resolver, basExSwtch);
                     ExportMethods(sw, element._BaseType(), resolver, basExSwtch);
                     Context.SpecialCase = false;
-                    Context.Warnings.Add(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element._BaseType().FullName, element.FullName));
+                    Context.AddWarning(ErrorMessages.RTW0005_BaseClassExportingAsInterface.Warn(element._BaseType().FullName, element.FullName));
                 }
             }
         }

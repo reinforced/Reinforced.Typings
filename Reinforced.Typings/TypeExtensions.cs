@@ -46,7 +46,7 @@ namespace Reinforced.Typings
 #endif
         }
 
-        internal static IEnumerable<Type> _GetTypes(this Assembly a, List<RtWarning> warnings)
+        internal static IEnumerable<Type> _GetTypes(this Assembly a, IWarningsCollector warnings)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Reinforced.Typings
             {
                 foreach (var elo in e.LoaderExceptions)
                 {
-                    warnings.Add(ErrorMessages.RTW0008_TypeloadException.Warn(elo.Message));
+                    warnings.AddWarning(ErrorMessages.RTW0008_TypeloadException.Warn(elo.Message));
                 }
                 return e.Types.Where(t => t != null);
             }

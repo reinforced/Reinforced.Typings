@@ -87,6 +87,18 @@ Configuration method should be static and consume
 ConfigurationBuilder as first parameter.
 Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.ConfigureTypings"" ")]
         public string ConfigurationMethod { get; set; }
+        
+        /// <summary>
+        /// Sets list of warnings to be suppressed. Semi-colon separated values.
+        /// All letters will be discarded when parsing, so can be specified in any convenient format 
+        /// </summary>
+        [ConsoleHelp(@"
+Sets list of warnings to be suppressed. 
+Semi-colon separated values. All letters 
+will be discarded when parsering, so 
+can be specified in any convenient format 
+Example:   rtcli.exe SuppressedWarnings=""RTW0001;2;3"" ")]
+        public string SuppressedWarnings { get; set; }
 
         /// <summary>
         /// Validates input parameters
@@ -117,6 +129,7 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
             result.Hierarchy = bool.Parse(tr.ReadLine());
             result.DocumentationFilePath = tr.ReadLine();
             result.ConfigurationMethod = tr.ReadLine();
+            result.SuppressedWarnings = tr.ReadLine();
             result.SourceAssemblies = new string[int.Parse(tr.ReadLine())];
             for (int i = 0; i < result.SourceAssemblies.Length; i++)
             {
@@ -133,6 +146,7 @@ Example:   rtcli.exe ConfigurationMethod=""My.Assembly.Name.Configuration.Config
             tw.WriteLine(Hierarchy);
             tw.WriteLine(DocumentationFilePath);
             tw.WriteLine(ConfigurationMethod);
+            tw.WriteLine(SuppressedWarnings);
             tw.WriteLine(SourceAssemblies.Length);
             foreach (var sourceAssembly in SourceAssemblies)
             {

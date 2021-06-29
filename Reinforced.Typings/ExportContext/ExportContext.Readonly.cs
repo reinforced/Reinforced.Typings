@@ -35,11 +35,19 @@ namespace Reinforced.Typings
         /// </summary>
         public DocumentationManager Documentation { get; private set; }
 
+        private readonly List<RtWarning> _warnings = new List<RtWarning>();
+        
         /// <summary>
         /// Warnings that should be displayed after build. 
         /// Feel free to add messages from generators here.
         /// </summary>
-        public List<RtWarning> Warnings { get; private set; }
+        public IEnumerable<RtWarning> Warnings 
+        {
+            get
+            {
+                return _warnings;
+            } 
+        }
 
         /// <summary>
         /// Blueprint of type currently being exported
@@ -67,8 +75,5 @@ namespace Reinforced.Typings
         /// Project blueprint
         /// </summary>
         public ProjectBlueprint Project { get; private set; }
-
-       
-
     }
 }

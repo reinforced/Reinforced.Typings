@@ -99,18 +99,18 @@ namespace Reinforced.Typings.Tests
         {
             Assert.Equal(new RtDictionaryType(AnyType, AnyType), _tr.ResolveTypeName(typeof(IDictionary)), _comparer);
             Assert.True(_context.Warnings.Any(c => c.Code == 7));
-            _context.Warnings.Clear();
+            _context.ClearWarnings();
 
             Assert.Equal(new RtDictionaryType(AnyType, AnyType), _tr.ResolveTypeName(typeof(IDictionary<object, object>)), _comparer);
             Assert.True(_context.Warnings.Any(c => c.Code == 7));
-            _context.Warnings.Clear();
+            _context.ClearWarnings();
 
             Assert.Equal(new RtDictionaryType(StringType, AnyType), _tr.ResolveTypeName(typeof(IDictionary<string, object>)), _comparer);
             Assert.Equal(new RtDictionaryType(NumberType, AnyType), _tr.ResolveTypeName(typeof(IDictionary<int, object>)), _comparer);
 
             Assert.Equal(new RtDictionaryType(AnyType, AnyType), _tr.ResolveTypeName(typeof(Dictionary<object, object>)), _comparer);
             Assert.True(_context.Warnings.Any(c => c.Code == 7));
-            _context.Warnings.Clear();
+            _context.ClearWarnings();
 
             Assert.Equal(new RtDictionaryType(StringType, AnyType), _tr.ResolveTypeName(typeof(Dictionary<string, object>)), _comparer);
             Assert.Equal(new RtDictionaryType(NumberType, AnyType), _tr.ResolveTypeName(typeof(Dictionary<int, object>)), _comparer);

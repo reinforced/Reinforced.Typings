@@ -42,10 +42,10 @@ namespace Reinforced.Typings
         private void InitializeDocumentation()
         {
             Documentation =
-                new DocumentationManager(Global.GenerateDocumentation ? DocumentationFilePath : null, Warnings);
+                new DocumentationManager(Global.GenerateDocumentation ? DocumentationFilePath : null, this);
             foreach (var additionalDocumentationPath in Project.AdditionalDocumentationPathes)
             {
-                Documentation.CacheDocumentation(additionalDocumentationPath, Warnings);
+                Documentation.CacheDocumentation(additionalDocumentationPath, this);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Reinforced.Typings
         private void BuildTypesCache()
         {
             var allTypes = SourceAssemblies
-                .SelectMany(c => c._GetTypes(Warnings)
+                .SelectMany(c => c._GetTypes(this)
                     .Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null || d.GetCustomAttribute<TsThirdPartyAttribute>() != null))
                 .Union(Project.BlueprintedTypes)
                 .Distinct()

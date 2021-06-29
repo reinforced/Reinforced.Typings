@@ -32,12 +32,12 @@ namespace Reinforced.Typings.Tests.SpecificCases
         public void LineAfterTest()
         {
             const string result = @"module Reinforced.Typings.Tests.SpecificCases {
-	export enum TestEnum2 { 
+	export enum TestEnum2 {
 		/** C Value */
-		C = 0, 
+		C = 0,
 		 
 		/** D Value */
-		D = 1, 
+		D = 1,
 		 
 		/** E Value */
 		E = 2		 
@@ -52,7 +52,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
                 s.ExportAsEnum<TestEnum2>().WithCodeGenerator<LineAfterAddingGenerator>();
             }, result);
 
-            Assert.Equal(str,result);
+            Assert.Equal(result,str);
         }
     }
 }

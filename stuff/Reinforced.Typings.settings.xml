@@ -79,6 +79,13 @@
 		-->
 		<!-- <RtForceTargetFramework>netcoreapp2.2</RtForceTargetFramework>	-->	
 		
+		<!--
+			Warnings to suppress during export process. 
+			Semicolon-separated values. All non-numbers will be discarder during parsing, so it
+			can be specified in any convenient format. E.g: RTW001;2;3.
+			Hm... seems that I know what to put here by default...
+		-->
+		<RtSuppress>RTW0013;RTW0014</RtSuppress>
 	</PropertyGroup>
 	
 	<!--

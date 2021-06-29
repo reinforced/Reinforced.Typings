@@ -12,8 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cake", "cake", "{71091BA9-1588-4878-B1FA-3EF908CCD61C}"
 	ProjectSection(SolutionItems) = preProject
 		cake\build.cake = cake\build.cake
-		cake\build.ps1 = cake\build.ps1
-		cake\build.sh = cake\build.sh
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reinforced.Typings.Tests.Dev", "Reinforced.Typings.Tests\Reinforced.Typings.Tests.Dev.csproj", "{6E812A62-42E1-4CBF-97A4-A1F73BB5E96E}"

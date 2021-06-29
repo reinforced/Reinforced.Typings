@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Reinforced.Typings.Exceptions;
 
 namespace Reinforced.Typings
 {
     /// <summary>
     ///     TsExport exporting settings
     /// </summary>
-    public sealed partial class ExportContext
+    public sealed partial class ExportContext : IWarningsCollector
     {
 
         private bool _isLocked;
@@ -18,7 +17,6 @@ namespace Reinforced.Typings
         /// </summary>
         public ExportContext(Assembly[] sourceAssemblies, IFilesOperations fileOperationsServiceOverride = null)
         {
-            Warnings = new List<RtWarning>();
             FileOperations = fileOperationsServiceOverride ?? new FilesOperations();
             FileOperations.Context = this;
             Global = new GlobalParameters(sourceAssemblies);

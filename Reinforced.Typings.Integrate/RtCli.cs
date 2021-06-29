@@ -94,6 +94,11 @@ namespace Reinforced.Typings.Integrate
         /// Full-qualified name of fluent configuration method
         /// </summary>
         public string ConfigurationMethod { get; set; }
+        
+        /// <summary>
+        /// Semicolon-separated list of warnings to be suppressed
+        /// </summary>
+        public string SuppressedWarnings { get; set; }
 
         /// <summary>Projects may set this to override a task's ToolName. Tasks may override this to prevent that.</summary>
         public override string ToolExe
@@ -192,6 +197,7 @@ namespace Reinforced.Typings.Integrate
                 TargetFile = FixTargetPath(TargetFile),
                 ReferencesTmpFilePath = string.Empty,
                 SourceAssemblies = ExtractSourceAssemblies(),
+                SuppressedWarnings = SuppressedWarnings,
                 DocumentationFilePath = DocumentationFilePath.EndsWith(".xml",
 #if NETCORE
                 StringComparison.CurrentCultureIgnoreCase

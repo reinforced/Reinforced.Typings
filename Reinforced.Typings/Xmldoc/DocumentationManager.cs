@@ -22,12 +22,12 @@ namespace Reinforced.Typings.Xmldoc
 
         private bool _isDocumentationExists;
 
-        internal DocumentationManager(string docFilePath, List<RtWarning> warnings)
+        internal DocumentationManager(string docFilePath, IWarningsCollector warnings)
         {
             CacheDocumentation(docFilePath, warnings);
         }
 
-        internal DocumentationManager(string[] docFilePath, List<RtWarning> warnings)
+        internal DocumentationManager(string[] docFilePath, IWarningsCollector warnings)
         {
             foreach (var s in docFilePath)
             {
@@ -35,7 +35,7 @@ namespace Reinforced.Typings.Xmldoc
             }
         }
 
-        internal void CacheDocumentation(string docFilePath, List<RtWarning> warnings)
+        internal void CacheDocumentation(string docFilePath, IWarningsCollector warnings)
         {
             if (string.IsNullOrEmpty(docFilePath))
             {
@@ -43,7 +43,7 @@ namespace Reinforced.Typings.Xmldoc
             }
             if (!File.Exists(docFilePath))
             {
-                warnings.Add(ErrorMessages.RTW0002_DocumentationNotFound.Warn(docFilePath));
+                warnings.AddWarning(ErrorMessages.RTW0002_DocumentationNotFound.Warn(docFilePath));
                 return;
             }
             try
@@ -64,7 +64,7 @@ namespace Reinforced.Typings.Xmldoc
             catch (Exception ex)
             {
                 _isDocumentationExists = false;
-                warnings.Add(ErrorMessages.RTW0006_DocumentationParseringError.Warn(docFilePath, ex.Message));
+                warnings.AddWarning(ErrorMessages.RTW0006_DocumentationParseringError.Warn(docFilePath, ex.Message));
             }
         }
 

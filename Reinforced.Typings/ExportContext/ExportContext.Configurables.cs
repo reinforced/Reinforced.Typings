@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Reinforced.Typings.Fluent;
 // ReSharper disable CheckNamespace
 namespace Reinforced.Typings
@@ -38,6 +40,7 @@ namespace Reinforced.Typings
                 _targetDirectory = value;
             }
         }
+        
         private string _targetFile;
         /// <summary>
         ///     Target file where to store generated sources.
@@ -52,6 +55,7 @@ namespace Reinforced.Typings
                 _targetFile = value;
             }
         }
+        
         private Action<ConfigurationBuilder> _configurationMethod;
         /// <summary>
         ///     Fluent configuration method
@@ -77,6 +81,20 @@ namespace Reinforced.Typings
             {
                 if (_isLocked) return;
                 _documentationFilePath = value;
+            }
+        }
+        
+        private HashSet<int> _suppressedWarningCodes = new HashSet<int>();
+        /// <summary>
+        ///     Gets or sets the list of suppressed warning codes
+        /// </summary>
+        public int[] SuppressedWarningCodes
+        {
+            get { return _suppressedWarningCodes.ToArray(); }
+            set
+            {
+                if (_isLocked) return;
+                _suppressedWarningCodes = new HashSet<int>(value);
             }
         }
 

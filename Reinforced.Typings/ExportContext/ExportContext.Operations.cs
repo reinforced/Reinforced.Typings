@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Reinforced.Typings.Exceptions;
 
 // ReSharper disable CheckNamespace
 namespace Reinforced.Typings
@@ -99,5 +100,27 @@ namespace Reinforced.Typings
             ExportedFile ef = new ExportedFile(typesHash, fileName, _globalReferences.Duplicate(), this);
             return ef;
         }
+        
+        
+        /// <summary>
+        /// Adds export-time warning that will be raised to the common warnings list ar the end
+        /// </summary>
+        /// <param name="warning">Warning instance</param>
+        public void AddWarning(RtWarning warning)
+        {
+            if (!_suppressedWarningCodes.Contains(warning.Code))
+            {
+                _warnings.Add(warning);
+            }
+        }
+        
+        /// <summary>
+        /// Clears warnings list
+        /// </summary>
+        public void ClearWarnings()
+        {
+            _warnings.Clear();
+        }
+
     }
 }

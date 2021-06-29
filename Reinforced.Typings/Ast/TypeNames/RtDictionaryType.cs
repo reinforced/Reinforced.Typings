@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reinforced.Typings.Ast.TypeNames
 {
@@ -80,6 +81,45 @@ namespace Reinforced.Typings.Ast.TypeNames
         {
             string keyTypeSpec = IsKeyEnum ? " in " : ":";
             return $"{{ [key{keyTypeSpec}{KeyType}]: {ValueType} }}";
+        }
+
+        private bool Equals(RtDictionaryType other)
+        {
+            return Equals(KeyType, other.KeyType) && Equals(ValueType, other.ValueType) && IsKeyEnum == other.IsKeyEnum;
+        }
+
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns>
+        /// <see langword="true" /> if the specified object  is equal to the current object; otherwise, <see langword="false" />.</returns>
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is RtDictionaryType other && Equals(other);
+        }
+
+        /// <summary>Serves as the default hash function.</summary>
+        /// <returns>A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(KeyType, ValueType, IsKeyEnum);
+        }
+
+        /// <summary>Returns a value that indicates whether the values of two <see cref="T:Reinforced.Typings.Ast.TypeNames.RtDictionaryType" /> objects are equal.</summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if the <paramref name="left" /> and <paramref name="right" /> parameters have the same value; otherwise, false.</returns>
+        public static bool operator ==(RtDictionaryType left, RtDictionaryType right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>Returns a value that indicates whether two <see cref="T:Reinforced.Typings.Ast.TypeNames.RtDictionaryType" /> objects have different values.</summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if <paramref name="left" /> and <paramref name="right" /> are not equal; otherwise, false.</returns>
+        public static bool operator !=(RtDictionaryType left, RtDictionaryType right)
+        {
+            return !Equals(left, right);
         }
     }
 }

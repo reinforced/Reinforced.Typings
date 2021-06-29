@@ -10,7 +10,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
     {
 
     }
-    class A
+    class AsyncA
     {
         public async Task<string> Do()
         {
@@ -52,7 +52,7 @@ namespace Reinforced.Typings.Tests.SpecificCases
         {
             const string result = @"
 module Reinforced.Typings.Tests.SpecificCases {
-	export interface IA
+	export interface IAsyncA
 	{
 		Do() : angular.Promise<string>;
 	}
@@ -78,7 +78,7 @@ module Reinforced.Typings.Tests.SpecificCases {
                 s.Global(a => a.DontWriteWarningComment().ReorderMembers());
                 s.SubstituteGeneric(typeof(INotPromise<>), (t, tr) => new RtSimpleTypeName("angular.Promise", t.GetGenericArguments().Select(tr.ResolveTypeName).ToArray()));
 
-                s.ExportAsInterface<A>()
+                s.ExportAsInterface<AsyncA>()
                     .SubstituteGeneric(typeof(Task<>), (t, tr) => new RtSimpleTypeName("angular.Promise", t.GetGenericArguments().Select(tr.ResolveTypeName).ToArray()))
                     .WithPublicProperties()
                     .WithPublicMethods();

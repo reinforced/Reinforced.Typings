@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Reinforced.Typings.Exceptions;
 #if NETCORE
 using System.Runtime.Loader;
 #endif
@@ -36,9 +37,9 @@ namespace Reinforced.Typings.Cli
         private readonly TextReader _profileReader;
         private readonly Dictionary<string, Assembly> _alreadyLoaded = new Dictionary<string, Assembly>();
         private readonly List<AssemblyLocation> _referencesCache = new List<AssemblyLocation>();
-        private readonly Action<string, object[]> BuildWarn;
+        private readonly Action<ErrorMessage, object[]> BuildWarn;
 
-        public AssemblyManager(string[] sourceAssemblies, TextReader profileReader, string referencesTmpFilePath, Action<string, object[]> buildWarn)
+        public AssemblyManager(string[] sourceAssemblies, TextReader profileReader, string referencesTmpFilePath, Action<ErrorMessage, object[]> buildWarn)
         {
             _sourceAssemblies = sourceAssemblies;
             _profileReader = profileReader;
@@ -75,7 +76,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!Path.IsPathRooted(assemblyPath))
                     {
-                        BuildWarn("Assembly {0} may be resolved incorrectly", new object[] { assemblyPath });
+                        BuildWarn(ErrorMessages.RTW0013_AssemblyMayNotBeResolvedIncorrectly, new object[] { assemblyPath });
                     }
 
                     try
@@ -90,7 +91,7 @@ namespace Reinforced.Typings.Cli
                     }
                     catch (Exception ex)
                     {
-                        BuildWarn("Assembly {0} failed to load: {1}", new object[] { path, ex });
+                        BuildWarn(ErrorMessages.RTW0014_AssemblyFailedToLoad, new object[] { path, ex });
                     }
                 }
             }
@@ -148,7 +149,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!Path.IsPathRooted(path))
                     {
-                        BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
+                        BuildWarn(ErrorMessages.RTW0013_AssemblyMayNotBeResolvedIncorrectly, new object[] { string.Format("{0} (from {1})",nm.Name, path) });
                         continue;
                     }
                     
@@ -156,7 +157,7 @@ namespace Reinforced.Typings.Cli
                 }
                 catch (Exception ex)
                 {
-                    BuildWarn("Assembly {0} from {1} was not loaded: {2}. Trying to load by name...", new object[] { nm.Name, path, ex });
+                    BuildWarn(ErrorMessages.RTW0014_AssemblyFailedToLoad, new object[] { string.Format("{0} (from {1})",nm.Name, path), ex });
                     continue;
                 }
                 

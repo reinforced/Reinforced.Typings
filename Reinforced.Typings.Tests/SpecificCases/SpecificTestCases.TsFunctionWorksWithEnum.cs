@@ -21,12 +21,13 @@ module Reinforced.Typings.Tests.SpecificCases {
 		MyProperty: string;
 		doSomething1(a: number) : string;
 		doSomethingForEnum1(a: TestEnum) : TestEnum;
-		doSomethingForEnumWithDefault1(a: TestEnum = TestEnum.One) : TestEnum;
+		doSomethingForEnumWithDefault1(a?: TestEnum) : TestEnum;
 	}
 }
-enum TestEnum { 
+enum TestEnum {
 	One = 0
-}";
+}
+";
             AssertConfiguration(s =>
             {
                 s.Global(x => x.DontWriteWarningComment().ReorderMembers());

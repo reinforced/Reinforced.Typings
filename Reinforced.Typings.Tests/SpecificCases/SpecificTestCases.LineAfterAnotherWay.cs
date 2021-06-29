@@ -41,20 +41,19 @@ export = {ns.Name};
         [Fact]
         public void LineAfterAnotherTest()
         {
-            const string result = @"
-module Reinforced.Typings.Tests.SpecificCases {
-	export enum TestEnum2 { 
+            const string result = @"module Reinforced.Typings.Tests.SpecificCases {
+	export enum TestEnum2 {
 		
 		// Lick the belly!
 		
 		/** C Value */
-		C = 0, 
+		C = 0,
 		 
 		
 		// Lick the belly!
 		
 		/** D Value */
-		D = 1, 
+		D = 1,
 		 
 		
 		// Lick the belly!
@@ -66,6 +65,8 @@ module Reinforced.Typings.Tests.SpecificCases {
 }
 
 export = Reinforced.Typings.Tests.SpecificCases;
+
+
 ";
             var str = AssertConfiguration(s =>
             {
@@ -74,7 +75,7 @@ export = Reinforced.Typings.Tests.SpecificCases;
                 s.ExportAsEnum<TestEnum2>().WithCodeGenerator<LineAfterAddingGenerator>();
             }, result);
 
-            Assert.Equal(str,result);
+            Assert.Equal(result,str);
         }
     }
 }

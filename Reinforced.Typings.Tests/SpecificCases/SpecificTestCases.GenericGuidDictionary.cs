@@ -32,7 +32,7 @@ module Reinforced.Typings.Tests.SpecificCases {
 
             }, result, exp =>
             {
-                var warnings = exp.Context.Warnings.Count;
+                var warnings = exp.Context.Warnings.Count();
                 Assert.Equal(0, warnings);
             });
         }

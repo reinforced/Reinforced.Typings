@@ -270,15 +270,15 @@ namespace Reinforced.Typings
             {
                 if (!t._IsGenericType())
                 {
-                    Context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(AnyType, t));
+                    Context.AddWarning(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(AnyType, typeof(object)));
                     return Cache(t, new RtDictionaryType(AnyType, AnyType));
                 }
                 var gargs = t._GetGenericArguments();
                 bool isKeyEnum = gargs[0]._IsEnum();
                 var key = ResolveTypeName(gargs[0]);
-                if (key.GetType() != NumberType.GetType() && key.GetType() != StringType.GetType() && !isKeyEnum)
+                if (!NumberType.Equals(key) && !StringType.Equals(key) && !isKeyEnum)
                 {
-                    Context.Warnings.Add(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, t));
+                    Context.AddWarning(ErrorMessages.RTW0007_InvalidDictionaryKey.Warn(key, gargs[0]));
                 }
                 var value = ResolveTypeName(gargs[1]);
                 return Cache(t, new RtDictionaryType(key, value, isKeyEnum));
@@ -348,7 +348,7 @@ namespace Reinforced.Typings
                 return Cache(t, NumberType);
             }
 
-            Context.Warnings.Add(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName, _anyOrUnknown));
+            Context.AddWarning(ErrorMessages.RTW0003_TypeUnknown.Warn(t.FullName, _anyOrUnknown));
 
             return Cache(t, _anyOrUnknown);
         }

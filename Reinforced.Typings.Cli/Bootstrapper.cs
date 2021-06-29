@@ -55,7 +55,8 @@ namespace Reinforced.Typings.Cli
         private static TextReader _profileReader;
         private static string _profilePath;
         private static AssemblyManager _assemblyManager;
-
+        private static HashSet<int> _suppressedWarnings = new HashSet<int>();
+        
         /// <summary>
         /// Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
         /// </summary>
@@ -96,6 +97,7 @@ namespace Reinforced.Typings.Cli
                     return;
                 }
                 var settings = InstantiateExportContext();
+                _suppressedWarnings = new HashSet<int>(settings.SuppressedWarningCodes);
                 ResolveFluentMethod(settings);
                 TsExporter exporter = new TsExporter(settings);
                 exporter.Export();
@@ -190,7 +192,7 @@ namespace Reinforced.Typings.Cli
                     }
                 }
             }
-            if (!isFound) BuildWarn("Cannot find configured fluent method '{0}'", methodPath);
+            if (!isFound) BuildWarn(ErrorMessages.RTW0009_CannotFindFluentMethod, methodPath);
         }
 
         public static ExportContext InstantiateExportContext()
@@ -247,10 +249,11 @@ namespace Reinforced.Typings.Cli
             }
         }
 
-        private static void BuildWarn(string message, params object[] args)
+        private static void BuildWarn(ErrorMessage msg, params object[] args)
         {
-            var warningMessage = string.Format(message, args);
-            VisualStudioFriendlyErrorMessage vsm = new VisualStudioFriendlyErrorMessage(99, warningMessage, VisualStudioFriendlyMessageType.Warning, "Build");
+            
+            if (_suppressedWarnings.Contains(msg.Code)) return;
+            VisualStudioFriendlyErrorMessage vsm = VisualStudioFriendlyErrorMessage.Create(msg.Warn(args));
             Console.WriteLine(vsm.ToString());
         }
 
@@ -261,11 +264,33 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine(vsm.ToString());
         }
 
+        public static HashSet<int> ParseSuppressedWarnings(string input)
+        {
+            var result = new HashSet<int>();
+            if (string.IsNullOrEmpty(input)) return result;
+            var values = input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            foreach (var warningCode in values)
+            {
+                var filtered = new string(warningCode.Where(char.IsDigit).ToArray());
+                bool parsed = int.TryParse(filtered, out int intWarningCode);
+                if (parsed) result.Add(intWarningCode);
+                else
+                {
+                    BuildWarn(ErrorMessages.RTW0010_CannotParseWarningCode,warningCode);
+                }
+            }
+
+            return result;
+        }
+
         private static ExporterConsoleParameters ExtractParametersFromFile(string fileName)
         {
             _profilePath = fileName;
             _profileReader = File.OpenText(fileName);
-            return ExporterConsoleParameters.FromFile(_profileReader);
+            var result = ExporterConsoleParameters.FromFile(_profileReader);
+            
+            _suppressedWarnings = ParseSuppressedWarnings(result.SuppressedWarnings);
+            return result;
         }
 
         public static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
@@ -278,7 +303,7 @@ namespace Reinforced.Typings.Cli
                 var kv = trimmed.Split('=');
                 if (kv.Length != 2)
                 {
-                    BuildWarn("Unrecognized parameter: {0}", s);
+                    BuildWarn(ErrorMessages.RTW0011_UnrecognizedConfigurationParameter, s);
                     continue;
                 }
 
@@ -288,7 +313,7 @@ namespace Reinforced.Typings.Cli
                 var prop = t._GetProperty(key);
                 if (prop == null)
                 {
-                    BuildWarn("Unrecognized parameter: {0}", key);
+                    BuildWarn(ErrorMessages.RTW0011_UnrecognizedConfigurationParameter, key);
                     continue;
                 }
 
@@ -312,7 +337,7 @@ namespace Reinforced.Typings.Cli
                     continue;
                 }
 
-                BuildWarn("Cannot parse parameter for source property {0}", key);
+                BuildWarn(ErrorMessages.RTW0012_UnrecognizedConfigurationParameterValue, key);
             }
 
             try
@@ -325,6 +350,8 @@ namespace Reinforced.Typings.Cli
                 PrintHelp();
                 return null;
             }
+
+            _suppressedWarnings = ParseSuppressedWarnings(instance.SuppressedWarnings);
             return instance;
         }
     }

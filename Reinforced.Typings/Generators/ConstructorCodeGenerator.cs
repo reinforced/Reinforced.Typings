@@ -123,7 +123,7 @@ namespace Reinforced.Typings.Generators
             var mockedCtorParams = Enumerable.Repeat("null", maxParams);
             constructor.NeedsSuperCall = true;
             constructor.SuperCallParameters.AddRange(mockedCtorParams);
-            Context.Warnings.Add(ErrorMessages.RTW0004_DefaultSuperCall.Warn(element.DeclaringType.FullName));
+            Context.AddWarning(ErrorMessages.RTW0004_DefaultSuperCall.Warn(element.DeclaringType.FullName));
         }
     }
 }
