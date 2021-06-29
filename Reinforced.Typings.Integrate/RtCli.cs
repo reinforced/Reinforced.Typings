@@ -158,6 +158,7 @@ namespace Reinforced.Typings.Integrate
                 if (fw.StartsWith("netstandard")) return true;
                 if (fw.StartsWith("netcoreapp")) return true;
                 if (fw.StartsWith("net5")) return true;
+                if (fw.StartsWith("net6")) return true;
                 return false;
             }
         }
