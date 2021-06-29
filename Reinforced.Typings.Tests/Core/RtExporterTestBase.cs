@@ -18,7 +18,7 @@ namespace Reinforced.Typings.Tests.Core
             Assert.True(mfo.TempRegistryCleared);
             var actual = mfo.ExportedFiles[Sample]; //<--- variable to check in debugger
             Assert.True(actual.TokenizeCompare(result, compareComments)); //<--- best place to put breakpoint
-            return result;
+            return actual;
         }
 
         protected string AssertConfiguration(Action<ConfigurationBuilder> configuration, string result, Action<TsExporter> expAction, bool compareComments = false)
@@ -32,7 +32,7 @@ namespace Reinforced.Typings.Tests.Core
             Assert.True(mfo.TempRegistryCleared);
             var actual = mfo.ExportedFiles[Sample]; //<--- variable to check in debugger
             Assert.True(actual.TokenizeCompare(result, compareComments)); //<--- best place to put breakpoint
-            return result;
+            return actual;
         }
 
         protected void AssertConfiguration(Action<ConfigurationBuilder> configuration, Dictionary<string,string> results, bool compareComments = false)

@@ -76,6 +76,7 @@ namespace Reinforced.Typings
             {
                 using (var tw = new StreamWriter(fs))
                 {
+                    tw.NewLine = Context.Global.NewLine;
                     ExportCore(tw, file);
                 }
             }

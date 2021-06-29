@@ -86,6 +86,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest1.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportOrderTest2.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.FunctionalNames.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.NewLineTest.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.LineAfterAnotherWay.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.NewForceNullable.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.InferTypeTest.cs" />
