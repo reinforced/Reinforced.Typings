@@ -17,7 +17,7 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> Version **1.6.0** released
+> Version **1.6.1** released
 
 - PR #222 - Support of .NET 6
 - Fixed unit tests
