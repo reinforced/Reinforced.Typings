@@ -17,12 +17,12 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> :metal: Version **1.5.9** released
+> Version **1.6.0** released
 
-- PR #188 - Support of .NET 5 :star:
-- PR #187 - Support of C#8 nullables
-- PR #183 - RtAsync and more efficient promises handling
-- build fixes
+- PR #222 - Support of .NET 6
+- Fixed unit tests
+- Equality comparers for AST nodes
+- Warnings suppression (RtSuppress in settings.xml)
 
 Support policy
 =================
