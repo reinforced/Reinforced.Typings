@@ -72,6 +72,7 @@
 			TargetDirectory="$(RtTargetDirectory)"
 			DocumentationFilePath="$(MSBuildProjectDirectory)\$(DocumentationFile)"			
 			ConfigurationMethod="$(RtConfigurationMethod)"
+			SuppressedWarnings="$(RtSuppress)"
 		/>
 		
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' == ''" />

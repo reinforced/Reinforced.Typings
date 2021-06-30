@@ -51,7 +51,7 @@ namespace Reinforced.Typings.Cli
     /// </summary>
     public static class Bootstrapper
     {
-        private static ExporterConsoleParameters _parameters;
+        
         private static TextReader _profileReader;
         private static string _profilePath;
         private static AssemblyManager _assemblyManager;
@@ -65,6 +65,7 @@ namespace Reinforced.Typings.Cli
         {
             Console.WriteLine("Reinforced.Typings CLI generator (c) 2015-2018 by Pavel B. Novikov");
 
+            ExporterConsoleParameters parameters = null;
             if (args.Length == 0)
             {
                 PrintHelp();
@@ -85,20 +86,21 @@ namespace Reinforced.Typings.Cli
                         Console.WriteLine("Cannot find profile {0}, exiting", args[1]);
                         return;
                     }
-                    _parameters = ExtractParametersFromFile(args[1]);
+                    parameters = ExtractParametersFromFile(args[1]);
                 }
                 else
                 {
-                    _parameters = ExtractParametersFromArgs(args);
+                    parameters = ExtractParametersFromArgs(args);
                 }
-                if (_parameters == null)
+                if (parameters == null)
                 {
                     Console.WriteLine("No valid parameters found. Exiting.");
                     return;
                 }
-                var settings = InstantiateExportContext();
-                _suppressedWarnings = new HashSet<int>(settings.SuppressedWarningCodes);
-                ResolveFluentMethod(settings);
+
+                _suppressedWarnings = ParseSuppressedWarnings(parameters.SuppressedWarnings);
+                var settings = InstantiateExportContext(parameters);
+                ResolveFluentMethod(settings,parameters);
                 TsExporter exporter = new TsExporter(settings);
                 exporter.Export();
                 _assemblyManager.TurnOffAdditionalResolvation();
@@ -107,14 +109,14 @@ namespace Reinforced.Typings.Cli
                     var msg = VisualStudioFriendlyErrorMessage.Create(rtWarning);
                     Console.WriteLine(msg.ToString());
                 }
-                ReleaseReferencesTempFile();
+                ReleaseReferencesTempFile(parameters);
             }
             catch (RtException rtException)
             {
                 var error = VisualStudioFriendlyErrorMessage.Create(rtException);
                 Console.WriteLine(error.ToString());
                 Console.WriteLine(rtException.StackTrace);
-                ReleaseReferencesTempFile();
+                ReleaseReferencesTempFile(parameters);
                 Environment.Exit(1);
             }
             catch (TargetInvocationException ex)
@@ -156,18 +158,18 @@ namespace Reinforced.Typings.Cli
             Console.WriteLine("Please build CompileTypeScript task to update javascript sources");
         }
 
-        private static void ReleaseReferencesTempFile()
+        private static void ReleaseReferencesTempFile(ExporterConsoleParameters parameters)
         {
             if (_profileReader != null) _profileReader.Dispose();
             if (!string.IsNullOrEmpty(_profilePath)) File.Delete(_profilePath);
-            if (_parameters == null) return;
-            if (!string.IsNullOrEmpty(_parameters.ReferencesTmpFilePath)) File.Delete(_parameters.ReferencesTmpFilePath);
+            if (parameters == null) return;
+            if (!string.IsNullOrEmpty(parameters.ReferencesTmpFilePath)) File.Delete(parameters.ReferencesTmpFilePath);
         }
 
-        private static void ResolveFluentMethod(ExportContext context)
+        private static void ResolveFluentMethod(ExportContext context, ExporterConsoleParameters parameters)
         {
-            if (string.IsNullOrEmpty(_parameters.ConfigurationMethod)) return;
-            var methodPath = _parameters.ConfigurationMethod;
+            if (string.IsNullOrEmpty(parameters.ConfigurationMethod)) return;
+            var methodPath = parameters.ConfigurationMethod;
             var path = new Stack<string>(methodPath.Split('.'));
             var method = path.Pop();
             var fullQualifiedType = string.Join(".", path.Reverse());
@@ -195,17 +197,18 @@ namespace Reinforced.Typings.Cli
             if (!isFound) BuildWarn(ErrorMessages.RTW0009_CannotFindFluentMethod, methodPath);
         }
 
-        public static ExportContext InstantiateExportContext()
+        public static ExportContext InstantiateExportContext(ExporterConsoleParameters parameters)
         {
-            _assemblyManager = new AssemblyManager(_parameters.SourceAssemblies,_profileReader,_parameters.ReferencesTmpFilePath,BuildWarn);
+            _assemblyManager = new AssemblyManager(parameters.SourceAssemblies,_profileReader,parameters.ReferencesTmpFilePath,BuildWarn);
 
             var srcAssemblies = _assemblyManager.GetAssembliesFromArgs();
             ExportContext context = new ExportContext(srcAssemblies)
             {
-                Hierarchical = _parameters.Hierarchy,
-                TargetDirectory = _parameters.TargetDirectory,
-                TargetFile = _parameters.TargetFile,
-                DocumentationFilePath = _parameters.DocumentationFilePath
+                Hierarchical = parameters.Hierarchy,
+                TargetDirectory = parameters.TargetDirectory,
+                TargetFile = parameters.TargetFile,
+                DocumentationFilePath = parameters.DocumentationFilePath,
+                SuppressedWarningCodes = ParseSuppressedWarnings(parameters.SuppressedWarnings)
             };
             return context;
         }
@@ -289,10 +292,7 @@ namespace Reinforced.Typings.Cli
         {
             _profilePath = fileName;
             _profileReader = File.OpenText(fileName);
-            var result = ExporterConsoleParameters.FromFile(_profileReader);
-            
-            _suppressedWarnings = ParseSuppressedWarnings(result.SuppressedWarnings);
-            return result;
+            return ExporterConsoleParameters.FromFile(_profileReader);
         }
 
         public static ExporterConsoleParameters ExtractParametersFromArgs(string[] args)
@@ -353,7 +353,6 @@ namespace Reinforced.Typings.Cli
                 return null;
             }
 
-            _suppressedWarnings = ParseSuppressedWarnings(instance.SuppressedWarnings);
             return instance;
         }
     }

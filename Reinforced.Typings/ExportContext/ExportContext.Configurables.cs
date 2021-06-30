@@ -88,9 +88,9 @@ namespace Reinforced.Typings
         /// <summary>
         ///     Gets or sets the list of suppressed warning codes
         /// </summary>
-        public int[] SuppressedWarningCodes
+        public IEnumerable<int> SuppressedWarningCodes
         {
-            get { return _suppressedWarningCodes.ToArray(); }
+            get { return _suppressedWarningCodes; }
             set
             {
                 if (_isLocked) return;
