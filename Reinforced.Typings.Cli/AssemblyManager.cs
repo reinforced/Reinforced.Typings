@@ -186,7 +186,7 @@ namespace Reinforced.Typings.Cli
                 {
                     if (!Path.IsPathRooted(path))
                     {
-                        BuildWarn("Assembly {0} may be resolved incorrectly to {1}", new object[] { nm.Name, path });
+                        BuildWarn(ErrorMessages.RTW0013_AssemblyMayNotBeResolvedIncorrectly, new object[] { string.Format("{0} (from {1})",nm.Name, path) });
                         continue;
                     }
                     
@@ -194,7 +194,7 @@ namespace Reinforced.Typings.Cli
                 }
                 catch (Exception ex)
                 {
-                    BuildWarn("Assembly {0} from {1} was not loaded: {2}", new object[] { nm.Name, path, ex });
+                    BuildWarn(ErrorMessages.RTW0014_AssemblyFailedToLoad, new object[] { string.Format("{0} (from {1})",nm.Name, path), ex });
                     continue;
                 }
 

@@ -42,12 +42,12 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <summary>
         /// Type for dictionary key
         /// </summary>
-        public RtTypeName KeyType { get; private set; }
+        public RtTypeName KeyType { get; }
 
         /// <summary>
         /// Type for disctionary value
         /// </summary>
-        public RtTypeName ValueType { get; private set; }
+        public RtTypeName ValueType { get; }
 
         /// <summary>
         /// A flag indicating whether the key is an enum type, and a mapped type should be generated.
@@ -101,7 +101,13 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(KeyType, ValueType, IsKeyEnum);
+            unchecked
+            {
+                var hashCode = (KeyType != null ? KeyType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ValueType != null ? ValueType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ IsKeyEnum.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>Returns a value that indicates whether the values of two <see cref="T:Reinforced.Typings.Ast.TypeNames.RtDictionaryType" /> objects are equal.</summary>

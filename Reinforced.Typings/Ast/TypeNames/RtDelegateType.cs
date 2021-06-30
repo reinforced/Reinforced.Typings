@@ -84,7 +84,10 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(_arguments, Result);
+            unchecked
+            {
+                return ((_arguments != null ? _arguments.GetHashCode() : 0) * 397) ^ (Result != null ? Result.GetHashCode() : 0);
+            }
         }
 
         /// <summary>Returns a value that indicates whether the values of two <see cref="T:Reinforced.Typings.Ast.TypeNames.RtDelegateType" /> objects are equal.</summary>

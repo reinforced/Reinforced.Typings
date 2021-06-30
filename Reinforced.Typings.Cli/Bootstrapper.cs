@@ -268,9 +268,11 @@ namespace Reinforced.Typings.Cli
         {
             var result = new HashSet<int>();
             if (string.IsNullOrEmpty(input)) return result;
-            var values = input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var values = input.Split(';');
             foreach (var warningCode in values)
             {
+                //for some reason there is no StringSplitOptions for netcoreapp1.0
+                if (string.IsNullOrEmpty(warningCode)) continue;
                 var filtered = new string(warningCode.Where(char.IsDigit).ToArray());
                 bool parsed = int.TryParse(filtered, out int intWarningCode);
                 if (parsed) result.Add(intWarningCode);

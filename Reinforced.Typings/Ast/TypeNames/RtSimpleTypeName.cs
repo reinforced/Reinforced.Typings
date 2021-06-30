@@ -116,7 +116,13 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(Prefix, TypeName);
+            unchecked
+            {
+                var hashCode = (_genericArguments != null ? _genericArguments.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Prefix != null ? Prefix.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (TypeName != null ? TypeName.GetHashCode() : 0);
+                return hashCode;
+            }
         }
 
         /// <summary>Returns a value that indicates whether the values of two <see cref="T:Reinforced.Typings.Ast.TypeNames.RtSimpleTypeName" /> objects are equal.</summary>
