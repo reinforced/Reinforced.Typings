@@ -184,7 +184,7 @@ namespace Reinforced.Typings
 
         /// <summary>
         ///     If true, export will be performed in .d.ts manner (only typings, declare module etc).
-        ///     Otherwise, export will be performed to regulat .ts file
+        ///     Otherwise, export will be performed to regular .ts file
         /// </summary>
         public bool ExportPureTypings
         {
