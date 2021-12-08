@@ -55,6 +55,9 @@ namespace Reinforced.Typings.Generators
                 {
                     var fieldItself = fields[n];
 
+                    if (Context.CurrentBlueprint.Ignored.Contains(fieldItself))
+                        continue;
+
                     var attr = Context.CurrentBlueprint.ForEnumValue(fieldItself);
                     if (attr != null) n = attr.Name;
                     if (string.IsNullOrEmpty(n)) n = fieldItself.Name;
