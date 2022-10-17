@@ -14,7 +14,8 @@
         <summary>Automated, reflection-based glue code generator for TypeScript</summary>
         <copyright>© 2019 Pavel B. Novikov</copyright>
         <language>en-US</language>
-        <tags>mvc, web, typescript</tags>		
+        <tags>mvc, web, typescript</tags>	
+        <developmentDependency>true</developmentDependency>	
         <license type="file">license\license.txt</license>
 		<releaseNotes>
 		
