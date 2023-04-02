@@ -17,12 +17,10 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> Version **1.6.1** released
+> Version **1.6.2** released
 
-- PR #222 - Support of .NET 6
-- Fixed unit tests
-- Equality comparers for AST nodes
-- Warnings suppression (RtSuppress in settings.xml)
+- Support of .NET 7
+- Build script updates (now builds with `dotnet cake`)
 
 Support policy
 =================
