@@ -1,6 +1,8 @@
-#addin "Cake.FileHelpers"
+#addin nuget:https://api.nuget.org/v3/index.json?package=Cake.FileHelpers&version=5.0.0
+#tool nuget:?package=NuGet.CommandLine&version=6.4.0
+
 var target = Argument("target", "Build");
-const string version = "1.6.1";
+const string version = "1.6.2";
 
 Task("Clean")
   .Does(() =>
@@ -210,30 +212,21 @@ Task("Build")
   Information("---------");
   // Copy nuspec
   CopyFileToDirectory("../stuff/Reinforced.Typings.nuspec", packageRoot);
-  ReplaceTextInFiles("../package/*.nuspec","$$VERSION$$",version);
+  
   var rn = string.Empty;
   if (System.IO.File.Exists(System.IO.Path.Combine("../stuff/relnotes", version) + ".md")){
         rn = System.IO.File.ReadAllText(System.IO.Path.Combine("../stuff/relnotes", version) + ".md");
   }
 
-  ReplaceTextInFiles("../package/*.nuspec","$$RELNOTES$$",rn);
-
   Information("---------");
   Information("Packaging");
   Information("---------");  
 
-  var nugetSettings = new ProcessSettings
-    {     
-      Arguments = "pack ../package/Reinforced.Typings.nuspec -OutputDirectory \"../\"" 
-    };
-
-  using(var process = StartAndReturnProcess("nuget", nugetSettings))
-  {
-      process.WaitForExit();      
-  }
-
-  
-
+  NuGetPack("../package/Reinforced.Typings.nuspec",new NuGetPackSettings(){
+    ReleaseNotes = new List<string>() { rn },
+    Version = version,
+    OutputDirectory = "../"
+  });  
   Information("Build complete");
 });
 

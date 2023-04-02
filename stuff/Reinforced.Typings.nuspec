@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>Reinforced.Typings</id>
-        <version>$$VERSION$$</version>
+<package>
+    <metadata minClientVersion="2.12">
+        <id>Reinforced.Typings</id>        
         <title>Reinforced.Typings</title>
         <authors>Pavel B. Novikov and contributors</authors>
         <owners>Pavel B. Novikov</owners>
@@ -12,62 +11,58 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Reinforced.Typings is automated, reflection-based glue code generator for TypeScript. It is MSBuild-integrated and can generate MVC/WebAPI services glue code, JSDOC and architecture mockups from your assemblies.</description>
         <summary>Automated, reflection-based glue code generator for TypeScript</summary>
-        <copyright>© 2019 Pavel B. Novikov</copyright>
-        <language>en-US</language>
-        <tags>mvc, web, typescript</tags>	
-        <developmentDependency>true</developmentDependency>	
-        <license type="file">license\license.txt</license>
-		<releaseNotes>
-		
-$$RELNOTES$$
-
-		</releaseNotes>
+        <copyright>© 2023 Pavel B. Novikov</copyright>
+        <language>en-US</language>		
+        <tags>mvc web typescript</tags>
+		<license type="expression">MIT</license>	
         <dependencies>
-          <group targetFramework=".NETFramework4.5" />
-		  <group targetFramework=".NETFramework4.6.1" />
-          <group targetFramework=".NETStandard1.5">
+          <group targetFramework="net45" />
+		  <group targetFramework="net461" />
+          <group targetFramework="netstandard1.5">
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />                 
           </group>
-          <group targetFramework=".NETCoreApp1.0">
+          <group targetFramework="netcoreapp1.0">
             <dependency id="Microsoft.NETCore.App" version="1.0.5" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
           </group>  
-			<group targetFramework=".NETCoreApp1.1">
+			<group targetFramework="netcoreapp1.1">
             <dependency id="Microsoft.NETCore.App" version="1.0.5" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
           </group>  		  
-          <group targetFramework=".NETCoreApp2.0">
+          <group targetFramework="netcoreapp2.0">
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="Microsoft.NETCore.App" version="2.0.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
           </group>
-		  <group targetFramework=".NETCoreApp2.1">
+		  <group targetFramework="netcoreapp2.1">
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="Microsoft.NETCore.App" version="2.0.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
           </group>
-		  <group targetFramework=".NETCoreApp2.2">
+		  <group targetFramework="netcoreapp2.2">
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="Microsoft.NETCore.App" version="2.0.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />
           </group>
-          <group targetFramework=".NETStandard2.0">
+          <group targetFramework="netstandard2.0">
             <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />            
           </group>
-          <group targetFramework=".NETCoreApp3.0">
+          <group targetFramework="netcoreapp3.0">
 			<dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />  
 		  </group>
-		  <group targetFramework=".NETCoreApp3.1">
+		  <group targetFramework="netcoreapp3.1">
 			<dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
             <dependency id="System.Xml.XmlSerializer" version="4.3.0" exclude="Build,Analyzers" />  
 		  </group>          
-		  <group targetFramework=".NETFramework5.0" />
+		  <group targetFramework="net5.0" />
+		  <group targetFramework="net6.0" />
+		  <group targetFramework="net7.0" />
         </dependencies>
         <frameworkAssemblies>
             <frameworkAssembly assemblyName="Microsoft.Build" targetFramework=".NETFramework4.5" />
@@ -75,16 +70,12 @@ $$RELNOTES$$
             <frameworkAssembly assemblyName="Microsoft.Build.Tasks.v4.0" targetFramework=".NETFramework4.5" />
             <frameworkAssembly assemblyName="Microsoft.Build.Utilities.v4.0" targetFramework=".NETFramework4.5" />
         </frameworkAssemblies>        
-    </metadata>
-	<files>    
-		<file src="build\**" target="build" />
-		<file src="content\**" target="content" />
-		<file src="buildMultiTargeting\**" target="buildMultiTargeting" />
+    </metadata>    
+	<files>        
+        <file src="readme.txt" target="" />
+		<file src="icon.png" target="" />
 		<file src="lib\**" target="lib" />
 		<file src="tools\**" target="tools" />        
-		<file src="readme.txt" target="" />
-		<file src="icon.png" target="" />
-		<file src="license\**" target="license" />		
+		<file src="build\**" target="build" />
 	</files>
-    
 </package>

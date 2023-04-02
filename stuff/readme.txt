@@ -1,27 +1,23 @@
------------------------
-IMPORTANT NOTICE ABOUT Reinforced.Typings.settings.xml FILE
------------------------
+Hello and welcome!
 
-Hi!
-Congratulations. You have just installed Reinforced.Typings.
+	You have just installed Reinforced.Typings NuGet package. 
+It will help you to generate TypeScript definitions for your 
+server-side C# code without pain.
 
-If you see that Reinforced.Typings.settings.xml file is included 
-into your project - please close this file and continue working. Everything if fine.
+	Reinforced.Typings can participate build process and 
+generate TypeScript every time you Build/Rebuild your project. 
+To activate this feature, your project must contain 
+Reinforced.Typings.settings.xml file in the root.
 
-Text below is for .NET Core users who dont get Reinforced.Typings.settings.xml 
-automatically copied into root poject folder. Yes, you must see 
-Reinforced.Typings.settings.xml in the root of your project along 
-with other files. if you don't - please, continue reading.
+	If Reinforced.Typings.settings.xml is already in place, 
+you're all set! Readme can be closed, you may continue your work.
 
-According to new NuGet's restrictions regarding content files in packages, 
-unfortunately I am not able to automatically add Reinfroced.Typings.settings.xml 
-to your project. So please do that by yourself. Trust me - it is pretty simple. 
-And please forgive NuGet for such a strange design. You can read discussions 
-about why they followed that way and lots more stuff about transient content 
-restore, or adding specific NuGet command for content, etc. here: 
-https://github.com/NuGet/Home/wiki/Bringing-back-content-support,-September-24th,-2015
+If it is not, then you have to create one manually. Simply:
+	1) Go to you project root 
+	2) Create file named Reinforced.Typings.settings.xml there
+	3) Copypaste default content into it
 
-So now please create empty Reinforced.Typings.settings.xml in the root 
-folder of your project and put the following text there:
+That's it! Have fun and wish you happy development time.
 
+Oh, default content for Reinforced.Typings.settings.xml is following:
 
