@@ -149,7 +149,7 @@ namespace Reinforced.Typings.Generators
                     if (val == null) result.InitializationExpression = "null";
                     else
                     {
-                        var sv = string.Format("`{0}`", val.ToString().Replace("'", "\\'"));
+                        var sv = string.Format("`{0}`", val.ToString().Replace("'", "\\'").Replace("`", "\\`"));
                         result.InitializationExpression = sv;
                     }
                 }
