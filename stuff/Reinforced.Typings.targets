@@ -50,12 +50,7 @@
 	<Target Name="ConditionallyShowDisabledWarning" Condition="'$(RtDisable)' != 'false'">
 		<Warning
 			File="Reinforced.Typings.settings.xml"
-			Text="Reinforced.Typings will not run because it is disabled in its configuration"
-			Condition="'$(TreatWarningsAsErrors)' != 'true'"/>
-		<Error
-			File="Reinforced.Typings.settings.xml"
-			Text="Reinforced.Typings will not run because it is disabled in its configuration"
-			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
+			Text="Reinforced.Typings will not run because it is disabled in its configuration"/>
 	</Target>
     <Target Name="ReinforcedTypingsGenerate" Condition="'$(BuildingProject)' != 'false' And '$(RtDisable)' == 'false'">	     
 		<RtCli 
@@ -74,7 +69,6 @@
 			ConfigurationMethod="$(RtConfigurationMethod)"
 			SuppressedWarnings="$(RtSuppress)"
 		/>
-		
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' == ''" />
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScriptWithTSConfig" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' != ''" />
 	</Target>
