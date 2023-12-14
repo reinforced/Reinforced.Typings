@@ -28,15 +28,10 @@
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RtCli" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
 	<UsingTask TaskName="Reinforced.Typings.Integrate.RemoveTypescriptStep" AssemblyFile="$(RtTargetsPath)\Reinforced.Typings.Integrate.dll" />
 	
-	<Target Name="ConditionallyDisableTypeScriptCompilation" Condition="'$(RtBypassTypeScriptcompilation)' == 'true'">
+	<Target Name="ConditionallyDisableTypeScriptCompilation" Condition="'$(RtBypassTypeScriptcompilation)' != 'false'">
 		<Warning 
 			File="Reinforced.Typings.settings.xml"
-			Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"
-			Condition="'$(TreatWarningsAsErrors)' != 'true'"/>
-		<Error 
-			File="Reinforced.Typings.settings.xml"
-			Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"
-			Condition="'$(TreatWarningsAsErrors)' == 'true'"/>
+			Text="TypeScript sources will not be built before project compile because it is disabled by Reinforced.Typings configuration"/>
 		<RemoveTypeScriptStep Original="$(CompileDependsOn)">
 			<Output PropertyName="CompileDependsOn" TaskParameter="Fixed"/>
 		</RemoveTypeScriptStep>
