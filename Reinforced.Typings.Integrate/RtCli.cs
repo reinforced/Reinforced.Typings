@@ -94,7 +94,7 @@ namespace Reinforced.Typings.Integrate
         /// Full-qualified name of fluent configuration method
         /// </summary>
         public string ConfigurationMethod { get; set; }
-        
+
         /// <summary>
         /// Semicolon-separated list of warnings to be suppressed
         /// </summary>
@@ -116,7 +116,7 @@ namespace Reinforced.Typings.Integrate
                     "dotnet.exe"
                     : "dotnet";
 #else
-                return "dotnet.exe"; 
+                return "dotnet.exe";
 #endif
             }
             return Path.Combine(GetProperRtcliPath(), ToolName);
@@ -126,7 +126,7 @@ namespace Reinforced.Typings.Integrate
         {
             var bd = new DirectoryInfo(BuildDirectory);
             var toolsPath = Path.Combine(bd.Parent.FullName, "tools");
-            var fwPath = Path.Combine(toolsPath, NormalizeFramework());
+            var fwPath = Path.Combine(toolsPath, RemoveTargetPlatform(NormalizeFramework()));
             return fwPath;
         }
 
@@ -152,6 +152,29 @@ namespace Reinforced.Typings.Integrate
             if (TargetFramework.StartsWith("net47")) return "net461";
             if (TargetFramework.StartsWith("net48")) return "net461";
             return TargetFramework;
+        }
+
+        private static string RemoveTargetPlatform(string targetFramework)
+        {
+            List<string> platformIdentifiers = new List<string>()
+            {
+                "-android",
+                "-ios",
+                "-maccatalyst",
+                "-macos",
+                "-tvos",
+                "-windows",
+            };
+
+            foreach (string platformIdentifier in platformIdentifiers)
+            {
+                if (targetFramework.Contains(platformIdentifier))
+                {
+                    return targetFramework.Replace(platformIdentifier, "");
+                }
+            }
+
+            return targetFramework;
         }
 
         private bool IsCore
@@ -183,7 +206,7 @@ namespace Reinforced.Typings.Integrate
                             "dotnet.exe"
                             : "dotnet";
 #else
-                return "dotnet.exe";
+                    return "dotnet.exe";
 #endif
                 }
                 return "rtcli.exe";
