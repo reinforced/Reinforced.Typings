@@ -42,9 +42,12 @@ namespace Reinforced.Typings.Fluent
         /// Please not the you do not have to specify quotes here! Quotes will be added automatically
         /// </param>
         /// <param name="isRequire">When true, import will be generated as "import ImportTarget = require('ImportSource')"</param>
-        public static ConfigurationBuilder AddImport(this ConfigurationBuilder conf, string target, string from, bool isRequire = false)
+        /// <param name="useDoubleQuotes">When true, import will use double quotes instead of single quotes"</param>
+        public static ConfigurationBuilder AddImport(this ConfigurationBuilder conf, string target, string from,
+            bool isRequire = false, bool useDoubleQuotes = false)
         {
-            conf.Imports.Add(new RtImport() { Target = target, From = from, IsRequire = isRequire });
+            conf.Imports.Add(new RtImport()
+            { Target = target, From = from, IsRequire = isRequire, UseDoubleQuotes = useDoubleQuotes });
             return conf;
         }
 
