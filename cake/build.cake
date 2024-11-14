@@ -2,7 +2,7 @@
 #tool nuget:?package=NuGet.CommandLine&version=6.4.0
 
 var target = Argument("target", "Build");
-const string version = "1.6.3";
+const string version = "1.6.4";
 
 Task("Clean")
   .Does(() =>
@@ -96,18 +96,18 @@ Task("BuildIntegrate")
 .Description("Building RT's integration MSBuild task")
 .Does(()=>{
   foreach(var fw in taskFrameworks){
-	  DotNetCoreMSBuildSettings mbs = null;
+	  DotNetMSBuildSettings mbs = null;
           
       if (netCore.Contains(fw)){
 		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
 		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
-        mbs = new DotNetCoreMSBuildSettings()
+        mbs = new DotNetMSBuildSettings()
           .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
-    DotNetCorePublish(IntegrateProject, new DotNetCorePublishSettings
+    DotNetPublish(IntegrateProject, new DotNetPublishSettings
     {
-      Verbosity = DotNetCoreVerbosity.Quiet,
+      Verbosity = DotNetVerbosity.Quiet,
       Configuration = RELEASE,	  
       MSBuildSettings = mbs,
       OutputDirectory = System.IO.Path.Combine(buildPath, fw),      
@@ -136,20 +136,20 @@ Task("Build")
       ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");       
       ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
 
-      DotNetCoreMSBuildSettings mbs = null;
+      DotNetMSBuildSettings mbs = null;
           
       if (netCore.Contains(fw)){
 		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
 		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
-        mbs = new DotNetCoreMSBuildSettings()
+        mbs = new DotNetMSBuildSettings()
           .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
-      DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+      DotNetPublish(CliNetCoreProject, new DotNetPublishSettings {  
         Configuration = RELEASE, 
         MSBuildSettings = mbs,
         Framework = fw,
-        Verbosity = DotNetCoreVerbosity.Quiet,
+        Verbosity = DotNetVerbosity.Quiet,
         OutputDirectory = System.IO.Path.Combine(toolsPath, fw)        
       });
   }
@@ -164,7 +164,7 @@ Task("Build")
       ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");  
       ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
       
-      var mbs = new DotNetCoreMSBuildSettings()
+      var mbs = new DotNetMSBuildSettings()
           .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml");
 
       if (netCore.Contains(fw)){
@@ -174,11 +174,11 @@ Task("Build")
           .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
-     DotNetCorePublish(RtNetCoreProject, new DotNetCorePublishSettings {  
+     DotNetPublish(RtNetCoreProject, new DotNetPublishSettings {  
         Configuration = RELEASE,
         MSBuildSettings = mbs,    
         Framework = fw,
-        Verbosity = DotNetCoreVerbosity.Quiet,
+        Verbosity = DotNetVerbosity.Quiet,
         OutputDirectory = System.IO.Path.Combine(libPath, fw)
       });
   }

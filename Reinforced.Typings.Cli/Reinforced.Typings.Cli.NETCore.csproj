@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net9.0;net8.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Reinforced.Typings.Cli</RootNamespace>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>    
@@ -15,9 +15,9 @@
 		<Company>Reinforced Software Construction OSS</Company>
 		<Copyright>Pavel B. Novikov 2019</Copyright>
 		<AssemblyTitle>$(AssemblyName)</AssemblyTitle>
-		<AssemblyVersion>1.6.3</AssemblyVersion>
-		<FileVersion>1.6.3</FileVersion>
-		<InformationalVersion>1.6.3</InformationalVersion>
+		<AssemblyVersion>1.6.4</AssemblyVersion>
+		<FileVersion>1.6.4</FileVersion>
+		<InformationalVersion>1.6.4</InformationalVersion>
 		<DefineConstants>$(DefineConstants);$(RtAdditionalConstants);</DefineConstants>
 	</PropertyGroup>    
 	<ItemGroup>
