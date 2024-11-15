@@ -2,7 +2,7 @@
 #tool nuget:?package=NuGet.CommandLine&version=6.4.0
 
 var target = Argument("target", "Build");
-const string version = "1.6.4";
+const string version = "1.6.5";
 
 Task("Clean")
   .Does(() =>
@@ -40,7 +40,7 @@ const string NET70 = "net7.0";
 const string NET80 = "net8.0";
 const string NET90 = "net9.0";
 
-var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31, NET50, NET60, NET70, NET80 };
+var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31, NET50, NET60, NET70, NET80, NET90 };
 var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET45, NET461, NET50, NET60, NET70, NET80, NET90};
 var taskFrameworks = new[] { NET46, NETSTANDARD20 };
 

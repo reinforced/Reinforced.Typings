@@ -17,9 +17,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> Version **1.6.4** released
+> Version **1.6.5** released
 
-- Support of .NET 9
+- Fix for malformed package of .NET 9 Support
 
 Support policy
 =================
