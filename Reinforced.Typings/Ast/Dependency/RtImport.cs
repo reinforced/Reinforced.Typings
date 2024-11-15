@@ -15,10 +15,10 @@ namespace Reinforced.Typings.Ast.Dependency
         /// </summary>
         public string Target
         {
-            get { return _target; }
+            get => _target;
             set
             {
-                _target = value == null ? null : value.Trim();
+                _target = value?.Trim();
                 CheckWildcardImport();
             }
         }
@@ -26,7 +26,12 @@ namespace Reinforced.Typings.Ast.Dependency
         /// <summary>
         /// Gets flag whether RtImport is wildcard import
         /// </summary>
-        public bool IsWildcard { get { return WildcardAlias != null; } }
+        public bool IsWildcard => WildcardAlias != null;
+
+        /// <summary>
+        /// Use double quotes instead of single quotes
+        /// </summary>
+        public bool UseDoubleQuotes { get; set; }
 
         /// <summary>
         /// Gets wildcard alias of import
@@ -41,7 +46,6 @@ namespace Reinforced.Typings.Ast.Dependency
                 if (arr.Length < 2)
                 {
                     WildcardAlias = null;
-
                 }
                 else
                 {
@@ -65,7 +69,10 @@ namespace Reinforced.Typings.Ast.Dependency
         public bool IsRequire { get; set; }
 
         /// <inheritdoc />
-        public override IEnumerable<RtNode> Children { get { yield break; } }
+        public override IEnumerable<RtNode> Children
+        {
+            get { yield break; }
+        }
 
         /// <inheritdoc />
         public override void Accept(IRtVisitor visitor)
@@ -82,8 +89,11 @@ namespace Reinforced.Typings.Ast.Dependency
         /// <inheritdoc />
         public override string ToString()
         {
-            if (IsRequire) return string.Format("import {0} = require('{1}');", Target, From);
-            return string.Format("import {0} from '{1}';", Target, From);
+            var quote = UseDoubleQuotes ? "\"" : "'";
+
+            return IsRequire
+                ? $"import {Target} = require({quote}{From}{quote});"
+                : $"import {Target} from {quote}{From}{quote};";
         }
     }
 }
