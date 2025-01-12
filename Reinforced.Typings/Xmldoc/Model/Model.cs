@@ -39,6 +39,9 @@ namespace Reinforced.Typings.Xmldoc.Model
         [XmlElement(ElementName = "summary")]
         public DocumentationSummary Summary { get; set; }
 
+        [XmlElement(ElementName = "remarks")]
+        public DocumentationRemarks Remarks { get; set; }
+
         [XmlElement(ElementName = "inheritdoc")]
         public DocumentationInheritDoc InheritDoc { get; set; }
 
@@ -88,6 +91,21 @@ namespace Reinforced.Typings.Xmldoc.Model
         public override void ReadXml(XmlReader reader)
         {
             Cref = reader.GetAttribute("cref");
+            Text = reader.ReadInnerXml().Trim();
+        }
+    }
+
+    public class DocumentationRemarks : XmlIgnoreInner
+    {
+        public string Text { get; set; }
+
+        public override string ToString()
+        {
+            return Text;
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
             Text = reader.ReadInnerXml().Trim();
         }
     }

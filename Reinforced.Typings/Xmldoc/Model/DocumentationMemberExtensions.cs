@@ -26,6 +26,11 @@
             return dm.Summary != null && !string.IsNullOrEmpty(dm.Summary.Text);
         }
 
+        public static bool HasRemarks(this DocumentationMember dm)
+        {
+            return dm.Remarks != null && !string.IsNullOrEmpty(dm.Remarks.Text);
+        }
+
         public static bool HasParameters(this DocumentationMember dm)
         {
             return dm.Parameters != null && dm.Parameters.Length > 0;
