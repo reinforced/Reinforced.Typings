@@ -29,7 +29,7 @@ namespace Reinforced.Typings.Xmldoc.Model
             set
             {
                 _name = value;
-                MemberType = _name.MeberType();
+                MemberType = _name.MemberType();
             }
         }
 
