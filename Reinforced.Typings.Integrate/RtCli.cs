@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Reinforced.Typings.Cli;
@@ -105,6 +106,15 @@ namespace Reinforced.Typings.Integrate
         {
             get; set;
         }
+
+        /// <summary>
+        /// By default `true`, you can disable it if caused any problems.
+        /// Exchange reference assemblies to their corresponding executable pairs, if found.
+        /// Drop reference assemblies otherwise.
+        /// See:
+        /// https://github.com/reinforced/Reinforced.Typings/issues/227
+        /// </summary>
+        public bool ExchangeReferenceAssemblies { get; set; } = true;
 
         protected override string GenerateFullPathToTool()
         {
@@ -242,11 +252,34 @@ namespace Reinforced.Typings.Integrate
             return path;
         }
 
+        private IEnumerable<string> GetReferenceAssemblyPaths()
+        {
+            var refRegex = new Regex(@"[\\/]+ref[\\/]+");
+
+            return (References ?? Array.Empty<ITaskItem>())
+                .Select(c => c.ItemSpec)
+                .Select(DoExchangeReferenceAssemblies)
+                .Where(x => x != null);
+
+            string DoExchangeReferenceAssemblies(string assemblyPath)
+            {
+                if (!ExchangeReferenceAssemblies)
+                {
+                    return assemblyPath;
+                }
+                if (refRegex.IsMatch(assemblyPath))
+                {
+                    var libAssembly = refRegex.Replace(assemblyPath, "/lib/");
+                    return File.Exists(libAssembly) ? libAssembly : null;
+                }
+                return assemblyPath;
+            }
+        }
 
         private void PutReferencesToTempFile(TextWriter tw)
         {
-            if (References == null) return;
-            foreach (var rf in References.Select(c => c.ItemSpec))
+            var referenceAssemblyPaths = GetReferenceAssemblyPaths();
+            foreach (var rf in referenceAssemblyPaths)
             {
                 tw.WriteLine(rf);
             }
