@@ -71,6 +71,7 @@
     <Compile Include="SpecificCases\SpecificTestCases.DaggmanoAutoIBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DDanteInheritanceBug.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.DGoncharovGenericsCase.cs" />
+    <Compile Include="SpecificCases\SpecificTestCases.EnumStringInitializerIgnoreManyValues.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.ExportEnumsInDtsWithDeclareKeyword.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport3.cs" />
     <Compile Include="SpecificCases\SpecificTestCases.GenericsExport2.cs" />
