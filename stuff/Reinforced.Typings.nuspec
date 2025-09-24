@@ -64,6 +64,8 @@
 		  <group targetFramework="net6.0" />
 		  <group targetFramework="net7.0" />
 		  <group targetFramework="net8.0" />
+		  <group targetFramework="net9.0" />
+		  <group targetFramework="net10.0" />
         </dependencies>
         <frameworkAssemblies>
             <frameworkAssembly assemblyName="Microsoft.Build" targetFramework=".NETFramework4.5" />

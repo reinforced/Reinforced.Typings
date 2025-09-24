@@ -167,6 +167,7 @@ namespace Reinforced.Typings.Integrate
                 if (fw.StartsWith("net7")) return true;
                 if (fw.StartsWith("net8")) return true;
                 if (fw.StartsWith("net9")) return true;
+                if (fw.StartsWith("net10")) return true;
                 return false;
             }
         }
