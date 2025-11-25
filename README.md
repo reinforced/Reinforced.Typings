@@ -17,9 +17,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> Version **1.6.5** released
+> Version **1.6.7** released
 
-- Fix for malformed package of .NET 9 Support
+- .NET 10 support. Do not search for 1.6.6 😊
 
 Support policy
 =================
@@ -345,3 +345,4 @@ module MyApp {
 	</td>
 </tr>
 </table>
+
