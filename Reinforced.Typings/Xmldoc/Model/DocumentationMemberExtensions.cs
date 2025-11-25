@@ -2,7 +2,7 @@
 {
     internal static class DocumentationMemberExtensions
     {
-        public static DocumentationMemberType MeberType(this string name)
+        public static DocumentationMemberType MemberType(this string name)
         {
             if (string.IsNullOrEmpty(name)) return DocumentationMemberType.Unknown;
             if (name.Contains("#ctor")) return DocumentationMemberType.Constructor;
