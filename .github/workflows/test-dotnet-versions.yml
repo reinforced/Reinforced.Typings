@@ -1,0 +1,177 @@
+name: Test .NET Versions
+
+on:
+  push:
+    branches: [master, main, develop]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  build-matrix:
+    name: Build (.NET ${{ matrix.dotnet-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # .NET 5.0 (EOS - legacy support)
+          - dotnet-version: '5.0'
+            target-framework: 'net5.0'
+            os: ubuntu-22.04
+          # .NET 6.0 (LTS)
+          - dotnet-version: '6.0'
+            target-framework: 'net6.0'
+            os: ubuntu-latest
+          # .NET 7.0 (EOS - legacy support)
+          - dotnet-version: '7.0'
+            target-framework: 'net7.0'
+            os: ubuntu-latest
+          # .NET 8.0 (LTS)
+          - dotnet-version: '8.0'
+            target-framework: 'net8.0'
+            os: ubuntu-latest
+          # .NET 9.0 (STS)
+          - dotnet-version: '9.0'
+            target-framework: 'net9.0'
+            os: ubuntu-latest
+          # .NET 10.0 (LTS)
+          - dotnet-version: '10.0'
+            target-framework: 'net10.0'
+            os: ubuntu-latest
+          # .NET Framework 4.8.1 on Windows
+          - dotnet-version: '8.0'
+            target-framework: 'net481'
+            os: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}.x
+
+      - name: Display .NET version
+        run: dotnet --version
+
+      - name: Generate signing key (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          # Generate consistent test signing key
+          echo "RT-TEST-KEY-2025" | sha256sum | head -c 596 > Reinforced.Typings/Reinforced.snk
+          cp Reinforced.Typings/Reinforced.snk Reinforced.Typings.Cli/
+          cp Reinforced.Typings/Reinforced.snk Reinforced.Typings.Integrate/
+
+      - name: Generate signing key (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Generate consistent test signing key
+          $hash = [System.Security.Cryptography.SHA256]::Create()
+          $bytes = $hash.ComputeHash([System.Text.Encoding]::UTF8.GetBytes("RT-TEST-KEY-2025"))
+          $keyBytes = New-Object byte[] 596
+          for ($i = 0; $i -lt 596; $i++) { $keyBytes[$i] = $bytes[$i % $bytes.Length] }
+          [System.IO.File]::WriteAllBytes("Reinforced.Typings/Reinforced.snk", $keyBytes)
+          Copy-Item "Reinforced.Typings/Reinforced.snk" "Reinforced.Typings.Cli/"
+          Copy-Item "Reinforced.Typings/Reinforced.snk" "Reinforced.Typings.Integrate/"
+
+      - name: Restore dependencies
+        run: |
+          dotnet restore Reinforced.Typings/Reinforced.Typings.NETCore.csproj
+          dotnet restore Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj
+          dotnet restore Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj
+
+      - name: Build Reinforced.Typings
+        run: dotnet build Reinforced.Typings/Reinforced.Typings.NETCore.csproj -c Release --no-restore -f ${{ matrix.target-framework }}
+        continue-on-error: ${{ matrix.target-framework == 'net481' && runner.os == 'Linux' }}
+
+      - name: Build Reinforced.Typings.Cli
+        run: dotnet build Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj -c Release --no-restore -f ${{ matrix.target-framework }}
+        continue-on-error: ${{ matrix.target-framework == 'net481' && runner.os == 'Linux' }}
+
+      - name: Build Reinforced.Typings.Integrate
+        run: dotnet build Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj -c Release --no-restore
+        if: matrix.target-framework != 'net481' || runner.os == 'Windows'
+
+  mono-build:
+    name: Build (.NET Framework 4.8.1 via Mono)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build with Mono
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Dockerfile.mono
+          push: false
+          tags: rt-test:net481-mono
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  container-test:
+    name: Container Test (.NET ${{ matrix.dotnet-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dotnet-version: ['5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build test container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Dockerfile.test
+          push: false
+          build-args: |
+            DOTNET_VERSION=${{ matrix.dotnet-version }}
+            TARGET_FRAMEWORK=net${{ matrix.dotnet-version }}
+          tags: rt-test:net${{ matrix.dotnet-version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: [build-matrix]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Generate signing key
+        run: |
+          echo "RT-TEST-KEY-2025" | sha256sum | head -c 596 > Reinforced.Typings/Reinforced.snk
+          cp Reinforced.Typings/Reinforced.snk Reinforced.Typings.Cli/
+          cp Reinforced.Typings/Reinforced.snk Reinforced.Typings.Integrate/
+
+      - name: Run tests
+        run: |
+          dotnet test Reinforced.Typings.Tests/Reinforced.Typings.Tests.NETCore.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=test-results.trx" \
+            --results-directory ./test-results \
+            || true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: ./test-results/

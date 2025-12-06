@@ -1,0 +1,58 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE and editor files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+
+# NuGet packages
+**/packages/
+package/
+*.nupkg
+
+# Test results
+**/TestResults/
+*.trx
+
+# Samples (not needed for core testing)
+Samples/
+
+# Cake build artifacts
+cake/
+
+# Documentation (except essential)
+*.md
+!README.md
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Development artifacts
+Playground/
+stuff/relnotes/
+
+# Signing keys (use generated test keys in container)
+*.snk
+!Reinforced_pub.snk
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Docker-specific excludes
+docker/*.log

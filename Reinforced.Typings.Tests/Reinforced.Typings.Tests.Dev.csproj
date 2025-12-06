@@ -1,39 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
 
-    <IsPackable>false</IsPackable>
-	<LangVersion>Preview</LangVersion> 
-  </PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <LangVersion>Preview</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>w:\Work\Reinforced\Typings\Reinforced.Typings\Reinforced.Typings.Tests\Reinforced.Typings.Tests.Dev.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>w:\Work\Reinforced\Typings\Reinforced.Typings\Reinforced.Typings.Tests\Reinforced.Typings.Tests.Dev.xml</DocumentationFile>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Properties\**" />
-    <EmbeddedResource Remove="Properties\**" />
-    <None Remove="Properties\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Properties\**"/>
+        <EmbeddedResource Remove="Properties\**"/>
+        <None Remove="Properties\**"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="xunit"/>
+        <PackageReference Include="xunit.runner.visualstudio">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Reinforced.Typings.Cli\Reinforced.Typings.Cli.Dev.csproj" />
-    <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.Dev.csproj" />
-    <ProjectReference Include="..\TestFluentAssembly\TestFluentAssembly.Dev.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Reinforced.Typings.Cli\Reinforced.Typings.Cli.Dev.csproj"/>
+        <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.Dev.csproj"/>
+        <ProjectReference Include="..\TestFluentAssembly\TestFluentAssembly.Dev.csproj"/>
+    </ItemGroup>
 
 </Project>

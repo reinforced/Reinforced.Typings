@@ -1,0 +1,73 @@
+# Docker Compose for testing across multiple .NET versions
+# Usage: docker compose -f docker/docker-compose.test.yml up --build
+
+services:
+  # .NET Framework 4.8.1 via Mono (for legacy support)
+  test-net481-mono:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mono
+    container_name: rt-test-net481-mono
+
+  # .NET 5.0 (EOS - legacy support) - uses Debian Buster
+  test-net5:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+      args:
+        DOTNET_VERSION: "5.0"
+        TARGET_FRAMEWORK: "net5.0"
+        IMAGE_SUFFIX: "-buster-slim"
+    container_name: rt-test-net5
+
+  # .NET 6.0 (LTS)
+  test-net6:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+      args:
+        DOTNET_VERSION: "6.0"
+        TARGET_FRAMEWORK: "net6.0"
+    container_name: rt-test-net6
+
+  # .NET 7.0 (EOS - legacy support) - uses Debian Bullseye
+  test-net7:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+      args:
+        DOTNET_VERSION: "7.0"
+        TARGET_FRAMEWORK: "net7.0"
+        IMAGE_SUFFIX: "-bullseye-slim"
+    container_name: rt-test-net7
+
+  # .NET 8.0 (LTS)
+  test-net8:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+      args:
+        DOTNET_VERSION: "8.0"
+        TARGET_FRAMEWORK: "net8.0"
+    container_name: rt-test-net8
+
+  # .NET 9.0 (STS)
+  test-net9:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+      args:
+        DOTNET_VERSION: "9.0"
+        TARGET_FRAMEWORK: "net9.0"
+    container_name: rt-test-net9
+
+  # .NET 10.0 (Current LTS) - uses Ubuntu Noble
+  test-net10:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+      args:
+        DOTNET_VERSION: "10.0"
+        TARGET_FRAMEWORK: "net10.0"
+        IMAGE_SUFFIX: "-noble"
+    container_name: rt-test-net10
