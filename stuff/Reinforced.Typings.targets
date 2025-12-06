@@ -61,6 +61,7 @@
 			DocumentationFilePath="$(MSBuildProjectDirectory)\$(DocumentationFile)"			
 			ConfigurationMethod="$(RtConfigurationMethod)"
 			SuppressedWarnings="$(RtSuppress)"
+			ExchangeReferenceAssemblies="$(RtExchangeReferenceAssemblies)"
 		/>
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScript" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' == ''" />
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="INeedThis=JustToRebuildTypescripts;BuildingProject=true" Targets="CompileTypeScriptWithTSConfig" Condition="'$(TypeScriptTarget)' != '' AND '@(ConfigFiles)' != ''" />
