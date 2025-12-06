@@ -1,0 +1,24 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/cake/">
+    <File Path="cake/build.cake" />
+  </Folder>
+  <Project Path="Reinforced.Typings.Cli/Reinforced.Typings.Cli.Dev.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.Dev.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="Reinforced.Typings.Tests/Reinforced.Typings.Tests.Dev.csproj" />
+  <Project Path="Reinforced.Typings/Reinforced.Typings.Dev.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="TestFluentAssembly/TestFluentAssembly.Dev.csproj" />
+</Solution>
