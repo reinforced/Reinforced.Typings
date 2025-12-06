@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="($(RtNetCore)=='True') AND ($(TargetFramework) != 'netstandard2.0')">    
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />        
+    <PackageReference Include="System.Xml.XmlSerializer" />        
   </ItemGroup>
 
 </Project>
