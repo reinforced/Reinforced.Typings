@@ -1,3 +1,7 @@
+Looking for job
+=================
+Hey, folks, I'm looking for a job. Full-stack engineer, more than 13 years of software engineering experience. Familiar with majority of production technologies (RDBMS, caches, queues, k8s, docker, web). If you need responsible, passionated and qualified contractor - feel free to contact me via [pavel.b.novikov@gmail.com](mailto://pavel.b.novikov@gmail.com). Lega location: Georgia.
+
 What is that?
 =================
 You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
