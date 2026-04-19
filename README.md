@@ -1,6 +1,23 @@
-Looking for job
-=================
-Hey, folks, I'm looking for a job. Full-stack engineer, more than 13 years of software engineering experience. Familiar with majority of production technologies (RDBMS, caches, queues, k8s, docker, web). If you need responsible, passionated and qualified contractor - feel free to contact me via [pavel.b.novikov@gmail.com](mailto://pavel.b.novikov@gmail.com). Lega location: Georgia.
+## Open to Opportunities
+================
+
+I'm a backend engineer / hands-on tech lead with 15+ years of experience.
+
+I specialize in:
+- distributed systems and high-load architectures
+- performance optimization and bottleneck elimination
+- large-scale refactoring (incl. Roslyn-based automation)
+- cloud-native systems (Docker, Kubernetes)
+
+Currently looking for a role where I can:
+- work on complex backend systems
+- contribute to architecture and technical decisions
+- stay hands-on while leading engineering efforts
+
+Feel free to reach out:
+📩 pavel.b.novikov@gmail.com
+
+Legal location: Georgia.
 
 What is that?
 =================
