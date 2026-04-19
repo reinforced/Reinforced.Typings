@@ -1,6 +1,4 @@
 ## Open to Opportunities
-================
-
 I'm a backend engineer / hands-on tech lead with 15+ years of experience.
 
 I specialize in:
