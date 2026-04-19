@@ -16,7 +16,8 @@ PM> Install-Package Reinforced.Typings
 **Find out detailed information in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
 
 ## Open to Opportunities
-Hi, I'm [Pavel](https://github.com/pavel-b-novikov), backend engineer / hands-on tech lead with 15+ years of experience.
+Hi, I'm [Pavel](https://github.com/pavel-b-novikov). I maintain this project alone in spare time since 2014.
+I'm hands-on tech lead with 15+ years of experience.
 
 I specialize in:
 - distributed systems and high-load architectures
