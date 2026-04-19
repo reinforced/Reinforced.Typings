@@ -1,3 +1,20 @@
+What is that?
+=================
+You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
+
+It converts .NET classes into TypeScript code. Suffering has ended - you don't need to write and maintain boring TypeScript glue code for your DTOs/ViewModels/APIs anymore - RT can generate it from C# app. 
+Moreover, it integrates with MSBuild build process and (re)generates glue code every time you rebuild .NET backend. So you get immediately notified when backend's API/DTOs changed and frontend is broken.
+
+Check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
+
+Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
+=================
+```sh
+PM> Install-Package Reinforced.Typings
+```
+
+**Find out detailed information in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
+
 ## Open to Opportunities
 I'm a backend engineer / hands-on tech lead with 15+ years of experience.
 
@@ -17,22 +34,6 @@ Feel free to reach out:
 
 Legal location: Georgia.
 
-What is that?
-=================
-You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
-
-It converts .NET classes into TypeScript code. Suffering has ended - you don't need to write and maintain boring TypeScript glue code for your DTOs/ViewModels/APIs anymore - RT can generate it from C# app. 
-Moreover, it integrates with MSBuild build process and (re)generates glue code every time you rebuild .NET backend. So you get immediately notified when backend's API/DTOs changed and frontend is broken.
-
-Check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
-
-Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
-=================
-```sh
-PM> Install-Package Reinforced.Typings
-```
-
-**Find out detailed information in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
 
 News
 =================
