@@ -1,22 +1,5 @@
-What is that?
-=================
-You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
-
-It converts .NET classes into TypeScript code. Suffering has ended - you don't need to write and maintain boring TypeScript glue code for your DTOs/ViewModels/APIs anymore - RT can generate it from C# app. 
-Moreover, it integrates with MSBuild build process and (re)generates glue code every time you rebuild .NET backend. So you get immediately notified when backend's API/DTOs changed and frontend is broken.
-
-Check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
-
-Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
-=================
-```sh
-PM> Install-Package Reinforced.Typings
-```
-
-**Find out detailed information in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
-
 ## Open to Opportunities
-Hi, I'm [Pavel](https://github.com/pavel-b-novikov). I maintain this project alone in spare time since 2014.
+Hi, I'm [Pavel](https://github.com/pavel-b-novikov). I maintain this project with my beloved worldwide contributors since 2014.
 I'm hands-on tech lead with 15+ years of experience.
 
 I specialize in:
@@ -35,19 +18,28 @@ Feel free to reach out:
 
 Legal location: Georgia.
 
+What is that?
+=================
+You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
+
+It converts .NET classes into TypeScript code. Suffering has ended - you don't need to write and maintain boring TypeScript glue code for your DTOs/ViewModels/APIs anymore - RT can generate it from C# app. 
+Moreover, it integrates with MSBuild build process and (re)generates glue code every time you rebuild .NET backend. So you get immediately notified when backend's API/DTOs changed and frontend is broken.
+
+Check out [documentation](https://github.com/reinforced/Reinforced.Typings/wiki) to discover numbers of useful features (type substitutions, modules, code generators, fluent configuration, multi-file export, JSDOC). 
+
+Reinforced.Typings is available on [NuGet](https://www.nuget.org/packages/Reinforced.Typings/).
+=================
+```sh
+PM> Install-Package Reinforced.Typings
+```
+
+**Find out detailed information in Reinforced.Typings [wiki](https://github.com/reinforced/Reinforced.Typings/wiki)**
 
 News
 =================
 > Version **1.6.7** released
 
 - .NET 10 support. Do not search for 1.6.6 😊
-
-Support policy
-=================
-
-Please **do not** ask your questions in github issues anymore. Such format is not suitable for storing FAQ. If you have question - please go to StackOverflow and ask it there. Tag your question with [reinforced-typings](https://stackoverflow.com/questions/tagged/reinforced-typings) tag. I watch full list of questions and will answer ASAP. Make experience that you've got available for other users! 
-
-GitHub issues are for confirmed bugs/feature requests now. If you've found bug - please write and PR test if you can. If you have feature idea - please describe it from fluent/attribute configuration point of view. Describe how'd you gonna to configure RT for desired result. Thanks in advance!
 
 Best to be used for
 =================
