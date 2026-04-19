@@ -16,7 +16,7 @@ Currently looking for a role where I can:
 Feel free to reach out:
 📩 pavel.b.novikov@gmail.com
 
-Legal location: Georgia.
+Legal location: Georgia. Remote-friendly roles preferred
 
 What is that?
 =================
