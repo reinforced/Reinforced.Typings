@@ -31,9 +31,9 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(RtNetCore)=='True'">
-		<PackageReference Include="System.Runtime" Version="4.3.0" />
-		<PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-		<PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
+		<PackageReference Include="System.Runtime" />
+		<PackageReference Include="System.Runtime.Loader" />
+		<PackageReference Include="System.Xml.XmlSerializer" />
 	</ItemGroup>
 
 	<ItemGroup>
