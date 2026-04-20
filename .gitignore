@@ -206,7 +206,7 @@ FakesAssemblies/
 Playground/
 
 # Reinforced Typings specific
-Reinforced.Typings.Private.sln
+Reinforced.Typings.Private.slnx
 Reinforced.Typings.pfx
 docplan.txt
 /package/build
