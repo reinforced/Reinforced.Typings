@@ -89,7 +89,7 @@ namespace Reinforced.Typings.Ast.TypeNames
         /// <inheritdoc />
         public override string ToString()
         {
-            string generics = _genericArguments.Length > 0 ? "<" + String.Join(",", _genericArguments.AsEnumerable()) + ">" : null;
+            string generics = _genericArguments.Length > 0 ? "<" + String.Join(", ", _genericArguments.AsEnumerable()) + ">" : null;
             var result = String.Concat(TypeName, generics);
             if (HasPrefix)
             {
