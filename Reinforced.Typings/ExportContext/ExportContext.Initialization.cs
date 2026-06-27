@@ -72,20 +72,22 @@ namespace Reinforced.Typings
 
 
 
-        private HashSet<Type> _allTypesHash;
+        private List<Type> _allTypes;
         private void BuildTypesCache()
         {
-            var allTypes = SourceAssemblies
-                .SelectMany(c => c._GetTypes(this)
-                    .Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null || d.GetCustomAttribute<TsThirdPartyAttribute>() != null))
+            var attributedTypes = SourceAssemblies
+                .SelectMany(c => ReflectionOrder.OrderTypes(c._GetTypes(this)
+                    .Where(d => d.GetCustomAttribute<TsAttributeBase>(false) != null || d.GetCustomAttribute<TsThirdPartyAttribute>() != null)));
+
+            var allTypes = attributedTypes
                 .Union(Project.BlueprintedTypes)
                 .Distinct()
                 .ToList();
 
-            _allTypesHash = new HashSet<Type>(allTypes);
+            _allTypes = allTypes;
             if (Hierarchical)
             {
-                foreach (var type in _allTypesHash)
+                foreach (var type in _allTypes)
                 {
                     Project.AddFileSeparationSettings(type);
                 }
@@ -94,6 +96,7 @@ namespace Reinforced.Typings
             else TypesToFilesMap =
                 allTypes.Where(d => Project.Blueprint(d).ThirdParty == null)
                     .GroupBy(c => GetPathForType(c, stripExtension: false))
+                    .OrderBy(c => c.Key, ReflectionOrder.StringComparer)
                     .ToDictionary(c => c.Key, c => c.AsEnumerable());
 
 

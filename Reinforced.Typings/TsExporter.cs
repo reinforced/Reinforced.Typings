@@ -61,16 +61,19 @@ namespace Reinforced.Typings
         {
             var ef = _context.CreateExportedFile(fileName);
             var gen = _context.Generators.GeneratorForNamespace();
-            var grp = ef.TypesToExport.GroupBy(c => _context.Project.Blueprint(c).GetNamespace(true));
+            var grp = ef.OrderedTypesToExport.GroupBy(c => _context.Project.Blueprint(c).GetNamespace(true));
             var nsp = grp.Where(g => !string.IsNullOrEmpty(g.Key)) // avoid anonymous types
-                .ToDictionary(k => k.Key, v => v.ToList());
+                .OrderBy(g => g.Min(t => _context.Project.Blueprint(t).GetOrder()))
+                .ThenBy(g => g.Key == "-" ? 1 : 0)
+                .ThenBy(g => g.Key, ReflectionOrder.StringComparer)
+                .ToList();
 
             List<RtNamespace> result = new List<RtNamespace>(nsp.Count);
             foreach (var n in nsp)
             {
                 var ns = n.Key;
                 if (ns == "-") ns = string.Empty;
-                var module = gen.Generate(n.Value, ns, ef.TypeResolver);
+                var module = gen.Generate(n, ns, ef.TypeResolver);
                 result.Add(module);
             }
             ef.Namespaces = result.ToArray();
@@ -99,7 +102,7 @@ namespace Reinforced.Typings
             }
             else
             {
-                foreach (var kv in _context.TypesToFilesMap)
+                foreach (var kv in _context.TypesToFilesMap.OrderBy(c => c.Key, ReflectionOrder.StringComparer))
                 {
                     var path = kv.Key;
                     var file = ExportTypes(kv.Key);

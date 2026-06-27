@@ -197,26 +197,26 @@ namespace Reinforced.Typings
         internal static IEnumerable<Type> _GetInterfaces(this Type t)
         {
 #if NETCORE
-            return t.GetTypeInfo().GetInterfaces();
+            return ReflectionOrder.OrderTypes(t.GetTypeInfo().GetInterfaces());
 #else
-            return t.GetInterfaces();
+            return ReflectionOrder.OrderTypes(t.GetInterfaces());
 #endif
         }
         internal static FieldInfo[] _GetFields(this Type t, BindingFlags flags)
         {
 #if NETCORE
-            return t.GetTypeInfo().GetFields(flags);
+            return ReflectionOrder.OrderMembers(t.GetTypeInfo().GetFields(flags)).ToArray();
 #else
-            return t.GetFields(flags);
+            return ReflectionOrder.OrderMembers(t.GetFields(flags)).ToArray();
 #endif
         }
 
         internal static FieldInfo[] _GetFields(this Type t)
         {
 #if NETCORE
-            return t.GetTypeInfo().GetFields();
+            return ReflectionOrder.OrderMembers(t.GetTypeInfo().GetFields()).ToArray();
 #else
-            return t.GetFields();
+            return ReflectionOrder.OrderMembers(t.GetFields()).ToArray();
 #endif
         }
 
@@ -232,9 +232,9 @@ namespace Reinforced.Typings
         internal static ConstructorInfo[] _GetConstructors(this Type t, BindingFlags flags)
         {
 #if NETCORE
-            return t.GetTypeInfo().GetConstructors(flags);
+            return ReflectionOrder.OrderMembers(t.GetTypeInfo().GetConstructors(flags)).ToArray();
 #else
-            return t.GetConstructors(flags);
+            return ReflectionOrder.OrderMembers(t.GetConstructors(flags)).ToArray();
 #endif
         }
 
@@ -242,18 +242,18 @@ namespace Reinforced.Typings
         internal static PropertyInfo[] _GetProperties(this Type t, BindingFlags flags)
         {
 #if NETCORE
-            return t.GetTypeInfo().GetProperties(flags);
+            return ReflectionOrder.OrderMembers(t.GetTypeInfo().GetProperties(flags)).ToArray();
 #else
-            return t.GetProperties(flags);
+            return ReflectionOrder.OrderMembers(t.GetProperties(flags)).ToArray();
 #endif
         }
 
         internal static MethodInfo[] _GetMethods(this Type t, BindingFlags flags)
         {
 #if NETCORE
-            return t.GetTypeInfo().GetMethods(flags);
+            return ReflectionOrder.OrderMembers(t.GetTypeInfo().GetMethods(flags)).ToArray();
 #else
-            return t.GetMethods(flags);
+            return ReflectionOrder.OrderMembers(t.GetMethods(flags)).ToArray();
 #endif
         }
 
@@ -365,7 +365,8 @@ namespace Reinforced.Typings
         internal static T[] GetInheritedMembers<T>(this Type type, Func<Type, T[]> membersGetter, Type limiter)
             where T : MemberInfo
         {
-            var members = new HashSet<T>(GetInheritanceEqComparer<T>());
+            var membersSet = new HashSet<T>(GetInheritanceEqComparer<T>());
+            var members = new List<T>();
 
             var considered = new List<Type>();
             var queue = new Queue<Type>();
@@ -403,10 +404,14 @@ namespace Reinforced.Typings
                     }
                 }
 
-                var typeMembers = membersGetter(subType);
+                var typeMembers = ReflectionOrder.OrderMembers(membersGetter(subType));
                 foreach (var newMember in typeMembers)
                 {
-                    if (!members.Contains(newMember)) members.Add(newMember);
+                    if (!membersSet.Contains(newMember))
+                    {
+                        membersSet.Add(newMember);
+                        members.Add(newMember);
+                    }
                 }
             }
             return members.ToArray();
