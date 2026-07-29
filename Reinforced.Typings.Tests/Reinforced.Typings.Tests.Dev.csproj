@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-	<LangVersion>Preview</LangVersion> 
+	<LangVersion>Preview</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,11 +28,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <!-- Reinforced.Typings.Integrate marks its own Microsoft.Build.Framework reference PrivateAssets="All" (it is normally supplied by the hosting MSBuild engine), so the test host needs its own copy. -->
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Reinforced.Typings.Cli\Reinforced.Typings.Cli.Dev.csproj" />
     <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.Dev.csproj" />
+    <ProjectReference Include="..\Reinforced.Typings.Integrate\Reinforced.Typings.Integrate.Dev.csproj" />
     <ProjectReference Include="..\TestFluentAssembly\TestFluentAssembly.Dev.csproj" />
   </ItemGroup>
 

@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>rtcli</name>
+    </assembly>
+    <members>
+        <member name="T:Reinforced.Typings.Cli.Bootstrapper">
+            <summary>
+            Class for CLI typescript typings utility
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Cli.Bootstrapper.Main(System.String[])">
+            <summary>
+            Usage: rtcli.exe Assembly.dll [Assembly2.dll Assembly3.dll ... etc] file.ts
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="T:Reinforced.Typings.Cli.ConsoleHelpAttribute">
+            <summary>
+            Denotes console help for parameter
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ConsoleHelpAttribute.HelpText">
+            <summary>
+            Help text
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Cli.ErrorMessages.RTW0009_CannotFindFluentMethod">
+            <summary>
+            Error of fluent method loading
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Cli.ErrorMessages.RTW0010_CannotParseWarningCode">
+            <summary>
+            Error of suppressed warning code parsing
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Cli.ErrorMessages.RTW0011_UnrecognizedConfigurationParameter">
+            <summary>
+            Error of configuration parameter parsing
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Cli.ErrorMessages.RTW0012_UnrecognizedConfigurationParameterValue">
+            <summary>
+            Error of configuration parameter value parsing
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Cli.ErrorMessages.RTW0013_AssemblyMayNotBeResolvedIncorrectly">
+            <summary>
+            Warning of potentially incorrect assembly resolve
+            </summary>
+        </member>
+        <member name="F:Reinforced.Typings.Cli.ErrorMessages.RTW0014_AssemblyFailedToLoad">
+            <summary>
+            Warning of failed assembly load
+            </summary>
+        </member>
+        <member name="T:Reinforced.Typings.Cli.ExporterConsoleParameters">
+            <summary>
+            Reinforced.Typings generator CLI parameters
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.SourceAssemblies">
+            <summary>
+            Source assemblies. 
+            The assemblies to extract typings from
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.TargetFile">
+            <summary>
+            Target file where to store generated sources. 
+            This parameter is not used when Hierarchy is true
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.TargetDirectory">
+            <summary>
+            Target directory where to store generated typing files. 
+            This parameter is not used when Hierarchy is false
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.ReferencesTmpFilePath">
+            <summary>
+            Full list of referenced assemblies. 
+            If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.Hierarchy">
+            <summary>
+            True to create project hierarchy in target folder. 
+            False to store generated typings in single file
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.DocumentationFilePath">
+            <summary>
+            Full path to assembly's XMLDOC file.
+            If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.ConfigurationMethod">
+            <summary>
+            Sets full-qualified name of configuration method to be applied to retrieve fluent configuration instead of attribute-based configuration.
+            Configuration method should be static and consume Reinforced.Typings.Fluent.ConfigurationBuilder as first parameter. 
+            Warning! It is important for Configuration method to be full-qualified and it should be located in the one of referenced assemblies!
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.SuppressedWarnings">
+            <summary>
+            Sets list of warnings to be suppressed. Semi-colon separated values.
+            All letters will be discarded when parsing, so can be specified in any convenient format 
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Cli.ExporterConsoleParameters.Validate">
+            <summary>
+            Validates input parameters
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Cli.ExporterConsoleParameters.ExportConsoleParameters">
+            <summary>
+            Produces command line arguments suitable for rtcli.exe
+            </summary>
+            <returns>Command line arguments string</returns>
+        </member>
+        <member name="T:Reinforced.Typings.Cli.VisualStudioFriendlyErrorMessage">
+            <summary>
+            Class that formats messages in appropriate way to be shown at 
+            VisualStudio's errors list
+            
+            Explanation is taken from here:
+            http://blogs.msdn.com/b/msbuild/archive/2006/11/03/msbuild-visual-studio-aware-error-messages-and-message-formats.aspx
+            </summary>
+        </member>
+    </members>
+</doc>
