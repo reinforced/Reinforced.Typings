@@ -1,23 +1,3 @@
-## Open to Opportunities
-Hi, I'm [Pavel](https://github.com/pavel-b-novikov). I maintain this project with my beloved worldwide contributors since 2014.
-I'm hands-on tech lead with 15+ years of experience.
-
-I specialize in:
-- distributed systems and high-load architectures
-- performance optimization and bottleneck elimination
-- large-scale refactoring (incl. Roslyn-based automation)
-- cloud-native systems (Docker, Kubernetes)
-
-Currently looking for a role where I can:
-- work on complex backend systems
-- contribute to architecture and technical decisions
-- stay hands-on while leading engineering efforts
-
-Feel free to reach out:
-📩 pavel.b.novikov@gmail.com
-
-Legal location: Georgia. Remote-friendly roles preferred
-
 What is that?
 =================
 You develop frontend applications with TypeScript and .NET Backend? You need Reinforced.Typings.
