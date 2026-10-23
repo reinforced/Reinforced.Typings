@@ -11,17 +11,19 @@ namespace Reinforced.Typings.ReferencesInspection
     {
         private readonly HashSet<RtReference> _references = new HashSet<RtReference>(ReferenceComparer.Instance);
         private readonly HashSet<RtImport> _imports = new HashSet<RtImport>(ImportComparer.Instance);
+        private readonly List<RtReference> _referencesOrder = new List<RtReference>();
+        private readonly List<RtImport> _importsOrder = new List<RtImport>();
         private readonly Dictionary<string, RtImport> _starImportsAs = new Dictionary<string, RtImport>();
 
         /// <summary>
         /// References exposed via &lt;reference path="..."&gt; tag
         /// </summary>
-        public IEnumerable<RtReference> References { get { return _references; } }
+        public IEnumerable<RtReference> References { get { return _referencesOrder; } }
 
         /// <summary>
         /// References exposed via imports
         /// </summary>
-        public IEnumerable<RtImport> Imports { get { return _imports; } }
+        public IEnumerable<RtImport> Imports { get { return _importsOrder; } }
 
         /// <summary>
         /// Cache of starred imports. Key is "from", value is star import alias
@@ -37,20 +39,19 @@ namespace Reinforced.Typings.ReferencesInspection
         {
             foreach (var rtReference in references)
             {
-                _references.AddIfNotExists(rtReference);
+                AddReference(rtReference);
             }
 
             if (imports != null)
             {
                 foreach (var rtImport in imports.Where(c => c.IsWildcard))
                 {
-                    _imports.AddIfNotExists(rtImport);
-                    _starImportsAs[rtImport.From] = rtImport;
+                    AddImport(rtImport);
                 }
 
                 foreach (var rtImport in imports.Where(c => !c.IsWildcard))
                 {
-                    _imports.AddIfNotExists(rtImport);
+                    AddImport(rtImport);
                 }
             }
         }
@@ -61,7 +62,7 @@ namespace Reinforced.Typings.ReferencesInspection
         /// <returns></returns>
         public InspectedReferences Duplicate()
         {
-            return new InspectedReferences(_references, _imports);
+            return new InspectedReferences(_referencesOrder, _importsOrder);
         }
 
         /// <summary>
@@ -70,7 +71,9 @@ namespace Reinforced.Typings.ReferencesInspection
         /// <param name="reference">New reference</param>
         public void AddReference(RtReference reference)
         {
-            _references.AddIfNotExists(reference);
+            if (_references.Contains(reference)) return;
+            _references.Add(reference);
+            _referencesOrder.Add(reference);
         }
 
         /// <summary>
@@ -82,13 +85,25 @@ namespace Reinforced.Typings.ReferencesInspection
             if (import.IsWildcard)
             {
                 if (_starImportsAs.ContainsKey(import.From)) return;
-                _imports.RemoveWhere(c => c.From == import.From);
+                var insertIndex = _importsOrder.FindIndex(c => c.From == import.From);
+                var removed = _imports.RemoveWhere(c => c.From == import.From);
+                if (removed > 0) _importsOrder.RemoveAll(c => c.From == import.From);
                 _imports.Add(import);
+                if (insertIndex >= 0 && insertIndex <= _importsOrder.Count)
+                {
+                    _importsOrder.Insert(insertIndex, import);
+                }
+                else
+                {
+                    _importsOrder.Add(import);
+                }
                 _starImportsAs[import.From] = import;
             }
             else
             {
-                _imports.AddIfNotExists(import);
+                if (_imports.Contains(import)) return;
+                _imports.Add(import);
+                _importsOrder.Add(import);
             }
         }
     }

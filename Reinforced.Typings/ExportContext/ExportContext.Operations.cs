@@ -85,19 +85,19 @@ namespace Reinforced.Typings
             {
                 if (!TypesToFilesMap.ContainsKey(fileName))
                 {
-                    var allFiles = string.Join(", ", TypesToFilesMap.Keys);
+                    var allFiles = string.Join(", ", TypesToFilesMap.Keys.OrderBy(c => c, ReflectionOrder.StringComparer).ToArray());
                     throw new Exception("Current configuration does not contain file " + fileName + ", only " + allFiles);
                 }
 
-                types = new HashSet<Type>(TypesToFilesMap[fileName]);
+                types = TypesToFilesMap[fileName];
             }
             else
             {
-                types = _allTypesHash;
+                types = _allTypes;
             }
-            var typesHash = new HashSet<Type>(types.Where(d => Project.Blueprint(d).ThirdParty == null));
+            var orderedTypes = types.Where(d => Project.Blueprint(d).ThirdParty == null).ToList();
 
-            ExportedFile ef = new ExportedFile(typesHash, fileName, _globalReferences.Duplicate(), this);
+            ExportedFile ef = new ExportedFile(orderedTypes, fileName, _globalReferences.Duplicate(), this);
             return ef;
         }
         

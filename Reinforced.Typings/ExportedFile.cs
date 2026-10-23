@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Reinforced.Typings.Ast;
 using Reinforced.Typings.Ast.Dependency;
@@ -21,10 +22,11 @@ namespace Reinforced.Typings
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        internal ExportedFile(HashSet<Type> typesToExport, string fileName, InspectedReferences references, ExportContext context)
+        internal ExportedFile(IEnumerable<Type> typesToExport, string fileName, InspectedReferences references, ExportContext context)
         {
             _context = context;
-            TypesToExport = typesToExport;
+            OrderedTypesToExport = typesToExport.ToList();
+            TypesToExport = new HashSet<Type>(OrderedTypesToExport);
             FileName = fileName;
             AllTypesIsSingleFile = !_context.Hierarchical;
             References = references;
@@ -56,6 +58,11 @@ namespace Reinforced.Typings
         /// Set of types being exported within this file
         /// </summary>
         public HashSet<Type> TypesToExport { get; private set; }
+
+        /// <summary>
+        /// Types being exported within this file in deterministic export order
+        /// </summary>
+        internal List<Type> OrderedTypesToExport { get; private set; }
 
         /// <summary>
         /// Absolute file path+name+extension
@@ -228,7 +235,7 @@ namespace Reinforced.Typings
 
         private void AddReferencesFromTypes()
         {
-            foreach (var type in TypesToExport)
+            foreach (var type in OrderedTypesToExport)
             {
                 AddTypeSpecificReferences(type);
                 if (_context.Global.UseModules) AddTypeSpecificImports(type);

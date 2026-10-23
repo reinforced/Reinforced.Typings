@@ -25,11 +25,12 @@ namespace Reinforced.Typings
         }
 
         private readonly Dictionary<Type, TypeBlueprint> _blueprints = new Dictionary<Type, TypeBlueprint>();
+        private readonly List<Type> _blueprintedTypes = new List<Type>();
 
 
         internal IEnumerable<Type> BlueprintedTypes
         {
-            get { return _blueprints.Keys; }
+            get { return _blueprintedTypes; }
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Reinforced.Typings
         public TypeBlueprint Blueprint(Type t)
         {
             if (t == null) return null;
-            return _blueprints.GetOrCreate(t, () => new TypeBlueprint(t));
+            return GetOrCreateBlueprint(t);
         }
 
         /// <summary>
@@ -52,9 +53,20 @@ namespace Reinforced.Typings
         public TypeBlueprint Blueprint(Type t, bool create)
         {
             if (t == null) return null;
-            if (create) return _blueprints.GetOrCreate(t, () => new TypeBlueprint(t));
+            if (create) return GetOrCreateBlueprint(t);
             if (!_blueprints.ContainsKey(t)) return null;
             return _blueprints[t];
+        }
+
+        private TypeBlueprint GetOrCreateBlueprint(Type t)
+        {
+            TypeBlueprint result;
+            if (_blueprints.TryGetValue(t, out result)) return result;
+
+            result = new TypeBlueprint(t);
+            _blueprints[t] = result;
+            _blueprintedTypes.Add(t);
+            return result;
         }
 
         internal void AddFileSeparationSettings(Type type)
