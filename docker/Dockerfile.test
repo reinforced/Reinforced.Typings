@@ -1,0 +1,97 @@
+# Multi-stage Dockerfile for testing across .NET versions
+# Usage: docker build --build-arg DOTNET_VERSION=8.0 --build-arg TARGET_FRAMEWORK=net8.0 -f docker/Dockerfile.test .
+#
+# Note: .NET 10.0 uses preview images without OS suffix
+
+ARG DOTNET_VERSION=8.0
+ARG IMAGE_SUFFIX=-bookworm-slim
+
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}${IMAGE_SUFFIX} AS build
+
+ARG TARGET_FRAMEWORK=net8.0
+
+WORKDIR /src
+
+# Copy project files for restore layer caching
+COPY Directory.Packages.props ./
+COPY Reinforced.Typings/*.csproj ./Reinforced.Typings/
+COPY Reinforced.Typings.Cli/*.csproj ./Reinforced.Typings.Cli/
+COPY Reinforced.Typings.Integrate/*.csproj ./Reinforced.Typings.Integrate/
+COPY TestFluentAssembly/*.csproj ./TestFluentAssembly/
+
+# Modify csproj files to use the target framework (like Cake build script does)
+RUN sed -i "s|<TargetFramework>[^<]*</TargetFramework>|<TargetFramework>${TARGET_FRAMEWORK}</TargetFramework>|g" \
+        Reinforced.Typings/Reinforced.Typings.NETCore.csproj \
+        Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj && \
+    sed -i "s|<TargetFrameworks>[^<]*</TargetFrameworks>|<TargetFramework>${TARGET_FRAMEWORK}</TargetFramework>|g" \
+        Reinforced.Typings/Reinforced.Typings.NETCore.csproj \
+        Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj
+
+# Restore dependencies
+RUN dotnet restore Reinforced.Typings/Reinforced.Typings.NETCore.csproj
+RUN dotnet restore Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj
+RUN dotnet restore Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj
+
+# Copy source code
+COPY Reinforced.Typings/ ./Reinforced.Typings/
+COPY Reinforced.Typings.Cli/ ./Reinforced.Typings.Cli/
+COPY Reinforced.Typings.Integrate/ ./Reinforced.Typings.Integrate/
+COPY TestFluentAssembly/ ./TestFluentAssembly/
+
+# Re-apply target framework changes after copying source (csproj was overwritten)
+RUN sed -i "s|<TargetFramework>[^<]*</TargetFramework>|<TargetFramework>${TARGET_FRAMEWORK}</TargetFramework>|g" \
+        Reinforced.Typings/Reinforced.Typings.NETCore.csproj \
+        Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj && \
+    sed -i "s|<TargetFrameworks>[^<]*</TargetFrameworks>|<TargetFramework>${TARGET_FRAMEWORK}</TargetFramework>|g" \
+        Reinforced.Typings/Reinforced.Typings.NETCore.csproj \
+        Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj
+
+# Build stage
+FROM build AS test-build
+
+ARG TARGET_FRAMEWORK
+ENV TARGET_FRAMEWORK=${TARGET_FRAMEWORK:-net8.0}
+
+# Build with signing disabled for container testing
+RUN echo "Building Reinforced.Typings for ${TARGET_FRAMEWORK}..." && \
+    dotnet build Reinforced.Typings/Reinforced.Typings.NETCore.csproj \
+        -c Release \
+        /p:SignAssembly=false
+
+RUN echo "Building Reinforced.Typings.Cli for ${TARGET_FRAMEWORK}..." && \
+    dotnet build Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj \
+        -c Release \
+        /p:SignAssembly=false
+
+# Build Integrate only for netstandard2.0 (net481 requires Windows)
+RUN echo "Building Reinforced.Typings.Integrate for netstandard2.0..." && \
+    dotnet build Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj \
+        -c Release \
+        /p:SignAssembly=false \
+        /p:TargetFramework=netstandard2.0
+
+# Create output directories to ensure COPY works
+RUN mkdir -p /src/Reinforced.Typings/bin/Release/${TARGET_FRAMEWORK} && \
+    mkdir -p /src/Reinforced.Typings.Cli/bin/Release/${TARGET_FRAMEWORK} && \
+    mkdir -p /src/Reinforced.Typings.Integrate/bin/Release
+
+# Final verification stage
+FROM build AS final
+
+ARG TARGET_FRAMEWORK=net8.0
+
+# Create non-root user
+RUN groupadd --gid 10001 rtuser 2>/dev/null || true && \
+    useradd --uid 10001 --gid 10001 --shell /bin/false rtuser 2>/dev/null || true
+
+WORKDIR /app
+
+# Copy only the build outputs for verification
+COPY --from=test-build /src/Reinforced.Typings/bin/Release/ ./Reinforced.Typings/
+COPY --from=test-build /src/Reinforced.Typings.Cli/bin/Release/ ./Reinforced.Typings.Cli/
+COPY --from=test-build /src/Reinforced.Typings.Integrate/bin/Release/ ./Reinforced.Typings.Integrate/
+
+# Verify builds exist
+RUN find . -name "*.dll" -type f | head -10 && \
+    echo "Build completed successfully for .NET ${TARGET_FRAMEWORK}"

@@ -21,19 +21,8 @@ const string buildPath = "../package/build";
 const string multiTargetPath = "../package/buildMultiTargeting";
 const string libPath = "../package/lib";
 const string RELEASE = "Release";
-const string NETCORE22 = "netcoreapp2.2";
-const string NETCORE21 = "netcoreapp2.1";
-const string NETSTANDARD16 = "netstandard1.6";
-const string NETSTANDARD15 = "netstandard1.5";
 const string NETSTANDARD20 = "netstandard2.0";
-const string NETCORE31 = "netcoreapp3.1";
-const string NETCORE30 = "netcoreapp3.0";
-const string NETCORE20 = "netcoreapp2.0";
-const string NETCORE10 = "netcoreapp1.0";
-const string NETCORE11 = "netcoreapp1.1";
-const string NET461 = "net461";
-const string NET46 = "net46";
-const string NET45 = "net45";
+const string NET481 = "net481";
 const string NET50 = "net5.0";
 const string NET60 = "net6.0";
 const string NET70 = "net7.0";
@@ -41,12 +30,12 @@ const string NET80 = "net8.0";
 const string NET90 = "net9.0";
 const string NET100 = "net10.0";
 
-var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31, NET50, NET60, NET70, NET80, NET90, NET100 };
-var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET45, NET461, NET50, NET60, NET70, NET80, NET90, NET100};
-var taskFrameworks = new[] { NET46, NETSTANDARD20 };
+var cliFrameworks = new[] { NET481, NET50, NET60, NET70, NET80, NET90, NET100 };
+var rtFrameworks = new[]  { NET481, NET50, NET60, NET70, NET80, NET90, NET100 };
+var taskFrameworks = new[] { NET481, NETSTANDARD20 };
 
-var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET50,NET60,NET70,NET80,NET90,NET100});
-var netCoreApp = new HashSet<string>(new[]{NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET50,NET60,NET70,NET80,NET90,NET100});
+var netCore = new HashSet<string>(new[]{NETSTANDARD20,NET50,NET60,NET70,NET80,NET90,NET100});
+var netCoreApp = new HashSet<string>(new[]{NET50,NET60,NET70,NET80,NET90,NET100});
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
@@ -61,7 +50,7 @@ Task("Reset")
   .Description("Resets target frameworks")
   .Does(() =>
 {
-	var fw = NET461;
+	var fw = NET481;
 	ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");       
     ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>"); 
     ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");       
