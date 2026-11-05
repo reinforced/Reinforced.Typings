@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Reinforced.Typings.Integrate</name>
+    </assembly>
+    <members>
+        <member name="M:Reinforced.Typings.Integrate.RemoveTypescriptStep.Execute">
+            <summary>Executes a task.</summary>
+            <returns>true if the task executed successfully; otherwise, false.</returns>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RemoveTypescriptStep.BuildEngine">
+            <summary>Gets or sets the build engine associated with the task.</summary>
+            <returns>The build engine associated with the task.</returns>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RemoveTypescriptStep.HostObject">
+            <summary>Gets or sets any host object that is associated with the task.</summary>
+            <returns>The host object associated with the task.</returns>
+        </member>
+        <member name="T:Reinforced.Typings.Integrate.RtCli">
+            <summary>
+            Task for gathering dynamic typings
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.TargetFramework">
+            <summary>
+            Framework version to invoke rtcli
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.RtForceTargetFramework">
+            <summary>
+            Forced usage of target framework
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.BuildDirectory">
+            <summary>
+            Package's "build" directory
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.References">
+            <summary>
+            Additional library references
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.SourceAssembly">
+            <summary>
+            Source assembly
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.TargetFile">
+            <summary>
+            Target .td/.d.ts file
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.TargetDirectory">
+            <summary>
+            Target directory for hierarchical generation
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.Hierarchical">
+            <summary>
+            Generate types to multiple files
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.AdditionalSourceAssemblies">
+            <summary>
+            Additional source assemblies to import
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.ProjectRoot">
+            <summary>
+            ProjectDir variable
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.DocumentationFilePath">
+            <summary>
+            Path to documentation XML
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.ConfigurationMethod">
+            <summary>
+            Full-qualified name of fluent configuration method
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.SuppressedWarnings">
+            <summary>
+            Semicolon-separated list of warnings to be suppressed
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Integrate.RtCli.ToolExe">
+            <summary>Projects may set this to override a task's ToolName. Tasks may override this to prevent that.</summary>
+        </member>
+        <member name="T:Reinforced.Typings.Cli.ConsoleHelpAttribute">
+            <summary>
+            Denotes console help for parameter
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ConsoleHelpAttribute.HelpText">
+            <summary>
+            Help text
+            </summary>
+        </member>
+        <member name="T:Reinforced.Typings.Cli.ExporterConsoleParameters">
+            <summary>
+            Reinforced.Typings generator CLI parameters
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.SourceAssemblies">
+            <summary>
+            Source assemblies. 
+            The assemblies to extract typings from
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.TargetFile">
+            <summary>
+            Target file where to store generated sources. 
+            This parameter is not used when Hierarchy is true
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.TargetDirectory">
+            <summary>
+            Target directory where to store generated typing files. 
+            This parameter is not used when Hierarchy is false
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.ReferencesTmpFilePath">
+            <summary>
+            Full list of referenced assemblies. 
+            If not specified then the CLI will try to resolve reference assemblies from same directory as target assembly
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.Hierarchy">
+            <summary>
+            True to create project hierarchy in target folder. 
+            False to store generated typings in single file
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.DocumentationFilePath">
+            <summary>
+            Full path to assembly's XMLDOC file.
+            If this parameter is not specified or contains invalid path then documentation will not be generated without any exception
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.ConfigurationMethod">
+            <summary>
+            Sets full-qualified name of configuration method to be applied to retrieve fluent configuration instead of attribute-based configuration.
+            Configuration method should be static and consume Reinforced.Typings.Fluent.ConfigurationBuilder as first parameter. 
+            Warning! It is important for Configuration method to be full-qualified and it should be located in the one of referenced assemblies!
+            </summary>
+        </member>
+        <member name="P:Reinforced.Typings.Cli.ExporterConsoleParameters.SuppressedWarnings">
+            <summary>
+            Sets list of warnings to be suppressed. Semi-colon separated values.
+            All letters will be discarded when parsing, so can be specified in any convenient format 
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Cli.ExporterConsoleParameters.Validate">
+            <summary>
+            Validates input parameters
+            </summary>
+        </member>
+        <member name="M:Reinforced.Typings.Cli.ExporterConsoleParameters.ExportConsoleParameters">
+            <summary>
+            Produces command line arguments suitable for rtcli.exe
+            </summary>
+            <returns>Command line arguments string</returns>
+        </member>
+    </members>
+</doc>

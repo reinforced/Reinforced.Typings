@@ -60,6 +60,11 @@
       <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <!-- Reinforced.Typings.Integrate marks its own Microsoft.Build.Framework reference as build-time only, so the test runner needs its own copy to load RemoveTypescriptStep at runtime. -->
+    <Reference Include="Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Build.Framework.15.9.20\lib\net46\Microsoft.Build.Framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassicMultiFileResolvationTests.cs" />
@@ -135,6 +140,8 @@
     <Compile Include="TokenizingComparerTests.cs" />
     <Compile Include="TypeNameEqualityComparer.cs" />
     <Compile Include="BasicTypesResolvationTests.cs" />
+    <Compile Include="MSBuildCompat\RemoveTypescriptStepTests.cs" />
+    <Compile Include="MSBuildCompat\TypeScriptTargetsCompatibilityTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -146,6 +153,10 @@
     <ProjectReference Include="..\Reinforced.Typings.Cli\Reinforced.Typings.Cli.csproj">
       <Project>{006290E6-CC0D-4222-87F8-9E67469AD2C9}</Project>
       <Name>Reinforced.Typings.Cli</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reinforced.Typings.Integrate\Reinforced.Typings.Integrate.csproj">
+      <Project>{F4830436-B660-4FAF-8F1B-4ADD0732AF02}</Project>
+      <Name>Reinforced.Typings.Integrate</Name>
     </ProjectReference>
     <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.csproj">
       <Project>{2A5CCD5C-E660-4088-8937-9632ABBBCDBB}</Project>
@@ -163,7 +174,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

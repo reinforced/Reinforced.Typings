@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Reinforced.Typings.Cli\Reinforced.Typings.Cli.NETCore.csproj" />
     <ProjectReference Include="..\Reinforced.Typings\Reinforced.Typings.NETCore.csproj" />
+    <ProjectReference Include="..\Reinforced.Typings.Integrate\Reinforced.Typings.Integrate.NETCore.csproj" />
     <ProjectReference Include="..\TestFluentAssembly\TestFluentAssembly.NETCore.csproj" />
   </ItemGroup>
   <ItemGroup>

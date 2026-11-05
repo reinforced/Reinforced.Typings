@@ -25,10 +25,12 @@ namespace Reinforced.Typings.Integrate
             foreach (string s in targets)
             {
                 string v = s.Trim();
-                bool isCompileTs = (v == "CompileTypeScript");
-                bool isCompileTsConfig = (v == "CompileTypeScriptWithTSConfig");
-                bool isGetTypeScriptOutputForPublishing = (v == "GetTypeScriptOutputForPublishing");
-                if ((!isCompileTs) && (!isCompileTsConfig) && (!isGetTypeScriptOutputForPublishing))
+                bool isCompileTs = v == "CompileTypeScript";
+                bool isCompileTsConfig = v == "CompileTypeScriptWithTSConfig";
+                bool isGetTypeScriptOutputForPublishing = v == "GetTypeScriptOutputForPublishing";
+                bool isSetTscExecutable = v == "SetTscExecutable"; // Microsoft.TypeScript.MSBuild 7+ (tsgo) renamed CompileTypeScript to SetTscExecutable/RunTscCompile
+                bool isRunTscCompile = v == "RunTscCompile";
+                if ((!isCompileTs) && (!isCompileTsConfig) && (!isGetTypeScriptOutputForPublishing) && (!isSetTscExecutable) && (!isRunTscCompile))
                 {
                     result.Add(v);
                 }
