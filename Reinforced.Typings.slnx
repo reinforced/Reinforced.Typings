@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/.nuget/">
+    <File Path=".nuget/NuGet.Config" />
+    <File Path=".nuget/NuGet.exe" />
+    <File Path=".nuget/NuGet.targets" />
+  </Folder>
+  <Project Path="Reinforced.Typings.Cli/Reinforced.Typings.Cli.csproj" />
+  <Project Path="Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.csproj" />
+  <Project Path="Reinforced.Typings.Tests/Reinforced.Typings.Tests.csproj" />
+  <Project Path="Reinforced.Typings/Reinforced.Typings.csproj" />
+  <Project Path="TestFluentAssembly/TestFluentAssembly.csproj" />
+</Solution>

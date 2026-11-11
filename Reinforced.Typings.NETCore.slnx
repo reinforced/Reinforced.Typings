@@ -1,0 +1,26 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/cake/">
+    <File Path="cake/build.cake" />
+    <File Path="cake/build.ps1" />
+    <File Path="cake/build.sh" />
+  </Folder>
+  <Project Path="Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="Reinforced.Typings.Tests/Reinforced.Typings.Tests.NETCore.csproj" />
+  <Project Path="Reinforced.Typings/Reinforced.Typings.NETCore.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="TestFluentAssembly/TestFluentAssembly.NETCore.csproj" />
+</Solution>
