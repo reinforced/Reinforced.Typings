@@ -2,7 +2,7 @@
 #tool nuget:?package=NuGet.CommandLine&version=6.4.0
 
 var target = Argument("target", "Build");
-const string version = "1.6.7";
+const string version = "1.6.8";
 
 Task("Clean")
   .Does(() =>
@@ -40,21 +40,22 @@ const string NET70 = "net7.0";
 const string NET80 = "net8.0";
 const string NET90 = "net9.0";
 const string NET100 = "net10.0";
+const string NET110 = "net11.0";
 
-var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31, NET50, NET60, NET70, NET80, NET90, NET100 };
-var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET45, NET461, NET50, NET60, NET70, NET80, NET90, NET100};
+var cliFrameworks = new[] { NETCORE10, NETCORE11, NET45, NET461,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31, NET50, NET60, NET70, NET80, NET90, NET100, NET110 };
+var rtFrameworks = new[]  { NETCORE10, NETCORE11, NETSTANDARD15,NETSTANDARD20,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET45, NET461, NET50, NET60, NET70, NET80, NET90, NET100, NET110};
 var taskFrameworks = new[] { NET46, NETSTANDARD20 };
 
-var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET50,NET60,NET70,NET80,NET90,NET100});
-var netCoreApp = new HashSet<string>(new[]{NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET50,NET60,NET70,NET80,NET90,NET100});
+var netCore = new HashSet<string>(new[]{NETSTANDARD15,NETSTANDARD20,NETCORE10,NETCORE11,NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET50,NET60,NET70,NET80,NET90,NET100,NET110});
+var netCoreApp = new HashSet<string>(new[]{NETCORE20,NETCORE21,NETCORE22,NETCORE30,NETCORE31,NET50,NET60,NET70,NET80,NET90,NET100,NET110});
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 const string RtNetCoreProject = "../Reinforced.Typings/Reinforced.Typings.NETCore.csproj";
 const string IntegrateProject = "../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj";
 const string tfParameter = "TargetFrameworks";
-string tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>"; 
+string tfRgx = $"<{tfParameter}>[a-zA-Z0-9;.]*</{tfParameter}>";
 const string tfSingleParameter = "TargetFramework";
-string tfsRgx = $"<{tfSingleParameter}>[a-zA-Z0-9;.]*</{tfSingleParameter}>"; 
+string tfsRgx = $"<{tfSingleParameter}>[a-zA-Z0-9;.]*</{tfSingleParameter}>";
 
 Task("Reset")
   .IsDependentOn("UpdateVersions")
@@ -62,10 +63,10 @@ Task("Reset")
   .Does(() =>
 {
 	var fw = NET461;
-	ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");       
-    ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>"); 
-    ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");       
-    ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
+	ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");
+    ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");
+    ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");
+    ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");
 });
 
 Task("PackageClean")
@@ -89,7 +90,7 @@ Task("UpdateVersions")
     foreach(var par in new[]{"AssemblyVersion","FileVersion","InformationalVersion"}){
       var rgx = $"<{par}>[0-9.]*</{par}>";
       ReplaceRegexInFiles(p,rgx,$"<{par}>{version}</{par}>");
-    }    
+    }
   }
 });
 
@@ -98,7 +99,7 @@ Task("BuildIntegrate")
 .Does(()=>{
   foreach(var fw in taskFrameworks){
 	  DotNetMSBuildSettings mbs = null;
-          
+
       if (netCore.Contains(fw)){
 		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
 		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
@@ -109,14 +110,14 @@ Task("BuildIntegrate")
     DotNetPublish(IntegrateProject, new DotNetPublishSettings
     {
       Verbosity = DotNetVerbosity.Quiet,
-      Configuration = RELEASE,	  
+      Configuration = RELEASE,
       MSBuildSettings = mbs,
-      OutputDirectory = System.IO.Path.Combine(buildPath, fw),      
+      OutputDirectory = System.IO.Path.Combine(buildPath, fw),
       Framework = fw
-    });    
-    
-  }  
-  
+    });
+
+  }
+
 });
 
 Task("Build")
@@ -132,13 +133,13 @@ Task("Build")
       Information("Building CLI for {0}",fw);
       Information("---------");
 
-      ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");       
-      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>"); 
-      ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");       
-      ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
+      ReplaceRegexInFiles(CliNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");
+      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");
+      ReplaceRegexInFiles(CliNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");
+      ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");
 
       DotNetMSBuildSettings mbs = null;
-          
+
       if (netCore.Contains(fw)){
 		var ac = "NETCORE;" + fw.ToUpperInvariant().Replace(".","_");
 		if (netCoreApp.Contains(fw)) ac += ";NETCORE_APP";
@@ -146,12 +147,12 @@ Task("Build")
           .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
-      DotNetPublish(CliNetCoreProject, new DotNetPublishSettings {  
-        Configuration = RELEASE, 
+      DotNetPublish(CliNetCoreProject, new DotNetPublishSettings {
+        Configuration = RELEASE,
         MSBuildSettings = mbs,
         Framework = fw,
         Verbosity = DotNetVerbosity.Quiet,
-        OutputDirectory = System.IO.Path.Combine(toolsPath, fw)        
+        OutputDirectory = System.IO.Path.Combine(toolsPath, fw)
       });
   }
 
@@ -162,9 +163,9 @@ Task("Build")
       Information("Building lib for {0}",fw);
       Information("---------");
 
-      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");  
-      ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>"); 
-      
+      ReplaceRegexInFiles(RtNetCoreProject,tfRgx,$"<{tfParameter}>{fw}</{tfParameter}>");
+      ReplaceRegexInFiles(RtNetCoreProject,tfsRgx,$"<{tfSingleParameter}>{fw}</{tfSingleParameter}>");
+
       var mbs = new DotNetMSBuildSettings()
           .WithProperty("DocumentationFile",$@"bin\Release\{fw}\Reinforced.Typings.xml");
 
@@ -175,17 +176,17 @@ Task("Build")
           .WithProperty("RtAdditionalConstants",ac)
           .WithProperty("RtNetCore","True");
       }
-     DotNetPublish(RtNetCoreProject, new DotNetPublishSettings {  
+     DotNetPublish(RtNetCoreProject, new DotNetPublishSettings {
         Configuration = RELEASE,
-        MSBuildSettings = mbs,    
+        MSBuildSettings = mbs,
         Framework = fw,
         Verbosity = DotNetVerbosity.Quiet,
         OutputDirectory = System.IO.Path.Combine(libPath, fw)
       });
   }
 
-  
-  
+
+
   Information("---------");
   Information("Copying build stuff");
   Information("---------");
@@ -198,7 +199,7 @@ Task("Build")
   Information("---------");
   Information("Writing readme");
   Information("---------");
-  
+
   CopyFileToDirectory("../stuff/license.txt", licenseRoot);
 
   // Copy readme with actual version of Reinforced.Typings.settings.xml
@@ -215,7 +216,7 @@ Task("Build")
   Information("---------");
   // Copy nuspec
   CopyFileToDirectory("../stuff/Reinforced.Typings.nuspec", packageRoot);
-  
+
   var rn = string.Empty;
   if (System.IO.File.Exists(System.IO.Path.Combine("../stuff/relnotes", version) + ".md")){
         rn = System.IO.File.ReadAllText(System.IO.Path.Combine("../stuff/relnotes", version) + ".md");
@@ -223,13 +224,13 @@ Task("Build")
 
   Information("---------");
   Information("Packaging");
-  Information("---------");  
+  Information("---------");
 
   NuGetPack("../package/Reinforced.Typings.nuspec",new NuGetPackSettings(){
     ReleaseNotes = new List<string>() { rn },
     Version = version,
     OutputDirectory = "../"
-  });  
+  });
   Information("Build complete");
 });
 

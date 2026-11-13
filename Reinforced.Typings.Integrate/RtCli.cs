@@ -94,7 +94,7 @@ namespace Reinforced.Typings.Integrate
         /// Full-qualified name of fluent configuration method
         /// </summary>
         public string ConfigurationMethod { get; set; }
-        
+
         /// <summary>
         /// Semicolon-separated list of warnings to be suppressed
         /// </summary>
@@ -116,7 +116,7 @@ namespace Reinforced.Typings.Integrate
                     "dotnet.exe"
                     : "dotnet";
 #else
-                return "dotnet.exe"; 
+                return "dotnet.exe";
 #endif
             }
             return Path.Combine(GetProperRtcliPath(), ToolName);
@@ -168,6 +168,7 @@ namespace Reinforced.Typings.Integrate
                 if (fw.StartsWith("net8")) return true;
                 if (fw.StartsWith("net9")) return true;
                 if (fw.StartsWith("net10")) return true;
+                if (fw.StartsWith("net11")) return true;
                 return false;
             }
         }

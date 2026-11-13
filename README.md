@@ -17,9 +17,9 @@ PM> Install-Package Reinforced.Typings
 
 News
 =================
-> Version **1.6.7** released
+> Version **1.6.8** released
 
-- .NET 10 support. Do not search for 1.6.6 😊
+- .NET 11 support
 
 Best to be used for
 =================
