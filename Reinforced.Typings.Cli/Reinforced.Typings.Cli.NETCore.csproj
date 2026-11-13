@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Reinforced.Typings.Cli</RootNamespace>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>    
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<DebugSymbols Condition="$(Configuration) == 'Release'">false</DebugSymbols>
 		<DebugType Condition="$(Configuration) == 'Release'">None</DebugType>
 		<StartupObject>Reinforced.Typings.Cli.Bootstrapper</StartupObject>
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<Platforms>AnyCPU;x64;x86</Platforms>
-		
+
 		<AssemblyName>rtcli</AssemblyName>
 		<Company>Reinforced Software Construction OSS</Company>
 		<Copyright>Pavel B. Novikov 2019</Copyright>
 		<AssemblyTitle>$(AssemblyName)</AssemblyTitle>
-		<AssemblyVersion>1.6.7</AssemblyVersion>
-		<FileVersion>1.6.7</FileVersion>
-		<InformationalVersion>1.6.7</InformationalVersion>
+		<AssemblyVersion>1.6.8</AssemblyVersion>
+		<FileVersion>1.6.8</FileVersion>
+		<InformationalVersion>1.6.8</InformationalVersion>
 		<DefineConstants>$(DefineConstants);$(RtAdditionalConstants);</DefineConstants>
-	</PropertyGroup>    
+	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="Properties\AssemblyInfo.cs" />
 	</ItemGroup>
